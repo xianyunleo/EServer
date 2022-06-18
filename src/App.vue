@@ -1,26 +1,28 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <a-row style="height: 100%;">
+    <a-col :span="4" style="height: 100%;">
+      <SideBar />
+    </a-col>
+    <a-col :span="20" style="display: flex;flex-direction: column;height: 100%">
+      <TitleBar />
+      <router-view />
+    </a-col>
+  </a-row>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
+import SideBar from "@/components/SideBar";
+import TitleBar from "@/components/TitleBar";
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    TitleBar,
+    SideBar,
+
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>

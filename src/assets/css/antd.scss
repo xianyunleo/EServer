@@ -1,0 +1,58 @@
+/*antd 组件样式修改*/
+.ant-btn {
+  border-radius: $button-border-radius;
+}
+
+.ant-input {
+  border-radius: $input-border-radius;
+}
+.ant-input-affix-wrapper{
+  border-radius: $button-border-radius;
+  .ant-input {
+    height: auto;
+  }
+}
+.ant-input-number{
+  border-radius: $input-border-radius;
+}
+.ant-select-selector{
+  border-radius: $input-border-radius!important;
+}
+
+.ant-card {
+  margin: 0 10px;
+  border-radius: $container-border-radius;
+  box-shadow:$container-box-shadow;
+  .ant-btn {
+    height: $custom-button-height;
+  }
+}
+
+.ant-card-head-title {
+  padding: 12px 0;
+  font-size: 14px;
+}
+
+.ant-table-wrapper {
+  margin: 0 10px;
+}
+
+.ant-table-wrapper {
+  background: #fff;
+  border-radius: $container-border-radius;
+  box-shadow:$container-box-shadow;
+}
+
+.ant-table {
+  border-radius: $container-border-radius;
+  overflow: hidden;
+}
+
+.ant-dropdown-menu, .ant-select-dropdown {
+  border-radius: $container-border-radius;
+}
+
+.ant-modal-content{
+  border-radius: $container-border-radius;
+  overflow: hidden;
+}
