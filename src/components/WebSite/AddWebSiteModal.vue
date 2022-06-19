@@ -44,37 +44,37 @@
 
 
 <script setup>
-  import {defineExpose, ref, reactive, toRaw} from "vue";
-  import {FolderOpenFilled} from "@ant-design/icons-vue";
-  import {openDirectoryDialog} from "@/electron/openDialog"
+import {defineExpose, ref, reactive, toRaw} from "vue";
+import {FolderOpenFilled} from "@ant-design/icons-vue";
+import {openDirectoryDialog} from "@/electron/openDialog"
 
-  const formRef = ref();
-  let visible = ref(false);
-  let formData = reactive({
-    serverName: '',
-    port: 80,
-    path: '',
-    phpVersion: '',
-  });
-  let selectPath = () => {
-    let path = openDirectoryDialog();
-    if (path) {
-      formData.path = path;
-    }
+const formRef = ref();
+let visible = ref(false);
+let formData = reactive({
+  serverName: '',
+  port: 80,
+  path: '',
+  phpVersion: '',
+});
+let selectPath = () => {
+  let path = openDirectoryDialog();
+  if (path) {
+    formData.path = path;
   }
+}
 
-  const addWeb = () => {
-    formRef.value.validateFields().then(values => {
-      console.log('Received values of form: ', values);
-      console.log('formState: ', toRaw(formData));
-       visible.value = false;
-      formRef.value.resetFields();
-    }).catch(info => {
-      console.log('Validate Failed:', info);
-    });
-  };
+const addWeb = () => {
+  formRef.value.validateFields().then(values => {
+    console.log('Received values of form: ', values);
+    console.log('formState: ', toRaw(formData));
+    visible.value = false;
+    formRef.value.resetFields();
+  }).catch(info => {
+    console.log('Validate Failed:', info);
+  });
+};
 
-  defineExpose({visible});
+defineExpose({visible});
 </script>
 
 <style scoped>

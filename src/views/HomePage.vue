@@ -9,12 +9,12 @@
       </div>
     </a-card>
 
-    <a-table :columns="columns" :data-source="data" class="content-table" :pagination="false" size="middle" >
+    <a-table :columns="columns" :data-source="data" class="content-table" :pagination="false" size="middle">
       <template #bodyCell="{ column }">
         <template v-if="column.dataIndex === 'status'">
           <div style="font-size: 20px;">
-<!--            <caret-right-outlined style="color: #20a53a;" />-->
-            <right-square-filled style="color: #20a53a;" />
+            <!--            <caret-right-outlined style="color: #20a53a;" />-->
+            <right-square-filled style="color: #20a53a;"/>
           </div>
         </template>
         <template v-if="column.dataIndex === 'service'">
@@ -64,9 +64,10 @@
   </div>
 </template>
 
-<script>
-import {ref,defineComponent} from "vue";
-import {DownOutlined,RightSquareFilled} from '@ant-design/icons-vue';
+<script setup>
+//import {ref} from "vue";
+import {DownOutlined, RightSquareFilled} from '@ant-design/icons-vue';
+
 const columns = [
   {
     title: '服务名',
@@ -77,7 +78,7 @@ const columns = [
     dataIndex: 'status',
     width: 80,
     align: 'center',
-  },  {
+  }, {
     title: '自启服务',
     dataIndex: 'service',
     width: 100,
@@ -94,39 +95,21 @@ const columns = [
     align: 'center',
   }
 ];
-export default defineComponent({
-  name: "HomePage",
-  components: {
-    DownOutlined,RightSquareFilled
+
+const data = [
+  {
+    name: 'Nginx',
+    port: '80,443',
+    pid: '180,1443',
   },
-  setup() {
-    let addWebModelVisible = ref('addWebModelVisible')
-    const data = [
-      {
-        name: 'Nginx',
-        port: '80,443',
-        pid: '180,1443',
-      },
-      {
-        name: 'PHP-FPM',
-      },
-      {
-        name: 'Redis',
-      },
-    ];
+  {
+    name: 'PHP-FPM',
+  },
+  {
+    name: 'Redis',
+  },
+];
 
-    let addWeb = ()=>{
-      addWebModelVisible= false
-    }
-
-    return {
-      data,
-      columns,
-      addWeb,
-      addWebModelVisible
-    };
-  }
-})
 </script>
 
 <style scoped>
@@ -142,7 +125,8 @@ export default defineComponent({
 .log-card {
   margin-bottom: 10px;
 }
-.operate-td{
+
+.operate-td {
   display: flex;
   justify-content: space-evenly;
 }
