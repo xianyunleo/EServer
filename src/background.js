@@ -29,7 +29,6 @@ async function createWindow() {
       enableRemoteModule: true
     }
   })
-  console.log('--my--',process.env.ELECTRON_NODE_INTEGRATION)
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode

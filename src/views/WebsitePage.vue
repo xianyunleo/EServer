@@ -1,7 +1,7 @@
 <template>
   <div class="content-container">
     <div class="web-header piece">
-      <a-button type="primary" @click="showModal">添加网站</a-button>
+      <a-button type="primary" @click="showAddWeb">添加网站</a-button>
       <input-with-search placeholder="请输入域名" style="width: 200px" @search="searchWeb"
       />
     </div>
@@ -27,11 +27,11 @@
       </template>
     </a-table>
   </div>
-  <add-web-site-modal v-model:visible="addWebModalVisible"/>
+  <add-web-site-modal ref="addWebSiteModalRef"/>
 </template>
 
-<script>
-import {ref, defineComponent} from "vue";
+<script setup>
+import {ref} from "vue";
 import {DownOutlined} from '@ant-design/icons-vue';
 import InputWithSearch from "@/components/InputWithSearch";
 import AddWebSiteModal from "@/components/WebSite/AddWebSiteModal";
@@ -57,80 +57,73 @@ const columns = [
     align: 'center',
   }
 ];
-export default defineComponent({
-  name: "WebSite",
-  components: {AddWebSiteModal, InputWithSearch, DownOutlined},
-  setup() {
-    let addWebModalVisible = ref(false)
-    let editWebModalVisible = ref(false)
-    let showModal = () => {
-      addWebModalVisible.value = true;
-    };
-    // eslint-disable-next-line no-unused-vars
-    let editWeb = () => {
-      editWebModalVisible.value = true;
-    }
-    let searchWeb = (val) => {
-      console.log(val)
-    }
-    let addWeb = () => {
-      console.log(45465)
-    }
-    const data = [
-      {
-        serverName: 'www.a.com',
-      },
-      {
-        serverName: 'www.b.com',
-      },
-      {
-        serverName: 'www.c.com',
-      }, {
-        serverName: 'www.a.com',
-      },
-      {
-        serverName: 'www.b.com',
-      },
-      {
-        serverName: 'www.c.com',
-      }, {
-        serverName: 'www.a.com',
-      },
-      {
-        serverName: 'www.b.com',
-      },
-      {
-        serverName: 'www.c.com',
-      }, {
-        serverName: 'www.a.com',
-      },
-      {
-        serverName: 'www.b.com',
-      },
-      {
-        serverName: 'www.c.com',
-      }, {
-        serverName: 'www.a.com',
-      },
-      {
-        serverName: 'www.b.com',
-      },
-      {
-        serverName: 'www.c.com',
-      }, {
-        serverName: 'www.a.com',
-      },
-      {
-        serverName: 'www.b.com',
-      },
-      {
-        serverName: 'www.c.com',
-      },
-    ];
 
-    return {data, columns, searchWeb, showModal, addWebModalVisible, addWeb};
-  }
-})
+const addWebSiteModalRef = ref(null)
+
+
+let showAddWeb = () => {
+  addWebSiteModalRef.value.visible = true;
+};
+
+let editWeb = () => {
+
+}
+let searchWeb = (val) => {
+  console.log(val)
+}
+
+
+const data = [
+  {
+    serverName: 'www.a.com',
+  },
+  {
+    serverName: 'www.b.com',
+  },
+  {
+    serverName: 'www.c.com',
+  }, {
+    serverName: 'www.a.com',
+  },
+  {
+    serverName: 'www.b.com',
+  },
+  {
+    serverName: 'www.c.com',
+  }, {
+    serverName: 'www.a.com',
+  },
+  {
+    serverName: 'www.b.com',
+  },
+  {
+    serverName: 'www.c.com',
+  }, {
+    serverName: 'www.a.com',
+  },
+  {
+    serverName: 'www.b.com',
+  },
+  {
+    serverName: 'www.c.com',
+  }, {
+    serverName: 'www.a.com',
+  },
+  {
+    serverName: 'www.b.com',
+  },
+  {
+    serverName: 'www.c.com',
+  }, {
+    serverName: 'www.a.com',
+  },
+  {
+    serverName: 'www.b.com',
+  },
+  {
+    serverName: 'www.c.com',
+  },
+];
 </script>
 
 <style scoped>

@@ -7,5 +7,6 @@ export function openDirectoryDialog(defaultPath = null) {
     if (defaultPath) {
         options.defaultPath = defaultPath;
     }
-    return dialog.showOpenDialogSync(options)
+    let res = dialog.showOpenDialogSync(options)
+    return res ? res[0] : undefined;
 }
