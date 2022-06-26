@@ -36,7 +36,7 @@
   </a-modal>
 </template>
 
-<script >
+<script setup>
 import {
   AppstoreTwoTone,
   ExclamationCircleTwoTone,
@@ -48,32 +48,22 @@ import {
 import { ref } from 'vue';
 import {useRouter} from "vue-router";
 
-export default {
-  name: "SideBar",
-  components:{
-    HomeTwoTone,LayoutTwoTone,ToolTwoTone,AppstoreTwoTone,SettingTwoTone,ExclamationCircleTwoTone
-  },
-  setup(){
-    const router = useRouter();
-    const selectedKeys = ref(['/']);
-    const visible = ref(false);
-    const menuItemSelect = e =>{
-      let path =  e.key
-      console.log(path)
-      console.log(selectedKeys)
-      if(path =='/about'){
-        visible.value = true;
-      }else{
-        router.push({path:e.key})
-      }
-    }
-    const handleOk = () =>{
-      visible.value = false;
-
-    }
-
-    return {menuItemSelect,selectedKeys,visible,handleOk}
+const router = useRouter();
+const selectedKeys = ref(['/']);
+const visible = ref(false);
+const menuItemSelect = e =>{
+  let path =  e.key
+  console.log(path)
+  console.log(selectedKeys)
+  if(path =='/about'){
+    visible.value = true;
+  }else{
+    router.push({path:e.key})
   }
+}
+const handleOk = () =>{
+  visible.value = false;
+
 }
 </script>
 

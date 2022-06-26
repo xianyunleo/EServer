@@ -135,3 +135,15 @@ img {
     border-radius:$button-border-radius;
   }
 }
+
+.tabs-modal{
+  .ant-modal-body{
+    padding-top: 0;
+  }
+}
+
+.left-tabs-modal{
+  .ant-modal-body{
+    padding: 0;
+  }
+}

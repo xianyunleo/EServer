@@ -12,10 +12,13 @@
           <div class="operate">
             <a-dropdown :trigger="['click']">
               <template #overlay>
-                <a-menu @click="handleMenuClick">
-                  <a-menu-item key="1" @click="editWeb">修改</a-menu-item>
+                <a-menu>
+                  <a-menu-item key="1" @click="showEditWeb">修改</a-menu-item>
                   <a-menu-item key="2">删除</a-menu-item>
-                  <a-menu-item key="3">打开根目录</a-menu-item>
+                  <a-menu-item key="3">浏览器访问</a-menu-item>
+                  <a-menu-item key="4">打开根目录</a-menu-item>
+                  <a-menu-item key="5">打开配置文件</a-menu-item>
+                  <a-menu-item key="6">打开命令行终端</a-menu-item>
                 </a-menu>
               </template>
               <a-button>管理
@@ -28,6 +31,7 @@
     </a-table>
   </div>
   <add-web-site-modal ref="addWebSiteModalRef"/>
+  <edit-web-site-modal ref="editWebSiteModalRef"/>
 </template>
 
 <script setup>
@@ -35,6 +39,7 @@ import {ref} from "vue";
 import {DownOutlined} from '@ant-design/icons-vue';
 import InputWithSearch from "@/components/InputWithSearch";
 import AddWebSiteModal from "@/components/WebSite/AddWebSiteModal";
+import EditWebSiteModal from "@/components/WebSite/EditWebSiteModal";
 
 const columns = [
   {
@@ -58,15 +63,16 @@ const columns = [
   }
 ];
 
-const addWebSiteModalRef = ref(null)
+const addWebSiteModalRef = ref(null);
+const editWebSiteModalRef = ref(null);
 
 
 let showAddWeb = () => {
   addWebSiteModalRef.value.visible = true;
 };
 
-let editWeb = () => {
-
+let showEditWeb = () => {
+  editWebSiteModalRef.value.visible = true;
 }
 let searchWeb = (val) => {
   console.log(val)

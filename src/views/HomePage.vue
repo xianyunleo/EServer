@@ -33,7 +33,7 @@
             <a-button type="primary">重启</a-button>
             <a-dropdown :trigger="['click']">
               <template #overlay>
-                <a-menu @click="handleMenuClick">
+                <a-menu >
                   <a-menu-item key="1">
                     修改
                   </a-menu-item>

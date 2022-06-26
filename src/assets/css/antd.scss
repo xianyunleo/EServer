@@ -52,6 +52,21 @@
   border-radius: $container-border-radius;
 }
 
+.ant-modal-header{
+  padding: 15px 20px;
+}
+.ant-modal-title{
+  font-size: 14px;
+
+}
+.ant-modal-close-x{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 53px;
+  height: 53px;
+}
+
 .ant-modal-content{
   border-radius: $container-border-radius;
   overflow: hidden;

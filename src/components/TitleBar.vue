@@ -6,15 +6,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
 
-
-export default {
-  name: "TitleBar",
-  components:{
-
-  },
-}
 </script>
 
 <style scoped>

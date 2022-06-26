@@ -33,7 +33,7 @@
 
         </a-form-item>
 
-        <a-form-item label="PHP版本" name="phpVersion" :rules="[{ required: true, message: '请选择PHP版本!' }]">
+        <a-form-item label="PHP版本" name="phpVersion">
           <a-input-password v-model:value="formData.phpVersion"/>
         </a-form-item>
       </a-form>

@@ -8,26 +8,15 @@
   </a-input>
 </template>
 
-<script>
-import {ref, defineComponent} from "vue";
+<script setup>
+import {ref, defineEmits} from "vue";
 import {SearchOutlined} from '@ant-design/icons-vue';
 
-export default defineComponent({
-  name: 'InputWithSearch',
-  props: {
-  },
-  components: {
-    SearchOutlined
-  },
-  setup(props, context) {
-    let val = ref('');
-    let searchClick = () => {
-      context.emit('search', val.value)
-    }
-    return {searchClick,val}
-  }
-
-});
+let val = ref('');
+const emits = defineEmits(['search'])
+let searchClick = () => {
+  emits('search', val.value)
+}
 
 </script>
 
