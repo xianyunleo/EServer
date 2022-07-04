@@ -25,8 +25,8 @@
         <a-form-item label="根目录" name="path" :rules="[{ required: true, message: '请选择根目录!' }]">
           <a-input v-model:value="formData.path" class="with-btn" readonly>
             <template #suffix>
-              <span class="icon-wrapper">
-                 <folder-open-filled style="color: rgba(0, 0, 0, 0.45);" @click="selectPath"/>
+              <span class="icon-wrapper" @click="selectPath">
+                 <folder-open-filled style="color: rgba(0, 0, 0, 0.45);" />
               </span>
             </template>
           </a-input>
@@ -46,7 +46,7 @@
 <script setup>
 import {defineExpose, ref, reactive, toRaw} from "vue";
 import {FolderOpenFilled} from "@ant-design/icons-vue";
-import {openDirectoryDialog} from "@/electron/openDialog"
+import {openDirectoryDialog} from "@/main/openDialog"
 
 const formRef = ref();
 let visible = ref(false);

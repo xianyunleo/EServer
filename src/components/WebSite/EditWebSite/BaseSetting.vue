@@ -42,7 +42,7 @@
 <script setup>
 import {reactive,ref}  from "vue";
 import {FolderOpenFilled} from "@ant-design/icons-vue";
-import {openDirectoryDialog} from "@/electron/openDialog";
+import {openDirectoryDialog} from "@/main/openDialog";
 
 let formData = reactive({
   serverName: '',

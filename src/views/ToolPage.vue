@@ -14,14 +14,25 @@
       </a-col>
     </a-row>
   </div>
-
+  <mysql-reset-pwd-modal ref="mysqlResetPwdModalRef"></mysql-reset-pwd-modal>
 </template>
 
 <script setup>
+import {ref} from "vue";
+import MysqlResetPwdModal from "@/components/ToolPage/MysqlResetPwdModal"
+import {download} from "@/main/downloader";
+
 
 let editHosts = ()=>{
-  console.log('editHost33')
+  download();
 };
+
+
+let mysqlResetPwdModalRef = ref(null);
+
+let mysqlResetPwd = ()=>{
+  mysqlResetPwdModalRef.value.visible = true;
+}
 
 let toolItems = [
   {
@@ -29,13 +40,14 @@ let toolItems = [
     avatar: 'https://joeschmoe.io/api/v1/random',
     title: '编辑hosts',
     desc: '修改、编辑hosts文件',
-    func: editHosts
+    func: editHosts,
   },
   {
     key:'mysqlResetPwd',
     avatar:'https://joeschmoe.io/api/v1/random',
     title:'MySQL修改密码',
     desc:'修改、重置MySQL的root账户的密码',
+    func: mysqlResetPwd,
   },
 ];
 

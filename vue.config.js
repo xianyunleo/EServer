@@ -28,7 +28,11 @@ module.exports ={
           ],
           icon: 'build/icons/icon.ico',
         },
-        artifactName:'${productName}-${os}-${version}.${ext}'
+        artifactName:'${productName}-${os}-${version}.${ext}',
+        "extraFiles": {
+          "from": "./extra/win/",
+          "to": "./",
+        },
       }
     }
   }

@@ -1,8 +1,8 @@
 <template>
   <a-input v-model:value="val" class="with-btn">
     <template #suffix>
-      <span class="icon-wrapper">
-         <search-outlined style="color: rgba(0, 0, 0, 0.45);" @click="searchClick"/>
+      <span class="icon-wrapper" @click="searchClick">
+         <search-outlined style="color: rgba(0, 0, 0, 0.45);" />
       </span>
     </template>
   </a-input>
