@@ -2,21 +2,25 @@
   <div class="content-container">
     <div class="web-header piece">
       <a-button type="primary" @click="showAddWeb">添加网站</a-button>
-      <input-with-search placeholder="请输入域名" style="width: 200px" @search="searchWeb"
-      />
+      <input-with-search placeholder="请输入域名" style="width: 200px" @search="searchWeb"/>
     </div>
 
-    <a-table :scroll="{y: true}" :columns="columns" :data-source="data" class="content-table web-table" :pagination="false" size="middle">
-      <template #bodyCell="{ column }">
+    <a-table :scroll="{y: true}"
+             :columns="columns"
+             :data-source="data"
+             class="content-table web-table"
+             :pagination="false"
+             size="middle">
+      <template #bodyCell="{ column, text, record}">
         <template v-if="column.dataIndex === 'operate'">
           <div class="operate">
             <a-dropdown :trigger="['click']">
               <template #overlay>
                 <a-menu>
                   <a-menu-item key="1" @click="showEditWeb">修改</a-menu-item>
-                  <a-menu-item key="2">删除</a-menu-item>
-                  <a-menu-item key="3">浏览器访问</a-menu-item>
-                  <a-menu-item key="4">打开根目录</a-menu-item>
+                  <a-menu-item key="2">删除{{ text }}</a-menu-item>
+                  <a-menu-item key="3">浏览器访问{{ record }}</a-menu-item>
+                  <a-menu-item key="4">打开根目录{{ column }}</a-menu-item>
                   <a-menu-item key="5">打开配置文件</a-menu-item>
                   <a-menu-item key="6">打开命令行终端</a-menu-item>
                 </a-menu>

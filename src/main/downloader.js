@@ -6,7 +6,6 @@ export function download(url) {
     url = 'https://dl.phpenv.cn/release/phpEnv8.3.5-Setup.exe'
 
     let corePath = getCorePath();
-
     let dlPath = path.join(corePath, 'aria2c');
     let command = `${dlPath} ${url} --check-certificate=false`;
     child_process.exec(command, (r) => {

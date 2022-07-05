@@ -52,9 +52,6 @@ let toolItems = [
 ];
 
 
-
-
-
 </script>
 
 <style scoped>
