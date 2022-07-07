@@ -8,7 +8,7 @@
     <a-table :scroll="{y: true}"
              :columns="columns"
              :data-source="data"
-             class="content-table web-table"
+             class="content-table web-table scroller"
              :pagination="false"
              size="middle">
       <template #bodyCell="{ column, text, record}">

@@ -1,27 +1,48 @@
 <template>
   <div class="content-container">
-    <a-tabs class="tabs piece" v-model:activeKey="activeTabKey" @change="tabChange">
-      <a-tab-pane key="Server" tab="服务"></a-tab-pane>
-      <a-tab-pane key="DataBase" tab="数据库" force-render></a-tab-pane>
-      <a-tab-pane key="PHP" tab="PHP"></a-tab-pane>
-    </a-tabs>
+    <div class="category">
+      <a-radio-group v-model:value="radioGroupVal" button-style="solid" @change="radioGroupChange">
+        <a-radio-button value="Server">服务</a-radio-button>
+        <a-radio-button value="DataBase">数据库</a-radio-button>
+        <a-radio-button value="PHP">PHP</a-radio-button>
+        <a-radio-button value="Tool">工具</a-radio-button>
+      </a-radio-group>
+    </div>
+
 
     <div class="soft-list piece">
-      <div class="soft-item">
-        <div class="soft-item-avatar">
-          <span></span>
+      <div class="soft-head">
+        <div class="soft-item">
+          <div class="soft-item-content">
+            <div class="soft-item-avatar">
+              <span></span>
+            </div>
+            <div class="soft-item-title">软件名称</div>
+            <div class="soft-item-desc">说明</div>
+            <div class="soft-item-operate">操作</div>
+          </div>
         </div>
-        <div class="soft-item-title">软件名称</div>
-        <div class="soft-item-desc">说明</div>
       </div>
-      <div class="soft-item" v-for="item in softItems" :key="item.key">
-        <div class="soft-item-avatar">
-          <img :src="item.Icon">
-        </div>
-        <div class="soft-item-title">{{ item.Name }}</div>
-        <div class="soft-item-desc">{{ item.Desc }}</div>
-        <div class="soft-item-operate">
-          <a-button type="primary">安装</a-button>
+
+      <div class="soft-body">
+        <div class="soft-item" v-for="item in softItems" :key="item.key">
+          <div class="soft-item-content">
+            <div class="soft-item-avatar">
+              <img :src="item.Icon">
+            </div>
+            <div class="soft-item-title">{{ item.Name }}</div>
+            <div class="soft-item-desc">{{ item.Desc }}</div>
+            <div class="soft-item-operate">
+              <a-button type="primary">安装</a-button>
+            </div>
+          </div>
+          <div class="soft-item-progress">
+            <a-progress :percent="50" :show-info="false"   status="active" />
+            <div class="progress-info">
+              <div>52M/100M</div>
+              <div>↓5.3M/S</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -32,37 +53,68 @@
 <script setup>
 
 import {getList} from "@/main/software";
+import {ref} from "vue";
 
+const defaultRadioVal = 'Server';
+let softItems = ref([]);
+let radioGroupVal = ref(defaultRadioVal);
+let radioGroupChange = () => {
+  setList(radioGroupVal.value);
+}
 
-let softItems = [];
-
-let tabChange = (activeTabKey) => {
-  console.log(activeTabKey)
+let setList = (type) => {
   try {
-    softItems = getList(activeTabKey);
+    softItems.value = getList(type);
   } catch (e) {
     console.log(e)
   }
 }
 
-tabChange('Server');
+setList(defaultRadioVal);
 
 
 </script>
 
 <style scoped>
+.category {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.category >>> .ant-radio-button-wrapper {
+  width: 120px;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+}
+
+.soft-list {
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.soft-list >>> .ant-btn {
+  height: 32px;
+}
 
 .soft-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 12px 0;
   color: #000000d9;
   border-bottom: 1px solid #f0f0f0;
 }
 
-.soft-item:hover {
-  background: #eee;
+.soft-item .soft-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.soft-head .soft-item {
+  background: #fafafa;
+}
+
+.soft-body .soft-item:hover {
+  background: #fafafa;
 }
 
 .soft-item-avatar {
@@ -86,5 +138,21 @@ tabChange('Server');
 
 .soft-item-desc {
   flex: 1;
+}
+
+.soft-item-progress {
+  color: #9b9b9b;
+  padding: 10px 10px 0 10px;
+}
+
+.soft-item-progress .progress-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.soft-item-operate {
+  width: 150px;
+  text-align: center;
 }
 </style>

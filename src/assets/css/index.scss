@@ -48,7 +48,7 @@ img {
   display: flex;
   flex-direction: column;
   border-right: 1px solid #ddd;
-
+  background: #f0f1f5;
   .draggable {
     height: $title-bar-height;
   }
@@ -68,7 +68,7 @@ img {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: $background-color;
+    background: #f0f1f5;
   }
 
   .ant-menu-item {
@@ -77,13 +77,13 @@ img {
 
   .ant-menu-item-selected {
     color: $font-color !important;
-    background-color: #e3e3e5 !important;
+    background-color: #d3d3d5 !important;
     border-radius: $button-border-radius;
   }
 
   .ant-menu-item-active {
     color: $font-color !important;
-    background-color: #ececee !important;
+    background-color: #e3e3e5 !important;
     border-radius: $button-border-radius;
   }
 

@@ -65,7 +65,7 @@ let toolItems = [
   cursor: pointer;
 }
 .tool-item:hover{
-  background: #eee;
+  background:#fafafa;
 }
 
 .tool-item-avatar {

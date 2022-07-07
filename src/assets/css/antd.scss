@@ -71,3 +71,14 @@
   border-radius: $container-border-radius;
   overflow: hidden;
 }
+
+.ant-radio-group{
+  .ant-radio-button-wrapper:first-child{
+    border-top-left-radius: $button-border-radius;
+    border-bottom-left-radius: $button-border-radius;
+  }
+  .ant-radio-button-wrapper:last-child{
+    border-top-right-radius: $button-border-radius;
+    border-bottom-right-radius: $button-border-radius;
+  }
+}
