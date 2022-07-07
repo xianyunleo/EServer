@@ -4,7 +4,7 @@
       <a-col :span="12" v-for="item in toolItems" :key="item.key">
         <div class="tool-item piece" @click="item.func">
           <div class="tool-item-avatar">
-            <img :src="item.avatar">
+            <img :src="item.avatar" alt="icon">
           </div>
           <div class="tool-item-content">
             <h4 class="tool-item-title">{{item.title}}</h4>
@@ -20,11 +20,11 @@
 <script setup>
 import {ref} from "vue";
 import MysqlResetPwdModal from "@/components/ToolPage/MysqlResetPwdModal"
-import {download} from "@/main/downloader";
+import {openHosts} from "@/main/file";
 
 
 let editHosts = ()=>{
-  download();
+  openHosts();
 };
 
 
