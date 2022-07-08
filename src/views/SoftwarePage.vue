@@ -89,8 +89,12 @@ setList(defaultRadioVal);
 }
 
 .soft-list {
+  display: flex;
+  flex-direction: column;
   margin-top: 10px;
+  margin-bottom: 10px;
   overflow: hidden;
+  flex: 1;
 }
 
 .soft-list >>> .ant-btn {
@@ -111,6 +115,11 @@ setList(defaultRadioVal);
 
 .soft-head .soft-item {
   background: #fafafa;
+}
+
+.soft-body{
+  flex: 1;
+  overflow: auto;
 }
 
 .soft-body .soft-item:hover {
