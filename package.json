@@ -20,6 +20,7 @@
     "core-js": "^3.6.5",
     "electron-is": "^3.0.0",
     "iconv-lite": "^0.6.3",
+    "sudo-prompt": "^9.2.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.16"
   },

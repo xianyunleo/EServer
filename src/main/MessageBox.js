@@ -1,5 +1,3 @@
-"use strict";
-
 import {Modal} from 'ant-design-vue';
 
 export default class MessageBox {

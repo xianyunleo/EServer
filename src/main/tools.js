@@ -1,13 +1,11 @@
-"use strict";
-
-import {execPromise} from "@/main/process";
+import {execPromise, sudoExecPromise} from "@/main/process";
 
 export async function openTextFile(filePath) {
     if (!await vscodeIsInstalled()) {
         throw new Error('vscode没有安装');
     }
     let command = `code ${filePath}`;
-    await execPromise(command);
+    await sudoExecPromise(command);
 }
 
 async function vscodeIsInstalled() {
