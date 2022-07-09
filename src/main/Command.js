@@ -5,6 +5,7 @@ import is from "electron-is";
 
 export default class Command {
     static async exec(command) {
+        console.log('-exec-',command)
         return await new Promise(function (resolve, reject) {
             let formatCommand;
             if (is.windows()) {
@@ -32,6 +33,7 @@ export default class Command {
     }
 
     static async sudoExec(command) {
+        console.log('-sudoExec-',command)
         return await new Promise(function (resolve, reject) {
             const options = {
                 name: APP_NAME,
