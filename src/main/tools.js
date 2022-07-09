@@ -1,4 +1,5 @@
 import Command from "@/main/Command";
+import {hostsPathMap} from "@/main/constant";
 
 export async function openTextFile(filePath) {
     if (!await vscodeIsInstalled()) {
@@ -16,5 +17,6 @@ export async function vscodeIsInstalled() {
 }
 
 export async function openHosts() {
-    await openTextFile('C:\\Windows\\System32\\drivers\\etc\\hosts');
+    let path = hostsPathMap[process.platform];
+    await openTextFile(path);
 }

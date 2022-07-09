@@ -1,5 +1,6 @@
 import child_process from "child_process";
 import sudo from "sudo-prompt"
+import {APP_NAME} from "@/main/constant";
 
 export default class Command {
     static async exec(command) {
@@ -26,7 +27,7 @@ export default class Command {
     static async sudoExec(command) {
         return await new Promise(function (resolve, reject) {
             const options = {
-                name: 'Electron',
+                name: APP_NAME,
             }
             sudo.exec(command, options, (err, stdout, stderr) => {
                 if (err) {
