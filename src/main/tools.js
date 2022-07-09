@@ -23,8 +23,9 @@ export async function openHosts() {
         throw new Error('vscode没有安装');
     }
     let path = hostsPathMap[process.platform];
-    if (is.macOS()) {
-        path += ' --unity-launch --no-sandbox';
+    if (is.windows()) {
+        return await openTextFile(path, true);
+    } else {
+        return await openTextFile(path, false);
     }
-    return await openTextFile(path, true);
 }
