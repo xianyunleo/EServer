@@ -1,12 +1,13 @@
 import Command from "@/main/Command";
 import {hostsPathMap} from "@/main/constant";
 
-export async function openTextFile(filePath) {
-    if (!await vscodeIsInstalled()) {
-        throw new Error('vscode没有安装');
-    }
+export async function openTextFile(filePath, isSudo = false) {
     let command = `code ${filePath}`;
-    await Command.sudoExec(command);
+    if (isSudo) {
+        return await Command.sudoExec(command);
+    } else {
+        return await Command.exec(command);
+    }
 }
 
 export async function vscodeIsInstalled() {
@@ -17,6 +18,9 @@ export async function vscodeIsInstalled() {
 }
 
 export async function openHosts() {
+    if (!await vscodeIsInstalled()) {
+        throw new Error('vscode没有安装');
+    }
     let path = hostsPathMap[process.platform];
-    await openTextFile(path);
+    return await openTextFile(path, false);
 }
