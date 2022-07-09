@@ -1,5 +1,6 @@
 import Command from "@/main/Command";
 import {hostsPathMap} from "@/main/constant";
+import is from "electron-is";
 
 export async function openTextFile(filePath, isSudo = false) {
     let command = `code ${filePath}`;
@@ -22,5 +23,8 @@ export async function openHosts() {
         throw new Error('vscode没有安装');
     }
     let path = hostsPathMap[process.platform];
-    return await openTextFile(path, false);
+    if (is.macOS()) {
+        path += ' --unity-launch --no-sandbox';
+    }
+    return await openTextFile(path, true);
 }
