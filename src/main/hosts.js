@@ -14,9 +14,8 @@ export async function openHosts() {
     if (is.windows()) {
         return await openTextFile(path);
     } else {
-        if (!canEditHosts()) {
-            console.log(canEditHosts())
-             await Command.sudoExec(`chmod 666 ${path}`);
+        if (!await canEditHosts()) {
+            await Command.sudoExec(`chmod 666 ${path}`);
         }
         return await openTextFile(path);
     }
@@ -37,13 +36,13 @@ export async function getHostsContent() {
     const options = {
         encoding: 'utf8',
     }
-    return await  fs.promises.readFile(path,options)
+    return await fs.promises.readFile(path, options)
 }
 
 export async function setHostsContent(text) {
     const options = {
         encoding: 'utf8',
     }
-    return await  fs.promises.writeFile(text,options)
+    return await fs.promises.writeFile(text, options)
 }
 
