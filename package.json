@@ -22,8 +22,7 @@
     "iconv-lite": "^0.6.3",
     "sudo-prompt": "^9.2.1",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.16",
-    "vue3-ace-editor": "^2.2.2"
+    "vue-router": "^4.0.16"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.17",
