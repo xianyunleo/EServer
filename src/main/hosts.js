@@ -15,6 +15,7 @@ export async function openHosts() {
         return await openTextFile(path);
     } else {
         if (!canEditHosts()) {
+            console.log(canEditHosts())
              await Command.sudoExec(`chmod 666 ${path}`);
         }
         return await openTextFile(path);
@@ -23,7 +24,12 @@ export async function openHosts() {
 
 export async function canEditHosts() {
     let path = hostsPathMap[process.platform];
-    return await fs.promises.access(path, fs.constants.R_OK | fs.constants.W_OK);
+    try {
+        await fs.promises.access(path, fs.constants.R_OK | fs.constants.W_OK);
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 export async function getHostsContent() {
