@@ -23,3 +23,14 @@ export function getList(type) {
     console.log(newList)
     return newList;
 }
+
+
+export function getIconPath() {
+    let corePath = getCorePath();
+    let softPath = path.join(corePath, '/config/software');
+    return path.join(softPath, '/icon');
+}
+
+export function getMysqlIconPath() {
+    return path.join(getIconPath(),'mysql.png')
+}

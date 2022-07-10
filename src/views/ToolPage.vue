@@ -15,43 +15,41 @@
     </a-row>
   </div>
   <mysql-reset-pwd-modal ref="mysqlResetPwdModalRef"></mysql-reset-pwd-modal>
+  <edit-hosts-modal ref="editHostsModalRef"></edit-hosts-modal>
 </template>
 
 <script setup>
 import {ref} from "vue";
-import {message} from 'ant-design-vue';
 import MysqlResetPwdModal from "@/components/ToolPage/MysqlResetPwdModal"
-import {openHosts} from "@/main/tools";
-import MessageBox from "@/main/MessageBox";
+import EditHostsModal from "@/components/ToolPage/EditHostsModal"
+
+import {getMysqlIconPath} from "@/main/software";
 
 
-let editHosts = async () => {
-  message.info('打开中，请等待...');
-  try {
-    await openHosts();
-  } catch (error) {
-    MessageBox.error(error.message,'打开VS Code失败！');
-  }
+let editHostsModalRef = ref(null);
+let mysqlResetPwdModalRef = ref(null);
+
+// eslint-disable-next-line no-unused-vars
+let editHosts =  () => {
+  editHostsModalRef.value.visible = true;
 };
 
-
-let mysqlResetPwdModalRef = ref(null);
 
 let mysqlResetPwd = () => {
   mysqlResetPwdModalRef.value.visible = true;
 }
 
 let toolItems = [
-  {
-    key: 'editHosts',
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    title: '编辑hosts',
-    desc: '查看、编辑hosts文件',
-    func: editHosts,
-  },
+  // {
+  //   key: 'editHosts',
+  //   avatar: 'https://joeschmoe.io/api/v1/random',
+  //   title: '编辑hosts',
+  //   desc: '查看、编辑hosts文件',
+  //   func: editHosts,
+  // },
   {
     key: 'mysqlResetPwd',
-    avatar: 'https://joeschmoe.io/api/v1/random',
+    avatar: getMysqlIconPath(),
     title: 'MySQL修改密码',
     desc: '修改、重置MySQL的root账户的密码',
     func: mysqlResetPwd,

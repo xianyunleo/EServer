@@ -22,7 +22,8 @@
     "iconv-lite": "^0.6.3",
     "sudo-prompt": "^9.2.1",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.16"
+    "vue-router": "^4.0.16",
+    "vue3-ace-editor": "^2.2.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.17",
@@ -34,6 +35,8 @@
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
+    "less": "^3.13.1",
+    "less-loader": "5.0",
     "node-sass": "^6.0.1",
     "sass-loader": "^10.2.1",
     "vue-cli-plugin-electron-builder": "~2.1.1"

@@ -5,6 +5,7 @@
       cancel-text="取消"
       @ok="reset"
       v-model:visible="visible"
+      centered
       :maskClosable="false">
     <div class="modal-content">
       <h4 style="text-align: center">

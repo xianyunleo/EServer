@@ -1,6 +1,6 @@
 import Command from "@/main/Command";
-import {hostsPathMap} from "@/main/constant";
-import is from "electron-is";
+// eslint-disable-next-line no-unused-vars
+import {APP_NAME, hostsPathMap} from "@/main/constant";
 
 export async function openTextFile(filePath, isSudo = false) {
     let command = `code ${filePath}`;
@@ -18,14 +18,3 @@ export async function vscodeIsInstalled() {
     return reg.test(output)
 }
 
-export async function openHosts() {
-    if (!await vscodeIsInstalled()) {
-        throw new Error('vscode没有安装');
-    }
-    let path = hostsPathMap[process.platform];
-    if (is.windows()) {
-        return await openTextFile(path, true);
-    } else {
-        return await openTextFile(path, false);
-    }
-}

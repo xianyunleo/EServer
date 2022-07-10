@@ -19,12 +19,12 @@
         </template>
         <template v-if="column.dataIndex === 'service'">
           <div>
-            <a-switch/>
+            <a-switch @click="serviceChange" />
           </div>
         </template>
         <template v-if="column.dataIndex === 'env'">
           <div>
-            <a-switch/>
+            <a-switch @click="envChange"  />
           </div>
         </template>
         <template v-if="column.dataIndex === 'operate'">
@@ -35,13 +35,7 @@
               <template #overlay>
                 <a-menu >
                   <a-menu-item key="1">
-                    修改
-                  </a-menu-item>
-                  <a-menu-item key="2">
-                    删除
-                  </a-menu-item>
-                  <a-menu-item key="3">
-                    打开根目录
+                    打开所在目录
                   </a-menu-item>
                 </a-menu>
               </template>
@@ -56,10 +50,11 @@
     </a-table>
 
     <a-card title="运行日志" class="log-card">
-      <div>
-        2022-06-04 15:39:57 [Nginx] 启动成功<br>
-        2022-06-04 19:39:57 [Nginx] 关闭成功
-      </div>
+      下个版本开放！！！
+<!--      <div>-->
+<!--        2022-06-04 15:39:57 [Nginx] 启动成功<br>-->
+<!--        2022-06-04 19:39:57 [Nginx] 关闭成功-->
+<!--      </div>-->
     </a-card>
   </div>
 </template>
@@ -67,7 +62,7 @@
 <script setup>
 //import {ref} from "vue";
 import {DownOutlined, RightSquareFilled} from '@ant-design/icons-vue';
-
+import { message } from 'ant-design-vue';
 const columns = [
   {
     title: '服务名',
@@ -110,6 +105,15 @@ const data = [
   },
 ];
 
+
+
+let serviceChange = ()=>{
+  message.info('下个版本开放！！！');
+}
+
+let envChange = ()=>{
+  message.info('下个版本开放！！！');
+}
 </script>
 
 <style scoped>

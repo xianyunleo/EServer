@@ -53,8 +53,7 @@ const selectedKeys = ref(['/']);
 const visible = ref(false);
 const menuItemSelect = e =>{
   let path =  e.key
-  console.log(path)
-  console.log(selectedKeys)
+
   if(path =='/about'){
     visible.value = true;
   }else{
