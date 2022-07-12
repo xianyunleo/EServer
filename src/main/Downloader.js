@@ -40,14 +40,14 @@ export default class Downloader {
         // });
 
         this.process.on('close', (code) => {
-            if (code !== 0) {
+            if (code !== 0) { // && code !== 1 //杀死进程
                 throw new Error(`下载失败，错误码 ${code}`);
             }
         });
     }
 
     exit() {
-        //kill  -9  -3?
-        this.process.kill();
+        //this.process.kill()在Proxy下有问题
+        process.kill(this.process.pid,'SIGKILL')
     }
 }
