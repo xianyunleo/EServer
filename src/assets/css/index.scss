@@ -13,8 +13,9 @@
   overflow: hidden;
 }
 
-img {
-  pointer-events: none;
+img,a{
+  user-drag: none;
+  -webkit-user-drag: none;
 }
 
 .draggable {

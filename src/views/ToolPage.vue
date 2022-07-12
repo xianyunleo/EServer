@@ -4,7 +4,19 @@
       <a-col :span="12" v-for="item in toolItems" :key="item.key">
         <div class="tool-item piece" @click="item.func">
           <div class="tool-item-avatar">
-            <img :src="item.avatar" alt="icon">
+            <template v-if="item.iconType">
+              <template v-if="item.iconType === iconTypes.textFile">
+                <file-text-two-tone />
+              </template>
+              <div v-else-if="item.iconType === iconTypes.dir">
+                <folder-open-two-tone />
+              </div>
+            </template>
+            <template v-else>
+              <img :src="item.avatar" alt="icon">
+            </template>
+
+
           </div>
           <div class="tool-item-content">
             <h4 class="tool-item-title">{{ item.title }}</h4>
@@ -20,11 +32,20 @@
 <script setup>
 import {ref} from "vue";
 import {message} from 'ant-design-vue';
+
+import {FileTextTwoTone,FolderOpenTwoTone} from "@ant-design/icons-vue";
 import MysqlResetPwdModal from "@/components/ToolPage/MysqlResetPwdModal"
 import {openHosts} from "@/main/hosts";
 import MessageBox from "@/main/MessageBox";
 import {getMysqlIconPath} from "@/main/software";
 
+
+const iconTypes = {
+  dir: 'dir',
+  file: 'file',
+  textFile: 'textFile',
+  tool: 'tool',
+}
 
 let editHosts = async () => {
   message.info('打开中，请等待...');
@@ -36,6 +57,7 @@ let editHosts = async () => {
 };
 
 
+
 let mysqlResetPwdModalRef = ref(null);
 
 let mysqlResetPwd = () => {
@@ -45,6 +67,7 @@ let mysqlResetPwd = () => {
   let toolItems = [
     {
       key: 'editHosts',
+      iconType: iconTypes.textFile,
       avatar: 'https://joeschmoe.io/api/v1/random',
       title: '编辑hosts',
       desc: '查看、编辑hosts文件',
@@ -83,7 +106,13 @@ let mysqlResetPwd = () => {
   display: flex;
 }
 
-.tool-item-avatar img {
+.tool-item-avatar > img {
+  width: 50px;
+  height: 50px;
+}
+
+.tool-item-avatar > span {
+  font-size:50px;
   width: 50px;
   height: 50px;
 }

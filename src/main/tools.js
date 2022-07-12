@@ -1,4 +1,5 @@
 import Command from "@/main/Command";
+import {shell} from "@electron/remote"
 
 export async function openTextFile(filePath, isSudo = false) {
     let command = `code ${filePath}`;
@@ -16,4 +17,7 @@ export async function vscodeIsInstalled() {
     return reg.test(output)
 }
 
+export async function openUrl(url) {
+    return await shell.openExternal(url);
+}
 
