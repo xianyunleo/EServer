@@ -19,8 +19,8 @@ export function getList(type) {
         newItem.Icon = path.join(softIconPath, item.Icon);
         newList.push(newItem);
     }
-    console.log(list)
-    console.log(newList)
+    //console.log(list)
+    //console.log(newList)
     return newList;
 }
 

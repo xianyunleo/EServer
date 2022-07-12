@@ -4,8 +4,13 @@ import path from "path";
 
 
 export default class Downloader {
+
     constructor(url) {
         this.url = url;
+        this.completedLength = 0;
+        this.totalLength = 0;
+        this.percent = 0;
+        this.perSecond = '0KB';
     }
 
     download() {
@@ -14,9 +19,20 @@ export default class Downloader {
         let downloadsPath = path.join(corePath, 'downloads');
         let args = [this.url, '--check-certificate=false', `--dir=${downloadsPath}`];
 
+
         this.process = child_process.spawn(downloaderPath, args);
+        console.log('--pid--',process.pid)
+        const regx = /([\d.]+\w+)\/([\d.]+\w+)\((\d+)%\).+DL:([\d.]+\w+)/ ;
         this.process.stdout.on('data', (data) => {
-            console.log(`stdout: ${data}`);
+            data= data.toString();
+            console.log(data)
+            let matches =data.match(regx)
+            if(matches){
+                this.completedLength = matches[1];
+                this.totalLength = matches[2];
+                this.percent = parseInt(matches[3]);
+                this.perSecond = matches[4];
+            }
         });
 
         // process.stderr.on('data', (data) => {
@@ -31,6 +47,7 @@ export default class Downloader {
     }
 
     exit() {
+        //kill  -9  -3?
         this.process.kill();
     }
 }
