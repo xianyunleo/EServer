@@ -33,14 +33,14 @@
             <div class="soft-item-title">{{ item.Name }}</div>
             <div class="soft-item-desc">{{ item.Desc }}</div>
             <div class="soft-item-operate">
-              <a-button type="primary">安装</a-button>
+              <a-button type="primary" @click="clickDownload">安装</a-button>
             </div>
           </div>
           <div class="soft-item-progress">
             <a-progress :percent="50" :show-info="false"   status="active" />
             <div class="progress-info">
               <div>52M/100M</div>
-              <div>↓5.3M/S</div>
+              <div>↓0KiB/S</div>
             </div>
           </div>
         </div>
@@ -54,6 +54,7 @@
 
 import {getList} from "@/main/software";
 import {ref} from "vue";
+import Downloader from "@/main/Downloader";
 
 const defaultRadioVal = 'Server';
 let softItems = ref([]);
@@ -68,6 +69,10 @@ let setList = (type) => {
   } catch (e) {
     console.log(e)
   }
+}
+
+let clickDownload = ()=>{
+  let Downloader = downloader();
 }
 
 setList(defaultRadioVal);
