@@ -136,7 +136,7 @@ const data = [
 ];
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .web-header {
   display: flex;
   justify-content: space-between;
@@ -147,26 +147,27 @@ const data = [
 .web-table {
   display: flex;
   height: 0;
+
+  :deep(.ant-spin-nested-loading) {
+    display: flex;
+  }
+
+  :deep(.ant-spin-container) {
+    display: flex;
+  }
+
+  :deep(.ant-table) {
+    display: flex;
+  }
+
+  :deep( .ant-table-container) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  :deep(.ant-table-header) {
+    overflow: visible !important;
+  }
 }
 
-.web-table >>> .ant-spin-nested-loading {
-  display: flex;
-}
-
-.web-table >>> .ant-spin-container {
-  display: flex;
-}
-
-.web-table >>> .ant-table {
-  display: flex;
-}
-
-.web-table >>> .ant-table-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.web-table >>> .ant-table-header {
-  overflow: visible !important;
-}
 </style>

@@ -14,7 +14,7 @@ let clickUrl = async () => {
 }
 </script>
 
-<style scoped lang="less">
+<style scoped lang="scss">
 .notify {
   margin-left: 20px;
   font-size: 13px;

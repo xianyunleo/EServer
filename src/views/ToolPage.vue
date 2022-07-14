@@ -25,6 +25,7 @@
         </div>
       </a-col>
     </a-row>
+    <a-button type="primary" @click="testClick(singleSoftware)">启动</a-button>
   </div>
   <mysql-reset-pwd-modal ref="mysqlResetPwdModalRef"></mysql-reset-pwd-modal>
 </template>
@@ -35,10 +36,18 @@ import {message} from 'ant-design-vue';
 
 import {FileTextTwoTone,FolderOpenTwoTone} from "@ant-design/icons-vue";
 import MysqlResetPwdModal from "@/components/ToolPage/MysqlResetPwdModal"
-import {openHosts} from "@/main/hosts";
+//import {openHosts} from "@/main/hosts";
 import MessageBox from "@/main/MessageBox";
 import {getMysqlIconPath} from "@/main/software";
+//import {test} from "@/main/tools"
+import {useMainStore} from "@/store";
+import {storeToRefs} from "pinia/dist/pinia";
+import Downloader from "@/main/Downloader";
 
+
+let mainStore = useMainStore();
+// eslint-disable-next-line no-unused-vars
+const {singleSoftware} = storeToRefs(mainStore)
 
 const iconTypes = {
   dir: 'dir',
@@ -47,10 +56,36 @@ const iconTypes = {
   tool: 'tool',
 }
 
-let editHosts = async () => {
+let testClick=  (obj)=>{
+  obj.dl = new Downloader('https://dl-cdn.phpenv.cn/release/test.zip');
+  obj.dl.download(obj.dl);
+
+  setTimeout(() => {
+    console.log(obj.dl.getProcess().stderr)
+    console.log(obj.dl)
+    console.log(obj.dl.getProcess())
+  }, 3000)
+}
+
+let editHosts =  () => {
+  singleSoftware.dl = new Downloader('https://dl-cdn.phpenv.cn/release/test.zip');
+  singleSoftware.dl.download();
+
+  setTimeout(() => {
+    console.log(singleSoftware.dl.getProcess().stderr)
+    console.log(singleSoftware.dl)
+    console.log(singleSoftware.dl.getProcess())
+  }, 3000)
+
+
+
   message.info('打开中，请等待...');
+
   try {
-    await openHosts();
+
+
+
+    //await openHosts();
   } catch (error) {
     MessageBox.error(error.message, '打开VS Code失败！');
   }
@@ -85,7 +120,7 @@ let mysqlResetPwd = () => {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .tool-item {
   display: flex;
   align-items: center;
@@ -94,27 +129,26 @@ let mysqlResetPwd = () => {
   padding: 12px 0;
   color: #000000d9;
   cursor: pointer;
-}
-
-.tool-item:hover {
-  background: #fafafa;
+  &:hover {
+    background: #fafafa;
+  }
 }
 
 .tool-item-avatar {
   margin-left: 16px;
   margin-right: 16px;
   display: flex;
-}
 
-.tool-item-avatar > img {
-  width: 50px;
-  height: 50px;
-}
+  > img {
+    width: 50px;
+    height: 50px;
+  }
 
-.tool-item-avatar > span {
-  font-size:50px;
-  width: 50px;
-  height: 50px;
+  > span {
+    font-size: 50px;
+    width: 50px;
+    height: 50px;
+  }
 }
 
 .tool-item-content {

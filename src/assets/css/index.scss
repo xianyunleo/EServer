@@ -80,6 +80,18 @@ img,a{
     color: $font-color !important;
     background-color: #d3d3d5 !important;
     border-radius: $button-border-radius;
+    &:before {
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 3px;
+      bottom: 0;
+      width: 3px;
+      margin: 12px 0 12px 1px;
+      background: #0067c0;
+      border-radius: 10px;
+      content: '';
+    }
   }
 
   .ant-menu-item-active {
@@ -88,18 +100,6 @@ img,a{
     border-radius: $button-border-radius;
   }
 
-  .ant-menu-item-selected:before {
-    position: absolute;
-    display: block;
-    top: 0;
-    left: 3px;
-    bottom: 0;
-    width: 3px;
-    margin: 12px 0 12px 1px;
-    background: #0067c0;
-    border-radius: 10px;
-    content: '';
-  }
 }
 
 .content-container {
@@ -130,10 +130,10 @@ img,a{
     align-items: center;
     cursor: pointer;
     padding: 0 8px;
-  }
-  .icon-wrapper:hover{
-    background: #eee;
-    border-radius:$button-border-radius;
+    &:hover{
+      background: #eee;
+      border-radius:$button-border-radius;
+    }
   }
 }
 

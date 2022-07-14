@@ -116,7 +116,7 @@ let envChange = ()=>{
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .quick-card {
   margin-top: 10px;
 }
@@ -128,6 +128,11 @@ let envChange = ()=>{
 
 .log-card {
   margin-bottom: 10px;
+
+  :deep(.ant-card-body) {
+    height: 150px;
+    padding: 12px 24px;
+  }
 }
 
 .operate-td {
@@ -135,9 +140,6 @@ let envChange = ()=>{
   justify-content: space-evenly;
 }
 
-.log-card >>> .ant-card-body {
-  height: 150px;
-  padding: 12px 24px;
-}
+
 
 </style>

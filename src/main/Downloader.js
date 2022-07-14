@@ -7,10 +7,14 @@ export default class Downloader {
 
     constructor(url) {
         this.url = url;
-        this.completedLength = 0;
-        this.totalLength = 0;
+        this.completedSize = 0;
+        this.totalSize = 0;
         this.percent = 0;
         this.perSecond = '0KB';
+    }
+
+    getProcess(){
+        return  this.process;
     }
 
     download() {
@@ -19,35 +23,40 @@ export default class Downloader {
         let downloadsPath = path.join(corePath, 'downloads');
         let args = [this.url, '--check-certificate=false', `--dir=${downloadsPath}`];
 
-
         this.process = child_process.spawn(downloaderPath, args);
-        console.log('--pid--',process.pid)
-        const regx = /([\d.]+\w+)\/([\d.]+\w+)\((\d+)%\).+DL:([\d.]+\w+)/ ;
+        //     console.log('--pid--',process.pid);
+        const regx = /([\d.]+\w+)\/([\d.]+\w+)\((\d+)%\).+DL:([\d.]+\w+)/;
+        this.process2 = {};
+
         this.process.stdout.on('data', (data) => {
-            data= data.toString();
+            data = data.toString();
             console.log(data)
-            let matches =data.match(regx)
-            if(matches){
-                this.completedLength = matches[1];
-                this.totalLength = matches[2];
+            let matches = data.match(regx)
+            if (matches) {
+                this.completedSize = matches[1].replace('i', '');
+                this.totalSize = matches[2].replace('i', '');
                 this.percent = parseInt(matches[3]);
-                this.perSecond = matches[4];
+                this.perSecond = matches[4].replace('i', '');
             }
         });
+        //
+        setTimeout(() => {
+            this.process.kill();
+        }, 5000)
+        //
+        //     // process.stderr.on('data', (data) => {
+        //     //     console.error(`stderr: ${data}`);
+        //     // });
+        //
 
-        // process.stderr.on('data', (data) => {
-        //     console.error(`stderr: ${data}`);
-        // });
-
-        this.process.on('close', (code) => {
-            if (code !== 0) { // && code !== 1 //杀死进程
-                throw new Error(`下载失败，错误码 ${code}`);
-            }
+        this.process.on('exit', (code) => {
+            console.error(`下载失败，错误码2 ${code}`)
         });
+
     }
 
     exit() {
-        //this.process.kill()在Proxy下有问题
-        process.kill(this.process.pid,'SIGKILL')
+        this.process.kill()//在Proxy下有问题
+        // process.kill(this.process.pid,'SIGKILL')
     }
 }
