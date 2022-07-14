@@ -2,16 +2,20 @@ import {getCorePath} from "@/main/app";
 import child_process from "child_process";
 import path from "path";
 import is from "electron-is";
+import {DOWNLOAD_STATUS} from "@/main/constant";
 
 
 export default class Downloader {
+    url = '';
+    completedSize = 0;
+    totalSize = 0;
+    percent = 0;
+    perSecond = '0KB';
 
+    errMsg = '';
+    status = DOWNLOAD_STATUS.READY;
     constructor(url) {
         this.url = url;
-        this.completedSize = 0;
-        this.totalSize = 0;
-        this.percent = 0;
-        this.perSecond = '0KB';
     }
 
     async download() {
@@ -45,8 +49,11 @@ export default class Downloader {
             });
 
             self.process.on('close', (code) => {
-                if (code == null || code === 1) {
+                if (code == null || code === 1) { // code = 1，是被 process.kill(pid) 了
                     return;
+                }
+                if (code === 0) {
+                    self.completed = true;
                 }
                 reject(new Error(self.errMsg));
             });
@@ -54,7 +61,7 @@ export default class Downloader {
 
     }
 
-    exit() {
+    stop() {
         //this.process.kill()//在Proxy下有问题
         process.kill(this.process.pid, 'SIGKILL')
     }

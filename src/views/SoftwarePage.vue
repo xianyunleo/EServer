@@ -35,6 +35,7 @@
             <div class="soft-item-operate">
               <a-button type="primary" @click="clickDownload(item)">安装</a-button>
               <a-button type="primary" @click="clickStop(item)">停止</a-button>
+              <a-button type="primary" >完成</a-button>
             </div>
           </div>
           <div class="soft-item-progress" v-if="item.dl">
@@ -81,7 +82,7 @@ let clickDownload = async (item) => {
   }
 }
 let clickStop = (item) => {
-  item.dl.exit();
+  item.dl.stop();
   item.dl = null;
 }
 
