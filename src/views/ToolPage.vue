@@ -25,7 +25,6 @@
         </div>
       </a-col>
     </a-row>
-    <a-button type="primary" @click="testClick(singleSoftware)">启动</a-button>
   </div>
   <mysql-reset-pwd-modal ref="mysqlResetPwdModalRef"></mysql-reset-pwd-modal>
 </template>
@@ -36,18 +35,10 @@ import {message} from 'ant-design-vue';
 
 import {FileTextTwoTone,FolderOpenTwoTone} from "@ant-design/icons-vue";
 import MysqlResetPwdModal from "@/components/ToolPage/MysqlResetPwdModal"
-//import {openHosts} from "@/main/hosts";
+import {openHosts} from "@/main/hosts";
 import MessageBox from "@/main/MessageBox";
 import {getMysqlIconPath} from "@/main/software";
-//import {test} from "@/main/tools"
-import {useMainStore} from "@/store";
-import {storeToRefs} from "pinia/dist/pinia";
-import Downloader from "@/main/Downloader";
 
-
-let mainStore = useMainStore();
-// eslint-disable-next-line no-unused-vars
-const {singleSoftware} = storeToRefs(mainStore)
 
 const iconTypes = {
   dir: 'dir',
@@ -56,41 +47,14 @@ const iconTypes = {
   tool: 'tool',
 }
 
-let testClick=  (obj)=>{
-  obj.dl = new Downloader('https://dl-cdn.phpenv.cn/release/test.zip');
-  obj.dl.download(obj.dl);
-
-  setTimeout(() => {
-    console.log(obj.dl.getProcess().stderr)
-    console.log(obj.dl)
-    console.log(obj.dl.getProcess())
-  }, 3000)
-}
-
-let editHosts =  () => {
-  singleSoftware.dl = new Downloader('https://dl-cdn.phpenv.cn/release/test.zip');
-  singleSoftware.dl.download();
-
-  setTimeout(() => {
-    console.log(singleSoftware.dl.getProcess().stderr)
-    console.log(singleSoftware.dl)
-    console.log(singleSoftware.dl.getProcess())
-  }, 3000)
-
-
-
+let editHosts =  async () => {
   message.info('打开中，请等待...');
-
   try {
-
-
-
-    //await openHosts();
+    await openHosts();
   } catch (error) {
     MessageBox.error(error.message, '打开VS Code失败！');
   }
 };
-
 
 
 let mysqlResetPwdModalRef = ref(null);

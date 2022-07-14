@@ -1,7 +1,6 @@
 import Command from "@/main/Command";
 import {shell} from "@electron/remote"
 
-import Downloader from "@/main/Downloader";
 
 export async function openTextFile(filePath, isSudo = false) {
     let command = `code ${filePath}`;
@@ -21,10 +20,4 @@ export async function vscodeIsInstalled() {
 
 export async function openUrl(url) {
     return await shell.openExternal(url);
-}
-
-
-export  function test(){
-    let downloader = new Downloader('https://dl-cdn.phpenv.cn/release/test.zip')
-    downloader.download();
 }

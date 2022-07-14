@@ -13,5 +13,4 @@ app.use(router)
 app.use(pinia)
 app.use(Antd)
 app.mount('#app')
-console.log('process.versions.node', process.versions.node)
 

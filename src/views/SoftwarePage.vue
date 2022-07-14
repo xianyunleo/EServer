@@ -38,10 +38,10 @@
             </div>
           </div>
           <div class="soft-item-progress" v-if="item.dl">
-            <a-progress :percent="item.dl.percent" :show-info="false" status="active"/>
+            <a-progress :percent="item.dl?.percent" :show-info="false" status="active"/>
             <div class="progress-info">
-              <div>{{ item.dl.completedSize }}/{{ item.dl.totalSize }}</div>
-              <div>↓{{ item.dl.perSecond }}/S</div>
+              <div>{{ item.dl?.completedSize }}/{{ item.dl?.totalSize }}</div>
+              <div>↓{{ item.dl?.perSecond }}/S</div>
             </div>
           </div>
         </div>
@@ -56,6 +56,7 @@
 import Downloader from "@/main/Downloader";
 import {useMainStore} from '@/store'
 import {storeToRefs} from 'pinia'
+import MessageBox from "@/main/MessageBox";
 
 let mainStore = useMainStore();
 const {softwareList, softwareType} = storeToRefs(mainStore)
@@ -70,13 +71,18 @@ let setShowList = (type) => {
   }
 }
 
-let clickDownload = (item) => {
-  let dl = new Downloader(item.dlInfo);
-  dl.download('https://dl-cdn.phpenv.cn/release/test.zip');
-  console.log('dl2',item.dl)
+let clickDownload = async (item) => {
+  try {
+    item.dl = new Downloader('https://dl-cdn.phpenv.cn/release/test.zip');
+    await item.dl.download();
+  } catch (error) {
+    item.dl = null;
+    MessageBox.error(`下载失败，${error.message}`);
+  }
 }
 let clickStop = (item) => {
   item.dl.exit();
+  item.dl = null;
 }
 
 </script>
