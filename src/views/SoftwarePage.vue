@@ -33,12 +33,12 @@
             <div class="soft-item-title">{{ item.Name }}</div>
             <div class="soft-item-desc">{{ item.Desc }}</div>
             <div class="soft-item-operate">
-              <a-button type="primary" @click="clickDownload(item)">安装</a-button>
-              <a-button type="primary" @click="clickStop(item)">停止</a-button>
-              <a-button type="primary" >完成</a-button>
+              <a-button v-show='!item.dl' type="primary" @click="clickDownload(item)">安装</a-button>
+              <a-button v-show='item.dl' type="primary" @click="clickStop(item)">停止</a-button>
+<!--              <a-button type="primary" >完成</a-button>-->
             </div>
           </div>
-          <div class="soft-item-progress" v-if="item.dl">
+          <div class="soft-item-progress" v-show="item.dl">
             <a-progress :percent="item.dl?.percent" :show-info="false" status="active"/>
             <div class="progress-info">
               <div>{{ item.dl?.completedSize }}/{{ item.dl?.totalSize }}</div>
