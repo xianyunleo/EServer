@@ -30,7 +30,7 @@ module.exports ={
         },
         artifactName:'${productName}-${os}-${version}.${ext}',
         extraFiles: {
-          from: "./extra/win/",
+          from: "./extra/win32/",
           to: "./",
         },
       }

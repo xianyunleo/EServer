@@ -29,7 +29,7 @@ async function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
-      webSecurity:!isDevelopment,
+      webSecurity:false,
     }
   })
 
