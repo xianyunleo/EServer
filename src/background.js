@@ -25,6 +25,7 @@ async function createWindow() {
     resizable:true,
     titleBarStyle:'hiddenInset',
     frame: !(process.platform === 'win32'),
+    vibrancy:'window',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
