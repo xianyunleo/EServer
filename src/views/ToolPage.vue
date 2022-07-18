@@ -37,7 +37,7 @@ import {FileTextTwoTone,FolderOpenTwoTone} from "@ant-design/icons-vue";
 import MysqlResetPwdModal from "@/components/ToolPage/MysqlResetPwdModal"
 import {openHosts} from "@/main/hosts";
 import MessageBox from "@/main/MessageBox";
-import {getMysqlIconPath} from "@/main/software";
+import {getMysqlIconPath} from "@/main/tools";
 
 
 const iconTypes = {

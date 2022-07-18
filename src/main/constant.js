@@ -3,12 +3,13 @@ export const CORE_PATH_NAME = 'core'
 export const MAC_CORE_PATH_NAME = 'EasyEnv'
 export const SOFTWARE_DEFAULT_TYPE = 'Server'
 
-export const DOWNLOAD_STATUS = {
+export const SOFTWARE_INSTALL_STATUS = {
     READY:'ready',
     ACTIVE: 'active',
-    ERROR: 'error',
-    COMPLETED: 'completed',
-    STOPPED: 'stopped'
+    STOPPED: 'stopped',
+    DL_ERROR: 'dl_error',
+    DOWNLOADING:'downloading',
+    DOWNLOADED: 'downloaded',
 }
 
 export const hostsPathMap = {

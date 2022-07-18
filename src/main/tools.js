@@ -1,5 +1,7 @@
 import Command from "@/main/Command";
 import {shell} from "@electron/remote"
+import path from "path";
+import {getIconPath} from "@/main/software/software";
 
 
 export async function openTextFile(filePath, isSudo = false) {
@@ -20,4 +22,8 @@ export async function vscodeIsInstalled() {
 
 export async function openUrl(url) {
     return await shell.openExternal(url);
+}
+
+export function getMysqlIconPath() {
+    return path.join(getIconPath(),'mysql.png')
 }

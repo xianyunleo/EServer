@@ -33,16 +33,17 @@
             <div class="soft-item-title">{{ item.Name }}</div>
             <div class="soft-item-desc">{{ item.Desc }}</div>
             <div class="soft-item-operate">
-              <a-button v-show='!item.dl' type="primary" @click="clickDownload(item)">安装</a-button>
-              <a-button v-show='item.dl' type="primary" @click="clickStop(item)">停止</a-button>
+              <a-button v-show='item.installer' type="primary" @click="clickInstall(item)">安装</a-button>
+              <a-button v-show='item.installer' type="primary" @click="clickStop(item)">停止</a-button>
 <!--              <a-button type="primary" >完成</a-button>-->
             </div>
           </div>
-          <div class="soft-item-progress" v-show="item.dl">
-            <a-progress :percent="item.dl?.percent" :show-info="false" status="active"/>
+          <div class="soft-item-progress" v-show="item.installer.status === SOFTWARE_INSTALL_STATUS.DOWNLOADING">
+            <a-progress :percent="item.installer?.dlInfo?.percent" :show-info="false" status="active"/>
             <div class="progress-info">
-              <div>{{ item.dl?.completedSize }}/{{ item.dl?.totalSize }}</div>
-              <div>↓{{ item.dl?.perSecond }}/S</div>
+              <div>{{ item.installer?.dlInfo?.completedSize }}/{{ item.installer?.dlInfo?.totalSize }}</div>
+              <div class="progress-text">下载中</div>
+              <div>↓{{ item.installer?.dlInfo?.perSecond }}/S</div>
             </div>
           </div>
         </div>
@@ -53,15 +54,13 @@
 </template>
 
 <script setup>
-
-import Downloader from "@/main/Downloader";
 import {useMainStore} from '@/store'
 import {storeToRefs} from 'pinia'
 import MessageBox from "@/main/MessageBox";
+import {SOFTWARE_INSTALL_STATUS} from "@/main/constant";
 
 let mainStore = useMainStore();
 const {softwareList, softwareType} = storeToRefs(mainStore)
-
 
 let radioGroupChange = () => {
   setShowList(softwareType.value);
@@ -72,18 +71,15 @@ let setShowList = (type) => {
   }
 }
 
-let clickDownload = async (item) => {
+let clickInstall = async (item) => {
   try {
-    item.dl = new Downloader('https://dl-cdn.phpenv.cn/release/test.zip');
-    await item.dl.download();
+    await item.installer.install();
   } catch (error) {
-    item.dl = null;
-    MessageBox.error(`下载失败，${error.message}`);
+    MessageBox.error(error.message);
   }
 }
 let clickStop = (item) => {
-  item.dl.stop();
-  item.dl = null;
+  item.installer.stopDownload();
 }
 
 </script>
@@ -169,13 +165,16 @@ let clickStop = (item) => {
 }
 
 .soft-item-progress {
-  color: #9b9b9b;
+  color: #666;
   padding: 10px 10px 0 10px;
 
   .progress-info {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    .progress-text{
+
+    }
   }
 }
 
