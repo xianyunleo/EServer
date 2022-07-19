@@ -1,6 +1,5 @@
 import {defineStore} from 'pinia'
 import {getList} from "@/main/software/software";
-import Installer from "@/main/software/Installer";
 import {SOFTWARE_DEFAULT_TYPE} from "@/main/constant";
 
 export const useMainStore = defineStore('main', {
@@ -9,7 +8,7 @@ export const useMainStore = defineStore('main', {
         let softwareList = getList();
         for (const item of softwareList) {
             item.show = softwareType === item.Type;
-            item.installer = new Installer(item);
+            item.installInfo = {};
         }
         return {softwareList,softwareType}
     },

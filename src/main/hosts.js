@@ -1,15 +1,15 @@
-import {hostsPathMap} from "@/main/constant";
 import fs from "fs";
-import {openTextFile, vscodeIsInstalled} from "@/main/tools";
 import is from "electron-is";
+import {openTextFile, vscodeIsInstalled} from "@/main/tools";
 import Command from "@/main/Command";
+import {getHostsPath} from "@/main/path";
 
 
 export async function openHosts() {
     if (!await vscodeIsInstalled()) {
         throw new Error('vscode没有安装');
     }
-    let path = hostsPathMap[process.platform];
+    let path = getHostsPath();
 
     if (is.windows()) {
         return await openTextFile(path);
@@ -22,7 +22,7 @@ export async function openHosts() {
 }
 
 export async function canEditHosts() {
-    let path = hostsPathMap[process.platform];
+    let path = getHostsPath();
     try {
         await fs.promises.access(path, fs.constants.R_OK | fs.constants.W_OK);
         return true;
@@ -32,7 +32,7 @@ export async function canEditHosts() {
 }
 
 export async function getHostsContent() {
-    let path = hostsPathMap[process.platform];
+    let path = getHostsPath();
     const options = {
         encoding: 'utf8',
     }

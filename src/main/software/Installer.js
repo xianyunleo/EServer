@@ -1,22 +1,26 @@
 import fs from 'fs'
 import {getCorePath} from "@/main/app";
 import path from "path";
-import {SOFTWARE_INSTALL_STATUS} from "@/main/constant";
 import child_process from "child_process";
 import is from "electron-is";
+import {SoftwareInstallStatus} from "@/main/enum";
+import extract from "extract-zip";
+import {getTypePath} from "@/main/software/software";
+import {getDownloadsPath} from "@/main/path";
 
 
 export default class Installer {
-    dlInfo = {};
-    errMsg = '';
-    status = SOFTWARE_INSTALL_STATUS.READY;
+    softItem;
     constructor(softItem) {
         this.softItem = softItem;
+        this.softItem.status = SoftwareInstallStatus.Ready;
+        this.resetDownloadInfo();
+        this.downloadSignal =  this.softItem.downloadAbortController?.signal;
         this.softItem.url = 'https://dl-cdn.phpenv.cn/release/test.zip';
     }
 
     resetDownloadInfo(){
-        this.dlInfo = {
+        this.softItem.installInfo.dlInfo = {
             completedSize: 0,
             totalSize: 0,
             percent: 0,
@@ -24,45 +28,77 @@ export default class Installer {
         }
     }
 
-    async install(){
-        this.resetDownloadInfo();
-        try{
-            await this.download();
-        }catch (error) {
-            throw new Error(`下载失败，${error.message}`);
-        }
-        try{
-            await this.zipExtract();
-        }catch (error) {
-            throw new Error(`解压失败，${error.message}`);
+    setDownloadInfo(dlInfo) {
+        this.softItem.installInfo.dlInfo = {
+            completedSize: dlInfo.completedSize,
+            totalSize: dlInfo.totalSize,
+            percent: dlInfo.percent,
+            perSecond: dlInfo.perSecond,
         }
     }
 
+    async install(){
+        console.log( 'this.softItem',this.softItem)
+        this.resetDownloadInfo();
+        try{
+            this.changeStatus(SoftwareInstallStatus.Downloading);
+            await this.download();
+        }catch (error) {
+            this.changeStatus(SoftwareInstallStatus.DownloadError);
+            throw new Error(`下载失败，${error.message}`);
+        }
+
+        if (is.dev()) console.log('判断是否下载完成')
+
+        if(this.status !== SoftwareInstallStatus.Downloaded){
+            this.changeStatus(SoftwareInstallStatus.Abort);
+            return;
+        }
+
+        if (is.dev()) console.log('开始解压...')
+
+        try{
+            this.changeStatus(SoftwareInstallStatus.Extracting);
+            await this.zipExtract();
+            this.changeStatus(SoftwareInstallStatus.Extracted);
+        }catch (error) {
+            this.changeStatus(SoftwareInstallStatus.ExtractError);
+            throw new Error(`解压失败，${error.message}`);
+        }
+        this.changeStatus(SoftwareInstallStatus.Finish);
+    }
+
     async download() {
-        //类的this和Promise无法在Promise方法里调用？todo再检查
-        //let self = this;
-        this.status = SOFTWARE_INSTALL_STATUS.DOWNLOADING;
         return await new Promise((resolve, reject) => {
-            console.log('this',this.status)
             let corePath = getCorePath();
             let downloaderPath = path.join(corePath, 'aria2c');
             let downloadsPath = path.join(corePath, 'downloads');
             let args = [this.softItem.url, '--check-certificate=false', `--dir=${downloadsPath}`];
 
-            this.dlProcess = child_process.spawn(downloaderPath, args);
+            let dlProcess  = child_process.spawn(downloaderPath, args);
             const progressRegx = /([\d.]+\w+)\/([\d.]+\w+)\((\d+)%\).+DL:([\d.]+\w+)/;
             const errRegx = /errorCode=\d+.+/g;
-            this.dlProcess.stdout.on('data', (data) => {
+            // 触发abort
+            function abortDownload() {
+                dlProcess.kill();
+            }
+
+            if (this.downloadSignal) {
+                //当 abort() 被调用时，这个promise 不会 reject 一个名为 AbortError 的 DOMException
+                this.downloadSignal.addEventListener('abort', abortDownload)
+            }
+
+            dlProcess.stdout.on('data', (data) => {
                 data = data.toString();
-                if (is.dev()) {
-                    console.log(data)
-                }
+                if (is.dev())  console.log(data)
                 let matches = data.match(progressRegx)
                 if (matches) {
-                    this.dlInfo.completedSize = matches[1].replace('i', '');
-                    this.dlInfo.totalSize = matches[2].replace('i', '');
-                    this.dlInfo.percent = parseInt(matches[3]);
-                    this.dlInfo.perSecond = matches[4].replace('i', '');
+                    this.setDownloadInfo({
+                        completedSize: matches[1].replace('i', ''),
+                        totalSize: matches[2].replace('i', ''),
+                        percent: parseFloat(matches[3]),
+                        perSecond: matches[4].replace('i', ''),
+                    })
                 } else {
                     let errMatches = data.match(errRegx)
                     if (errMatches && errMatches.length > 0) {
@@ -71,28 +107,57 @@ export default class Installer {
                 }
             });
 
-            this.dlProcess.on('close', (code) => {
-                if (code == null || code === 1) { // code = 1，是被 process.kill(pid) 了
-                    return;
+            dlProcess.on('close', (code) => {
+                if (this.downloadSignal) {
+                    this.downloadSignal.removeEventListener('abort', abortDownload);
+                }
+                if (code == null) {
+                    this.changeStatus(SoftwareInstallStatus.Abort);
+                    return resolve(true);
                 }
                 if (code === 0) {
-                    this.status = SOFTWARE_INSTALL_STATUS.DOWNLOADED;
+                    this.changeStatus(SoftwareInstallStatus.Downloaded);
+                    return resolve(true);
                 }
                 reject(new Error(this.errMsg));
             });
+
         });
 
     }
 
-    async zipExtract(){
-        let softItem = this.softItem;
-        let filePath  = path.join(this.getDownloadsPath(), `${softItem.DirName}.zip`);
-        console.log(filePath)
+    changeStatus(status){
+        this.softItem.status = status;
     }
 
-    stopDownload() {
-        //this.dlProcess.kill()//在Proxy下有问题
-        process.kill(this.dlProcess.pid, 'SIGKILL')
+
+    async zipExtract() {
+        let softItem = this.softItem;
+        softItem.DirName = 'test';
+        let filePath = path.join(getDownloadsPath(), `HandyControl.git.zip`);
+        let typePath = getTypePath(softItem.Type)
+        console.log('filePath',filePath)
+        console.log('typePath',typePath)
+        return await extract(filePath, {dir: typePath});
+    }
+    
+
+
+    /**
+     *
+     * @param status SoftwareInstallStatus
+     */
+    getStatusText(status) {
+        switch (status) {
+            case SoftwareInstallStatus.Downloading:
+                return '下载中';
+            case SoftwareInstallStatus.Extracting:
+                return '解压中';
+            case SoftwareInstallStatus.Finish:
+                return '安装完成';
+            default:
+                return '';
+        }
     }
 
     static getList(type) {

@@ -1,6 +1,8 @@
 import {getCorePath} from "@/main/app";
 import path from "path";
 import fs from "fs";
+import {SoftwareType} from "@/main/enum";
+import {getPhpPath} from "@/main/path";
 
 export function getIconPath() {
     let corePath = getCorePath();
@@ -39,38 +41,29 @@ export function getList(type) {
 //     return false;
 // }
 
-//
-// function getItemPath(item)
-// {
-//     let typePath = GetTypePath(item.Type);
-//     return  typePath + item.DirName;
-// }
-//
-// /// 根据软件类型，获取对应的软件所在的目录
-// function GetTypePath( type)
-// {
-//     switch (type)
-//     {
-//         case PESoftwareClassEnum.Server:
-//             return PathConst.ServerPath;
-//
-//         case PESoftwareClassEnum.PHP:
-//             return PathConst.PhpDirPath;
-//
-//         case PESoftwareClassEnum.MySQL:
-//             return PathConst.MySQLPath;
-//
-//         case PESoftwareClassEnum.Tool:
-//             return PathConst.ToolPath;
-//     }
-//
-//     return String.Empty;
-// }
 
-export function getDownloadsPath(){
-    let corePath = getCorePath();
-    return path.join(corePath, 'downloads');
+//获取软件所在的目录
+// eslint-disable-next-line no-unused-vars
+export function getItemPath(item) {
+    let typePath = getTypePath(item.Type);
+    return path.join(typePath, item.DirName);
 }
+
+//根据软件类型，获取软件所在的类型目录
+export function getTypePath(type) {
+    type = SoftwareType[type];
+    console.log('SoftwareType',type)
+    switch (type) {
+        case SoftwareType.PHP:
+            return getPhpPath();
+        default:
+            return '';
+    }
+}
+
+
+
+
 
 
 

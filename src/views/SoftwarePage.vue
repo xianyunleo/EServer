@@ -33,17 +33,20 @@
             <div class="soft-item-title">{{ item.Name }}</div>
             <div class="soft-item-desc">{{ item.Desc }}</div>
             <div class="soft-item-operate">
-              <a-button v-show='item.installer' type="primary" @click="clickInstall(item)">安装</a-button>
-              <a-button v-show='item.installer' type="primary" @click="clickStop(item)">停止</a-button>
+              <a-button v-show='true' type="primary" @click="clickInstall(item)">安装</a-button>
+              <a-button v-show='true' type="primary" @click="clickStop(item)">停止</a-button>
 <!--              <a-button type="primary" >完成</a-button>-->
             </div>
           </div>
-          <div class="soft-item-progress" v-show="item.installer.status === SOFTWARE_INSTALL_STATUS.DOWNLOADING">
-            <a-progress :percent="item.installer?.dlInfo?.percent" :show-info="false" status="active"/>
+          <div class="soft-item-progress"
+               v-show="item.installInfo && item.installInfo?.status !== SoftwareInstallStatus.Ready
+               && item.installInfo?.status !== SoftwareInstallStatus.Finish"
+          >
+            <a-progress :percent="item.installInfo?.dlInfo?.percent" :show-info="false" status="active"/>
             <div class="progress-info">
-              <div>{{ item.installer?.dlInfo?.completedSize }}/{{ item.installer?.dlInfo?.totalSize }}</div>
-              <div class="progress-text">下载中</div>
-              <div>↓{{ item.installer?.dlInfo?.perSecond }}/S</div>
+              <div>{{ item.installInfo?.dlInfo?.completedSize }}/{{ item.installInfo?.dlInfo?.totalSize }}</div>
+              <div class="progress-text">{{ progressText}}</div>
+              <div>↓{{ item.installInfo?.dlInfo?.perSecond }}/S</div>
             </div>
           </div>
         </div>
@@ -54,12 +57,18 @@
 </template>
 
 <script setup>
+// eslint-disable-next-line no-unused-vars
+import {ref,computed} from 'vue';
 import {useMainStore} from '@/store'
 import {storeToRefs} from 'pinia'
 import MessageBox from "@/main/MessageBox";
-import {SOFTWARE_INSTALL_STATUS} from "@/main/constant";
+import {SoftwareInstallStatus} from "@/main/enum";
+import Installer from "@/main/software/Installer";
+
+SoftwareInstallStatus
 
 let mainStore = useMainStore();
+
 const {softwareList, softwareType} = storeToRefs(mainStore)
 
 let radioGroupChange = () => {
@@ -71,16 +80,24 @@ let setShowList = (type) => {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 let clickInstall = async (item) => {
   try {
-    await item.installer.install();
+    item.downloadAbortController = new AbortController();
+    let installer = new Installer(item);
+    await installer.install();
   } catch (error) {
     MessageBox.error(error.message);
   }
 }
 let clickStop = (item) => {
-  item.installer.stopDownload();
+  item.downloadAbortController.abort();
 }
+
+
+let progressText = computed(() => {
+  return "progressText";
+});
 
 </script>
 

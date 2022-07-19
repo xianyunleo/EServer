@@ -3,6 +3,7 @@ import path from "path";
 import {CORE_PATH_NAME,MAC_CORE_PATH_NAME} from "@/main/constant";
 import is from "electron-is";
 
+
 export function getAppPath(){
     return path.dirname(getExecutablePath());
 }
