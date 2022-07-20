@@ -33,8 +33,9 @@
             <div class="soft-item-title">{{ item.Name }}</div>
             <div class="soft-item-desc">{{ item.Desc }}</div>
             <div class="soft-item-operate">
-              <a-button v-show='true' type="primary" @click="clickInstall(item)">安装</a-button>
-              <a-button v-show='true' type="primary" @click="clickStop(item)">停止</a-button>
+              <a-button v-if='item.installInfo == null || item.showStatusErrorText'
+                        type="primary" @click="clickInstall(item)">安装</a-button>
+              <a-button v-else type="primary" @click="clickStop(item)">停止</a-button>
 <!--              <a-button type="primary" >完成</a-button>-->
             </div>
           </div>
@@ -45,10 +46,23 @@
           >
             <a-progress :percent="item.installInfo?.dlInfo?.percent" :show-info="false" status="active"/>
             <div class="progress-info">
-              <div>{{ item.installInfo?.dlInfo?.completedSize }}/{{ item.installInfo?.dlInfo?.totalSize }}</div>
-              <div class="status-text" v-show="!item.showStatusErrorText">{{item.statusText}}</div>
-              <div class="status-text-error" v-show="item.showStatusErrorText">{{ item.statusErrorText}}</div>
-              <div>↓{{ item.installInfo?.dlInfo?.perSecond }}/S</div>
+              <div class="progress-info-left">
+                <span v-show="item.installInfo?.status === SoftwareInstallStatus.Downloading">
+                  {{ item.installInfo?.dlInfo?.completedSize }}/</span>{{ item.installInfo?.dlInfo?.totalSize }}
+              </div>
+              <div class="status-text-error" v-show="item.showStatusErrorText">
+                <a-tooltip>
+                  <template #title>{{ item.statusErrorText}}</template>
+                  {{ item.statusErrorText}}
+                </a-tooltip>
+
+              </div>
+              <div class="progress-info-right">
+                <span v-if="item.installInfo?.status !== SoftwareInstallStatus.Downloading">{{item.statusText}}</span>
+                <span v-else>
+                  ↓{{ item.installInfo?.dlInfo?.perSecond }}/S
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -84,22 +98,33 @@ let setShowList = (type) => {
 
 // eslint-disable-next-line no-unused-vars
 let clickInstall = async (item) => {
+  //判断是否已经有安装任务
+  if (item.installInfo != null && !item.showStatusErrorText) {
+    return;
+  }
+  item.installInfo = {};
+  item.downloadAbortController = new AbortController();
+  item.showStatusErrorText = false;
+  item.statusText = computed(() => {
+    if (!item.installInfo) {
+      return '';
+    }
+    switch (item.installInfo.status) {
+      case SoftwareInstallStatus.Ready:
+        console.log('正在开始')
+        return '正在开始';
+      case SoftwareInstallStatus.Downloading:
+        return '下载中';
+      case SoftwareInstallStatus.Extracting:
+        return '解压中';
+      default:
+        return '';
+    }
+  });
   try {
-    item.downloadAbortController = new AbortController();
-    item.showStatusErrorText = false;
-    item.statusText = computed(() => {
-      switch (item.installInfo.status) {
-        case SoftwareInstallStatus.Downloading:
-          return '下载中';
-        case SoftwareInstallStatus.Extracting:
-          return '解压中';
-        default:
-          return '';
-      }
-    });
     let installer = new Installer(item);
     await installer.install();
-
+    item.installInfo = null;
   } catch (error) {
     item.statusErrorText = error.message;
     item.showStatusErrorText = true;
@@ -193,23 +218,36 @@ let clickStop = (item) => {
 
 .soft-item-progress {
   color: #666;
-  padding: 10px 10px 0 10px;
+  padding: 10px 20px 0 20px;
 
   .progress-info {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .status-text{
+    .progress-info-left{
+      margin-right: 20px;
+    }
+    .progress-info-right{
+      margin-left: 20px;
 
     }
+    .status-text{
+      flex: 1;
+      text-align: center;
+    }
     .status-text-error{
+      flex: 1;
       color: red;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }
 
 .soft-item-operate {
-  width: 150px;
+  width: 100px;
   text-align: center;
 }
 </style>

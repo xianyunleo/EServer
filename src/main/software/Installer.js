@@ -30,19 +30,23 @@ export default class Installer {
     }
 
     setDownloadInfo(dlInfo) {
-        this.softItem.installInfo.dlInfo = {
-            completedSize: dlInfo.completedSize,
-            totalSize: dlInfo.totalSize,
-            percent: dlInfo.percent,
-            perSecond: dlInfo.perSecond,
+        if(dlInfo.completedSize){
+            this.softItem.installInfo.dlInfo.completedSize = dlInfo.completedSize;
+        }
+        if(dlInfo.totalSize){
+            this.softItem.installInfo.dlInfo.totalSize = dlInfo.totalSize;
+        }
+        if(dlInfo.percent){
+            this.softItem.installInfo.dlInfo.percent = dlInfo.percent;
+        }
+        if(dlInfo.perSecond){
+            this.softItem.installInfo.dlInfo.perSecond = dlInfo.perSecond;
         }
     }
 
     async install(){
-        console.log( 'this.softItem',this.softItem)
         this.resetDownloadInfo();
         try{
-            this.changeStatus(SoftwareInstallStatus.Downloading);
             await this.download();
         }catch (error) {
             this.changeStatus(SoftwareInstallStatus.DownloadError);
@@ -51,7 +55,7 @@ export default class Installer {
 
         if (is.dev()) console.log('判断是否下载完成')
 
-        if(this.status !== SoftwareInstallStatus.Downloaded){
+        if(this.softItem.installInfo.status !== SoftwareInstallStatus.Downloaded){
             this.changeStatus(SoftwareInstallStatus.Abort);
             return;
         }
@@ -59,7 +63,6 @@ export default class Installer {
         if (is.dev()) console.log('开始解压...')
 
         try{
-            this.changeStatus(SoftwareInstallStatus.Extracting);
             await this.zipExtract();
             this.changeStatus(SoftwareInstallStatus.Extracted);
         }catch (error) {
@@ -74,9 +77,10 @@ export default class Installer {
             let corePath = getCorePath();
             let downloaderPath = path.join(corePath, 'aria2c');
             let downloadsPath = path.join(corePath, 'downloads');
-            let args = [this.softItem.url, '--check-certificate=false', `--dir=${downloadsPath}`];
+            let args = [this.softItem.url, '--check-certificate=false', '--allow-overwrite=true', `--dir=${downloadsPath}`];
 
             let dlProcess  = child_process.spawn(downloaderPath, args);
+            this.changeStatus(SoftwareInstallStatus.Downloading);
             const progressRegx = /([\d.]+\w+)\/([\d.]+\w+)\((\d+)%\).+DL:([\d.]+\w+)/;
             const errRegx = /errorCode=\d+.+/g;
             // 触发abort
@@ -118,8 +122,10 @@ export default class Installer {
                 }
                 if (code === 0) {
                     this.changeStatus(SoftwareInstallStatus.Downloaded);
+                    this.setDownloadInfo({percent:100})
                     return resolve(true);
                 }
+                console.log('errMsg',this.errMsg)
                 reject(new Error(this.errMsg));
             });
 
@@ -137,8 +143,7 @@ export default class Installer {
         softItem.DirName = 'test';
         let filePath = path.join(getDownloadsPath(), `HandyControl.git.zip`);
         let typePath = getTypePath(softItem.Type)
-        console.log('filePath',filePath)
-        console.log('typePath',typePath)
+        this.changeStatus(SoftwareInstallStatus.Extracting);
         return await extract(filePath, {dir: typePath});
     }
 
