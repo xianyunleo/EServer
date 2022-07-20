@@ -8,7 +8,6 @@ export const useMainStore = defineStore('main', {
         let softwareList = getList();
         for (const item of softwareList) {
             item.show = softwareType === item.Type;
-            item.installInfo = {};
         }
         return {softwareList,softwareType}
     },

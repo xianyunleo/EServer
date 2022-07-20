@@ -39,13 +39,15 @@
             </div>
           </div>
           <div class="soft-item-progress"
-               v-show="item.installInfo && item.installInfo?.status !== SoftwareInstallStatus.Ready
-               && item.installInfo?.status !== SoftwareInstallStatus.Finish"
+               v-show="item.installInfo && item.installInfo.status
+               && item.installInfo.status !== SoftwareInstallStatus.Ready
+               && item.installInfo.status !== SoftwareInstallStatus.Finish"
           >
             <a-progress :percent="item.installInfo?.dlInfo?.percent" :show-info="false" status="active"/>
             <div class="progress-info">
               <div>{{ item.installInfo?.dlInfo?.completedSize }}/{{ item.installInfo?.dlInfo?.totalSize }}</div>
-              <div class="progress-text">{{ progressText}}</div>
+              <div class="status-text" v-show="!item.showStatusErrorText">{{item.statusText}}</div>
+              <div class="status-text-error" v-show="item.showStatusErrorText">{{ item.statusErrorText}}</div>
               <div>↓{{ item.installInfo?.dlInfo?.perSecond }}/S</div>
             </div>
           </div>
@@ -61,7 +63,6 @@
 import {ref,computed} from 'vue';
 import {useMainStore} from '@/store'
 import {storeToRefs} from 'pinia'
-import MessageBox from "@/main/MessageBox";
 import {SoftwareInstallStatus} from "@/main/enum";
 import Installer from "@/main/software/Installer";
 
@@ -69,7 +70,8 @@ SoftwareInstallStatus
 
 let mainStore = useMainStore();
 
-const {softwareList, softwareType} = storeToRefs(mainStore)
+const {softwareList, softwareType} = storeToRefs(mainStore);
+
 
 let radioGroupChange = () => {
   setShowList(softwareType.value);
@@ -84,20 +86,28 @@ let setShowList = (type) => {
 let clickInstall = async (item) => {
   try {
     item.downloadAbortController = new AbortController();
+    item.showStatusErrorText = false;
+    item.statusText = computed(() => {
+      switch (item.installInfo.status) {
+        case SoftwareInstallStatus.Downloading:
+          return '下载中';
+        case SoftwareInstallStatus.Extracting:
+          return '解压中';
+        default:
+          return '';
+      }
+    });
     let installer = new Installer(item);
     await installer.install();
+
   } catch (error) {
-    MessageBox.error(error.message);
+    item.statusErrorText = error.message;
+    item.showStatusErrorText = true;
   }
 }
 let clickStop = (item) => {
   item.downloadAbortController.abort();
 }
-
-
-let progressText = computed(() => {
-  return "progressText";
-});
 
 </script>
 
@@ -189,8 +199,11 @@ let progressText = computed(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .progress-text{
+    .status-text{
 
+    }
+    .status-text-error{
+      color: red;
     }
   }
 }

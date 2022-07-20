@@ -13,7 +13,8 @@ export default class Installer {
     softItem;
     constructor(softItem) {
         this.softItem = softItem;
-        this.softItem.status = SoftwareInstallStatus.Ready;
+        this.softItem.installInfo = this.softItem.installInfo ? this.softItem.installInfo : {}
+        this.softItem.installInfo.status = SoftwareInstallStatus.Ready;
         this.resetDownloadInfo();
         this.downloadSignal =  this.softItem.downloadAbortController?.signal;
         this.softItem.url = 'https://dl-cdn.phpenv.cn/release/test.zip';
@@ -127,7 +128,7 @@ export default class Installer {
     }
 
     changeStatus(status){
-        this.softItem.status = status;
+        this.softItem.installInfo.status = status;
     }
 
 
@@ -140,7 +141,7 @@ export default class Installer {
         console.log('typePath',typePath)
         return await extract(filePath, {dir: typePath});
     }
-    
+
 
 
     /**
