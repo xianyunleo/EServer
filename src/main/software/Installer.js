@@ -1,4 +1,3 @@
-import fs from 'fs'
 import {getCorePath} from "@/main/app";
 import path from "path";
 import child_process from "child_process";
@@ -11,16 +10,17 @@ import {getDownloadsPath} from "@/main/path";
 
 export default class Installer {
     softItem;
+
     constructor(softItem) {
         this.softItem = softItem;
         this.softItem.installInfo = this.softItem.installInfo ? this.softItem.installInfo : {}
         this.softItem.installInfo.status = SoftwareInstallStatus.Ready;
         this.resetDownloadInfo();
-        this.downloadSignal =  this.softItem.downloadAbortController?.signal;
+        this.downloadSignal = this.softItem.downloadAbortController?.signal;
         this.softItem.url = 'https://dl-cdn.phpenv.cn/release/test.zip';
     }
 
-    resetDownloadInfo(){
+    resetDownloadInfo() {
         this.softItem.installInfo.dlInfo = {
             completedSize: 0,
             totalSize: 0,
@@ -30,44 +30,46 @@ export default class Installer {
     }
 
     setDownloadInfo(dlInfo) {
-        if(dlInfo.completedSize){
+        if (dlInfo.completedSize) {
             this.softItem.installInfo.dlInfo.completedSize = dlInfo.completedSize;
         }
-        if(dlInfo.totalSize){
+        if (dlInfo.totalSize) {
             this.softItem.installInfo.dlInfo.totalSize = dlInfo.totalSize;
         }
-        if(dlInfo.percent){
+        if (dlInfo.percent) {
             this.softItem.installInfo.dlInfo.percent = dlInfo.percent;
         }
-        if(dlInfo.perSecond){
+        if (dlInfo.perSecond) {
             this.softItem.installInfo.dlInfo.perSecond = dlInfo.perSecond;
         }
     }
 
-    async install(){
+    async install() {
         this.resetDownloadInfo();
-        try{
+        try {
             await this.download();
-        }catch (error) {
+        } catch (error) {
             this.changeStatus(SoftwareInstallStatus.DownloadError);
-            throw new Error(`下载失败，${error.message}`);
+            let errMsg = error.message ? error.message : '未知错误';
+            throw new Error(`下载失败，${errMsg}`);
         }
 
         if (is.dev()) console.log('判断是否下载完成')
 
-        if(this.softItem.installInfo.status !== SoftwareInstallStatus.Downloaded){
+        if (this.softItem.installInfo.status !== SoftwareInstallStatus.Downloaded) {
             this.changeStatus(SoftwareInstallStatus.Abort);
             return;
         }
 
         if (is.dev()) console.log('开始解压...')
 
-        try{
+        try {
             await this.zipExtract();
             this.changeStatus(SoftwareInstallStatus.Extracted);
-        }catch (error) {
+        } catch (error) {
             this.changeStatus(SoftwareInstallStatus.ExtractError);
-            throw new Error(`解压失败，${error.message}`);
+            let errMsg = error.message ? error.message : '未知错误';
+            throw new Error(`解压失败，${errMsg}`);
         }
         this.changeStatus(SoftwareInstallStatus.Finish);
     }
@@ -79,10 +81,11 @@ export default class Installer {
             let downloadsPath = path.join(corePath, 'downloads');
             let args = [this.softItem.url, '--check-certificate=false', '--allow-overwrite=true', `--dir=${downloadsPath}`];
 
-            let dlProcess  = child_process.spawn(downloaderPath, args);
+            let dlProcess = child_process.spawn(downloaderPath, args);
             this.changeStatus(SoftwareInstallStatus.Downloading);
             const progressRegx = /([\d.]+\w+)\/([\d.]+\w+)\((\d+)%\).+DL:([\d.]+\w+)/;
             const errRegx = /errorCode=\d+.+/g;
+
             // 触发abort
             function abortDownload() {
                 dlProcess.kill();
@@ -95,7 +98,7 @@ export default class Installer {
 
             dlProcess.stdout.on('data', (data) => {
                 data = data.toString();
-                if (is.dev())  console.log(data)
+                if (is.dev()) console.log(data)
                 let matches = data.match(progressRegx)
                 if (matches) {
                     this.setDownloadInfo({
@@ -122,10 +125,10 @@ export default class Installer {
                 }
                 if (code === 0) {
                     this.changeStatus(SoftwareInstallStatus.Downloaded);
-                    this.setDownloadInfo({percent:100})
+                    this.setDownloadInfo({percent: 100})
                     return resolve(true);
                 }
-                console.log('errMsg',this.errMsg)
+                console.log('errMsg', this.errMsg)
                 reject(new Error(this.errMsg));
             });
 
@@ -133,10 +136,9 @@ export default class Installer {
 
     }
 
-    changeStatus(status){
+    changeStatus(status) {
         this.softItem.installInfo.status = status;
     }
-
 
     async zipExtract() {
         let softItem = this.softItem;
@@ -146,45 +148,5 @@ export default class Installer {
         this.changeStatus(SoftwareInstallStatus.Extracting);
         return await extract(filePath, {dir: typePath});
     }
-
-
-
-    /**
-     *
-     * @param status SoftwareInstallStatus
-     */
-    getStatusText(status) {
-        switch (status) {
-            case SoftwareInstallStatus.Downloading:
-                return '下载中';
-            case SoftwareInstallStatus.Extracting:
-                return '解压中';
-            case SoftwareInstallStatus.Finish:
-                return '安装完成';
-            default:
-                return '';
-        }
-    }
-
-    static getList(type) {
-        let corePath = getCorePath();
-        let softPath = path.join(corePath, '/config/software');
-        let softConfigPath = path.join(softPath, 'software.json');
-        let softIconPath = path.join(softPath, '/icon');
-        let json = fs.readFileSync(softConfigPath);
-        let list = JSON.parse(json);
-
-        let newList =  [];
-        for (const item of list) {
-            if (type && type !== item.Type) {
-                continue;
-            }
-            let newItem = item;
-            newItem.Icon = path.join(softIconPath, item.Icon);
-            newList.push(newItem);
-        }
-        return newList;
-    }
-
 
 }

@@ -33,34 +33,34 @@
             <div class="soft-item-title">{{ item.Name }}</div>
             <div class="soft-item-desc">{{ item.Desc }}</div>
             <div class="soft-item-operate">
-              <a-button v-if='item.installInfo == null || item.showStatusErrorText'
-                        type="primary" @click="clickInstall(item)">安装</a-button>
-              <a-button v-else type="primary" @click="clickStop(item)">停止</a-button>
-<!--              <a-button type="primary" >完成</a-button>-->
+              <a-button v-if="item.installInfo != null && !item.showStatusErrorText"
+                        type="primary" @click="clickStop(item)">停止
+              </a-button>
+              <a-button v-else type="primary" @click="clickInstall(item)">安装</a-button>
+
+              <!--              <a-button type="primary" >完成</a-button>-->
             </div>
           </div>
-          <div class="soft-item-progress"
-               v-show="item.installInfo && item.installInfo.status
-               && item.installInfo.status !== SoftwareInstallStatus.Ready
-               && item.installInfo.status !== SoftwareInstallStatus.Finish"
-          >
+          <div class="soft-item-progress" v-show="item.installInfo">
             <a-progress :percent="item.installInfo?.dlInfo?.percent" :show-info="false" status="active"/>
             <div class="progress-info">
               <div class="progress-info-left">
                 <span v-show="item.installInfo?.status === SoftwareInstallStatus.Downloading">
-                  {{ item.installInfo?.dlInfo?.completedSize }}/</span>{{ item.installInfo?.dlInfo?.totalSize }}
+                  {{ item.installInfo?.dlInfo?.completedSize }}/{{ item.installInfo?.dlInfo?.totalSize }}
+                </span>
               </div>
               <div class="status-text-error" v-show="item.showStatusErrorText">
                 <a-tooltip>
-                  <template #title>{{ item.statusErrorText}}</template>
-                  {{ item.statusErrorText}}
+                  <template #title>{{ item.statusErrorText }}</template>
+                  {{ item.statusErrorText }}
                 </a-tooltip>
-
               </div>
               <div class="progress-info-right">
-                <span v-if="item.installInfo?.status !== SoftwareInstallStatus.Downloading">{{item.statusText}}</span>
-                <span v-else>
+                <span v-if="item.installInfo?.status === SoftwareInstallStatus.Downloading">
                   ↓{{ item.installInfo?.dlInfo?.perSecond }}/S
+                </span>
+                <span v-else>
+                  {{ item.statusText }}
                 </span>
               </div>
             </div>
@@ -73,8 +73,7 @@
 </template>
 
 <script setup>
-// eslint-disable-next-line no-unused-vars
-import {ref,computed} from 'vue';
+import {computed} from 'vue';
 import {useMainStore} from '@/store'
 import {storeToRefs} from 'pinia'
 import {SoftwareInstallStatus} from "@/main/enum";
@@ -96,9 +95,8 @@ let setShowList = (type) => {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
 let clickInstall = async (item) => {
-  //判断是否已经有安装任务
+  //判断是否已经有安装信息，并且没有错误
   if (item.installInfo != null && !item.showStatusErrorText) {
     return;
   }
@@ -126,6 +124,7 @@ let clickInstall = async (item) => {
     await installer.install();
     item.installInfo = null;
   } catch (error) {
+    //catch 不item.installInfo = null，因为installInfo有信息要显示
     item.statusErrorText = error.message;
     item.showStatusErrorText = true;
   }
@@ -224,18 +223,22 @@ let clickStop = (item) => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .progress-info-left{
+
+    .progress-info-left {
       margin-right: 20px;
     }
-    .progress-info-right{
+
+    .progress-info-right {
       margin-left: 20px;
 
     }
-    .status-text{
+
+    .status-text {
       flex: 1;
       text-align: center;
     }
-    .status-text-error{
+
+    .status-text-error {
       flex: 1;
       color: red;
       text-align: center;
