@@ -1,11 +1,18 @@
 /* global __static */
 import path from "path";
+import {app} from '@electron/remote'
 import {CORE_PATH_NAME,MAC_CORE_PATH_NAME} from "@/main/constant";
 import is from "electron-is";
 
 
 export function getAppPath(){
-    return path.dirname(getExecutablePath());
+    if(is.windows()){
+        return path.dirname(getExecutablePath());
+    }else{
+        //mac返回xxx.app所在的路径
+        return path.join(app.getAppPath(),'../../../../')
+    }
+
 }
 
 export function getExecutablePath(){
@@ -20,9 +27,9 @@ export function getCorePath() {
             result = path.join(getPlatformPath(), CORE_PATH_NAME)
         }
     } else if (is.macOS()) {
-        result = path.join(getAppPath(), `../${MAC_CORE_PATH_NAME}`)
+        result = path.join(getAppPath(), MAC_CORE_PATH_NAME)
         if (is.dev()) {
-            result = path.join(getPlatformPath(), MAC_CORE_PATH_NAME)
+            result = path.join(__static,`../${MAC_CORE_PATH_NAME}`);
         }
     }
     return result
