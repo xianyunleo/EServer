@@ -9,8 +9,8 @@ export function getAppPath(){
     if(is.windows()){
         return path.dirname(getExecutablePath());
     }else{
-        //mac返回xxx.app所在的路径
-        return path.join(app.getAppPath(),'../../../../')
+        //mac返回xxx.app/Contents/所在的路径
+        return path.join(app.getAppPath(),'../../')
     }
 
 }
@@ -29,7 +29,7 @@ export function getCorePath() {
     } else if (is.macOS()) {
         result = path.join(getAppPath(), MAC_CORE_PATH_NAME)
         if (is.dev()) {
-            result = path.join(__static,`../${MAC_CORE_PATH_NAME}`);
+            result = path.join(getPlatformPath(), CORE_PATH_NAME)
         }
     }
     return result

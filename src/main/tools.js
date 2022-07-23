@@ -25,5 +25,5 @@ export async function openUrl(url) {
 }
 
 export function getMysqlIconPath() {
-    return path.join(getIconPath(),'mysql.png')
+    return 'file://'+path.join(getIconPath(),'mysql.png')
 }
