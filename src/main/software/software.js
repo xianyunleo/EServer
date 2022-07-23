@@ -14,7 +14,7 @@ export function getList(type) {
     let corePath = getCorePath();
     let softPath = path.join(corePath, '/config/software');
     let softConfigPath = path.join(softPath, 'software.json');
-    let softIconPath = path.join(softPath, '/icon');
+    let softIconPath = 'file://'+path.join(softPath, '/icon');
     let json = fs.readFileSync(softConfigPath);
     let list = JSON.parse(json);
 
