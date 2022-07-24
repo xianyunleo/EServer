@@ -22,11 +22,6 @@
             <a-switch @click="serviceChange" />
           </div>
         </template>
-        <template v-if="column.dataIndex === 'env'">
-          <div>
-            <a-switch @click="envChange"  />
-          </div>
-        </template>
         <template v-if="column.dataIndex === 'operate'">
           <div class="operate-td">
             <a-button type="primary">启动</a-button>
@@ -78,12 +73,7 @@ const columns = [
     dataIndex: 'service',
     width: 100,
     align: 'center',
-  }, {
-    title: '环境变量',
-    dataIndex: 'env',
-    width: 100,
-    align: 'center',
-  }, {
+  },{
     title: '操作',
     dataIndex: 'operate',
     width: 250,
@@ -111,9 +101,6 @@ let serviceChange = ()=>{
   message.info('下个版本开放！！！');
 }
 
-let envChange = ()=>{
-  message.info('下个版本开放！！！');
-}
 </script>
 
 <style scoped lang="scss">
