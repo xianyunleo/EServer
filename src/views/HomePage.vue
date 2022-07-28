@@ -4,7 +4,7 @@
       <div class="quick-card-content">
         <a-button type="primary">一键启动</a-button>
         <a-button type="primary">命令行终端</a-button>
-        <a-button type="primary">数据库管理</a-button>
+        <a-button type="primary" @click="corePathClick">核心目录</a-button>
         <a-button type="primary">网站目录</a-button>
       </div>
     </a-card>
@@ -58,6 +58,7 @@
 //import {ref} from "vue";
 import {DownOutlined, RightSquareFilled} from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
+import {openCorePath} from '@/main/tools'
 const columns = [
   {
     title: '服务名',
@@ -100,6 +101,11 @@ const data = [
 let serviceChange = ()=>{
   message.info('下个版本开放！！！');
 }
+
+let corePathClick = ()=>{
+  openCorePath()
+}
+
 
 </script>
 

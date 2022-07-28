@@ -2,6 +2,7 @@ import Command from "@/main/Command";
 import {shell} from "@electron/remote"
 import path from "path";
 import {getIconPath} from "@/main/software/software";
+import {getCorePath} from "@/main/app";
 
 
 export async function openTextFile(filePath, isSudo = false) {
@@ -11,6 +12,10 @@ export async function openTextFile(filePath, isSudo = false) {
     } else {
         return await Command.exec(command);
     }
+}
+
+export function openCorePath() {
+    shell.showItemInFolder(getCorePath());
 }
 
 export async function vscodeIsInstalled() {

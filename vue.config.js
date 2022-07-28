@@ -15,10 +15,6 @@ module.exports ={
               target: "zip",
               arch: ["x64"]
             },
-            {
-              target: "pkg",
-              arch: ["x64"]
-            },
           ],
           extraFiles: {
             from: "./extra/darwin/",
