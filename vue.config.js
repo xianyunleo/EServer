@@ -28,10 +28,6 @@ module.exports ={
               target: "zip",
               arch: ["x64"]
             },
-            {
-              target: "portable",
-              arch: ["x64"]
-            }
           ],
           extraFiles: {
             from: "./extra/win32/",

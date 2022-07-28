@@ -6,8 +6,10 @@ import {getHostsPath} from "@/main/path";
 import fixPath from 'fix-path';
 
 export async function openHosts() {
-    //mac下修复环境变量不识别的问题
-    fixPath();
+    if(is.macOS()){
+        //mac下修复环境变量不识别的问题
+        fixPath();
+    }
     if (!await vscodeIsInstalled()) {
         throw new Error('vscode没有安装');
     }
