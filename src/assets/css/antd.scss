@@ -86,3 +86,7 @@
 .ant-message-notice-content{
   border-radius: $container-border-radius;;
 }
+
+.ant-spin-nested-loading > div > .ant-spin{
+  max-height: none;
+}

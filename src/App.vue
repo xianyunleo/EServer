@@ -1,27 +1,44 @@
 <template>
-  <a-row style="height: 100%;">
-    <a-col :span="4" style="height: 100%;">
-      <SideBar />
-    </a-col>
-    <a-col :span="20" style="display: flex;flex-direction: column;height: 100%">
-      <TitleBar />
-      <router-view />
-    </a-col>
-  </a-row>
+  <a-spin :spinning="spinning"  tip="初始化中..." size="large" style="height: 100vh;">
+    <a-row>
+      <a-col :span="4" style="height: 100vh;">
+        <SideBar />
+      </a-col>
+      <a-col :span="20" style="display: flex;flex-direction: column;height: 100vh">
+        <TitleBar />
+        <router-view />
+      </a-col>
+    </a-row>
+  </a-spin>
 </template>
 
-<script>
-
+<script setup>
 import SideBar from "@/components/SideBar";
 import TitleBar from "@/components/TitleBar";
-export default {
-  name: 'App',
-  components: {
-    TitleBar,
-    SideBar,
+import {init, initFileExists} from "@/main/app";
+import {ref} from "vue";
+import MessageBox from "@/main/MessageBox";
 
+let spinning = ref(false);
+
+let initApp = async () => {
+  if(!await initFileExists()){
+    return;
   }
+
+  spinning.value = true;
+  try {
+    await init();
+  } catch (e) {
+    MessageBox.error(e.message);
+  }
+  spinning.value = false;
 }
+
+initApp();
+
+
+
 </script>
 
 <style>

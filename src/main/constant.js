@@ -1,4 +1,6 @@
 export const APP_NAME = 'EasyEnv'
 export const CORE_PATH_NAME = 'core'
 export const MAC_CORE_PATH_NAME = 'Core'
+export const MAC_USER_CORE_PATH = '/Applications/EasyEnv/'
+export const INIT_FILE_NAME = 'init.txt'
 export const SOFTWARE_DEFAULT_TYPE = 'Server'
