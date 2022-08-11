@@ -5,62 +5,15 @@
         "Type": "Server",
         "CanDelete": "False",
         "Icon": "nginx.png",
-        "Desc": "Web服务器",
-        "Url": ""
-    },
-    {
-        "Name": "PHP-7.2",
-        "DirName": "php-7.2",
-        "Type": "PHP",
-        "CanDelete": "True",
-        "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言",
-        "Url": ""
+        "Desc": "Web服务器"
     },
     {
         "Name": "MySQL-5.7",
         "DirName": "mysql-5.7",
-        "Type": "DataBase",
+        "Type": "Server",
         "CanDelete": "True",
         "Icon": "mysql.png",
-        "Desc": "MySQL是一种关系数据库",
-        "Url": ""
-    },
-    {
-        "Name": "PHP-5.6",
-        "DirName": "php-5.6",
-        "Type": "PHP",
-        "CanDelete": "True",
-        "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言",
-        "Url": ""
-    },
-	{
-        "Name": "PHP-7.0",
-        "DirName": "php-7.0",
-        "Type": "PHP",
-        "CanDelete": "True",
-        "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言",
-        "Url": ""
-    },
-	{
-        "Name": "PHP-7.1",
-        "DirName": "php-7.1",
-        "Type": "PHP",
-        "CanDelete": "True",
-        "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言",
-        "Url": ""
-    },
-	{
-        "Name": "PHP-7.3",
-        "DirName": "php-7.3",
-        "Type": "PHP",
-        "CanDelete": "True",
-        "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言",
-        "Url": ""
+        "Desc": "MySQL是一种关系数据库"
     },
 	{
         "Name": "PHP-7.4",
@@ -68,53 +21,7 @@
         "Type": "PHP",
         "CanDelete": "True",
         "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言",
-        "Url": ""
-    },
-	{
-        "Name": "PHP-8.0",
-        "DirName": "php-8.0",
-        "Type": "PHP",
-        "CanDelete": "True",
-        "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言",
-        "Url": ""
-    },
-    {
-        "Name": "PHP-8.1",
-        "DirName": "php-8.1",
-        "Type": "PHP",
-        "CanDelete": "True",
-        "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言",
-        "Url": ""
-    },
-    {
-        "Name": "MySQL-5.5",
-        "DirName": "mysql-5.5",
-        "Type": "MySQL",
-        "CanDelete": "True",
-        "Icon": "mysql.png",
-        "Desc": "MySQL是一种关系数据库",
-        "Url": ""
-    },
-	{
-        "Name": "MySQL-5.6",
-        "DirName": "mysql-5.6",
-        "Type": "MySQL",
-        "CanDelete": "True",
-        "Icon": "mysql.png",
-        "Desc": "MySQL是一种关系数据库",
-        "Url": ""
-    },
-	{
-        "Name": "MySQL-8.0",
-        "DirName": "mysql-8.0",
-        "Type": "MySQL",
-        "CanDelete": "True",
-        "Icon": "mysql.png",
-        "Desc": "MySQL是一种关系数据库",
-        "Url": ""
+        "Desc": "PHP是世界上最好的编程语言"
     },
     {
         "Name": "Redis",
@@ -124,7 +31,6 @@
         "Type": "Server",
         "CanDelete": "True",
         "Icon": "redis.png",
-        "Desc": "一款高性能的Key-Value数据库",
-        "Url": ""
+        "Desc": "一款高性能的Key-Value数据库"
     }
 ]

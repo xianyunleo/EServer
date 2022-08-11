@@ -1,4 +1,4 @@
-import {getCorePath} from "@/main/app";
+import {getUserCorePath} from "@/main/app";
 import path from "path";
 import child_process from "child_process";
 import is from "electron-is";
@@ -76,7 +76,7 @@ export default class Installer {
 
     async download() {
         return await new Promise((resolve, reject) => {
-            let corePath = getCorePath();
+            let corePath = getUserCorePath();
             let downloaderPath = path.join(corePath, 'aria2c');
             let downloadsPath = path.join(corePath, 'downloads');
             let args = [this.softItem.url, '--check-certificate=false', '--allow-overwrite=true', `--dir=${downloadsPath}`];

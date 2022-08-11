@@ -1,17 +1,17 @@
-import {getCorePath} from "@/main/app";
+import {getUserCorePath} from "@/main/app";
 import path from "path";
 import fs from "fs";
 import {SoftwareType} from "@/main/enum";
 import {getPhpPath} from "@/main/path";
 
 export function getIconPath() {
-    let corePath = getCorePath();
+    let corePath = getUserCorePath();
     let softPath = path.join(corePath, '/config/software');
     return path.join(softPath, '/icon');
 }
 
 export function getList(type) {
-    let corePath = getCorePath();
+    let corePath = getUserCorePath();
     let softPath = path.join(corePath, '/config/software');
     let softConfigPath = path.join(softPath, 'software.json');
     let softIconPath = 'file://'+path.join(softPath, '/icon');

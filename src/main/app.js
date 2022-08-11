@@ -1,9 +1,9 @@
 /* global __static */
 import path from "path";
 import {app} from '@electron/remote'
-import {CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
+import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
 import is from "electron-is";
-import {fileExists, linuxFileCopy} from "@/main/utils";
+import {fileExists, linuxFileMove} from "@/main/utils";
 import fs from "fs";
 
 
@@ -21,24 +21,26 @@ export function getExecutablePath(){
     return process.execPath;
 }
 
-export function getCorePath() {
+export function getUserCorePath() {
     let result = '';
     if (is.windows()) {
-        result = path.join(getAppPath(), CORE_PATH_NAME)
         if (is.dev()) {
-            result = path.join(getPlatformPath(), CORE_PATH_NAME)
+            result = path.join(getPlatformPath(), WIN_CORE_PATH_NAME)
+        }else {
+            result = path.join(getAppPath(), WIN_CORE_PATH_NAME)
         }
     } else if (is.macOS()) {
-        result = path.join(getAppPath(), MAC_CORE_PATH_NAME)
         if (is.dev()) {
-            result = path.join(getPlatformPath(), CORE_PATH_NAME)
+            result = path.join(getPlatformPath(), MAC_CORE_PATH_NAME)
+        }else{
+            result = path.join(getAppPath(), MAC_CORE_PATH_NAME)
         }
     }
     return result
 }
 
 export function getInitFilePath(){
-    return  path.join(getCorePath(), INIT_FILE_NAME);
+    return  path.join(getUserCorePath(), INIT_FILE_NAME);
 }
 
 export function getPlatformPath(){
@@ -55,16 +57,31 @@ export async function init() {
     if (!await fileExists(initFile)) {
         return;
     }
-    if(is.macOS()){
-        let corePath = getCorePath();
-        let userCorePath = MAC_USER_CORE_PATH;
-        if(!await fileExists(userCorePath)){
-            await fs.promises.mkdir(userCorePath);
+    if(is.macOS() && is.production()){
+        if(!await fileExists(MAC_USER_CORE_PATH)){
+            await fs.promises.mkdir(MAC_USER_CORE_PATH);
+            await moveCoreSubDir(['software','tmp','www']);
+            await createCoreSubDir(['downloads']);
         }
-        await linuxFileCopy(path.join(corePath,'downloads'),path.join(userCorePath,'downloads'));
-        await linuxFileCopy(path.join(corePath,'software'),path.join(userCorePath,'software'));
     }
     await fs.promises.unlink(initFile);
 }
 
+/**
+ * 将App包内的Core子目录移动到用户Core目录
+ * @param dirs
+ * @returns {Promise<void>}
+ */
+export async function moveCoreSubDir(dirs) {
+    let corePath = getUserCorePath();
+    for (const dir of dirs) {
+        await linuxFileMove(path.join(corePath,dir),path.join(MAC_USER_CORE_PATH,dir));
+    }
+}
+
+export async function createCoreSubDir(dirs) {
+    for (const dir of dirs) {
+        await fs.promises.mkdir(path.join(MAC_USER_CORE_PATH,dir));
+    }
+}
 

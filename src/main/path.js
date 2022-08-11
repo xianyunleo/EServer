@@ -1,9 +1,21 @@
 import path from "path";
-import {getCorePath} from "@/main/app";
+import {getUserCorePath} from "@/main/app";
 import is from "electron-is";
 
+export function getSoftwarePath(){
+    return path.join(getUserCorePath(), 'software');
+}
+
+export function getNginxPath(){
+    return path.join(getSoftwarePath(), 'nginx');
+}
+
+export function getNginxVhostsPath(){
+    return path.join(getNginxPath(), 'vhosts');
+}
+
 export function getPhpPath(){
-    return path.join(getCorePath(), `bin/php`);
+    return path.join(getSoftwarePath(), 'php');
 }
 
 export function getHostsPath() {
@@ -14,8 +26,7 @@ export function getHostsPath() {
     }
 }
 
-
 export function getDownloadsPath(){
-    let corePath = getCorePath();
+    let corePath = getUserCorePath();
     return path.join(corePath, 'downloads');
 }

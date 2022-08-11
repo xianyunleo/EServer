@@ -11,9 +11,6 @@ module.exports ={
             {
               target: 'dmg',
               arch:['x64'],
-            },      {
-              target: "zip",
-              arch: ["x64"]
             },
           ],
           extraFiles: {
@@ -35,7 +32,7 @@ module.exports ={
           },
           icon: 'build/icons/icon.ico',
         },
-        artifactName:'${productName}-${os}-${version}.${ext}',
+        artifactName:'${productName}-${version}-${arch}.${ext}',
 
       }
     }

@@ -3,9 +3,9 @@
     <div class="category">
       <a-radio-group v-model:value="softwareType" button-style="solid" @change="radioGroupChange">
         <a-radio-button value="Server">服务</a-radio-button>
-        <a-radio-button value="DataBase">数据库</a-radio-button>
         <a-radio-button value="PHP">PHP</a-radio-button>
         <a-radio-button value="Tool">工具</a-radio-button>
+        <a-radio-button value="installed">已安装</a-radio-button>
       </a-radio-group>
     </div>
 
@@ -87,8 +87,13 @@ const {softwareList, softwareType} = storeToRefs(mainStore);
 
 
 let radioGroupChange = () => {
-  setShowList(softwareType.value);
+  if (softwareType.value === 'installed') {
+    console.log(softwareType.value)
+  } else {
+    setShowList(softwareType.value);
+  }
 }
+
 let setShowList = (type) => {
   for (const item of softwareList.value) {
     item.show = type === item.Type;
