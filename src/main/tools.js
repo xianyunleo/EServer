@@ -14,8 +14,12 @@ export async function openTextFile(filePath, isSudo = false) {
     }
 }
 
+export function openPath(path) {
+    shell.openPath(path);
+}
+
 export function openCorePath() {
-    shell.openPath(getUserCorePath());
+    openPath(getUserCorePath());
 }
 
 export async function vscodeIsInstalled() {

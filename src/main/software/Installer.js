@@ -5,7 +5,7 @@ import is from "electron-is";
 import {SoftwareInstallStatus} from "@/main/enum";
 import extract from "extract-zip";
 import {getTypePath} from "@/main/software/software";
-import {getDownloadsPath} from "@/main/path";
+import {getDownloadsPath} from "@/main/getPath";
 
 
 export default class Installer {

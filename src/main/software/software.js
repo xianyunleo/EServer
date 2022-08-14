@@ -2,7 +2,7 @@ import {getUserCorePath} from "@/main/app";
 import path from "path";
 import fs from "fs";
 import {SoftwareType} from "@/main/enum";
-import {getPhpPath} from "@/main/path";
+import {getPHPPath} from "@/main/getPath";
 
 export function getIconPath() {
     let corePath = getUserCorePath();
@@ -55,7 +55,7 @@ export function getTypePath(type) {
     console.log('SoftwareType',type)
     switch (type) {
         case SoftwareType.PHP:
-            return getPhpPath();
+            return getPHPPath();
         default:
             return '';
     }

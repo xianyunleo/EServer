@@ -86,7 +86,7 @@ let mainStore = useMainStore();
 const {softwareList, softwareType} = storeToRefs(mainStore);
 
 
-let radioGroupChange = () => {
+const radioGroupChange = () => {
   if (softwareType.value === 'installed') {
     console.log(softwareType.value)
   } else {
@@ -94,13 +94,13 @@ let radioGroupChange = () => {
   }
 }
 
-let setShowList = (type) => {
+const setShowList = (type) => {
   for (const item of softwareList.value) {
     item.show = type === item.Type;
   }
 }
 
-let clickInstall = async (item) => {
+const clickInstall = async (item) => {
   //判断是否已经有安装信息，并且没有错误
   if (item.installInfo != null && !item.showStatusErrorText) {
     return;
@@ -134,7 +134,7 @@ let clickInstall = async (item) => {
     item.showStatusErrorText = true;
   }
 }
-let clickStop = (item) => {
+const clickStop = (item) => {
   item.downloadAbortController.abort();
 }
 

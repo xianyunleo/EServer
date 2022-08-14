@@ -2,7 +2,7 @@ import fs from "fs";
 import is from "electron-is";
 import {openTextFile, vscodeIsInstalled} from "@/main/tools";
 import Command from "@/main/Command";
-import {getHostsPath} from "@/main/path";
+import {getHostsPath} from "@/main/getPath";
 import fixPath from 'fix-path';
 
 export async function openHosts() {

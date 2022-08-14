@@ -7,7 +7,7 @@
 
     <a-table :scroll="{y: true}"
              :columns="columns"
-             :data-source="data"
+             :data-source="list"
              class="content-table web-table scroller"
              :pagination="false"
              size="middle">
@@ -19,10 +19,10 @@
                 <a-menu>
                   <a-menu-item key="1" @click="showEditWeb">修改</a-menu-item>
                   <a-menu-item key="2">删除{{ text }}</a-menu-item>
-                  <a-menu-item key="3">浏览器访问{{ record }}</a-menu-item>
-                  <a-menu-item key="4">打开根目录{{ column }}</a-menu-item>
-                  <a-menu-item key="5">打开配置文件</a-menu-item>
-                  <a-menu-item key="6">打开命令行终端</a-menu-item>
+                  <a-menu-item @click="browse(record)">浏览器访问</a-menu-item>
+                  <a-menu-item @click="openRootPath(record)">打开根目录{{ column }}</a-menu-item>
+                  <a-menu-item @click="openConfFile(record)">打开配置文件</a-menu-item>
+<!--                  <a-menu-item >打开命令行终端</a-menu-item>-->
                 </a-menu>
               </template>
               <a-button>管理
@@ -34,7 +34,7 @@
       </template>
     </a-table>
   </div>
-  <add-web-site-modal ref="addWebSiteModalRef"/>
+  <add-web-site-modal ref="addWebSiteModalRef" :searchWeb="searchWeb"/>
   <edit-web-site-modal ref="editWebSiteModalRef"/>
 </template>
 
@@ -44,20 +44,23 @@ import {DownOutlined} from '@ant-design/icons-vue';
 import InputWithSearch from "@/components/InputWithSearch";
 import AddWebSiteModal from "@/components/WebSite/AddWebSiteModal";
 import EditWebSiteModal from "@/components/WebSite/EditWebSiteModal";
+import Website from "@/main/Website";
+import {openPath, openTextFile, openUrl} from "@/main/tools";
 
 const columns = [
   {
     title: '网站域名',
-    width: 100,
+    width: 160,
     dataIndex: 'serverName',
+    ellipsis: true,
   }, {
     title: '根目录',
     dataIndex: 'path',
-    width: 120,
+    ellipsis: true,
   }, {
     title: 'PHP版本',
     dataIndex: 'phpVersion',
-    width: 50,
+    width: 80,
     align: 'center',
   }, {
     title: '操作',
@@ -70,70 +73,37 @@ const columns = [
 const addWebSiteModalRef = ref(null);
 const editWebSiteModalRef = ref(null);
 
+let list=ref([]);
 
-let showAddWeb = () => {
+const searchWeb = async (val) => {
+  list.value  = await Website.getList(val);
+}
+
+(async () => {
+  await searchWeb();
+})();
+
+
+const showAddWeb = () => {
   addWebSiteModalRef.value.visible = true;
 };
 
-let showEditWeb = () => {
+const showEditWeb = () => {
   editWebSiteModalRef.value.visible = true;
 }
-let searchWeb = (val) => {
-  console.log(val)
+
+const browse = async (item) => {
+  await openUrl(`http://${item.serverName}`);
+}
+
+const openConfFile = async (item) => {
+  await openTextFile(item.confPath);
+}
+const openRootPath = async (item) => {
+  await openPath(item.path);
 }
 
 
-const data = [
-  {
-    serverName: 'www.a.com',
-  },
-  {
-    serverName: 'www.b.com',
-  },
-  {
-    serverName: 'www.c.com',
-  }, {
-    serverName: 'www.a.com',
-  },
-  {
-    serverName: 'www.b.com',
-  },
-  {
-    serverName: 'www.c.com',
-  }, {
-    serverName: 'www.a.com',
-  },
-  {
-    serverName: 'www.b.com',
-  },
-  {
-    serverName: 'www.c.com',
-  }, {
-    serverName: 'www.a.com',
-  },
-  {
-    serverName: 'www.b.com',
-  },
-  {
-    serverName: 'www.c.com',
-  }, {
-    serverName: 'www.a.com',
-  },
-  {
-    serverName: 'www.b.com',
-  },
-  {
-    serverName: 'www.c.com',
-  }, {
-    serverName: 'www.a.com',
-  },
-  {
-    serverName: 'www.b.com',
-  },
-  {
-    serverName: 'www.c.com',
-  },
-];
 </script>
 
 <style scoped lang="scss">

@@ -18,9 +18,9 @@ initialize();
 async function createWindow() {
   // Create the browser window.
    win = new BrowserWindow({
-    width: 850,
+    width: 880,
     height: 650,
-    minWidth: 850,
+    minWidth: 880,
     minHeight: 650,
     resizable:true,
     titleBarStyle:'hiddenInset',

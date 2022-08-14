@@ -6,16 +6,28 @@ export function getSoftwarePath(){
     return path.join(getUserCorePath(), 'software');
 }
 
+export function getServerPath(){
+    return path.join(getSoftwarePath(), 'server');
+}
+
 export function getNginxPath(){
-    return path.join(getSoftwarePath(), 'nginx');
+    return path.join(getServerPath(), 'nginx');
+}
+
+export function getNginxConfPath(){
+    return path.join(getNginxPath(), 'conf');
 }
 
 export function getNginxVhostsPath(){
-    return path.join(getNginxPath(), 'vhosts');
+    return path.join(getNginxConfPath(), 'vhosts');
 }
 
-export function getPhpPath(){
+export function getPHPPath(){
     return path.join(getSoftwarePath(), 'php');
+}
+
+export function getWWWPath(){
+    return path.join(getUserCorePath(), 'www');
 }
 
 export function getHostsPath() {

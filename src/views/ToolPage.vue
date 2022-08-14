@@ -47,7 +47,7 @@ const iconTypes = {
   tool: 'tool',
 }
 
-let editHosts =  async () => {
+const editHosts =  async () => {
   message.info('打开中，请等待...');
   try {
     await openHosts();
@@ -59,7 +59,7 @@ let editHosts =  async () => {
 
 let mysqlResetPwdModalRef = ref(null);
 
-let mysqlResetPwd = () => {
+const mysqlResetPwd = () => {
   mysqlResetPwdModalRef.value.visible = true;
 }
 
