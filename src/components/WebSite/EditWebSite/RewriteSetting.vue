@@ -14,7 +14,7 @@
       </a-select>
     </a-form-item>
     <a-form-item label="">
-      <a-textarea v-model:value="rewriteContent" :autosize="{ minRows: 6, maxRows: 10}" />
+      <a-textarea v-model:value="formData.urlRewrite" :autosize="{ minRows: 8, maxRows: 16}" />
     </a-form-item>
   </a-form>
 
@@ -24,7 +24,14 @@
 </template>
 
 <script setup>
-import {ref}  from "vue";
+import {ref,defineProps,toRef}  from "vue";
+
+//import Website from "@/main/Website";
+
+const props = defineProps({
+  confInfo: {type: Object, required: true},
+})
+let formData = toRef(props,'urlRewrite');
 
 let rewriteOptions = ref([
   {
@@ -35,9 +42,9 @@ let rewriteOptions = ref([
     label: 'Lucy',
   },
 ])
-let rewriteContent = ref();
+
 let rewriteChange = (val)=>{
-  rewriteContent.value = val;
+  formData.value.urlRewrite = val;
 }
 </script>
 

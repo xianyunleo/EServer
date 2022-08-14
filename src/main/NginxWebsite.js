@@ -1,33 +1,56 @@
 import fs from "fs";
-import path from "path";
-import {getNginxVhostsPath} from "@/main/getPath";
+import Nginx from "@/main/Nginx";
+import {STATIC_WEB_NAME} from "@/main/constant";
+
 export default class NginxWebsite {
     confText;
     serverName;
+
     constructor(serverName) {
-       this.serverName = serverName;
+        this.serverName = serverName;
     }
+
     async init() {
-        let filepath = this.getConfPath();
-        this.confText = await fs.promises.readFile(filepath,{encoding:'utf8'});
+        let confPath = Nginx.getWebsiteConfPath(this.serverName);
+        this.confText = await fs.promises.readFile(confPath, {encoding: 'utf8'});
     }
 
-    getConfPath(){
-        return path.join(getNginxVhostsPath(), `${this.serverName}.conf`);
+    getConf(){
+        return {
+            ...this.getBasicConf(),
+            urlRewrite:this.getUrlRewrite() ?? '',
+        }
     }
 
-     getPort() {
+    getBasicConf(){
+        return {
+            serverName: this.serverName,
+            port: this.getPort(),
+            path: this.getPath(),
+            phpVersion:this.getPHPVersion() ?? STATIC_WEB_NAME,
+        }
+    }
+
+    getPort() {
         let matches = this.confText.match(/listen\s+(\d+)\s*;/)
         return matches ? matches[1] : null;
     }
 
-     getPath() {
+    getPath() {
         let matches = this.confText.match(/root\s+(\S+)\s*;/)
         return matches ? matches[1] : null;
     }
 
-     getPHPVersion() {
+    getPHPVersion() {
         let matches = this.confText.match(/php-(\S+?)\.conf/)
         return matches ? matches[1] : null;
+    }
+
+    getUrlRewrite(){
+        let matches= this.confText.match(/(?<=#REWRITE_START)[\s\S]+?(?=#REWRITE_END)/);
+        if(matches){
+            return  matches[0].trim();
+        }
+        return '';
     }
 }

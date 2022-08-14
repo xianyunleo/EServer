@@ -6,7 +6,7 @@ import {getHostsPath} from "@/main/getPath";
 import fixPath from 'fix-path';
 
 export async function openHosts() {
-    if(is.macOS()){
+    if (is.macOS()) {
         //mac下修复环境变量不识别的问题
         fixPath();
     }

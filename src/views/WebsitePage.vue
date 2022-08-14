@@ -17,12 +17,12 @@
             <a-dropdown :trigger="['click']">
               <template #overlay>
                 <a-menu>
-                  <a-menu-item key="1" @click="showEditWeb">修改</a-menu-item>
-                  <a-menu-item key="2">删除{{ text }}</a-menu-item>
+                  <a-menu-item @click="showEditWeb(record)">修改</a-menu-item>
+                  <a-menu-item @click="del(record)">删除{{ text }}</a-menu-item>
                   <a-menu-item @click="browse(record)">浏览器访问</a-menu-item>
                   <a-menu-item @click="openRootPath(record)">打开根目录{{ column }}</a-menu-item>
                   <a-menu-item @click="openConfFile(record)">打开配置文件</a-menu-item>
-<!--                  <a-menu-item >打开命令行终端</a-menu-item>-->
+                  <!--                  <a-menu-item >打开命令行终端</a-menu-item>-->
                 </a-menu>
               </template>
               <a-button>管理
@@ -34,8 +34,8 @@
       </template>
     </a-table>
   </div>
-  <add-web-site-modal ref="addWebSiteModalRef" :searchWeb="searchWeb"/>
-  <edit-web-site-modal ref="editWebSiteModalRef"/>
+  <add-web-site-modal ref="addWebSiteModalRef" @searchWeb="searchWeb" />
+  <edit-web-site-modal ref="editWebSiteModalRef" :serverName="serverName"/>
 </template>
 
 <script setup>
@@ -70,26 +70,31 @@ const columns = [
   }
 ];
 
-const addWebSiteModalRef = ref(null);
-const editWebSiteModalRef = ref(null);
+let addWebSiteModalRef = ref(null);
+let editWebSiteModalRef = ref(null);
 
-let list=ref([]);
-
+let list = ref([]);
+let serverName = ref('');
 const searchWeb = async (val) => {
-  list.value  = await Website.getList(val);
+  list.value = await Website.getList(val);
 }
 
 (async () => {
   await searchWeb();
 })();
 
+const del = async (item) => {
+  await Website.delete(item.serverName);
+  await searchWeb();
+}
 
 const showAddWeb = () => {
   addWebSiteModalRef.value.visible = true;
 };
 
-const showEditWeb = () => {
+const showEditWeb = (item) => {
   editWebSiteModalRef.value.visible = true;
+  serverName.value = item.serverName;
 }
 
 const browse = async (item) => {
@@ -97,7 +102,7 @@ const browse = async (item) => {
 }
 
 const openConfFile = async (item) => {
-  await openTextFile(item.confPath);
+  await openTextFile(Website.getConfPath(item.serverName));
 }
 const openRootPath = async (item) => {
   await openPath(item.path);
