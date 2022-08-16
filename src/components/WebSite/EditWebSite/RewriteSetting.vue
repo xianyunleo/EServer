@@ -19,32 +19,42 @@
   </a-form>
 
   <div style="text-align: center">
-    <a-button type="primary">保存</a-button>
+    <a-button type="primary" @click="save">保存</a-button>
   </div>
 </template>
 
 <script setup>
-import {ref,defineProps,toRef}  from "vue";
+import {ref,defineProps,toRef,inject}  from "vue";
+import Website from "@/main/Website";
+import MessageBox from "@/main/MessageBox";
+import {message} from "ant-design-vue";
 
 //import Website from "@/main/Website";
+const serverName = inject('serverName');
 
 const props = defineProps({
   confInfo: {type: Object, required: true},
 })
-let formData = toRef(props,'urlRewrite');
+let formData = toRef(props,'confInfo');
 
 let rewriteOptions = ref([
   {
-    value: 'jack',
-    label: 'Jack',
-  }, {
-    value: 'lucy',
-    label: 'Lucy',
-  },
+    value: '测试规则',
+    label: '##',
+  }
 ])
 
-let rewriteChange = (val)=>{
+const rewriteChange = (val)=>{
   formData.value.urlRewrite = val;
+}
+
+const save = async () => {
+  try {
+    await Website.saveRewrite(formData.value.serverName, formData.value.urlRewrite);
+    message.info('保存成功');
+  }catch (error){
+    MessageBox.error(`保存失败，${error.message}`)
+  }
 }
 </script>
 

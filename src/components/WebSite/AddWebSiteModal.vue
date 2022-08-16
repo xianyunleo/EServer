@@ -23,8 +23,8 @@
           <a-input-number v-model:value="formData.port" min="80" max="65535"/>
         </a-form-item>
 
-        <a-form-item label="根目录" name="path" :rules="[{ required: true, message: '请选择根目录!' }]">
-          <input-open-dir-dialog v-model:value="formData.path" ></input-open-dir-dialog>
+        <a-form-item label="根目录" name="rootPath" :rules="[{ required: true, message: '请选择根目录!' }]">
+          <input-open-dir-dialog v-model:value="formData.rootPath" ></input-open-dir-dialog>
         </a-form-item>
 
         <a-form-item label="PHP版本" name="phpVersion">
@@ -39,16 +39,16 @@
 
 <script setup>
 // eslint-disable-next-line no-unused-vars
-import {defineExpose, ref, reactive, toRef,defineProps,computed,watch,defineEmits} from "vue";
+import {defineExpose, ref, reactive, toRef,defineProps,computed,watch,defineEmits,inject} from "vue";
 import InputOpenDirDialog from "@/components/InputOpenDirDialog";
 import path from "path";
 import Website from "@/main/Website";
 import {getWWWPath} from "@/main/getPath";
 import MessageBox from "@/main/MessageBox";
 
-const emit = defineEmits(['searchWeb'])
+const searchWeb = inject('searchWeb');
 
-let visible = ref(false)
+let visible = ref(false);
 
 let wwwPath = getWWWPath();
 const formRef = ref();
@@ -56,7 +56,7 @@ const formRef = ref();
 let formData = reactive({
   serverName: '',
   port: 80,
-  path: wwwPath,
+  rootPath: wwwPath,
   phpVersion: '',
 });
 
@@ -71,7 +71,7 @@ let phpVersionList = ref([]);
 
 
 const serverNameChange = () => {
-  formData.path = path.join(wwwPath, formData.serverName);
+  formData.rootPath = path.join(wwwPath, formData.serverName);
 }
 
 const addWebClick = async () => {
@@ -80,15 +80,15 @@ const addWebClick = async () => {
     visible.value = false;
     formRef.value.resetFields();
     await addWeb(values);
-    emit('searchWeb');
+    searchWeb();
   } catch (errorInfo) {
     console.log('Failed:', errorInfo);
   }
 };
 
-const addWeb = async (webServerInfo) => {
+const addWeb = async (websiteInfo) => {
   try {
-    await Website.add(webServerInfo);
+    await Website.add(websiteInfo);
   } catch (error) {
     MessageBox.error(error.message);
   }

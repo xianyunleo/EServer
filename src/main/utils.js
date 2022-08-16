@@ -18,7 +18,6 @@ export function getFilNameWithoutExt(filename) {
 
 export async function dirGetFiles(dirPath, search = null) {
     let files = await fs.promises.readdir(dirPath, {withFileTypes: true});
-    console.log('files', files)
     return files.filter((item) => {
         if (item.name.charAt(0) === '.' || item.isDirectory()) {
             return false;

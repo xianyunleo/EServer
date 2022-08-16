@@ -29,8 +29,7 @@ const val = computed({
 })
 
 let selectPath = () => {
-  let path = openDirectoryDialog();
-  console.log('path',path)
+  let path = openDirectoryDialog(val.value);
   if (path) {
     val.value = path;
   }

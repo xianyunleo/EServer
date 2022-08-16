@@ -34,12 +34,12 @@
       </template>
     </a-table>
   </div>
-  <add-web-site-modal ref="addWebSiteModalRef" @searchWeb="searchWeb" />
+  <add-web-site-modal ref="addWebSiteModalRef" />
   <edit-web-site-modal ref="editWebSiteModalRef" :serverName="serverName"/>
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref,provide} from "vue";
 import {DownOutlined} from '@ant-design/icons-vue';
 import InputWithSearch from "@/components/InputWithSearch";
 import AddWebSiteModal from "@/components/WebSite/AddWebSiteModal";
@@ -55,7 +55,7 @@ const columns = [
     ellipsis: true,
   }, {
     title: '根目录',
-    dataIndex: 'path',
+    dataIndex: 'rootPath',
     ellipsis: true,
   }, {
     title: 'PHP版本',
@@ -70,14 +70,18 @@ const columns = [
   }
 ];
 
-let addWebSiteModalRef = ref(null);
-let editWebSiteModalRef = ref(null);
-
 let list = ref([]);
 let serverName = ref('');
+
 const searchWeb = async (val) => {
   list.value = await Website.getList(val);
 }
+
+provide('searchWeb' , searchWeb);
+provide('serverName' , serverName);
+
+let addWebSiteModalRef = ref(null);
+let editWebSiteModalRef = ref(null);
 
 (async () => {
   await searchWeb();

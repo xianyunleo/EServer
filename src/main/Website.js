@@ -6,18 +6,18 @@ import Nginx from "@/main/Nginx";
 import NginxWebsite from "@/main/NginxWebsite";
 
 export default class Website {
-    static async add(webServerInfo) {
-        if (await Nginx.websiteIsExist(webServerInfo.serverName)) {
+    static async add(websiteInfo) {
+        if (await Nginx.websiteIsExist(websiteInfo.serverName)) {
             throw new Error('添加失败，网站已经存在！');
         }
-        if (!await fileExists(webServerInfo.path)) {
+        if (!await fileExists(websiteInfo.rootPath)) {
             try {
-                !await fs.promises.mkdir(webServerInfo.path)
+                !await fs.promises.mkdir(websiteInfo.rootPath)
             } catch {
                 throw new Error('添加失败，创建根目录失败！');
             }
         }
-        await Nginx.addWebsite(webServerInfo);
+        await Nginx.addWebsite(websiteInfo);
     }
 
     static async delete(serverName) {
@@ -28,10 +28,16 @@ export default class Website {
         return await Nginx.getWebsiteList(search);
     }
 
-    static async getConf(serverName) {
+    static async getBasicInfo(serverName) {
         let webSite = new NginxWebsite(serverName);
         await webSite.init();
-        return webSite.getConf();
+        return webSite.getBasicInfo();
+    }
+
+    static async getRewrite(serverName) {
+        let webSite = new NginxWebsite(serverName);
+        await webSite.init();
+        return webSite.getRewrite();
     }
 
     static getConfPath(serverName) {
@@ -51,4 +57,15 @@ export default class Website {
         return res;
     }
 
+    static async saveBasicInfo(serverName, websiteInfo) {
+        let webSite = new NginxWebsite(serverName);
+        await webSite.init();
+        return webSite.saveBasicInfo(websiteInfo);
+    }
+
+    static async saveRewrite(serverName, content) {
+        let webSite = new NginxWebsite(serverName);
+        await webSite.init();
+        return webSite.saveUrlRewrite(content);
+    }
 }
