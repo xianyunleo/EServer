@@ -39,36 +39,32 @@
 
 <script setup>
 // eslint-disable-next-line no-unused-vars
-import {defineExpose, ref, reactive, toRef,defineProps,computed,watch,defineEmits,inject} from "vue";
+import {ref, reactive, inject} from "vue";
 import InputOpenDirDialog from "@/components/InputOpenDirDialog";
 import path from "path";
 import Website from "@/main/Website";
 import {getWWWPath} from "@/main/getPath";
 import MessageBox from "@/main/MessageBox";
 
-const searchWeb = inject('searchWeb');
+const {search, addModalVisible: visible} = inject('website');
 
-let visible = ref(false);
-
-let wwwPath = getWWWPath();
+const wwwPath = getWWWPath();
 const formRef = ref();
 
-let formData = reactive({
+const formData = reactive({
   serverName: '',
   port: 80,
   rootPath: wwwPath,
   phpVersion: '',
 });
 
-let phpVersionList = ref([]);
+const phpVersionList = ref([]);
 (async () => {
   let list = await Website.getPHPVersionList();
   phpVersionList.value = list.map(item => {
     return {value: item.version, label: item.name};
   });
 })();
-
-
 
 const serverNameChange = () => {
   formData.rootPath = path.join(wwwPath, formData.serverName);
@@ -80,9 +76,9 @@ const addWebClick = async () => {
     visible.value = false;
     formRef.value.resetFields();
     await addWeb(values);
-    searchWeb();
+    search();
   } catch (errorInfo) {
-    console.log('Failed:', errorInfo);
+    console.log('Validate Failed:', errorInfo);
   }
 };
 
@@ -93,7 +89,6 @@ const addWeb = async (websiteInfo) => {
     MessageBox.error(error.message);
   }
 }
-defineExpose({visible});
 </script>
 
 <style scoped>

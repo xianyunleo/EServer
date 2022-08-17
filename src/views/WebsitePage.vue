@@ -1,8 +1,8 @@
 <template>
   <div class="content-container">
     <div class="web-header piece">
-      <a-button type="primary" @click="showAddWeb">添加网站</a-button>
-      <input-with-search placeholder="请输入域名" style="width: 200px" @search="searchWeb"/>
+      <a-button type="primary" @click="showAdd">添加网站</a-button>
+      <input-with-search placeholder="请输入域名" style="width: 200px" @search="search"/>
     </div>
 
     <a-table :scroll="{y: true}"
@@ -17,11 +17,12 @@
             <a-dropdown :trigger="['click']">
               <template #overlay>
                 <a-menu>
-                  <a-menu-item @click="showEditWeb(record)">修改</a-menu-item>
+                  <a-menu-item @click="showEdit(record)">修改</a-menu-item>
                   <a-menu-item @click="del(record)">删除{{ text }}</a-menu-item>
                   <a-menu-item @click="browse(record)">浏览器访问</a-menu-item>
                   <a-menu-item @click="openRootPath(record)">打开根目录{{ column }}</a-menu-item>
                   <a-menu-item @click="openConfFile(record)">打开配置文件</a-menu-item>
+                  <a-menu-item @click="openRewriteConfFile(record)">打开URL重写配置文件</a-menu-item>
                   <!--                  <a-menu-item >打开命令行终端</a-menu-item>-->
                 </a-menu>
               </template>
@@ -34,8 +35,8 @@
       </template>
     </a-table>
   </div>
-  <add-web-site-modal ref="addWebSiteModalRef" />
-  <edit-web-site-modal ref="editWebSiteModalRef" :serverName="serverName"/>
+  <add-web-site-modal  />
+  <edit-web-site-modal v-if="editModalVisible" /> <!--加v-if是为了后代组件重新加载，从而更新网站配置信息-->
 </template>
 
 <script setup>
@@ -46,6 +47,7 @@ import AddWebSiteModal from "@/components/WebSite/AddWebSiteModal";
 import EditWebSiteModal from "@/components/WebSite/EditWebSiteModal";
 import Website from "@/main/Website";
 import {openPath, openTextFile, openUrl} from "@/main/tools";
+
 
 const columns = [
   {
@@ -70,34 +72,37 @@ const columns = [
   }
 ];
 
-let list = ref([]);
-let serverName = ref('');
+const list = ref([]);
+const serverName = ref('');
+const addModalVisible = ref(false);
+const editModalVisible = ref(false);
 
-const searchWeb = async (val) => {
+const search = async (val) => {
   list.value = await Website.getList(val);
 }
 
-provide('searchWeb' , searchWeb);
-provide('serverName' , serverName);
-
-let addWebSiteModalRef = ref(null);
-let editWebSiteModalRef = ref(null);
+provide('website',{
+  serverName,
+  search,
+  addModalVisible,
+  editModalVisible,
+});
 
 (async () => {
-  await searchWeb();
+  await search();
 })();
 
 const del = async (item) => {
   await Website.delete(item.serverName);
-  await searchWeb();
+  await search();
 }
 
-const showAddWeb = () => {
-  addWebSiteModalRef.value.visible = true;
+const showAdd = () => {
+  addModalVisible.value = true;
 };
 
-const showEditWeb = (item) => {
-  editWebSiteModalRef.value.visible = true;
+const showEdit = (item) => {
+  editModalVisible.value = true;
   serverName.value = item.serverName;
 }
 
@@ -108,6 +113,10 @@ const browse = async (item) => {
 const openConfFile = async (item) => {
   await openTextFile(Website.getConfPath(item.serverName));
 }
+const openRewriteConfFile = async (item) => {
+  await openTextFile(Website.getRewriteConfPath(item.serverName));
+}
+
 const openRootPath = async (item) => {
   await openPath(item.path);
 }

@@ -25,16 +25,26 @@
 </template>
 
 <script setup>
-import {ref,defineExpose} from "vue";
+import {ref,computed,defineProps,defineEmits} from "vue";
 
-let visible = ref(false);
-let newPwd = ref('');
+const props = defineProps(['show'])
+const emit = defineEmits(['update:show'])
+
+const visible = computed({
+  get() {
+    return props.show;
+  },
+  set(value) {
+    emit('update:show', value);
+  }
+})
+
+const newPwd = ref('');
+
 const reset = () => {
   console.log(newPwd)
 };
 
-
-defineExpose({visible});
 </script>
 
 <style scoped>

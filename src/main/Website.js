@@ -7,7 +7,7 @@ import NginxWebsite from "@/main/NginxWebsite";
 
 export default class Website {
     static async add(websiteInfo) {
-        if (await Nginx.websiteIsExist(websiteInfo.serverName)) {
+        if (await Nginx.websiteExists(websiteInfo.serverName)) {
             throw new Error('添加失败，网站已经存在！');
         }
         if (!await fileExists(websiteInfo.rootPath)) {
@@ -30,18 +30,20 @@ export default class Website {
 
     static async getBasicInfo(serverName) {
         let webSite = new NginxWebsite(serverName);
-        await webSite.init();
-        return webSite.getBasicInfo();
+        return await webSite.getBasicInfo();
     }
 
     static async getRewrite(serverName) {
         let webSite = new NginxWebsite(serverName);
-        await webSite.init();
         return webSite.getRewrite();
     }
 
     static getConfPath(serverName) {
         return Nginx.getWebsiteConfPath(serverName);
+    }
+
+    static getRewriteConfPath(serverName) {
+        return Nginx.getWebsiteRewriteConfPath(serverName);
     }
 
     static async getPHPVersionList() {
@@ -59,13 +61,11 @@ export default class Website {
 
     static async saveBasicInfo(serverName, websiteInfo) {
         let webSite = new NginxWebsite(serverName);
-        await webSite.init();
-        return webSite.saveBasicInfo(websiteInfo);
+        return await webSite.saveBasicInfo(websiteInfo);
     }
 
     static async saveRewrite(serverName, content) {
         let webSite = new NginxWebsite(serverName);
-        await webSite.init();
-        return webSite.saveUrlRewrite(content);
+        return await webSite.saveUrlRewrite(content);
     }
 }

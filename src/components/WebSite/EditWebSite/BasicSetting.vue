@@ -28,35 +28,34 @@
 
 <script setup>
 // eslint-disable-next-line no-unused-vars
-import {reactive, ref, defineProps, watch, toRef,inject,onUpdated} from "vue";
+import {ref,inject} from "vue";
 import InputOpenDirDialog from "@/components/InputOpenDirDialog";
 import Website from "@/main/Website";
 import {message} from "ant-design-vue";
 import MessageBox from "@/main/MessageBox";
-//import {openDirectoryDialog} from "@/main/openDialog";
-//import Website from "@/main/Website";
 
-const serverName = inject('serverName');
-const searchWeb = inject('searchWeb')
+const {serverName,search} = inject('website');
 
+const formData = ref({});
+const phpVersionList = ref([]);
 
-const save = async () => {
-  try {
-    await Website.saveBasicInfo(serverName, formData.value);
-    message.info('保存成功');
-    searchWeb();
-  }catch (error){
-    MessageBox.error(`保存失败，${error.message}`)
-  }
-}
-
-let phpVersionList = ref([]);
 (async () => {
+  formData.value = await Website.getBasicInfo(serverName.value);
   let list = await Website.getPHPVersionList();
   phpVersionList.value = list.map(item => {
     return {value: item.version, label: item.name};
   });
 })();
+
+const save = async () => {
+  try {
+    await Website.saveBasicInfo(serverName.value, formData.value);
+    message.info('保存成功');
+    search();
+  }catch (error){
+    MessageBox.error(`保存失败，${error.message}`)
+  }
+}
 
 </script>
 

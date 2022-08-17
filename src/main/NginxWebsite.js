@@ -1,10 +1,6 @@
 import fs from "fs";
 import Nginx from "@/main/Nginx";
-import {CONF_INDENT, STATIC_WEB_NAME} from "@/main/constant";
-import {EOL} from "os";
-
-const N = EOL;
-const T = CONF_INDENT;
+import {STATIC_WEB_NAME} from "@/main/constant";
 
 export default class NginxWebsite {
     serverName;
@@ -13,14 +9,17 @@ export default class NginxWebsite {
 
     constructor(serverName) {
         this.serverName = serverName;
-    }
-
-    async init() {
         this.confPath = Nginx.getWebsiteConfPath(this.serverName);
-        this.confText = await fs.promises.readFile(this.confPath, {encoding: 'utf8'});
     }
 
-    getBasicInfo(){
+    async initConfText() {
+        if(!this.confText){
+            this.confText = await fs.promises.readFile(this.confPath, {encoding: 'utf8'});
+        }
+    }
+
+    async getBasicInfo(){
+        await this.initConfText();
         return {
             serverName: this.serverName,
             port: this.getPort(),
@@ -29,9 +28,9 @@ export default class NginxWebsite {
         }
     }
 
-    getRewrite() {
-        let matches = this.confText.match(/(?<=#REWRITE_START)[\s\S]+?(?=#REWRITE_END)/);
-        return matches ? matches[0].trim() : '';
+    async getRewrite() {
+        let rewritePath = Nginx.getWebsiteRewriteConfPath(this.serverName);
+        return await fs.promises.readFile(rewritePath, {encoding: 'utf8'});
     }
 
     getPort() {
@@ -51,6 +50,7 @@ export default class NginxWebsite {
 
 
     async saveBasicInfo(websiteInfo) {
+        await this.initConfText();
         let text = this.confText;
         text = text.replace(/(?<=listen\s+)\d+(?=\s*;)/, websiteInfo.port);
         text = text.replace(/(?<=root\s+)\S+(?=\s*;)/, websiteInfo.rootPath);
@@ -60,9 +60,8 @@ export default class NginxWebsite {
     }
 
     async saveUrlRewrite(content) {
-        content = `${N}${content}${N}${T}`;
-        this.confText = this.confText.replace(/(?<=#REWRITE_START)[\s\S]+?(?=#REWRITE_END)/, content);
-        await this.saveInfo();
+        let rewritePath = Nginx.getWebsiteRewriteConfPath(this.serverName);
+        await fs.promises.writeFile(rewritePath,content);
     }
 
     async saveInfo() {

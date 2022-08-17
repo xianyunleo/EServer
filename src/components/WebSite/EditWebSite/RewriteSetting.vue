@@ -24,20 +24,20 @@
 </template>
 
 <script setup>
-import {ref,defineProps,toRef,inject}  from "vue";
+// eslint-disable-next-line no-unused-vars
+import {ref,inject,watchEffect}  from "vue";
 import Website from "@/main/Website";
 import MessageBox from "@/main/MessageBox";
 import {message} from "ant-design-vue";
 
-//import Website from "@/main/Website";
-const serverName = inject('serverName');
+const {serverName} = inject('website');
 
-const props = defineProps({
-  confInfo: {type: Object, required: true},
-})
-let formData = toRef(props,'confInfo');
+const formData = ref({});
+(async () => {
+  formData.value.urlRewrite = await Website.getRewrite(serverName.value);
+})();
 
-let rewriteOptions = ref([
+const rewriteOptions = ref([
   {
     value: '测试规则',
     label: '##',
@@ -50,7 +50,7 @@ const rewriteChange = (val)=>{
 
 const save = async () => {
   try {
-    await Website.saveRewrite(formData.value.serverName, formData.value.urlRewrite);
+    await Website.saveRewrite(serverName.value, formData.value.urlRewrite);
     message.info('保存成功');
   }catch (error){
     MessageBox.error(`保存失败，${error.message}`)

@@ -79,9 +79,7 @@ import {storeToRefs} from 'pinia'
 import {SoftwareInstallStatus} from "@/main/enum";
 import Installer from "@/main/software/Installer";
 
-SoftwareInstallStatus
-
-let mainStore = useMainStore();
+const mainStore = useMainStore();
 
 const {softwareList, softwareType} = storeToRefs(mainStore);
 

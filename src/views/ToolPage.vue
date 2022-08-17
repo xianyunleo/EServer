@@ -26,7 +26,7 @@
       </a-col>
     </a-row>
   </div>
-  <mysql-reset-pwd-modal ref="mysqlResetPwdModalRef"></mysql-reset-pwd-modal>
+  <mysql-reset-pwd-modal v-model:show="mysqlResetPwdModalVisible"></mysql-reset-pwd-modal>
 </template>
 
 <script setup>
@@ -56,11 +56,10 @@ const editHosts =  async () => {
   }
 };
 
-
-let mysqlResetPwdModalRef = ref(null);
+const mysqlResetPwdModalVisible = ref(false);
 
 const mysqlResetPwd = () => {
-  mysqlResetPwdModalRef.value.visible = true;
+  mysqlResetPwdModalVisible.value = true;
 }
 
   let toolItems = [

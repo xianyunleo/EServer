@@ -21,10 +21,10 @@ const emit = defineEmits(['update:value'])
 
 const val = computed({
   get() {
-    return props.value
+    return props.value;
   },
   set(value) {
-    emit('update:value', value)
+    emit('update:value', value);
   }
 })
 

@@ -1,9 +1,9 @@
 import {EOL} from "os";
 import {CONF_INDENT} from "@/main/constant";
 import path from "path";
-import {getNginxVhostsPath} from "@/main/getPath";
+import {getNginxVhostsPath, getNginxVhostsRewritePath} from "@/main/getPath";
 import fs from "fs";
-import {dirGetFiles, getFilNameWithoutExt} from "@/main/utils";
+import {dirGetFiles, fileExists, getFilNameWithoutExt} from "@/main/utils";
 import NginxWebsite from "@/main/NginxWebsite";
 
 const N = EOL;
@@ -15,8 +15,7 @@ export default class Nginx {
         return await Promise.all(list.map(async item => {
             let serverName = getFilNameWithoutExt(item);
             let webSite = new NginxWebsite(serverName);
-            await webSite.init();
-            return webSite.getBasicInfo();
+            return await webSite.getBasicInfo();
         }));
     }
 
@@ -44,6 +43,7 @@ export default class Nginx {
     #SSL_END
 
     #REWRITE_START
+    include vhosts/rewrite/${websiteInfo.serverName}.conf
     #REWRITE_END
     
     #EXTRA_INFO_START
@@ -82,25 +82,38 @@ export default class Nginx {
 
         confText = Nginx.replaceWebsiteConfPHPVersion(websiteInfo.phpVersion,confText);
 
-        let confPath = path.join(getNginxVhostsPath(), `${websiteInfo.serverName}.conf`)
+        let confPath = Nginx.getWebsiteConfPath(websiteInfo.serverName);
         await fs.promises.writeFile(confPath, confText);
 
-
-        //todo新增URL重写文件
+        //创建URL重写文件
+        let rewritePath = Nginx.getWebsiteRewriteConfPath(websiteInfo.serverName);
+        if(!await fileExists(rewritePath)){
+            await fs.promises.writeFile(rewritePath,'');
+        }
     }
 
     static async delWebsite(serverName) {
         let confPath = Nginx.getWebsiteConfPath(serverName);
-        await fs.promises.unlink(confPath);
+        if (await fileExists(confPath)) {
+            await fs.promises.unlink(confPath);
+        }
+        let rewritePath = Nginx.getWebsiteRewriteConfPath(serverName);
+        if (await fileExists(rewritePath)) {
+            await fs.promises.unlink(rewritePath);
+        }
     }
 
-    static async websiteIsExist(serverName) {
+    static async websiteExists(serverName) {
         let vhosts = await dirGetFiles(getNginxVhostsPath(), '.conf');
         return vhosts.includes(`${serverName}.conf`)
     }
 
     static getWebsiteConfPath(serverName) {
         return path.join(getNginxVhostsPath(), `${serverName}.conf`);
+    }
+
+    static getWebsiteRewriteConfPath(serverName) {
+        return path.join(getNginxVhostsRewritePath(), `${serverName}.conf`);
     }
 
     static replaceWebsiteConfPHPVersion(phpVersion, confText) {
