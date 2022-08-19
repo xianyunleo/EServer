@@ -1,5 +1,6 @@
 <template>
   <a-modal
+      width="550px"
       :title="`修改网站[${serverName}]`"
       ok-text="确认"
       cancel-text="取消"
@@ -9,7 +10,7 @@
       centered
       :maskClosable="false">
     <div class="modal-content">
-      <a-tabs tabPosition="left" v-model:activeKey="activeKey" >
+      <a-tabs tabPosition="left" v-model:activeKey="activeKey" class="tabs">
         <a-tab-pane key="basicSetting" tab="基本配置">
           <basic-setting/>
         </a-tab-pane>
@@ -34,11 +35,10 @@ const activeKey = ref(defaultKey);
 </script>
 
 <style scoped lang="scss">
-.left-tabs-modal {
-  /*  todo不生效*/
-  :deep(.ant-modal-content) {
-    height: 600px !important;
+.modal-content{
+  height: 350px;
+  .tabs{
+    height: 100%;
   }
 }
-
 </style>

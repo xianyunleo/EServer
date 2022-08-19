@@ -3,7 +3,7 @@ import path from "path";
 import {app} from '@electron/remote'
 import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
 import is from "electron-is";
-import {fileExists, linuxFileMove} from "@/main/utils";
+import {fsDelete, fsExists, fsMove} from "@/main/utils";
 import fs from "fs";
 
 
@@ -49,22 +49,22 @@ export function getPlatformPath() {
 
 export async function initFileExists() {
     let initFile = getInitFilePath();
-    return await fileExists(initFile);
+    return await fsExists(initFile);
 }
 
 export async function init() {
     let initFile = getInitFilePath();
-    if (!await fileExists(initFile)) {
+    if (!await fsExists(initFile)) {
         return;
     }
     if (is.macOS() && is.production()) {
-        if (!await fileExists(MAC_USER_CORE_PATH)) {
+        if (!await fsExists(MAC_USER_CORE_PATH)) {
             await fs.promises.mkdir(MAC_USER_CORE_PATH);
             await moveCoreSubDir(['software', 'tmp', 'www']);
             await createCoreSubDir(['downloads']);
         }
     }
-    await fs.promises.unlink(initFile);
+    await fsDelete(initFile);
 }
 
 /**
@@ -75,7 +75,7 @@ export async function init() {
 export async function moveCoreSubDir(dirs) {
     let corePath = getUserCorePath();
     for (const dir of dirs) {
-        await linuxFileMove(path.join(corePath, dir), path.join(MAC_USER_CORE_PATH, dir));
+        await fsMove(path.join(corePath, dir), path.join(MAC_USER_CORE_PATH, dir));
     }
 }
 

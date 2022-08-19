@@ -1,11 +1,11 @@
 <template>
   <div class="content-container">
     <div class="category">
-      <a-radio-group v-model:value="softwareType" button-style="solid" @change="radioGroupChange">
+      <a-radio-group v-model:value="softwareTypeSelected" button-style="solid" @change="radioGroupChange">
+        <a-radio-button value="Installed">已安装</a-radio-button>
         <a-radio-button value="Server">服务</a-radio-button>
         <a-radio-button value="PHP">PHP</a-radio-button>
         <a-radio-button value="Tool">工具</a-radio-button>
-        <a-radio-button value="installed">已安装</a-radio-button>
       </a-radio-group>
     </div>
 
@@ -33,12 +33,26 @@
             <div class="soft-item-title">{{ item.Name }}</div>
             <div class="soft-item-desc">{{ item.Desc }}</div>
             <div class="soft-item-operate">
-              <a-button v-if="item.installInfo != null && !item.showStatusErrorText"
-                        type="primary" @click="clickStop(item)">停止
-              </a-button>
-              <a-button v-else type="primary" @click="clickInstall(item)">安装</a-button>
+              <template v-if="item.installed">
+                <a-dropdown :trigger="['click']">
+                  <template #overlay>
+                    <a-menu>
+                      <a-menu-item @click="openInstallPath(item)">打开所在目录</a-menu-item>
+                    </a-menu>
+                  </template>
+                  <a-button>管理
+                    <DownOutlined/>
+                  </a-button>
+                </a-dropdown>
+                <a-button :disabled="item.CanDelete" type="primary" @click="uninstall(item)">卸载</a-button>
+              </template>
+              <template v-else>
+                <a-button v-if="item.installInfo == null || item.showStatusErrorText"
+                          type="primary" @click="clickInstall(item)">安装
+                </a-button>
 
-              <!--              <a-button type="primary" >完成</a-button>-->
+                <a-button v-else type="primary" @click="clickStop(item)">停止</a-button>
+              </template>
             </div>
           </div>
           <div class="soft-item-progress" v-show="item.installInfo">
@@ -78,24 +92,30 @@ import {useMainStore} from '@/store'
 import {storeToRefs} from 'pinia'
 import {SoftwareInstallStatus} from "@/main/enum";
 import Installer from "@/main/software/Installer";
+import {openPath} from "@/main/tools";
+import {DownOutlined} from '@ant-design/icons-vue';
+import {getPath as getInstallPath} from "@/main/software/software";
+import MessageBox from "@/main/MessageBox";
 
 const mainStore = useMainStore();
+const {softwareList,  softwareTypeSelected} = storeToRefs(mainStore);
 
-const {softwareList, softwareType} = storeToRefs(mainStore);
-
-
-const radioGroupChange = () => {
-  if (softwareType.value === 'installed') {
-    console.log(softwareType.value)
-  } else {
-    setShowList(softwareType.value);
-  }
-}
+softwareTypeSelected.value = 'Installed';
 
 const setShowList = (type) => {
   for (const item of softwareList.value) {
-    item.show = type === item.Type;
+    if (type === 'Installed') {
+      item.show = item.installed === true;
+    } else {
+      item.show = type === item.Type;
+    }
   }
+}
+
+setShowList(softwareTypeSelected.value);
+
+const radioGroupChange = () => {
+  setShowList(softwareTypeSelected.value);
 }
 
 const clickInstall = async (item) => {
@@ -136,6 +156,18 @@ const clickStop = (item) => {
   item.downloadAbortController.abort();
 }
 
+const openInstallPath = async (item) => {
+  await openPath(getInstallPath(item));
+}
+
+const uninstall = async (item) => {
+  try {
+    item.installInfo = null;
+  } catch (error) {
+    MessageBox.error(`卸载失败，${error.message ? error.message : error}`)
+  }
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -164,7 +196,6 @@ const clickStop = (item) => {
   }
 }
 
-
 .soft-item {
   padding: 12px 0;
   color: #000000d9;
@@ -176,7 +207,6 @@ const clickStop = (item) => {
     justify-content: space-between;
   }
 }
-
 
 .soft-head {
   .soft-item {
@@ -253,7 +283,9 @@ const clickStop = (item) => {
 }
 
 .soft-item-operate {
-  width: 100px;
-  text-align: center;
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content:space-around;
 }
 </style>

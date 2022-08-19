@@ -1,6 +1,6 @@
 import fs from "fs";
-import {getPHPPath} from "@/main/getPath";
-import {dirGetDirs, fileExists} from "@/main/utils";
+import { getPHPPath} from "@/main/getPath";
+import {getDirsByDir, fsExists} from "@/main/utils";
 import {STATIC_WEB_NAME} from "@/main/constant";
 import Nginx from "@/main/Nginx";
 import NginxWebsite from "@/main/NginxWebsite";
@@ -10,7 +10,7 @@ export default class Website {
         if (await Nginx.websiteExists(websiteInfo.serverName)) {
             throw new Error('添加失败，网站已经存在！');
         }
-        if (!await fileExists(websiteInfo.rootPath)) {
+        if (!await fsExists(websiteInfo.rootPath)) {
             try {
                 !await fs.promises.mkdir(websiteInfo.rootPath)
             } catch {
@@ -47,7 +47,7 @@ export default class Website {
     }
 
     static async getPHPVersionList() {
-        let list = await dirGetDirs(getPHPPath(), 'php-');
+        let list = await getDirsByDir(getPHPPath(), 'php-');
         let res = list.map(item => {
             let matches = item.match(/php-(.+)/);
             if (!matches) {
@@ -57,6 +57,18 @@ export default class Website {
         });
         res.push({version: '', name: STATIC_WEB_NAME});
         return res;
+    }
+
+    /**
+     * 获取URL重写规则列表
+     * @returns {Promise<Awaited<{name: *, text: String}>[]>}
+     */
+    static async getRewriteRuleList(){
+        return await Nginx.getRewriteRuleList();
+    }
+
+    static async getRewriteByRule(ruleName) {
+        return await Nginx.getRewriteByRule(ruleName);
     }
 
     static async saveBasicInfo(serverName, websiteInfo) {

@@ -22,6 +22,10 @@ export function getNginxVhostsPath(){
     return path.join(getNginxConfPath(), 'vhosts');
 }
 
+export function getNginxRewritePath(){
+    return path.join(getNginxConfPath(), 'rewrite');
+}
+
 export function getNginxVhostsRewritePath(){
     return path.join(getNginxVhostsPath(), 'rewrite');
 }

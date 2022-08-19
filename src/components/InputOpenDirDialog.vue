@@ -12,7 +12,7 @@
 // eslint-disable-next-line no-unused-vars
 import {defineProps, defineEmits, computed, toRef} from "vue";
 import {FolderOpenFilled} from "@ant-design/icons-vue";
-import {openDirectoryDialog} from "@/main/openDialog";
+import FileDialog from "@/main/FileDialog";
 
 
 const props = defineProps(['value'])
@@ -29,7 +29,7 @@ const val = computed({
 })
 
 let selectPath = () => {
-  let path = openDirectoryDialog(val.value);
+  let path = FileDialog.showOpenDirectory(val.value);
   if (path) {
     val.value = path;
   }
