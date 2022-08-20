@@ -7,14 +7,15 @@
 
     <a-form-item label="">
       <a-select
-          :options = "rewriteOptions"
+          v-model:value="formData.rewriteSelected"
+          :options = "rewriteList"
           style="width: 120px"
-          @change="rewriteChange"
+          @change="rewriteSelectChange"
       >
       </a-select>
     </a-form-item>
     <a-form-item label="">
-      <a-textarea v-model:value="formData.urlRewrite" :autosize="{ minRows: 8, maxRows: 16}" />
+      <a-textarea v-model:value="formData.rewriteContent" :auto-size="{ minRows: 8, maxRows: 8}" />
     </a-form-item>
   </a-form>
 
@@ -25,32 +26,43 @@
 
 <script setup>
 // eslint-disable-next-line no-unused-vars
-import {ref,inject,watchEffect}  from "vue";
+import {ref,inject}  from "vue";
 import Website from "@/main/Website";
 import MessageBox from "@/main/MessageBox";
 import {message} from "ant-design-vue";
 
 const {serverName} = inject('website');
 
-const formData = ref({});
+const formData = ref({
+  rewriteSelected: 0,
+  rewriteContent: '',
+});
+const rewriteList = ref([]);
+
+const getRewrite = async () => {
+  return await Website.getRewrite(serverName.value);
+}
+
 (async () => {
-  formData.value.urlRewrite = await Website.getRewrite(serverName.value);
+  formData.value.rewriteContent = await getRewrite();
+  let list = await Website.getRewriteRuleList();
+  rewriteList.value = list.map(item => {
+    return {value: item, label: item};
+  });
+  rewriteList.value.unshift({label: '当前', value: 0});
 })();
 
-const rewriteOptions = ref([
-  {
-    value: '测试规则',
-    label: '##',
+const rewriteSelectChange = async (val) => {
+  if (val === 0) {
+    formData.value.rewriteContent = await getRewrite();
+  } else {
+    formData.value.rewriteContent = await Website.getRewriteByRule(val);
   }
-])
-
-const rewriteChange = (val)=>{
-  formData.value.urlRewrite = val;
 }
 
 const save = async () => {
   try {
-    await Website.saveRewrite(serverName.value, formData.value.urlRewrite);
+    await Website.saveRewrite(serverName.value, formData.value.rewriteContent);
     message.info('保存成功');
   }catch (error){
     MessageBox.error(`保存失败，${error.message}`)

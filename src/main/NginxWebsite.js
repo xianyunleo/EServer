@@ -2,6 +2,9 @@ import fs from "fs";
 import Nginx from "@/main/Nginx";
 import {STATIC_WEB_NAME} from "@/main/constant";
 
+/**
+ * Nginx网站类，用于生成网站对象
+ */
 export default class NginxWebsite {
     serverName;
     confPath;
@@ -54,7 +57,7 @@ export default class NginxWebsite {
         let text = this.confText;
         text = text.replace(/(?<=listen\s+)\d+(?=\s*;)/, websiteInfo.port);
         text = text.replace(/(?<=root\s+)\S+(?=\s*;)/, websiteInfo.rootPath);
-        text = Nginx.replaceWebsiteConfPHPVersion(websiteInfo.phpVersion,text);
+        text = Nginx.replaceConfPHPVersion(websiteInfo.phpVersion,text);
         this.confText = text;
         await this.saveInfo();
     }

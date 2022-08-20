@@ -46,7 +46,7 @@ import InputWithSearch from "@/components/InputWithSearch";
 import AddWebSiteModal from "@/components/WebSite/AddWebSiteModal";
 import EditWebSiteModal from "@/components/WebSite/EditWebSiteModal";
 import Website from "@/main/Website";
-import {openPath, openTextFile, openUrl} from "@/main/tools";
+import Tool from "@/main/Tool";
 
 
 const columns = [
@@ -107,18 +107,18 @@ const showEdit = (item) => {
 }
 
 const browse = async (item) => {
-  await openUrl(`http://${item.serverName}`);
+  await Tool.openUrl(`http://${item.serverName}`);
 }
 
 const openConfFile = async (item) => {
-  await openTextFile(Website.getConfPath(item.serverName));
+  await Tool.openTextFile(Website.getConfPath(item.serverName));
 }
 const openRewriteConfFile = async (item) => {
-  await openTextFile(Website.getRewriteConfPath(item.serverName));
+  await Tool.openTextFile(Website.getRewriteConfPath(item.serverName));
 }
 
 const openRootPath = async (item) => {
-  await openPath(item.path);
+  await Tool.openPath(item.path);
 }
 
 

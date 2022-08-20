@@ -4,7 +4,13 @@ import {APP_NAME} from "@/main/constant";
 import is from "electron-is";
 
 export default class Command {
-    static async exec(command) {
+    /**
+     *
+     * @param command
+     * @param workingDirectory
+     * @returns {Promise<unknown>}
+     */
+    static async exec(command,workingDirectory=null) {
         return await new Promise((resolve, reject) => {
             let formatCommand;
             if (is.windows()) {
@@ -16,6 +22,10 @@ export default class Command {
             const options = {
                 encoding: bufferEncoding
             }
+            if (workingDirectory) {
+                options.cwd = workingDirectory;
+            }
+
             child_process.exec(command, options, (err, stdout, stderr) => {
                 if (err) {
                     if (is.windows()) {

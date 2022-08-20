@@ -1,16 +1,11 @@
 import {defineStore} from 'pinia'
-import {getList} from "@/main/software/software";
-import {SOFTWARE_DEFAULT_TYPE} from "@/main/constant";
+import Software from "@/main/software/Software";
 
 export const useMainStore = defineStore('main', {
     state: () => {
-        let softwareType = SOFTWARE_DEFAULT_TYPE;
-        let softwareList = getList();
-        for (const item of softwareList) {
-            item.show = softwareType === item.Type;
-            item.installInfo = null;
-        }
-        return {softwareList,softwareType}
+        let softwareTypeSelected = '';
+        let softwareList = Software.getList();
+        return {softwareList, softwareTypeSelected}
     },
     getters: {},
     actions: {}

@@ -7,10 +7,10 @@
 </template>
 
 <script setup>
-import {openUrl} from "@/main/tools";
+import Tool from "@/main/Tool";
 
 let clickUrl = async () => {
-  await openUrl('http://www.phpenv.cn');
+  await Tool.openUrl('http://www.phpenv.cn');
 }
 </script>
 

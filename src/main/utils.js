@@ -1,9 +1,8 @@
 //通用且与项目无关的方法
 import fs from "fs";
 import path from "path";
-import Command from "@/main/Command";
 
-export async function fileExists(path) {
+export async function fsExists(path) {
     try {
         await fs.promises.access(path);
         return true;
@@ -12,14 +11,31 @@ export async function fileExists(path) {
     }
 }
 
+export function fsExistsSync(path) {
+    try {
+        fs.accessSync(path);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+export async function fsMove(sourcePath, targetPath) {
+    return await fs.promises.rename(sourcePath, targetPath);
+}
+
+export async function fsDelete(path) {
+    return await fs.promises.rm(path);
+}
+
 export function getFilNameWithoutExt(filename) {
     return path.parse(filename).name;
 }
 
-export async function dirGetFiles(dirPath, search = null) {
+export async function getFilesByDir(dirPath, search = null) {
     let files = await fs.promises.readdir(dirPath, {withFileTypes: true});
     return files.filter((item) => {
-        if (item.name.charAt(0) === '.' || item.isDirectory()) {
+        if (item.name.charAt(0) === '.' || !item.isFile()) {
             return false;
         }
         if (search) {
@@ -29,7 +45,7 @@ export async function dirGetFiles(dirPath, search = null) {
     }).map(item => item.name);
 }
 
-export async function dirGetDirs(dirPath, search = null) {
+export async function getDirsByDir(dirPath, search = null) {
     let files = await fs.promises.readdir(dirPath, {withFileTypes: true});
     return files.filter((item) => {
         if (item.name.charAt(0) === '.' || !item.isDirectory()) {
@@ -42,12 +58,3 @@ export async function dirGetDirs(dirPath, search = null) {
     }).map(item => item.name);
 }
 
-export async function linuxFileCopy(sourcePath, targetPath) {
-    let command = `cp -r ${sourcePath} ${targetPath}`;
-    return await Command.exec(command);
-}
-
-export async function linuxFileMove(sourcePath, targetPath) {
-    let command = `mv ${sourcePath} ${targetPath}`;
-    return await Command.exec(command);
-}

@@ -1,9 +1,9 @@
 import {EOL} from "os";
 import {CONF_INDENT} from "@/main/constant";
 import path from "path";
-import {getNginxVhostsPath, getNginxVhostsRewritePath} from "@/main/getPath";
+import GetPath from "@/main/GetPath";
 import fs from "fs";
-import {dirGetFiles, fileExists, getFilNameWithoutExt} from "@/main/utils";
+import {getFilesByDir, fsExists, getFilNameWithoutExt, fsDelete} from "@/main/utils";
 import NginxWebsite from "@/main/NginxWebsite";
 
 const N = EOL;
@@ -11,9 +11,9 @@ const T = CONF_INDENT;
 
 export default class Nginx {
     static async getWebsiteList(search) {
-        let list = await dirGetFiles(getNginxVhostsPath(), search);
-        return await Promise.all(list.map(async item => {
-            let serverName = getFilNameWithoutExt(item);
+        let files = await getFilesByDir(GetPath.getNginxVhostsPath(), search);
+        return await Promise.all(files.map(async name => {
+            let serverName = getFilNameWithoutExt(name);
             let webSite = new NginxWebsite(serverName);
             return await webSite.getBasicInfo();
         }));
@@ -80,43 +80,63 @@ export default class Nginx {
     error_log  logs/${websiteInfo.serverName}.error.log;
 }`;
 
-        confText = Nginx.replaceWebsiteConfPHPVersion(websiteInfo.phpVersion,confText);
+        confText = Nginx.replaceConfPHPVersion(websiteInfo.phpVersion,confText);
 
         let confPath = Nginx.getWebsiteConfPath(websiteInfo.serverName);
         await fs.promises.writeFile(confPath, confText);
 
         //创建URL重写文件
         let rewritePath = Nginx.getWebsiteRewriteConfPath(websiteInfo.serverName);
-        if(!await fileExists(rewritePath)){
+        if(!await fsExists(rewritePath)){
             await fs.promises.writeFile(rewritePath,'');
         }
     }
 
     static async delWebsite(serverName) {
         let confPath = Nginx.getWebsiteConfPath(serverName);
-        if (await fileExists(confPath)) {
-            await fs.promises.unlink(confPath);
+        if (await fsExists(confPath)) {
+            await fsDelete(confPath);
         }
         let rewritePath = Nginx.getWebsiteRewriteConfPath(serverName);
-        if (await fileExists(rewritePath)) {
-            await fs.promises.unlink(rewritePath);
+        if (await fsExists(rewritePath)) {
+            await fsDelete(rewritePath);
         }
     }
 
     static async websiteExists(serverName) {
-        let vhosts = await dirGetFiles(getNginxVhostsPath(), '.conf');
+        let vhosts = await getFilesByDir(GetPath.getNginxVhostsPath(), '.conf');
         return vhosts.includes(`${serverName}.conf`)
     }
 
     static getWebsiteConfPath(serverName) {
-        return path.join(getNginxVhostsPath(), `${serverName}.conf`);
+        return path.join(GetPath.getNginxVhostsPath(), `${serverName}.conf`);
     }
 
     static getWebsiteRewriteConfPath(serverName) {
-        return path.join(getNginxVhostsRewritePath(), `${serverName}.conf`);
+        return path.join(GetPath.getNginxVhostsRewritePath(), `${serverName}.conf`);
     }
 
-    static replaceWebsiteConfPHPVersion(phpVersion, confText) {
+    /**
+     * 获取URL重写规则列表
+     * @returns {Promise<Awaited<{name: *, text: String}>[]>}
+     */
+    static async getRewriteRuleList() {
+        let rewritePath = GetPath.getNginxRewritePath();
+        let files = await getFilesByDir(rewritePath);
+        return files.map(name => {
+            return getFilNameWithoutExt(name)
+        });
+    }
+
+    static async getRewriteByRule(ruleName) {
+        let rewritePath = path.join(GetPath.getNginxRewritePath(), `${ruleName}.conf`)
+        if (!await fsExists(rewritePath)) {
+            return '';
+        }
+        return await fs.promises.readFile(rewritePath, {encoding: 'utf8'});
+    }
+
+    static replaceConfPHPVersion(phpVersion, confText) {
         let phpPattern = /(?<=#PHP_START)[\s\S]+?(?=#PHP_END)/;
         let phpReplace;
         if (phpVersion) {
