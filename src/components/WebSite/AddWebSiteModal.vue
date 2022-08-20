@@ -43,12 +43,12 @@ import {ref, reactive, inject} from "vue";
 import InputOpenDirDialog from "@/components/InputOpenDirDialog";
 import path from "path";
 import Website from "@/main/Website";
-import {getWWWPath} from "@/main/getPath";
+import GetPath from "@/main/GetPath";
 import MessageBox from "@/main/MessageBox";
 
 const {search, addModalVisible: visible} = inject('website');
 
-const wwwPath = getWWWPath();
+const wwwPath = GetPath.getWWWPath();
 const formRef = ref();
 
 const formData = reactive({

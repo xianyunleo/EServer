@@ -1,7 +1,7 @@
 import {EOL} from "os";
 import {CONF_INDENT} from "@/main/constant";
 import path from "path";
-import {getNginxRewritePath, getNginxVhostsPath, getNginxVhostsRewritePath} from "@/main/getPath";
+import GetPath from "@/main/GetPath";
 import fs from "fs";
 import {getFilesByDir, fsExists, getFilNameWithoutExt, fsDelete} from "@/main/utils";
 import NginxWebsite from "@/main/NginxWebsite";
@@ -11,7 +11,7 @@ const T = CONF_INDENT;
 
 export default class Nginx {
     static async getWebsiteList(search) {
-        let files = await getFilesByDir(getNginxVhostsPath(), search);
+        let files = await getFilesByDir(GetPath.getNginxVhostsPath(), search);
         return await Promise.all(files.map(async name => {
             let serverName = getFilNameWithoutExt(name);
             let webSite = new NginxWebsite(serverName);
@@ -104,16 +104,16 @@ export default class Nginx {
     }
 
     static async websiteExists(serverName) {
-        let vhosts = await getFilesByDir(getNginxVhostsPath(), '.conf');
+        let vhosts = await getFilesByDir(GetPath.getNginxVhostsPath(), '.conf');
         return vhosts.includes(`${serverName}.conf`)
     }
 
     static getWebsiteConfPath(serverName) {
-        return path.join(getNginxVhostsPath(), `${serverName}.conf`);
+        return path.join(GetPath.getNginxVhostsPath(), `${serverName}.conf`);
     }
 
     static getWebsiteRewriteConfPath(serverName) {
-        return path.join(getNginxVhostsRewritePath(), `${serverName}.conf`);
+        return path.join(GetPath.getNginxVhostsRewritePath(), `${serverName}.conf`);
     }
 
     /**
@@ -121,7 +121,7 @@ export default class Nginx {
      * @returns {Promise<Awaited<{name: *, text: String}>[]>}
      */
     static async getRewriteRuleList() {
-        let rewritePath = getNginxRewritePath();
+        let rewritePath = GetPath.getNginxRewritePath();
         let files = await getFilesByDir(rewritePath);
         return files.map(name => {
             return getFilNameWithoutExt(name)
@@ -129,7 +129,7 @@ export default class Nginx {
     }
 
     static async getRewriteByRule(ruleName) {
-        let rewritePath = path.join(getNginxRewritePath(), `${ruleName}.conf`)
+        let rewritePath = path.join(GetPath.getNginxRewritePath(), `${ruleName}.conf`)
         if (!await fsExists(rewritePath)) {
             return '';
         }

@@ -1,11 +1,11 @@
-import {getUserCorePath} from "@/main/app";
+import App from "@/main/App";
 import path from "path";
 import child_process from "child_process";
 import is from "electron-is";
 import {SoftwareInstallStatus} from "@/main/enum";
 import extract from "extract-zip";
-import {getTypePath} from "@/main/software/software";
-import {getDownloadsPath} from "@/main/getPath";
+import Software from "@/main/software/Software";
+import GetPath from "@/main/GetPath";
 
 
 export default class Installer {
@@ -76,7 +76,7 @@ export default class Installer {
 
     async download() {
         return await new Promise((resolve, reject) => {
-            let corePath = getUserCorePath();
+            let corePath = App.getUserCorePath();
             let downloaderPath = path.join(corePath, 'aria2c');
             let downloadsPath = path.join(corePath, 'downloads');
             let args = [this.softItem.url, '--check-certificate=false', '--allow-overwrite=true', `--dir=${downloadsPath}`];
@@ -143,8 +143,8 @@ export default class Installer {
     async zipExtract() {
         let softItem = this.softItem;
         softItem.DirName = 'test';
-        let filePath = path.join(getDownloadsPath(), `HandyControl.git.zip`);
-        let typePath = getTypePath(softItem.Type)
+        let filePath = path.join(GetPath.getDownloadsPath(), `HandyControl.git.zip`);
+        let typePath = Software.getTypePath(softItem.Type)
         this.changeStatus(SoftwareInstallStatus.Extracting);
         return await extract(filePath, {dir: typePath});
     }

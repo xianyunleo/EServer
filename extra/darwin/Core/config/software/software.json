@@ -2,6 +2,8 @@
     {
         "Name": "Nginx",
         "DirName": "nginx",
+        "ServerProcessName": "nginx",
+        "ServerProcessPath": "sbin/nginx",
         "Type": "Server",
         "CanDelete": false,
         "Icon": "nginx.png",

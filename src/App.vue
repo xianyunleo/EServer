@@ -15,20 +15,20 @@
 <script setup>
 import SideBar from "@/components/SideBar";
 import TitleBar from "@/components/TitleBar";
-import {init, initFileExists} from "@/main/app";
+import App from "@/main/App";
 import {ref} from "vue";
 import MessageBox from "@/main/MessageBox";
 
 let spinning = ref(false);
 
 let initApp = async () => {
-  if(!await initFileExists()){
+  if (!await App.initFileExists()) {
     return;
   }
 
   spinning.value = true;
   try {
-    await init();
+    await App.init();
   } catch (e) {
     MessageBox.error(e.message);
   }

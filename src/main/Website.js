@@ -1,5 +1,5 @@
 import fs from "fs";
-import { getPHPPath} from "@/main/getPath";
+import GetPath from "@/main/GetPath";
 import {getDirsByDir, fsExists} from "@/main/utils";
 import {STATIC_WEB_NAME} from "@/main/constant";
 import Nginx from "@/main/Nginx";
@@ -47,7 +47,7 @@ export default class Website {
     }
 
     static async getPHPVersionList() {
-        let list = await getDirsByDir(getPHPPath(), 'php-');
+        let list = await getDirsByDir(GetPath.getPHPPath(), 'php-');
         let res = list.map(item => {
             let matches = item.match(/php-(.+)/);
             if (!matches) {

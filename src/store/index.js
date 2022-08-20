@@ -1,10 +1,10 @@
 import {defineStore} from 'pinia'
-import {getList} from "@/main/software/software";
+import Software from "@/main/software/Software";
 
 export const useMainStore = defineStore('main', {
-    state:  () => {
+    state: () => {
         let softwareTypeSelected = '';
-        let softwareList =  getList();
+        let softwareList = Software.getList();
         return {softwareList, softwareTypeSelected}
     },
     getters: {},

@@ -92,9 +92,9 @@ import {useMainStore} from '@/store'
 import {storeToRefs} from 'pinia'
 import {SoftwareInstallStatus} from "@/main/enum";
 import Installer from "@/main/software/Installer";
-import {openPath} from "@/main/tools";
+import Tool from "@/main/Tool";
 import {DownOutlined} from '@ant-design/icons-vue';
-import {getPath as getInstallPath} from "@/main/software/software";
+import Software from "@/main/software/Software";
 import MessageBox from "@/main/MessageBox";
 
 const mainStore = useMainStore();
@@ -132,7 +132,6 @@ const clickInstall = async (item) => {
     }
     switch (item.installInfo.status) {
       case SoftwareInstallStatus.Ready:
-        console.log('正在开始')
         return '正在开始';
       case SoftwareInstallStatus.Downloading:
         return '下载中';
@@ -157,7 +156,7 @@ const clickStop = (item) => {
 }
 
 const openInstallPath = async (item) => {
-  await openPath(getInstallPath(item));
+  await Tool.openPath(Software.getPath(item));
 }
 
 const uninstall = async (item) => {

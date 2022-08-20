@@ -35,9 +35,9 @@ import {message} from 'ant-design-vue';
 
 import {FileTextTwoTone,FolderOpenTwoTone} from "@ant-design/icons-vue";
 import MysqlResetPwdModal from "@/components/ToolPage/MysqlResetPwdModal"
-import {openHosts} from "@/main/hosts";
+import Hosts from "@/main/Hosts";
 import MessageBox from "@/main/MessageBox";
-import {getMysqlIconPath} from "@/main/tools";
+import GetPath from "@/main/GetPath";
 
 
 const iconTypes = {
@@ -50,7 +50,7 @@ const iconTypes = {
 const editHosts =  async () => {
   message.info('打开中，请等待...');
   try {
-    await openHosts();
+    await Hosts.openHosts();
   } catch (error) {
     MessageBox.error(error.message, '打开VS Code失败！');
   }
@@ -73,7 +73,7 @@ const mysqlResetPwd = () => {
     },
     {
       key: 'mysqlResetPwd',
-      avatar: getMysqlIconPath(),
+      avatar: GetPath.getMysqlIconPath(),
       title: 'MySQL修改密码',
       desc: '修改、重置MySQL的root账户的密码',
       func: mysqlResetPwd,

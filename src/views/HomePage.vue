@@ -2,15 +2,15 @@
   <div class="content-container">
     <a-card title="快捷操作" class="quick-card">
       <div class="quick-card-content">
-        <a-button type="primary">一键启动</a-button>
-        <a-button type="primary">命令行终端</a-button>
+<!--        <a-button type="primary">一键启动</a-button>-->
+<!--        <a-button type="primary">命令行终端</a-button>-->
         <a-button type="primary" @click="corePathClick">核心目录</a-button>
-        <a-button type="primary">网站目录</a-button>
+        <a-button type="primary" @click="wwwPathClick">网站目录</a-button>
       </div>
     </a-card>
 
     <a-table :columns="columns" :data-source="data" class="content-table" :pagination="false" size="middle">
-      <template #bodyCell="{ column }">
+      <template #bodyCell="{ column, record}">
         <template v-if="column.dataIndex === 'status'">
           <div style="font-size: 20px;">
             <!--            <caret-right-outlined style="color: #20a53a;" />-->
@@ -24,7 +24,7 @@
         </template>
         <template v-if="column.dataIndex === 'operate'">
           <div class="operate-td">
-            <a-button type="primary">启动</a-button>
+            <a-button type="primary" @click="startClick(record)">启动</a-button>
             <a-button type="primary">重启</a-button>
             <a-dropdown :trigger="['click']">
               <template #overlay>
@@ -55,15 +55,20 @@
 </template>
 
 <script setup>
-//import {ref} from "vue";
+
 import {DownOutlined, RightSquareFilled} from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
-import {openCorePath} from '@/main/tools'
+import Tool from '@/main/Tool'
+import App from "@/main/App";
+import GetPath from "@/main/GetPath";
+import Software from "@/main/software/Software";
+import ServerControl from "@/main/ServerControl";
+import MessageBox from "@/main/MessageBox";
 const columns = [
   {
     title: '服务名',
     width: 100,
-    dataIndex: 'name',
+    dataIndex: 'Name',
   }, {
     title: '状态',
     dataIndex: 'status',
@@ -82,30 +87,28 @@ const columns = [
   }
 ];
 
-const data = [
-  {
-    name: 'Nginx',
-    port: '80,443',
-    pid: '180,1443',
-  },
-  {
-    name: 'MySQL-5.7',
-  },
-  {
-    name: 'Redis',
-  },
-];
-
-
-
-let serviceChange = ()=>{
+let data = [];
+const list = Software.getList('Server');
+data = list.filter((item)=>item.Installed);
+const serviceChange = ()=>{
   message.info('下个版本开放！！！');
 }
 
-let corePathClick = ()=>{
-  openCorePath()
+const corePathClick = ()=>{
+  Tool.openPath(App.getUserCorePath());
+}
+const wwwPathClick = ()=>{
+  Tool.openPath(GetPath.getWWWPath());
 }
 
+const startClick = async (item) => {
+  try {
+    await ServerControl.start(item);
+  } catch (error) {
+    const msg = error.message ? error.message : error;
+    MessageBox.error(`启动服务失败，${msg}`);
+  }
+}
 
 </script>
 
