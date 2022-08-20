@@ -1,6 +1,6 @@
 # EasyEnv
-### Windows Mac平台下的一款集成Web Server、PHP、MySQL、Redis等GUI集成环境
-### 版权声明：此源码仅供个人研究学习，禁止编译或者二次修改从事商业活动等
+### Windows Mac平台下的一款集成Nginx、PHP、MySQL、Redis等GUI集成环境
+### 版权声明：此源码仅供个人研究学习，禁止编译或者二次修改后从事商业活动等
 ## Project setup
 ```
 npm install
