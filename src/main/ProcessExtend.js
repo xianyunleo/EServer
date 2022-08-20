@@ -9,7 +9,7 @@ export default class ProcessExtend{
      */
     static async killByName(name) {
         // eslint-disable-next-line no-empty
-        if (!is.windows()) {
+        if (is.windows()) {
 
         } else {
             return await Command.exec(`pkill -9 ${name}`);

@@ -29,9 +29,8 @@
             <a-dropdown :trigger="['click']">
               <template #overlay>
                 <a-menu >
-                  <a-menu-item key="1">
-                    打开所在目录
-                  </a-menu-item>
+                  <a-menu-item @click="openInstallPath(record)">打开所在目录</a-menu-item>
+                  <a-menu-item v-if="record.ServerConfPath" @click="openConfPath(record)">打开配置文件</a-menu-item>
                 </a-menu>
               </template>
               <a-button>
@@ -64,6 +63,8 @@ import GetPath from "@/main/GetPath";
 import Software from "@/main/software/Software";
 import ServerControl from "@/main/ServerControl";
 import MessageBox from "@/main/MessageBox";
+import {enumGetName} from "@/main/utils";
+import {EnumSoftwareType} from "@/main/enum";
 const columns = [
   {
     title: '服务名',
@@ -87,8 +88,8 @@ const columns = [
   }
 ];
 
-let data = [];
-const list = Software.getList('Server');
+let data;
+const list = Software.getList(enumGetName(EnumSoftwareType,EnumSoftwareType.Server));
 data = list.filter((item)=>item.Installed);
 const serviceChange = ()=>{
   message.info('下个版本开放！！！');
@@ -100,6 +101,15 @@ const corePathClick = ()=>{
 const wwwPathClick = ()=>{
   Tool.openPath(GetPath.getWWWPath());
 }
+
+const openInstallPath = async (item) => {
+  await Tool.openPath(Software.getPath(item));
+}
+const openConfPath = async (item) => {
+  console.log(Software.getServerConfPath(item))
+  await Tool.openTextFile(Software.getServerConfPath(item));
+}
+
 
 const startClick = async (item) => {
   try {

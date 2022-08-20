@@ -3,6 +3,7 @@ export default class SoftwareItem {
     DirName;
     ServerProcessName;
     ServerProcessPath;
+    ServerConfPath;
     Type;
     CanDelete;
     Icon;

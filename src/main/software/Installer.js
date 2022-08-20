@@ -2,7 +2,7 @@ import App from "@/main/App";
 import path from "path";
 import child_process from "child_process";
 import is from "electron-is";
-import {SoftwareInstallStatus} from "@/main/enum";
+import {EnumSoftwareInstallStatus} from "@/main/enum";
 import extract from "extract-zip";
 import Software from "@/main/software/Software";
 import GetPath from "@/main/GetPath";
@@ -14,7 +14,7 @@ export default class Installer {
     constructor(softItem) {
         this.softItem = softItem;
         this.softItem.installInfo = this.softItem.installInfo ? this.softItem.installInfo : {}
-        this.softItem.installInfo.status = SoftwareInstallStatus.Ready;
+        this.softItem.installInfo.status = EnumSoftwareInstallStatus.Ready;
         this.resetDownloadInfo();
         this.downloadSignal = this.softItem.downloadAbortController?.signal;
         this.softItem.url = 'https://dl-cdn.phpenv.cn/release/test.zip';
@@ -49,15 +49,15 @@ export default class Installer {
         try {
             await this.download();
         } catch (error) {
-            this.changeStatus(SoftwareInstallStatus.DownloadError);
+            this.changeStatus(EnumSoftwareInstallStatus.DownloadError);
             let errMsg = error.message ? error.message : '未知错误';
             throw new Error(`下载失败，${errMsg}`);
         }
 
         if (is.dev()) console.log('判断是否下载完成')
 
-        if (this.softItem.installInfo.status !== SoftwareInstallStatus.Downloaded) {
-            this.changeStatus(SoftwareInstallStatus.Abort);
+        if (this.softItem.installInfo.status !== EnumSoftwareInstallStatus.Downloaded) {
+            this.changeStatus(EnumSoftwareInstallStatus.Abort);
             return;
         }
 
@@ -65,13 +65,13 @@ export default class Installer {
 
         try {
             await this.zipExtract();
-            this.changeStatus(SoftwareInstallStatus.Extracted);
+            this.changeStatus(EnumSoftwareInstallStatus.Extracted);
         } catch (error) {
-            this.changeStatus(SoftwareInstallStatus.ExtractError);
+            this.changeStatus(EnumSoftwareInstallStatus.ExtractError);
             let errMsg = error.message ? error.message : '未知错误';
             throw new Error(`解压失败，${errMsg}`);
         }
-        this.changeStatus(SoftwareInstallStatus.Finish);
+        this.changeStatus(EnumSoftwareInstallStatus.Finish);
     }
 
     async download() {
@@ -82,7 +82,7 @@ export default class Installer {
             let args = [this.softItem.url, '--check-certificate=false', '--allow-overwrite=true', `--dir=${downloadsPath}`];
 
             let dlProcess = child_process.spawn(downloaderPath, args);
-            this.changeStatus(SoftwareInstallStatus.Downloading);
+            this.changeStatus(EnumSoftwareInstallStatus.Downloading);
             const progressRegx = /([\d.]+\w+)\/([\d.]+\w+)\((\d+)%\).+DL:([\d.]+\w+)/;
             const errRegx = /errorCode=\d+.+/g;
 
@@ -120,11 +120,11 @@ export default class Installer {
                     this.downloadSignal.removeEventListener('abort', abortDownload);
                 }
                 if (code == null) {
-                    this.changeStatus(SoftwareInstallStatus.Abort);
+                    this.changeStatus(EnumSoftwareInstallStatus.Abort);
                     return resolve(true);
                 }
                 if (code === 0) {
-                    this.changeStatus(SoftwareInstallStatus.Downloaded);
+                    this.changeStatus(EnumSoftwareInstallStatus.Downloaded);
                     this.setDownloadInfo({percent: 100})
                     return resolve(true);
                 }
@@ -145,7 +145,7 @@ export default class Installer {
         softItem.DirName = 'test';
         let filePath = path.join(GetPath.getDownloadsPath(), `HandyControl.git.zip`);
         let typePath = Software.getTypePath(softItem.Type)
-        this.changeStatus(SoftwareInstallStatus.Extracting);
+        this.changeStatus(EnumSoftwareInstallStatus.Extracting);
         return await extract(filePath, {dir: typePath});
     }
 

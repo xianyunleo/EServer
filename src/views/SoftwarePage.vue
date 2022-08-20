@@ -3,9 +3,9 @@
     <div class="category">
       <a-radio-group v-model:value="softwareTypeSelected" button-style="solid" @change="radioGroupChange">
         <a-radio-button value="Installed">已安装</a-radio-button>
-        <a-radio-button value="Server">服务</a-radio-button>
-        <a-radio-button value="PHP">PHP</a-radio-button>
-        <a-radio-button value="Tool">工具</a-radio-button>
+        <a-radio-button :value="enumGetName(EnumSoftwareType,EnumSoftwareType.Server)">服务</a-radio-button>
+        <a-radio-button :value="enumGetName(EnumSoftwareType,EnumSoftwareType.PHP)">PHP</a-radio-button>
+        <a-radio-button :value="enumGetName(EnumSoftwareType,EnumSoftwareType.Tool)">工具</a-radio-button>
       </a-radio-group>
     </div>
 
@@ -59,7 +59,7 @@
             <a-progress :percent="item.installInfo?.dlInfo?.percent" :show-info="false" status="active"/>
             <div class="progress-info">
               <div class="progress-info-left">
-                <span v-show="item.installInfo?.status === SoftwareInstallStatus.Downloading">
+                <span v-show="item.installInfo?.status === EnumSoftwareInstallStatus.Downloading">
                   {{ item.installInfo?.dlInfo?.completedSize }}/{{ item.installInfo?.dlInfo?.totalSize }}
                 </span>
               </div>
@@ -70,7 +70,7 @@
                 </a-tooltip>
               </div>
               <div class="progress-info-right">
-                <span v-if="item.installInfo?.status === SoftwareInstallStatus.Downloading">
+                <span v-if="item.installInfo?.status === EnumSoftwareInstallStatus.Downloading">
                   ↓{{ item.installInfo?.dlInfo?.perSecond }}/S
                 </span>
                 <span v-else>
@@ -90,16 +90,17 @@
 import {computed} from 'vue';
 import {useMainStore} from '@/store'
 import {storeToRefs} from 'pinia'
-import {SoftwareInstallStatus} from "@/main/enum";
+import {EnumSoftwareInstallStatus, EnumSoftwareType} from "@/main/enum";
 import Installer from "@/main/software/Installer";
 import Tool from "@/main/Tool";
 import {DownOutlined} from '@ant-design/icons-vue';
 import Software from "@/main/software/Software";
 import MessageBox from "@/main/MessageBox";
+import {enumGetName} from "@/main/utils";
 
 const mainStore = useMainStore();
 const {softwareList,  softwareTypeSelected} = storeToRefs(mainStore);
-
+EnumSoftwareType
 softwareTypeSelected.value = 'Installed';
 
 const setShowList = (type) => {
@@ -131,11 +132,11 @@ const clickInstall = async (item) => {
       return '';
     }
     switch (item.installInfo.status) {
-      case SoftwareInstallStatus.Ready:
+      case EnumSoftwareInstallStatus.Ready:
         return '正在开始';
-      case SoftwareInstallStatus.Downloading:
+      case EnumSoftwareInstallStatus.Downloading:
         return '下载中';
-      case SoftwareInstallStatus.Extracting:
+      case EnumSoftwareInstallStatus.Extracting:
         return '解压中';
       default:
         return '';

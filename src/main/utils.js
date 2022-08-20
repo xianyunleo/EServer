@@ -58,3 +58,12 @@ export async function getDirsByDir(dirPath, search = null) {
     }).map(item => item.name);
 }
 
+
+export function enumGetName(enumObj, val) {
+    let names = Object.keys(enumObj);
+    for (const name of names) {
+        if (enumObj[name] === val) {
+            return name;
+        }
+    }
+}

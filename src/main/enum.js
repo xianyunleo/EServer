@@ -1,4 +1,4 @@
-export const SoftwareInstallStatus = {
+export const EnumSoftwareInstallStatus = {
     Ready: 0,
     Active: 1,
     Downloading: 2,
@@ -11,7 +11,7 @@ export const SoftwareInstallStatus = {
     Finish: 200,
 }
 
-export const SoftwareType = {
+export const EnumSoftwareType = {
     PHP: 0,
     Server: 1,
     MySQL: 2,

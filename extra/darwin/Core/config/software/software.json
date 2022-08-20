@@ -4,6 +4,7 @@
         "DirName": "nginx",
         "ServerProcessName": "nginx",
         "ServerProcessPath": "sbin/nginx",
+        "ServerConfPath": "conf/nginx.conf",
         "Type": "Server",
         "CanDelete": false,
         "Icon": "nginx.png",
@@ -12,6 +13,9 @@
 	{
         "Name": "PHP-7.4",
         "DirName": "php-7.4",
+        "ServerProcessName": "php-fpm",
+        "ServerProcessPath": "sbin/php-fpm",
+        "ServerConfPath": "etc/php-fpm.conf",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
