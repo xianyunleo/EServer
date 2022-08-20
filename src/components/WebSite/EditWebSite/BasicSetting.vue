@@ -53,7 +53,7 @@ const save = async () => {
     message.info('保存成功');
     search();
   }catch (error){
-    MessageBox.error(`保存失败，${error.message}`)
+    MessageBox.error(error.message ? error.message : error, '保存出错！');
   }
 }
 

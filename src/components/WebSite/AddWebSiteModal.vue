@@ -86,7 +86,7 @@ const addWeb = async (websiteInfo) => {
   try {
     await Website.add(websiteInfo);
   } catch (error) {
-    MessageBox.error(error.message);
+    MessageBox.error(error.message ? error.message : error, '添加网站出错！');
   }
 }
 </script>

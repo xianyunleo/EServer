@@ -163,7 +163,7 @@ const uninstall = async (item) => {
   try {
     item.installInfo = null;
   } catch (error) {
-    MessageBox.error(`卸载失败，${error.message ? error.message : error}`)
+    MessageBox.error(error.message ? error.message : error, '卸载出错！');
   }
 }
 

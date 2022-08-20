@@ -52,7 +52,7 @@ const editHosts =  async () => {
   try {
     await Hosts.openHosts();
   } catch (error) {
-    MessageBox.error(error.message, '打开VS Code失败！');
+    MessageBox.error(error.message ? error.message : error, '打开hosts文件出错！');
   }
 };
 

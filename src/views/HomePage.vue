@@ -105,8 +105,7 @@ const startClick = async (item) => {
   try {
     await ServerControl.start(item);
   } catch (error) {
-    const msg = error.message ? error.message : error;
-    MessageBox.error(`启动服务失败，${msg}`);
+    MessageBox.error(error.message ? error.message : error, '启动服务出错！');
   }
 }
 
