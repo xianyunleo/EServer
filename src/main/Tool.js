@@ -4,7 +4,7 @@ import {shell} from "@electron/remote"
 export default class Tool {
     static async openTextFile(filePath, isSudo = false) {
         if (!await Tool.vscodeIsInstalled()) {
-            throw new Error('vscode没有安装');
+            throw new Error('VS Code没有安装');
         }
         let command = `code ${filePath}`;
         if (isSudo) {

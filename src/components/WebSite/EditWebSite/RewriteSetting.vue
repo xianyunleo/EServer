@@ -65,7 +65,7 @@ const save = async () => {
     await Website.saveRewrite(serverName.value, formData.value.rewriteContent);
     message.info('保存成功');
   }catch (error){
-    MessageBox.error(`保存失败，${error.message}`)
+    MessageBox.error(error.message ? error.message : error, '保存出错！');
   }
 }
 </script>

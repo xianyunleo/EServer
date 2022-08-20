@@ -19,9 +19,9 @@ import App from "@/main/App";
 import {ref} from "vue";
 import MessageBox from "@/main/MessageBox";
 
-let spinning = ref(false);
+const spinning = ref(false);
 
-let initApp = async () => {
+(async () => {
   if (!await App.initFileExists()) {
     return;
   }
@@ -29,15 +29,11 @@ let initApp = async () => {
   spinning.value = true;
   try {
     await App.init();
-  } catch (e) {
-    MessageBox.error(e.message);
+  } catch (error) {
+    MessageBox.error(error.message ? error.message : error, '软件初始化出错！');
   }
   spinning.value = false;
-}
-
-initApp();
-
-
+})()
 
 </script>
 
