@@ -1,20 +1,19 @@
 import fs from "fs";
 import GetPath from "@/main/GetPath";
-import {getDirsByDir, fsExists} from "@/main/utils";
-import {STATIC_WEB_NAME} from "@/main/constant";
+import {fsExists, getDirsByDir} from "@/main/utils";
 import Nginx from "@/main/Nginx";
 import NginxWebsite from "@/main/NginxWebsite";
 
 export default class Website {
     static async add(websiteInfo) {
         if (await Nginx.websiteExists(websiteInfo.serverName)) {
-            throw new Error('添加失败，网站已经存在！');
+            throw new Error('网站已经存在！');
         }
         if (!await fsExists(websiteInfo.rootPath)) {
             try {
                 !await fs.promises.mkdir(websiteInfo.rootPath)
             } catch {
-                throw new Error('添加失败，创建根目录失败！');
+                throw new Error('创建根目录失败！');
             }
         }
         await Nginx.addWebsite(websiteInfo);
@@ -48,15 +47,13 @@ export default class Website {
 
     static async getPHPVersionList() {
         let list = await getDirsByDir(GetPath.getPHPPath(), 'php-');
-        let res = list.map(item => {
+        return list.map(item => {
             let matches = item.match(/php-(.+)/);
             if (!matches) {
                 return false;
             }
             return {version: matches[1], name: matches[0]};
         });
-        res.push({version: '', name: STATIC_WEB_NAME});
-        return res;
     }
 
     /**

@@ -122,7 +122,7 @@ export default class Nginx {
      */
     static async getRewriteRuleList() {
         let rewritePath = GetPath.getNginxRewritePath();
-        let files = await getFilesByDir(rewritePath);
+        let files = await getFilesByDir(rewritePath,'.conf');
         return files.map(name => {
             return getFilNameWithoutExt(name)
         });

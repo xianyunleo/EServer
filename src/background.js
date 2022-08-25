@@ -1,6 +1,6 @@
 'use strict'
 
-import {initialize} from '@electron/remote/main'
+import * as remoteMain  from '@electron/remote/main'
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
@@ -11,14 +11,14 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-export let win;
+export let window;
 
-initialize();
+remoteMain.initialize();
 
 async function createWindow() {
   // Create the browser window.
-   win = new BrowserWindow({
-    width: 880,
+    window = new BrowserWindow({
+    width: 1280,
     height: 650,
     minWidth: 880,
     minHeight: 650,
@@ -34,14 +34,16 @@ async function createWindow() {
     }
   })
 
+  remoteMain.enable(window.webContents);
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
+    await window.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+    if (!process.env.IS_TEST) window.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-    win.loadURL('app://./index.html')
+      window.loadURL('app://./index.html')
   }
 }
 

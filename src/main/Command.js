@@ -5,42 +5,39 @@ import is from "electron-is";
 
 export default class Command {
     /**
-     *
+     * 执行命令，并返回结果（标准输出）
      * @param command
-     * @param workingDirectory
-     * @returns {Promise<unknown>}
+     * @param options
+     * @returns {Promise<String>}
      */
-    static async exec(command,workingDirectory=null) {
-        return await new Promise((resolve, reject) => {
-            let formatCommand;
+    static async exec(command, options = {}) {
+        let formatCommand;
+        if (is.windows()) {
+            formatCommand = '@chcp 65001 >nul & cmd /d/s/c ';
+            command = formatCommand + command;
+        }
+
+        if (!options.encoding) {
+            options.encoding = "utf8";
+        }
+        console.log('exec command',command)
+
+        try {
+            return child_process.execSync(command,options);
+        } catch (error) {
             if (is.windows()) {
-                formatCommand = '@chcp 65001 >nul & cmd /d/s/c ';
-                command = formatCommand + command;
+                // eslint-disable-next-line no-ex-assign
+                error = new Error(error.message.replace(formatCommand, ''))
             }
-
-            const bufferEncoding = "utf8";
-            const options = {
-                encoding: bufferEncoding
-            }
-            if (workingDirectory) {
-                options.cwd = workingDirectory;
-            }
-
-            child_process.exec(command, options, (err, stdout, stderr) => {
-                if (err) {
-                    if (is.windows()) {
-                        err = new Error(err.message.replace(formatCommand, ''))
-                    }
-                    reject(err);
-                } else if (stderr.lenght > 0) {
-                    reject(new Error(stderr.toString()));
-                } else {
-                    resolve(stdout.toString());
-                }
-            });
-        });
+            throw error;
+        }
     }
 
+    /**
+     *
+     * @param command
+     * @returns {Promise<unknown>}
+     */
     static async sudoExec(command) {
         return await new Promise((resolve, reject) => {
             const options = {

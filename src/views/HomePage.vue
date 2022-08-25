@@ -9,12 +9,12 @@
       </div>
     </a-card>
 
-    <a-table :columns="columns" :data-source="data" class="content-table" :pagination="false" size="middle">
+    <a-table :columns="columns" :data-source="serverList" class="content-table" :pagination="false" size="middle">
       <template #bodyCell="{ column, record}">
         <template v-if="column.dataIndex === 'status'">
           <div style="font-size: 20px;">
-            <!--            <caret-right-outlined style="color: #20a53a;" />-->
-            <right-square-filled style="color: #20a53a;"/>
+            <right-square-filled style="color: red;" v-show="!record.isRunning"/>
+            <right-square-filled style="color: #20a53a;" v-show="record.isRunning"/>
           </div>
         </template>
         <template v-if="column.dataIndex === 'service'">
@@ -24,8 +24,9 @@
         </template>
         <template v-if="column.dataIndex === 'operate'">
           <div class="operate-td">
-            <a-button type="primary" @click="startClick(record)">启动</a-button>
-            <a-button type="primary">重启</a-button>
+            <a-button type="primary" @click="startServerClick(record)" v-show="!record.isRunning">启动</a-button>
+            <a-button type="primary" @click="stopServerClick(record)" v-show="record.isRunning">停止</a-button>
+            <a-button type="primary" @click="startServerClick(record)">重启</a-button>
             <a-dropdown :trigger="['click']">
               <template #overlay>
                 <a-menu >
@@ -54,7 +55,9 @@
 </template>
 
 <script setup>
-
+// eslint-disable-next-line no-unused-vars
+import {watch} from 'vue';
+import {useMainStore} from '@/store'
 import {DownOutlined, RightSquareFilled} from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import Tool from '@/main/Tool'
@@ -63,8 +66,9 @@ import GetPath from "@/main/GetPath";
 import Software from "@/main/software/Software";
 import ServerControl from "@/main/ServerControl";
 import MessageBox from "@/main/MessageBox";
-import {enumGetName} from "@/main/utils";
-import {EnumSoftwareType} from "@/main/enum";
+import {storeToRefs} from "pinia/dist/pinia";
+//import {sleep} from "@/main/utils";
+
 const columns = [
   {
     title: '服务名',
@@ -88,9 +92,13 @@ const columns = [
   }
 ];
 
-let data;
-const list = Software.getList(enumGetName(EnumSoftwareType,EnumSoftwareType.Server));
-data = list.filter((item)=>item.Installed);
+const mainStore = useMainStore();
+const {serverList} = storeToRefs(mainStore);
+
+//todo 检查所有服务状态，不加await，配合自启服务显示，放到运行日志里
+
+serverList.value = serverList.value.filter(item => Software.IsInStalled(item));
+
 const serviceChange = ()=>{
   message.info('下个版本开放！！！');
 }
@@ -106,14 +114,27 @@ const openInstallPath = async (item) => {
   await Tool.openPath(Software.getPath(item));
 }
 const openConfPath = async (item) => {
-  console.log(Software.getServerConfPath(item))
   await Tool.openTextFile(Software.getServerConfPath(item));
 }
 
-
-const startClick = async (item) => {
+const startServerClick = async (item) => {
   try {
+    //todo 开始前loading，开始后sleep 1-3s
     await ServerControl.start(item);
+    const unwatch = watch(() => item.errMsg, (errMsg) => {
+      if (errMsg) {
+        unwatch();
+        MessageBox.error(errMsg, '启动服务出错！');
+      }
+    });
+  } catch (error) {
+    MessageBox.error(error.message ? error.message : error, '启动服务出错！');
+  }
+}
+
+const stopServerClick = async (item) => {
+  try {
+    await ServerControl.stop(item);
   } catch (error) {
     MessageBox.error(error.message ? error.message : error, '启动服务出错！');
   }

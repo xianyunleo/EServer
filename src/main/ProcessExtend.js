@@ -12,7 +12,14 @@ export default class ProcessExtend{
         if (is.windows()) {
 
         } else {
-            return await Command.exec(`pkill -9 ${name}`);
+            try{
+                //pkill杀不存在的进程会有标准错误，从而引发异常
+                return await Command.exec(`pkill -9 ${name}`);
+                // eslint-disable-next-line no-empty
+            }catch{
+
+            }
+
         }
     }
 }

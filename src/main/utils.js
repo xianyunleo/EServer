@@ -29,7 +29,7 @@ export async function fsDelete(path) {
 }
 
 export function getFilNameWithoutExt(filename) {
-    return path.parse(filename).name;
+    return path.parse(filename)?.name;
 }
 
 export async function getFilesByDir(dirPath, search = null) {
@@ -42,7 +42,7 @@ export async function getFilesByDir(dirPath, search = null) {
             return item.name.includes(search);
         }
         return true;
-    }).map(item => item.name);
+    })?.map(item => item.name);
 }
 
 export async function getDirsByDir(dirPath, search = null) {
@@ -55,7 +55,7 @@ export async function getDirsByDir(dirPath, search = null) {
             return item.name.includes(search);
         }
         return true;
-    }).map(item => item.name);
+    })?.map(item => item.name);
 }
 
 
@@ -66,4 +66,12 @@ export function enumGetName(enumObj, val) {
             return name;
         }
     }
+}
+
+export function parseTemplateStrings(str, argObj) {
+    return str.replace(/\${(.+?)}/g, (match, p1) => argObj[p1]);
+}
+
+export function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
 }

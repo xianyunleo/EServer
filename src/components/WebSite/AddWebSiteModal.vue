@@ -45,6 +45,7 @@ import path from "path";
 import Website from "@/main/Website";
 import GetPath from "@/main/GetPath";
 import MessageBox from "@/main/MessageBox";
+import {STATIC_WEB_NAME} from "@/main/constant";
 
 const {search, addModalVisible: visible} = inject('website');
 
@@ -64,6 +65,7 @@ const phpVersionList = ref([]);
   phpVersionList.value = list.map(item => {
     return {value: item.version, label: item.name};
   });
+  phpVersionList.value.push({value: '', label: STATIC_WEB_NAME})
 })();
 
 const serverNameChange = () => {

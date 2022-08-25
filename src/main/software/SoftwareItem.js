@@ -4,6 +4,7 @@ export default class SoftwareItem {
     ServerProcessName;
     ServerProcessPath;
     ServerConfPath;
+    StartServerCommand;
     Type;
     CanDelete;
     Icon;

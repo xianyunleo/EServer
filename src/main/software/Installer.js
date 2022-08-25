@@ -1,27 +1,29 @@
 import App from "@/main/App";
 import path from "path";
 import child_process from "child_process";
-import is from "electron-is";
 import {EnumSoftwareInstallStatus} from "@/main/enum";
 import extract from "extract-zip";
 import Software from "@/main/software/Software";
 import GetPath from "@/main/GetPath";
-
+import Database from "@/main/Database";
 
 export default class Installer {
-    softItem;
+    item;
 
+    /**
+     *
+     * @param softItem {SoftwareItem}
+     */
     constructor(softItem) {
-        this.softItem = softItem;
-        this.softItem.installInfo = this.softItem.installInfo ? this.softItem.installInfo : {}
-        this.softItem.installInfo.status = EnumSoftwareInstallStatus.Ready;
+        this.item = softItem;
+        this.item.installInfo = this.item.installInfo ? this.item.installInfo : {}
+        this.item.installInfo.status = EnumSoftwareInstallStatus.Ready;
         this.resetDownloadInfo();
-        this.downloadSignal = this.softItem.downloadAbortController?.signal;
-        this.softItem.url = 'https://dl-cdn.phpenv.cn/release/test.zip';
+        this.downloadSignal = this.item.downloadAbortController?.signal;
     }
 
     resetDownloadInfo() {
-        this.softItem.installInfo.dlInfo = {
+        this.item.installInfo.dlInfo = {
             completedSize: 0,
             totalSize: 0,
             percent: 0,
@@ -31,16 +33,16 @@ export default class Installer {
 
     setDownloadInfo(dlInfo) {
         if (dlInfo.completedSize) {
-            this.softItem.installInfo.dlInfo.completedSize = dlInfo.completedSize;
+            this.item.installInfo.dlInfo.completedSize = dlInfo.completedSize;
         }
         if (dlInfo.totalSize) {
-            this.softItem.installInfo.dlInfo.totalSize = dlInfo.totalSize;
+            this.item.installInfo.dlInfo.totalSize = dlInfo.totalSize;
         }
         if (dlInfo.percent) {
-            this.softItem.installInfo.dlInfo.percent = dlInfo.percent;
+            this.item.installInfo.dlInfo.percent = dlInfo.percent;
         }
         if (dlInfo.perSecond) {
-            this.softItem.installInfo.dlInfo.perSecond = dlInfo.perSecond;
+            this.item.installInfo.dlInfo.perSecond = dlInfo.perSecond;
         }
     }
 
@@ -51,17 +53,17 @@ export default class Installer {
         } catch (error) {
             this.changeStatus(EnumSoftwareInstallStatus.DownloadError);
             let errMsg = error.message ? error.message : '未知错误';
-            throw new Error(`下载失败，${errMsg}`);
+            throw new Error(`下载出错，${errMsg}`);
         }
 
-        if (is.dev()) console.log('判断是否下载完成')
+        if (App.isDev()) console.log('判断是否下载完成')
 
-        if (this.softItem.installInfo.status !== EnumSoftwareInstallStatus.Downloaded) {
+        if (this.item.installInfo.status !== EnumSoftwareInstallStatus.Downloaded) {
             this.changeStatus(EnumSoftwareInstallStatus.Abort);
             return;
         }
 
-        if (is.dev()) console.log('开始解压...')
+        if (App.isDev()) console.log('开始解压...')
 
         try {
             await this.zipExtract();
@@ -69,8 +71,19 @@ export default class Installer {
         } catch (error) {
             this.changeStatus(EnumSoftwareInstallStatus.ExtractError);
             let errMsg = error.message ? error.message : '未知错误';
-            throw new Error(`解压失败，${errMsg}`);
+            throw new Error(`解压出错，${errMsg}`);
         }
+
+        try {
+            // eslint-disable-next-line no-constant-condition
+            if ('mysql'===1) {
+                Database.InitMySQL();
+            }
+        } catch (error) {
+            let errMsg = error.message ? error.message : '未知错误';
+            throw new Error(`安装出错，${errMsg}`);
+        }
+
         this.changeStatus(EnumSoftwareInstallStatus.Finish);
     }
 
@@ -79,7 +92,8 @@ export default class Installer {
             let corePath = App.getUserCorePath();
             let downloaderPath = path.join(corePath, 'aria2c');
             let downloadsPath = path.join(corePath, 'downloads');
-            let args = [this.softItem.url, '--check-certificate=false', '--allow-overwrite=true', `--dir=${downloadsPath}`];
+            let url = 'https://dl-cdn.phpenv.cn/release/test.zip';
+            let args = [url, '--check-certificate=false', '--allow-overwrite=true', `--dir=${downloadsPath}`];
 
             let dlProcess = child_process.spawn(downloaderPath, args);
             this.changeStatus(EnumSoftwareInstallStatus.Downloading);
@@ -98,7 +112,7 @@ export default class Installer {
 
             dlProcess.stdout.on('data', (data) => {
                 data = data.toString();
-                if (is.dev()) console.log(data)
+                if (App.isDev()) console.log(data)
                 let matches = data.match(progressRegx)
                 if (matches) {
                     this.setDownloadInfo({
@@ -137,11 +151,11 @@ export default class Installer {
     }
 
     changeStatus(status) {
-        this.softItem.installInfo.status = status;
+        this.item.installInfo.status = status;
     }
 
     async zipExtract() {
-        let softItem = this.softItem;
+        let softItem = this.item;
         softItem.DirName = 'test';
         let filePath = path.join(GetPath.getDownloadsPath(), `HandyControl.git.zip`);
         let typePath = Software.getTypePath(softItem.Type)

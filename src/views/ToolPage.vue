@@ -38,6 +38,7 @@ import MysqlResetPwdModal from "@/components/ToolPage/MysqlResetPwdModal"
 import Hosts from "@/main/Hosts";
 import MessageBox from "@/main/MessageBox";
 import GetPath from "@/main/GetPath";
+import {sleep} from "@/main/utils";
 
 
 const iconTypes = {
@@ -49,6 +50,7 @@ const iconTypes = {
 
 const editHosts =  async () => {
   message.info('打开中，请等待...');
+  await sleep(100);
   try {
     await Hosts.openHosts();
   } catch (error) {

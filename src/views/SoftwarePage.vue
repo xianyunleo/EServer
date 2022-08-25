@@ -97,11 +97,16 @@ import {DownOutlined} from '@ant-design/icons-vue';
 import Software from "@/main/software/Software";
 import MessageBox from "@/main/MessageBox";
 import {enumGetName} from "@/main/utils";
+//import path from "path";
 
 const mainStore = useMainStore();
 const {softwareList,  softwareTypeSelected} = storeToRefs(mainStore);
-EnumSoftwareType
 softwareTypeSelected.value = 'Installed';
+
+//todo
+// for (const item of list) {
+//   item.Installed = Software.IsInStalled(item);
+// }
 
 const setShowList = (type) => {
   for (const item of softwareList.value) {

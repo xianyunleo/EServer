@@ -8,6 +8,10 @@ import fs from "fs";
 
 
 export default class App{
+    static isDev(){
+        return !app.isPackaged;
+    }
+
     static getAppPath() {
         if (is.windows()) {
             return path.dirname(App.getExecutablePath());
@@ -24,13 +28,13 @@ export default class App{
     static getUserCorePath() {
         let result = '';
         if (is.windows()) {
-            if (is.dev()) {
+            if (App.isDev()) {
                 result = path.join(App.getPlatformPath(), WIN_CORE_PATH_NAME)
             } else {
                 result = path.join(App.getAppPath(), WIN_CORE_PATH_NAME)
             }
         } else if (is.macOS()) {
-            if (is.dev()) {
+            if (App.isDev()) {
                 result = path.join(App.getPlatformPath(), MAC_CORE_PATH_NAME)
             } else {
                 result = path.join(App.getAppPath(), MAC_CORE_PATH_NAME)
@@ -57,7 +61,7 @@ export default class App{
         if (!await fsExists(initFile)) {
             return;
         }
-        if (is.macOS() && is.production()) {
+        if (is.macOS() && !App.isDev()) {
             if (!await fsExists(MAC_USER_CORE_PATH)) {
                 await fs.promises.mkdir(MAC_USER_CORE_PATH);
                 await App.moveCoreSubDir(['software', 'tmp', 'www']);

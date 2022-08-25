@@ -1,24 +1,18 @@
 import App from "@/main/App";
 import path from "path";
 import fs from "fs";
-import {fsExistsSync} from "@/main/utils";
-import {SoftwareType} from "@/main/enum";
+import {enumGetName, fsExistsSync} from "@/main/utils";
+import {EnumSoftwareType} from "@/main/enum";
 import GetPath from "@/main/GetPath";
 
 export default class Software {
 
-    static getIconPath() {
-        let corePath = App.getUserCorePath();
-        let softPath = path.join(corePath, '/config/software');
-        return path.join(softPath, '/icon');
-    }
-
     /**
      *
-     * @param type {SoftwareItem.Type}
      * @returns {[]}
      */
-    static getList(type) {
+    static getList() {
+        //TODO 配置写到内存里
         let corePath = App.getUserCorePath();
         let softPath = path.join(corePath, '/config/software');
         let softConfigPath = path.join(softPath, 'software.json');
@@ -26,17 +20,10 @@ export default class Software {
         let json = fs.readFileSync(softConfigPath);
         let list = JSON.parse(json);
 
-        let newList = [];
         for (const item of list) {
-            if (type && type !== item.Type) {
-                continue;
-            }
-            let newItem = item;
-            newItem.Installed = Software.IsInStalled(item);
-            newItem.Icon = path.join(softIconPath, item.Icon);
-            newList.push(newItem);
+            item.Icon = path.join(softIconPath, item.Icon);
         }
-        return newList;
+        return list;
     }
 
     /**
@@ -62,21 +49,42 @@ export default class Software {
     }
 
     /**
+     * 获取软件服务配置文件所在的目录
+     * @param item {SoftwareItem}
+     * @returns {string}
+     */
+    static getServerConfPath(item) {
+        let serverTypeName = enumGetName(EnumSoftwareType,EnumSoftwareType.Server);
+        if (item.Type !== serverTypeName || !item.ServerConfPath) {
+            return null;
+        }
+        let softPath = Software.getPath(item);
+        return path.join(softPath, item.ServerConfPath);
+    }
+
+    /**
      * 根据软件类型，获取软件所在的类型目录
      * @param type {SoftwareItem.Type}
      * @returns {string}
      */
     static getTypePath(type) {
-        type = SoftwareType[type];
+        type = EnumSoftwareType[type];
         switch (type) {
-            case SoftwareType.PHP:
+            case EnumSoftwareType.PHP:
                 return GetPath.getPHPPath();
-            case SoftwareType.Server:
+            case EnumSoftwareType.Server:
                 return GetPath.getServerPath();
-            case SoftwareType.MySQL:
+            case EnumSoftwareType.MySQL:
                 return GetPath.getServerPath();
             default:
                 return '';
         }
     }
+
+    static getIconPath() {
+        let corePath = App.getUserCorePath();
+        let softPath = path.join(corePath, '/config/software');
+        return path.join(softPath, '/icon');
+    }
+
 }

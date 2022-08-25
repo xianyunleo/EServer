@@ -18,11 +18,18 @@ export default class Tool {
         shell.openPath(path);
     }
 
+    /**
+     *
+     * @returns {Promise<boolean>}
+     */
     static async vscodeIsInstalled() {
-        let command = "code -v";
-        let output = await Command.exec(command);
-        let reg = /\d+\.\d+\.\d+/;
-        return reg.test(output)
+        let command = "which code";
+        try {
+            let output = await Command.exec(command);
+            return output && output.trim() !== '';
+        } catch {
+            return false;
+        }
     }
 
     static async openUrl(url) {
