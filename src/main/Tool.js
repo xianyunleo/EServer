@@ -8,14 +8,14 @@ export default class Tool {
         }
         let command = `code ${filePath}`;
         if (isSudo) {
-            return await Command.sudoExec(command);
+            await Command.sudoExec(command);
         } else {
-            return await Command.exec(command);
+            await Command.exec(command);
         }
     }
 
-    static openPath(path) {
-        shell.openPath(path);
+    static async openPath(path) {
+        await shell.openPath(path);
     }
 
     /**

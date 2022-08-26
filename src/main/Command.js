@@ -8,7 +8,7 @@ export default class Command {
      * 执行命令，并返回结果（标准输出）
      * @param command
      * @param options
-     * @returns {Promise<String>}
+     * @returns {Promise<string>}
      */
     static async exec(command, options = {}) {
         let formatCommand;

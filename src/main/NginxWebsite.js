@@ -15,25 +15,25 @@ export default class NginxWebsite {
         this.confPath = Nginx.getWebsiteConfPath(this.serverName);
     }
 
-    async initConfText() {
-        if(!this.confText){
-            this.confText = await fs.promises.readFile(this.confPath, {encoding: 'utf8'});
+    initConfText() {
+        if (!this.confText) {
+            this.confText = fs.readFileSync(this.confPath, {encoding: 'utf8'});
         }
     }
 
-    async getBasicInfo(){
-        await this.initConfText();
+    getBasicInfo() {
+        this.initConfText();
         return {
             serverName: this.serverName,
             port: this.getPort(),
             rootPath: this.getRootPath(),
-            phpVersion:this.getPHPVersion() ?? STATIC_WEB_NAME,
+            phpVersion: this.getPHPVersion() ?? STATIC_WEB_NAME,
         }
     }
 
-    async getRewrite() {
+    getRewrite() {
         let rewritePath = Nginx.getWebsiteRewriteConfPath(this.serverName);
-        return await fs.promises.readFile(rewritePath, {encoding: 'utf8'});
+        return fs.readFileSync(rewritePath, {encoding: 'utf8'});
     }
 
     getPort() {
@@ -52,22 +52,22 @@ export default class NginxWebsite {
     }
 
 
-    async saveBasicInfo(websiteInfo) {
-        await this.initConfText();
+    saveBasicInfo(websiteInfo) {
+        this.initConfText();
         let text = this.confText;
         text = text.replace(/(?<=listen\s+)\d+(?=\s*;)/, websiteInfo.port);
         text = text.replace(/(?<=root\s+)\S+(?=\s*;)/, websiteInfo.rootPath);
-        text = Nginx.replaceConfPHPVersion(websiteInfo.phpVersion,text);
+        text = Nginx.replaceConfPHPVersion(websiteInfo.phpVersion, text);
         this.confText = text;
-        await this.saveInfo();
+        this.saveInfo();
     }
 
-    async saveUrlRewrite(content) {
+    saveUrlRewrite(content) {
         let rewritePath = Nginx.getWebsiteRewriteConfPath(this.serverName);
-        await fs.promises.writeFile(rewritePath,content);
+        fs.writeFileSync(rewritePath, content);
     }
 
-    async saveInfo() {
-        await fs.promises.writeFile(this.confPath, this.confText);
+    saveInfo() {
+        fs.writeFileSync(this.confPath, this.confText);
     }
 }

@@ -1,4 +1,4 @@
-#!/Applications/EasyEnv/software/php/php-7.4/bin/php
+#!/Applications/EasySrv/software/php/php-7.4/bin/php
 <?php if (!class_exists('PHP_Archive')) {
 ?><?php
 /**
@@ -1171,8 +1171,8 @@ spl_autoload_register('command_autoload');
 new PharCommand($argc, $argv);
 
 __HALT_COMPILER(); ?>
-6            pharcommand       directorytreeiterator.incé  Œ½ñbN  Ú½êc¤         clicommand.incü!  Œ½ñb%
-  Çší¤         directorygraphiterator.incÒ  Œ½ñbi  û”¢F¤         invertedregexiterator.inc¼  Œ½ñbÏ   ÒqÆ¤         pharcommand.incDœ  Œ½ñbé#  ¡ÍÚŒ¤         phar.inc  Œ½ñb,  ùä>¤      TÛnÚ@}¶¿b°“@HúR9W
+6            pharcommand       directorytreeiterator.incé  3cN  Ú½êc¤         clicommand.incü!  3c%
+  Çší¤         directorygraphiterator.incÒ  3ci  û”¢F¤         invertedregexiterator.inc¼  3cÏ   ÒqÆ¤         pharcommand.incDœ  3cé#  ¡ÍÚŒ¤         phar.inc  3c,  ùä>¤      TÛnÚ@}¶¿b°“@HúR9W
 $ :a^*U²6f°W2¶5»Nˆšü{g¹$h‘ÌÊ3çÌœ9;pyS$…mŸÁíB¦sIéœ^4!J$ø¥-³È†È,¦¼,`°Ë"EUIâ¢T(ý}ÆôQM¯P¢ÔIN ‚¢RÁ·)Æuj.4Î;/Ð2ÇWŽ›T0ñ9h‘ÍÍa2œ€/IÐgOkÝDÁNÐFèbÌÌB7èF“(íf3¼ú—ì'$%óÎÚg•š ®4fsSŒJf=m3[~Û–™¦—gJSiXP¾…ÐIÛ¶LÃBXBÃDöµæ°¾'4¨SÛZ”Y¤°0Œ6ÕœŠåÚ·±¸fÚóöó¶2|Þ	ì‰(ag7ú*À{Ä_Ö®›œ@xÞ÷ÁÏ°„w#0î>ªªîIu|èèy½®ï‡³Ál:ß¿~’žõ†áý`ö†#¿oo+mæþwš3Žº¶õf¯M¾%Ô%e –jÐ€).ÍY.ä
 çð,Ùæw¢>\sÚ×†Y¸‚f“{Y¾v§‘^u. ‘Â%4t"Uë:FÝÇB'ŽkâÇÇ.jÍm_íÁ‚òqçlê¶®¡Æ¼HŽ7Ð|…&xü@ÕìŸz¨º÷þßJ­ªÒ¯VÓ­îÁbònê<ÐÄWáì{ÚcÂ˜·PU¶ÊŒb°ùùd3Eš:81Í‹­jë1 ,Rh@¡ /Îúûsq.2PwW°’Ço®í?µksÚHò3üŠ1Å­¤°±·j÷L`/—»­Úªd/åd?Š’Åt7#a»²þï×ÝóÐ	ìÍí¥Ê fzú=ýR^ÿ´ÛìºÝ‹W¯Øßâ$å,J“(ßnÃl5J²¨Ë`=ÉÖ"/wìÃ&´p'd(%{ûî—·
 ž¶Â²Øä‚±÷¡ˆJÉþžs±æêÔ*,8ƒW——?°!~ýë¸…ˆY…åBós„.coîd!Â¨`w¡ŽóLæÈ¹BÀ’í.å[ža‘äÙs\í¹ ÆÆ£K"Üñ¾v;;‘<*øŠõC±Ž&‡+ûúJ´]I6e¡á£4 î»Ú^·—Y„Ò°åÅ-D>ñ0P`Š|Ðí —~±Iäp†Û€Æ°ê,ïõòÞYÖÌJžÆ77k^h±¥Oû©Ù³oÄú,Y@€Lb¦Øc¯ÙUÀ©Ž‚çBäÂïýš[{­“=Ï,ÚðèëE¶æ—‹'¶áéîsÖ#ÊOŒ§’#Ö³DJ^øÓs’d>^,æž(3o´ü-û’å÷™¥êiJãÅ“÷"â
@@ -1234,4 +1234,4 @@ X H¬v,·Pÿ5vÕ2µ'KnMoj}›Q]ÜŸšzÿ.j¿}p¨ò]Y0UVÃ
 -nÓßIƒwÑÎ*b/j“‘PÇ¶¨dH¸?’n˜ Å^ôh”7xÐSþ=ñ:¤ãñÞw®áSñç/¶¨
 šjX^¼|q4b,^XÂö& á‡uà:ƒð9·q®+e†vhô‹Úw:gW|íû¼ö]ý–ágðíOÁãC¼H÷«ŸöðSßùú.ÇÑj¿VË$>|x M ¾Û:Œ
 ]$ '•¢Wô+h=ü‡7‚)«Z¡S¯Ôo^“B¯"jÀop ït?Õoµ"Á·r©BÓÐõŠÿKÆcBÅ­0.½–RM°ê°:/©Äí˜Ï)€ÄYÿðêllt`~o*dä„N™¥tÑ€|Ú„c”Ë g¿hwJZ`Ã»Fâ~+ÙÈGl„dãçÔŒQ·‚úÛ¢(0c,2°šå´|2ülöÉ'x$”çí	LÏò§bwg§/¶õ›}únãÖÓ·5‹ÓÕÇ	K÷9ó‹Ø¼M+žSÓyƒëXòeQs]Dm–†­Øùß7/}}‹ïØ{%ÿ½îàxÛæ†ü¬c¿÷LlÄEKo­Ø Ër¬µ—U%6õÎû‹h|Aâ@—ZaƒyxÝÓc& ¼¿/®°vÄÅDò›¡öéWùf4–½@ $ÄxìWl	·?¼™1©únãß]ñÏ¢·»x?h€ßÙËS„tsôèæVŽ?\EyšÌuF_”i…î.\“#5/®#m~œB¸Ž+çgFÃ›³®›ÿCyr5òA]á¹\<ÜüÅ<«¸W3Ê9)vúÝ©æ8þÊ.2ƒž‚!:d¯9Í75lžLöÅgÙ•¦Ÿýå¯¦ŸOwÆáh´7Mäß';í>Úû\Ž?—›„Ÿ‰Mu JÀÿçµƒËà‰Ý½"ÔpðTýPÞµic::=q0±é³èwø|ðOœ£U5Â“Îöz	”&’!:9í‰Eˆö“Òö«ˆÜ„Š;´¡_Cä&…þ¼ªÐ¬¨óö_i\ Æc>µý|ñœÙÌ’sÉw!¸:\‹jÞKÖºægôtTâôy`tëeßä0>¤w+±ÚÑˆs¼À*ê
-ÍèŒ/të$@òõoU]y >ÙÚüûýPñIšfp¦a€5Ôü‡{êÃ“Ã{ÿ’AOƒ@…Ïì¯˜£6±T/šh¬µ=4iì0S`ã²Ù]Ôÿ»­©mÐ–™÷½yû–p7­‹Z©x4R0‚‡L‚º@k›ôŠ¶9W¡†¥ˆ½°fM$Û‰|Q1À9	+âœ6(EO ÏÕdrÝëFôuÛ0¯Êm*s¬âÚ¶ý•ôáÉ¦2<-_gœº¡Ÿ®=ï­Û¸¿ªÂÆªËÚPIÖ£×•=Öº!vbƒËñ¤¯ö§]¸ƒJ‚ì6ôì‰ÑW¬ZeÁ&Ý±“_éÜ¢Lgç*1Éd!CãèVE_jß?3Ý)^¦wmÓ­s4htzJ„Tg¹ÅPÆ}ÉV>Ç^ ›Ú¤wâ=ì‡iò(ÿaÙ>‚W>¬‡;@§÷êFU\îÉ$ªwbSÔ3ÂWþ›%   GBMB
+ÍèŒ/të$@òõoU]y >ÙÚüûýPñIšfp¦a€5Ôü‡{êÃ“Ã{ÿ’AOƒ@…Ïì¯˜£6±T/šh¬µ=4iì0S`ã²Ù]Ôÿ»­©mÐ–™÷½yû–p7­‹Z©x4R0‚‡L‚º@k›ôŠ¶9W¡†¥ˆ½°fM$Û‰|Q1À9	+âœ6(EO ÏÕdrÝëFôuÛ0¯Êm*s¬âÚ¶ý•ôáÉ¦2<-_gœº¡Ÿ®=ï­Û¸¿ªÂÆªËÚPIÖ£×•=Öº!vbƒËñ¤¯ö§]¸ƒJ‚ì6ôì‰ÑW¬ZeÁ&Ý±“_éÜ¢Lgç*1Éd!CãèVE_jß?3Ý)^¦wmÓ­s4htzJ„Tg¹ÅPÆ}ÉV>Ç^ ›Ú¤wâ=ì‡iò(ÿaÙ>‚W>¬‡;@§÷êÑ”þ;\vÌ¡H—àžß6ÓÑ¸(?   GBMB

@@ -7,12 +7,12 @@ export default class GetPath {
         return path.join(App.getUserCorePath(), 'software');
     }
 
-    static getServerPath(){
+    static getServerTypePath(){
         return path.join(GetPath.getSoftwarePath(), 'server');
     }
 
     static getNginxPath(){
-        return path.join(GetPath.getServerPath(), 'nginx');
+        return path.join(GetPath.getServerTypePath(), 'nginx');
     }
 
     static getNginxConfPath(){
@@ -31,8 +31,12 @@ export default class GetPath {
         return path.join(GetPath.getNginxVhostsPath(), 'rewrite');
     }
 
-    static getPHPPath(){
+    static getPHPTypePath(){
         return path.join(GetPath.getSoftwarePath(), 'php');
+    }
+
+    static getMysqlPathByVersion(version) {
+        return path.join(GetPath.getServerTypePath(), `mysql-${version}`);
     }
 
     static getWWWPath(){

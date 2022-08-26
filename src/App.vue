@@ -21,14 +21,13 @@ import MessageBox from "@/main/MessageBox";
 
 const spinning = ref(false);
 
-(async () => {
-  if (!await App.initFileExists()) {
+(() => {
+  if (!App.initFileExists()) {
     return;
   }
-
   spinning.value = true;
   try {
-    await App.init();
+    App.init();
   } catch (error) {
     MessageBox.error(error.message ? error.message : error, '软件初始化出错！');
   }

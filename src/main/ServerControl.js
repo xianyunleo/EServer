@@ -14,38 +14,41 @@ export default class ServerControl {
      * @param softItem
      * @returns {Promise<void>}
      */
-     static async start(softItem) {
-         const item = softItem;
+    static async start(softItem) {
+        const item = softItem;
 
-         //杀死同名的或者同类的其他服务
-         if (item.Name === 'Nginx') {
-             ServerControl.startPHPFPM();
-             await ServerControl.killWebServer();
-         } else {
-             await ProcessExtend.killByName(item.ServerProcessName);
-         }
+        let workPath = Software.getPath(item); //服务目录
+        let serverProcessPath = path.join(workPath, item.ServerProcessPath);  //服务的进程目录
+        //杀死同名的或者同类的其他服务
+        if (item.Name === 'Nginx') {
+            ServerControl.startPHPFPM();
+            await ServerControl.killWebServer();
+        } else {
+            let processName = path.parse(serverProcessPath)?.name;
+            await ProcessExtend.killByName(processName);
+        }
 
-         let workPath = Software.getPath(item); //服务目录
-         let processPath = path.join(workPath, item.ServerProcessPath);  //服务的进程目录
-         let commandStr;
 
-         if (item.StartServerCommand) {
-             let tempStr = item.StartServerCommand.trim();
-             commandStr = parseTemplateStrings(tempStr, {ProcessPath: processPath, WorkPath: workPath});
-         } else {
-             commandStr = processPath;
-         }
+        let commandStr;
 
-         const options = {cwd: workPath};
+        if (item.StartServerCommand) {
+            let tempStr = item.StartServerCommand.trim();
+            let argObj = {ServerProcessPath: serverProcessPath, WorkPath: workPath};
+            commandStr = parseTemplateStrings(tempStr, argObj);
+        } else {
+            commandStr = serverProcessPath;
+        }
 
-         item.isRunning = true;
-         item.errMsg = '';
-         child_process.exec(commandStr, options, (error, stdout, stderr) => {
-             item.isRunning = false;
-             if (stderr) {
-                 item.errMsg = stderr;
-             }
-         });
+        const options = {cwd: workPath};
+
+        item.isRunning = true;
+        item.errMsg = '';
+        child_process.exec(commandStr, options, (error, stdout, stderr) => {
+            item.isRunning = false;
+            if (stderr) {
+                item.errMsg = stderr;
+            }
+        });
     }
 
     /**
@@ -56,7 +59,8 @@ export default class ServerControl {
     static async stop(softItem) {
         //todo 只杀本项目的服务
         const item = softItem;
-        let promiseArr = [ProcessExtend.killByName(item.ServerProcessName)];
+        let processName = path.parse(item.ServerProcessPath)?.name;
+        let promiseArr = [ProcessExtend.killByName(processName)];
         if (item.Name === 'Nginx') {
             promiseArr.push(ServerControl.killPHPFPM());
         }
@@ -71,7 +75,7 @@ export default class ServerControl {
         await ServerControl.killPHPFPM();
 
         let nginxVhostsPath = GetPath.getNginxVhostsPath();
-        let vhosts = await getFilesByDir(nginxVhostsPath,'.conf');
+        let vhosts =  getFilesByDir(nginxVhostsPath, '.conf');
         if (!vhosts || vhosts.length === 0) {
             return;
         }
@@ -100,11 +104,11 @@ export default class ServerControl {
             const item = phpItemMap.get(phpName);
 
             let workPath = Software.getPath(item); //服务目录
-            let processPath = path.join(workPath, item.ServerProcessPath);  //服务的进程目录
+            let serverProcessPath = path.join(workPath, item.ServerProcessPath);  //服务的进程目录
 
             let tempStr = item.StartServerCommand.trim();
             let argObj = {
-                ProcessPath: processPath,
+                ServerProcessPath: serverProcessPath,
                 ConfPath: path.join(workPath, item.ConfPath),
                 ServerConfPath: path.join(workPath, item.ServerConfPath),
             };

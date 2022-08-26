@@ -1,7 +1,7 @@
 import App from "@/main/App";
 import path from "path";
 import fs from "fs";
-import {enumGetName, fsExistsSync} from "@/main/utils";
+import {enumGetName, fsExists} from "@/main/utils";
 import {EnumSoftwareType} from "@/main/enum";
 import GetPath from "@/main/GetPath";
 
@@ -29,12 +29,11 @@ export default class Software {
     /**
      * 判断软件是否安装
      * @param item {SoftwareItem}
-     * @returns {Promise<|undefined>}
-     * @constructor
+     * @returns {boolean}
      */
     static IsInStalled(item) {
         let path = Software.getPath(item);
-        return fsExistsSync(path);
+        return fsExists(path);
     }
 
 
@@ -63,7 +62,7 @@ export default class Software {
     }
 
     /**
-     * 根据软件类型，获取软件所在的类型目录
+     * 根据软件类型，获取软件的类型目录
      * @param type {SoftwareItem.Type}
      * @returns {string}
      */
@@ -71,11 +70,11 @@ export default class Software {
         type = EnumSoftwareType[type];
         switch (type) {
             case EnumSoftwareType.PHP:
-                return GetPath.getPHPPath();
+                return GetPath.getPHPTypePath();
             case EnumSoftwareType.Server:
-                return GetPath.getServerPath();
+                return GetPath.getServerTypePath();
             case EnumSoftwareType.MySQL:
-                return GetPath.getServerPath();
+                return GetPath.getServerTypePath();
             default:
                 return '';
         }

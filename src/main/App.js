@@ -3,12 +3,13 @@ import path from "path";
 import {app} from '@electron/remote'
 import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
 import is from "electron-is";
-import {fsDelete, fsExists, fsMove} from "@/main/utils";
+import {fsDelete, fsExists, fsMove, getDirsByDir} from "@/main/utils";
 import fs from "fs";
+import GetPath from "@/main/GetPath";
 
 
-export default class App{
-    static isDev(){
+export default class App {
+    static isDev() {
         return !app.isPackaged;
     }
 
@@ -51,41 +52,51 @@ export default class App{
         return path.join(__static, `../extra/${process.platform}`);
     }
 
-    static async initFileExists() {
+    static initFileExists() {
         let initFile = App.getInitFilePath();
-        return await fsExists(initFile);
+        return fsExists(initFile);
     }
 
-    static async init() {
+    static init() {
         let initFile = App.getInitFilePath();
-        if (!await fsExists(initFile)) {
+        if (!fsExists(initFile)) {
             return;
         }
         if (is.macOS() && !App.isDev()) {
-            if (!await fsExists(MAC_USER_CORE_PATH)) {
-                await fs.promises.mkdir(MAC_USER_CORE_PATH);
-                await App.moveCoreSubDir(['software', 'tmp', 'www']);
-                await App.createCoreSubDir(['downloads']);
+            if (!fsExists(MAC_USER_CORE_PATH)) {
+                fs.mkdirSync(MAC_USER_CORE_PATH);
+                App.moveCoreSubDir(['software', 'tmp', 'www']);
+                App.createCoreSubDir(['downloads']);
             }
         }
-        await fsDelete(initFile);
+        fsDelete(initFile);
+    }
+
+    static initMySQL() {
+        let serverPath = GetPath.getServerTypePath();
+        let mysqlList = getDirsByDir(serverPath, 'mysql');
+        for (const name of mysqlList) {
+            let mysqlPath = path.join(serverPath, name);
+            if (!fsExists()) {
+                console.log(mysqlPath)
+            }
+        }
     }
 
     /**
      * 将App包内的Core子目录移动到用户Core目录
      * @param dirs
-     * @returns {Promise<void>}
      */
-    static async moveCoreSubDir(dirs) {
+    static moveCoreSubDir(dirs) {
         let corePath = App.getUserCorePath();
         for (const dir of dirs) {
-            await fsMove(path.join(corePath, dir), path.join(MAC_USER_CORE_PATH, dir));
+            fsMove(path.join(corePath, dir), path.join(MAC_USER_CORE_PATH, dir));
         }
     }
 
-    static async createCoreSubDir(dirs) {
+    static createCoreSubDir(dirs) {
         for (const dir of dirs) {
-            await fs.promises.mkdir(path.join(MAC_USER_CORE_PATH, dir));
+            fs.mkdirSync(path.join(MAC_USER_CORE_PATH, dir));
         }
     }
 }

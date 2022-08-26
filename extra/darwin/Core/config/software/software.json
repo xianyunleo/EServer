@@ -2,10 +2,19 @@
     {
         "Name": "Nginx",
         "DirName": "nginx",
-        "ServerProcessName": "nginx",
         "ServerProcessPath": "sbin/nginx",
         "ServerConfPath": "conf/nginx.conf",
-        "StartServerCommand":"${ProcessPath} -p ${WorkPath} -g 'daemon off;'",
+        "StartServerCommand":"${ServerProcessPath} -p ${WorkPath} -g 'daemon off;'",
+        "ExtraFile": [
+            {
+                "Name": "访问日志",
+                "Path": "logs/access.log"
+            },
+            {
+                "Name": "错误日志",
+                "Path": "logs/error.log"
+            }
+        ],
         "Type": "Server",
         "CanDelete": false,
         "Icon": "nginx.png",
@@ -15,10 +24,9 @@
         "Name": "PHP-7.4",
         "DirName": "php-7.4",
         "ConfPath": "etc/php.ini",
-        "ServerProcessName": "php-fpm",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerCommand":"${ProcessPath} -c ${ConfPath} -y ${ServerConfPath}",
+        "StartServerCommand":"${ServerProcessPath} -c ${ConfPath} -y ${ServerConfPath}",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -36,6 +44,15 @@
         "Name": "MySQL-5.7",
         "DirName": "mysql-5.7",
         "Type": "Server",
+        "ServerProcessPath": "bin/mysqld",
+        "ServerConfPath": "my.cnf",
+        "StartServerCommand":"${ServerProcessPath} --defaults-file=${ServerConfPath}",
+        "ExtraFile": [
+            {
+                "Name": "日志",
+                "Path": "logs/mysql.log"
+            }
+        ],
         "CanDelete": true,
         "Icon": "mysql.png",
         "Desc": "MySQL是一种关系数据库"

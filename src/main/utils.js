@@ -2,16 +2,7 @@
 import fs from "fs";
 import path from "path";
 
-export async function fsExists(path) {
-    try {
-        await fs.promises.access(path);
-        return true;
-    } catch {
-        return false;
-    }
-}
-
-export function fsExistsSync(path) {
+export function fsExists(path) {
     try {
         fs.accessSync(path);
         return true;
@@ -20,20 +11,26 @@ export function fsExistsSync(path) {
     }
 }
 
-export async function fsMove(sourcePath, targetPath) {
-    return await fs.promises.rename(sourcePath, targetPath);
+export function fsMove(sourcePath, targetPath) {
+    return fs.renameSync(sourcePath, targetPath);
 }
 
-export async function fsDelete(path) {
-    return await fs.promises.rm(path);
+export function fsDelete(path) {
+    return fs.rmSync(path);
 }
 
 export function getFilNameWithoutExt(filename) {
     return path.parse(filename)?.name;
 }
 
-export async function getFilesByDir(dirPath, search = null) {
-    let files = await fs.promises.readdir(dirPath, {withFileTypes: true});
+/**
+ * 获取指定目录下的所有文件名
+ * @param dirPath {string}
+ * @param search {string}
+ * @returns {string[]}
+ */
+export function getFilesByDir(dirPath, search = '') {
+    let files = fs.readdirSync(dirPath, {withFileTypes: true});
     return files.filter((item) => {
         if (item.name.charAt(0) === '.' || !item.isFile()) {
             return false;
@@ -42,11 +39,17 @@ export async function getFilesByDir(dirPath, search = null) {
             return item.name.includes(search);
         }
         return true;
-    })?.map(item => item.name);
+    }).map(item => item.name);
 }
 
-export async function getDirsByDir(dirPath, search = null) {
-    let files = await fs.promises.readdir(dirPath, {withFileTypes: true});
+/**
+ * 获取指定目录下的所有目录名
+ * @param dirPath {string}
+ * @param search {string}
+ * @returns {string[]}
+ */
+export function getDirsByDir(dirPath, search = '') {
+    let files = fs.readdirSync(dirPath, {withFileTypes: true});
     return files.filter((item) => {
         if (item.name.charAt(0) === '.' || !item.isDirectory()) {
             return false;
@@ -55,9 +58,8 @@ export async function getDirsByDir(dirPath, search = null) {
             return item.name.includes(search);
         }
         return true;
-    })?.map(item => item.name);
+    }).map(item => item.name);
 }
-
 
 export function enumGetName(enumObj, val) {
     let names = Object.keys(enumObj);

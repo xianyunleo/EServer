@@ -39,12 +39,12 @@ const formData = ref({
 });
 const rewriteList = ref([]);
 
-const getRewrite = async () => {
-  return await Website.getRewrite(serverName.value);
+const getRewrite = () => {
+  return Website.getRewrite(serverName.value);
 }
 
 (async () => {
-  formData.value.rewriteContent = await getRewrite();
+  formData.value.rewriteContent = getRewrite();
   let list = await Website.getRewriteRuleList();
   rewriteList.value = list.map(item => {
     return {value: item, label: item};
@@ -54,15 +54,15 @@ const getRewrite = async () => {
 
 const rewriteSelectChange = async (val) => {
   if (val === 0) {
-    formData.value.rewriteContent = await getRewrite();
+    formData.value.rewriteContent =  getRewrite();
   } else {
-    formData.value.rewriteContent = await Website.getRewriteByRule(val);
+    formData.value.rewriteContent =  Website.getRewriteByRule(val);
   }
 }
 
 const save = async () => {
   try {
-    await Website.saveRewrite(serverName.value, formData.value.rewriteContent);
+    Website.saveRewrite(serverName.value, formData.value.rewriteContent);
     message.info('保存成功');
   }catch (error){
     MessageBox.error(error.message ? error.message : error, '保存出错！');

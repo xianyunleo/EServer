@@ -12,12 +12,12 @@ export default class Hosts {
         let path = Hosts.getHostsPath();
 
         if (is.windows()) {
-            return await Tool.openTextFile(path);
+            await Tool.openTextFile(path);
         } else {
             if (!await Hosts.canEditHosts()) {
                 await Command.sudoExec(`chmod 666 ${path}`);
             }
-            return await Tool.openTextFile(path);
+            await Tool.openTextFile(path);
         }
     }
 

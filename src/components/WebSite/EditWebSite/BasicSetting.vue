@@ -41,7 +41,7 @@ const formData = ref({});
 const phpVersionList = ref([]);
 
 (async () => {
-  formData.value = await Website.getBasicInfo(serverName.value);
+  formData.value =  Website.getBasicInfo(serverName.value);
   let list = await Website.getPHPVersionList();
   phpVersionList.value = list.map(item => {
     return {value: item.version, label: item.name};

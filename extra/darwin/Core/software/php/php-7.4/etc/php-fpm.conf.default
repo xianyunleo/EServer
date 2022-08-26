@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;
 
 ; All relative paths in this configuration file are relative to PHP's install
-; prefix (/Applications/EasyEnv/software/php/php-7.4). This prefix can be dynamically changed by using the
+; prefix (/Applications/EasySrv/software/php/php-7.4). This prefix can be dynamically changed by using the
 ; '-p' argument from the command line.
 
 ;;;;;;;;;;;;;;;;;;
@@ -12,14 +12,14 @@
 
 [global]
 ; Pid file
-; Note: the default prefix is /Applications/EasyEnv/software/php/php-7.4/var
+; Note: the default prefix is /Applications/EasySrv/software/php/php-7.4/var
 ; Default Value: none
 ;pid = run/php-fpm.pid
 
 ; Error log file
 ; If it's set to "syslog", log is sent to syslogd instead of being written
 ; into a local file.
-; Note: the default prefix is /Applications/EasyEnv/software/php/php-7.4/var
+; Note: the default prefix is /Applications/EasySrv/software/php/php-7.4/var
 ; Default Value: log/php-fpm.log
 ;error_log = log/php-fpm.log
 
@@ -139,5 +139,5 @@
 ; file.
 ; Relative path can also be used. They will be prefixed by:
 ;  - the global prefix if it's been set (-p argument)
-;  - /Applications/EasyEnv/software/php/php-7.4 otherwise
-include=/Applications/EasyEnv/software/php/php-7.4/etc/php-fpm.d/*.conf
+;  - /Applications/EasySrv/software/php/php-7.4 otherwise
+include=/Applications/EasySrv/software/php/php-7.4/etc/php-fpm.d/*.conf

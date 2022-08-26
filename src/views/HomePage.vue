@@ -4,7 +4,7 @@
       <div class="quick-card-content">
 <!--        <a-button type="primary">一键启动</a-button>-->
 <!--        <a-button type="primary">命令行终端</a-button>-->
-        <a-button type="primary" @click="corePathClick">核心目录</a-button>
+        <a-button type="primary" @click="corePathClick">{{APP_NAME}}目录</a-button>
         <a-button type="primary" @click="wwwPathClick">网站目录</a-button>
       </div>
     </a-card>
@@ -44,7 +44,7 @@
       </template>
     </a-table>
 
-    <a-card title="运行日志" class="log-card">
+    <a-card title="服务运行日志" class="log-card">
       下个版本开放！！！
 <!--      <div>-->
 <!--        2022-06-04 15:39:57 [Nginx] 启动成功<br>-->
@@ -67,6 +67,7 @@ import Software from "@/main/software/Software";
 import ServerControl from "@/main/ServerControl";
 import MessageBox from "@/main/MessageBox";
 import {storeToRefs} from "pinia/dist/pinia";
+import {APP_NAME} from "@/main/constant";
 //import {sleep} from "@/main/utils";
 
 const columns = [
@@ -103,6 +104,14 @@ const serviceChange = ()=>{
   message.info('下个版本开放！！！');
 }
 
+const openTextFile = async (filePath) => {
+  try {
+    await Tool.openTextFile(filePath);
+  } catch (error) {
+    MessageBox.error(error.message ? error.message : error, '打开文件出错！');
+  }
+}
+
 const corePathClick = ()=>{
   Tool.openPath(App.getUserCorePath());
 }
@@ -111,10 +120,10 @@ const wwwPathClick = ()=>{
 }
 
 const openInstallPath = async (item) => {
-  await Tool.openPath(Software.getPath(item));
+   Tool.openPath(Software.getPath(item));
 }
 const openConfPath = async (item) => {
-  await Tool.openTextFile(Software.getServerConfPath(item));
+  openTextFile();
 }
 
 const startServerClick = async (item) => {

@@ -48,7 +48,7 @@ const iconTypes = {
   tool: 'tool',
 }
 
-const editHosts =  async () => {
+const editHosts = async () => {
   message.info('打开中，请等待...');
   await sleep(100);
   try {
@@ -64,23 +64,23 @@ const mysqlResetPwd = () => {
   mysqlResetPwdModalVisible.value = true;
 }
 
-  let toolItems = [
-    {
-      key: 'editHosts',
-      iconType: iconTypes.textFile,
-      avatar: 'https://joeschmoe.io/api/v1/random',
-      title: '编辑hosts',
-      desc: '查看、编辑hosts文件',
-      func: editHosts,
-    },
-    {
-      key: 'mysqlResetPwd',
-      avatar: GetPath.getMysqlIconPath(),
-      title: 'MySQL修改密码',
-      desc: '修改、重置MySQL的root账户的密码',
-      func: mysqlResetPwd,
-    },
-  ];
+const toolItems = [
+  {
+    key: 'editHosts',
+    iconType: iconTypes.textFile,
+    avatar: 'https://joeschmoe.io/api/v1/random',
+    title: '编辑hosts',
+    desc: '查看、编辑hosts文件',
+    func: editHosts,
+  },
+  {
+    key: 'mysqlResetPwd',
+    avatar: GetPath.getMysqlIconPath(),
+    title: 'MySQL修改密码',
+    desc: '修改、重置MySQL的root账户的密码',
+    func: mysqlResetPwd,
+  },
+];
 
 
 </script>

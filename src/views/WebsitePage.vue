@@ -47,6 +47,7 @@ import AddWebSiteModal from "@/components/WebSite/AddWebSiteModal";
 import EditWebSiteModal from "@/components/WebSite/EditWebSiteModal";
 import Website from "@/main/Website";
 import Tool from "@/main/Tool";
+import MessageBox from "@/main/MessageBox";
 
 
 const columns = [
@@ -78,7 +79,11 @@ const addModalVisible = ref(false);
 const editModalVisible = ref(false);
 
 const search = async (val) => {
-  list.value = await Website.getList(val);
+  try {
+    list.value = await Website.getList(val);
+  } catch (error) {
+    MessageBox.error(error.message ? error.message : error, '获取网站列表出错！');
+  }
 }
 
 provide('website',{
@@ -88,13 +93,11 @@ provide('website',{
   editModalVisible,
 });
 
-(async () => {
-  await search();
-})();
+search();
 
-const del = async (item) => {
-  await Website.delete(item.serverName);
-  await search();
+const del = (item) => {
+  Website.delete(item.serverName);
+  search();
 }
 
 const showAdd = () => {
@@ -106,19 +109,19 @@ const showEdit = (item) => {
   serverName.value = item.serverName;
 }
 
-const browse = async (item) => {
-  await Tool.openUrl(`http://${item.serverName}`);
+const browse =  (item) => {
+   Tool.openUrl(`http://${item.serverName}`);
 }
 
 const openConfFile = async (item) => {
-  await Tool.openTextFile(Website.getConfPath(item.serverName));
+   Tool.openTextFile(Website.getConfPath(item.serverName));
 }
-const openRewriteConfFile = async (item) => {
-  await Tool.openTextFile(Website.getRewriteConfPath(item.serverName));
+const openRewriteConfFile =  (item) => {
+   Tool.openTextFile(Website.getRewriteConfPath(item.serverName));
 }
 
-const openRootPath = async (item) => {
-  await Tool.openPath(item.path);
+const openRootPath =  (item) => {
+   Tool.openPath(item.path);
 }
 
 

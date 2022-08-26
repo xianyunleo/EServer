@@ -9,8 +9,8 @@
 <script setup>
 import Tool from "@/main/Tool";
 
-let clickUrl = async () => {
-  await Tool.openUrl('http://www.phpenv.cn');
+let clickUrl =  () => {
+   Tool.openUrl('http://www.phpenv.cn');
 }
 </script>
 
