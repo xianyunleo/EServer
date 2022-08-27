@@ -1,7 +1,5 @@
-export const APP_NAME = 'EasySrv'
 export const WIN_CORE_PATH_NAME = 'core'
 export const MAC_CORE_PATH_NAME = 'Core'
 export const MAC_USER_CORE_PATH = '/Applications/EasySrv/'
 export const INIT_FILE_NAME = 'init.init'
 export const CONF_INDENT = '    '
-export const STATIC_WEB_NAME = '纯静态'

@@ -1,0 +1,156 @@
+//@import '~ant-design-vue/dist/antd.dark.css';
+
+@import "var";
+@import "antd";
+@import "keyframes";
+@import "scrollbar";
+
+#app {
+  user-select: none;
+  height: 100%;
+  color: $font-color !important;
+  background: $background-color;
+  overflow: hidden;
+}
+
+img,a{
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.draggable {
+  -webkit-app-region: drag;
+}
+
+.non-draggable {
+  -webkit-app-region: no-drag;
+}
+
+.title-bar {
+  height: $title-bar-height;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+
+
+.piece {
+  margin: 0 10px;
+  background: #fff;
+  border-radius: $container-border-radius;
+  box-shadow: $container-box-shadow;
+  .ant-btn {
+    height: $custom-button-height;
+  }
+}
+
+.sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #ddd;
+  background: #f0f1f5;
+  .draggable {
+    height: $title-bar-height;
+  }
+
+  .logo-container {
+    height: $logo-container-height;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .logo-container img {
+    width: 90px;
+    height: 90px;
+  }
+  .ant-menu {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f0f1f5;
+  }
+
+  .ant-menu-item {
+    margin: 0 5px;
+  }
+
+  .ant-menu-item-selected {
+    color: $font-color !important;
+    background-color: #d3d3d5 !important;
+    border-radius: $button-border-radius;
+    &:before {
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 3px;
+      bottom: 0;
+      width: 3px;
+      margin: 12px 0 12px 1px;
+      background: #0067c0;
+      border-radius: 10px;
+      content: '';
+    }
+  }
+
+  .ant-menu-item-active {
+    color: $font-color !important;
+    background-color: #e3e3e5 !important;
+    border-radius: $button-border-radius;
+  }
+
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 0;
+  position:relative;
+  animation:bottom-to-top-frame 0.2s;
+}
+
+.content-table{
+  flex: 1;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  .ant-btn {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+
+.ant-input-affix-wrapper.with-btn{
+  padding-right: 5px;
+  .icon-wrapper{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    cursor: pointer;
+    padding: 0 8px;
+    &:hover{
+      background: #eee;
+      border-radius:$button-border-radius;
+    }
+  }
+}
+
+.tabs-modal{
+  .ant-modal-body{
+    padding-top: 0;
+  }
+}
+
+.left-tabs-modal{
+  .ant-modal-body{
+    padding: 0;
+  }
+  .ant-tabs-content-holder{
+    padding: 15px 10px;
+  }
+  .ant-tabs-tabpane{
+    padding: 0!important;
+  }
+}
