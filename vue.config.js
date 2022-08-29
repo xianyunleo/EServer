@@ -1,8 +1,15 @@
 
 module.exports ={
+  pages: {
+    index: {
+      entry: "src/renderer/main.js",
+    },
+  },
   pluginOptions:{
     electronBuilder:{
       nodeIntegration: true,
+      mainProcessFile: "src/main/index.js",
+      mainProcessWatch: ['src/main/index.js'],
       builderOptions:{
         appId:'net.xianYun.EasyEnv',
         productName:'EasyEnv',

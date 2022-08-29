@@ -3,9 +3,9 @@ import path from "path";
 import {app} from '@electron/remote'
 import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
 import is from "electron-is";
-import {fsDelete, fsExists, fsMove, getDirsByDir} from "@/main/utils";
+import {fsDelete, fsExists, fsMove, getDirsByDir} from "@/main/utils/utils";
 import fs from "fs";
-import GetPath from "@/main/GetPath";
+import GetPath from "@/shared/utils/GetPath";
 
 
 export default class App {
@@ -53,8 +53,7 @@ export default class App {
     }
 
     static initFileExists() {
-        let initFile = App.getInitFilePath();
-        return fsExists(initFile);
+        return fsExists(App.getInitFilePath());
     }
 
     static init() {
