@@ -7,8 +7,8 @@ export const useMainStore = defineStore('main', {
     state: () => {
         const softwareTypeSelected = '';
         const softwareList = Software.getList();
-        const serverList = softwareList.filter(item => item.Type === enumGetName(EnumSoftwareType, EnumSoftwareType.Server));
-        return {softwareList, softwareTypeSelected, serverList};
+        const serverSoftwareList = softwareList.filter(item => item.Type === enumGetName(EnumSoftwareType, EnumSoftwareType.Server));
+        return {softwareList, softwareTypeSelected, serverSoftwareList};
     },
     getters: {},
     actions: {}

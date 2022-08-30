@@ -34,8 +34,13 @@ export default class ServerControl {
 
         if (item.StartServerCommand) {
             let tempStr = item.StartServerCommand.trim();
-            let argObj = {ServerProcessPath: serverProcessPath, WorkPath: workPath};
+            let argObj = {
+                ServerProcessPath: serverProcessPath,
+                WorkPath: workPath,
+                ServerConfPath: path.join(workPath, item.ServerConfPath),
+            };
             commandStr = parseTemplateStrings(tempStr, argObj);
+            console.log('commandStr',commandStr)
         } else {
             commandStr = serverProcessPath;
         }

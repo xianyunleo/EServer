@@ -4,21 +4,25 @@ import child_process from "child_process";
 import {EnumSoftwareInstallStatus} from "@/shared/enum";
 import extract from "extract-zip";
 import Software from "@/main/core/software/Software";
-import GetPath from "@/shared/utils/GetPath";
 import Database from "@/main/core/Database";
+import is from "electron-is";
+import {DOWNLOAD_URL} from "@/shared/constant";
+import {fsDelete} from "@/main/utils/utils";
 
 export default class Installer {
     item;
-
+    fileName;
     /**
      *
      * @param softItem {SoftwareItem}
      */
     constructor(softItem) {
+        console.log('this.item',this.item)
         this.item = softItem;
         this.item.installInfo = this.item.installInfo ? this.item.installInfo : {}
         this.item.installInfo.status = EnumSoftwareInstallStatus.Ready;
         this.resetDownloadInfo();
+        this.fileName = `${this.item.DirName}.zip`;
         this.downloadSignal = this.item.downloadAbortController?.signal;
     }
 
@@ -73,7 +77,7 @@ export default class Installer {
             let errMsg = error.message ? error.message : '未知错误';
             throw new Error(`解压出错，${errMsg}`);
         }
-
+        //todo配置中，配置文件
         try {
             // eslint-disable-next-line no-constant-condition
             if ('mysql'===1) {
@@ -87,12 +91,22 @@ export default class Installer {
         this.changeStatus(EnumSoftwareInstallStatus.Finish);
     }
 
+    getDownloadUrl() {
+        let url
+        if (is.windows()) {
+            url = `${DOWNLOAD_URL}/win`;
+        } else {
+            url = `${DOWNLOAD_URL}/mac`;
+        }
+        return `${url}/software/${this.fileName}`;
+    }
+
     async download() {
         return await new Promise((resolve, reject) => {
-            let corePath = App.getUserCorePath();
-            let downloaderPath = path.join(corePath, 'aria2c');
-            let downloadsPath = path.join(corePath, 'downloads');
-            let url = 'https://dl-cdn.phpenv.cn/release/test.zip';
+            let downloaderPath = this.getDownloaderPath();
+            let downloadsPath = this.getDownloadsPath();
+            let url = this.getDownloadUrl();
+            if (App.isDev()) console.log('downloadUrl',url)
             let args = [url, '--check-certificate=false', '--allow-overwrite=true', `--dir=${downloadsPath}`];
 
             let dlProcess = child_process.spawn(downloaderPath, args);
@@ -112,7 +126,6 @@ export default class Installer {
 
             dlProcess.stdout.on('data', (data) => {
                 data = data.toString();
-                if (App.isDev()) console.log(data)
                 let matches = data.match(progressRegx)
                 if (matches) {
                     this.setDownloadInfo({
@@ -155,12 +168,25 @@ export default class Installer {
     }
 
     async zipExtract() {
-        let softItem = this.item;
-        softItem.DirName = 'test';
-        let filePath = path.join(GetPath.getDownloadsPath(), `HandyControl.git.zip`);
-        let typePath = Software.getTypePath(softItem.Type)
+        let filePath = path.join(this.getDownloadsPath(), this.fileName);
+        console.log('filePath',filePath)
+
+        let typePath = Software.getTypePath(this.item.Type)
+        console.log('typePath',typePath)
         this.changeStatus(EnumSoftwareInstallStatus.Extracting);
         return await extract(filePath, {dir: typePath});
     }
 
+     getDownloadsPath() {
+        return path.join(App.getUserCorePath(), 'downloads');
+    }
+
+     getDownloaderPath() {
+        return path.join(App.getCorePath(), 'aria2c');
+    }
+
+    static uninstall(item) {
+        let path = Software.getPath(item);
+        fsDelete(path);
+    }
 }

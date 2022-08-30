@@ -26,7 +26,7 @@
           <div class="operate-td">
             <a-button type="primary" @click="startServerClick(record)" v-show="!record.isRunning">启动</a-button>
             <a-button type="primary" @click="stopServerClick(record)" v-show="record.isRunning">停止</a-button>
-            <a-button type="primary" @click="startServerClick(record)">重启</a-button>
+            <a-button type="primary" @click="restartServerClick(record)">重启</a-button>
             <a-dropdown :trigger="['click']">
               <template #overlay>
                 <a-menu >
@@ -69,6 +69,7 @@ import MessageBox from "@/renderer/utils/MessageBox";
 import {storeToRefs} from "pinia/dist/pinia";
 import {APP_NAME} from "@/shared/constant";
 import Native from "@/renderer/utils/Native";
+import {sleep} from "@/shared/utils/utils";
 //import {sleep} from "@/main/utils";
 
 const columns = [
@@ -95,11 +96,10 @@ const columns = [
 ];
 
 const mainStore = useMainStore();
-const {serverList} = storeToRefs(mainStore);
+const {serverSoftwareList} = storeToRefs(mainStore);
 
 //todo 检查所有服务状态，不加await，配合自启服务显示，放到运行日志里
-
-serverList.value = serverList.value.filter(item => Software.IsInStalled(item));
+let serverList = serverSoftwareList.value.filter(item => Software.IsInStalled(item));
 
 const serviceChange = ()=>{
   message.info('下个版本开放！！！');
@@ -112,11 +112,11 @@ const wwwPathClick = ()=>{
   Native.openPath(GetPath.getWWWPath());
 }
 
-const openInstallPath = async (item) => {
-   Native.openPath(Software.getPath(item));
+const openInstallPath = (item) => {
+  Native.openPath(Software.getPath(item));
 }
 
-const openConfPath = async (item) => {
+const openConfPath = (item) => {
   Native.openTextFile(Software.getServerConfPath(item));
 }
 
@@ -130,8 +130,27 @@ const startServerClick = async (item) => {
         MessageBox.error(errMsg, '启动服务出错！');
       }
     });
+    await sleep(1000);
   } catch (error) {
     MessageBox.error(error.message ? error.message : error, '启动服务出错！');
+  }
+}
+
+const restartServerClick = async (item) => {
+  try {
+    //todo 开始前loading，开始后sleep 1-3s
+    await ServerControl.stop(item);
+    await sleep(1000);
+    await ServerControl.start(item);
+    const unwatch = watch(() => item.errMsg, (errMsg) => {
+      if (errMsg) {
+        unwatch();
+        MessageBox.error(errMsg, '重启服务出错！');
+      }
+    });
+    await sleep(1000);
+  } catch (error) {
+    MessageBox.error(error.message ? error.message : error, '重启服务出错！');
   }
 }
 

@@ -2,10 +2,11 @@ import child_process from "child_process";
 import sudo from "sudo-prompt"
 import {APP_NAME} from "@/shared/constant";
 import is from "electron-is";
+import App from "@/main/App";
 
 export default class Command {
     /**
-     * 执行命令，并返回结果（标准输出）
+     * 执行命令，等待进程退出返回结果（标准输出）
      * @param command
      * @param options
      * @returns {Promise<string>}
@@ -20,7 +21,8 @@ export default class Command {
         if (!options.encoding) {
             options.encoding = "utf8";
         }
-        console.log('exec command',command)
+
+        if (App.isDev()) console.log('exec command', command)
 
         try {
             return child_process.execSync(command,options);

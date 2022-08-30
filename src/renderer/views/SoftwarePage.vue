@@ -33,7 +33,7 @@
             <div class="soft-item-title">{{ item.Name }}</div>
             <div class="soft-item-desc">{{ item.Desc }}</div>
             <div class="soft-item-operate">
-              <template v-if="item.installed">
+              <template v-if="item.Installed">
                 <a-dropdown :trigger="['click']">
                   <template #overlay>
                     <a-menu>
@@ -44,7 +44,7 @@
                     <DownOutlined/>
                   </a-button>
                 </a-dropdown>
-                <a-button :disabled="item.CanDelete" type="primary" @click="uninstall(item)">卸载</a-button>
+                <a-button :disabled="item.CanDelete===false" type="primary" @click="uninstall(item)">卸载</a-button>
               </template>
               <template v-else>
                 <a-button v-if="item.installInfo == null || item.showStatusErrorText"
@@ -88,30 +88,30 @@
 
 <script setup>
 import {computed} from 'vue';
-import {useMainStore} from '@/renderer/store'
-import {storeToRefs} from 'pinia'
+import {useMainStore} from '@/renderer/store';
+import {storeToRefs} from 'pinia';
+import {message} from "ant-design-vue";
 import {EnumSoftwareInstallStatus, EnumSoftwareType} from "@/shared/enum";
 import Installer from "@/main/core/software/Installer";
 import {DownOutlined} from '@ant-design/icons-vue';
 import Software from "@/main/core/software/Software";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {enumGetName} from "@/shared/utils/utils";
-import Navite from "@/renderer/utils/Native";
+import Native from "@/renderer/utils/Native";
 //import path from "path";
 
 const mainStore = useMainStore();
 const {softwareList,  softwareTypeSelected} = storeToRefs(mainStore);
 softwareTypeSelected.value = 'Installed';
 
-//todo
-// for (const item of list) {
-//   item.Installed = Software.IsInStalled(item);
-// }
+for (const item of softwareList.value) {
+  item.Installed = Software.IsInStalled(item);
+}
 
 const setShowList = (type) => {
   for (const item of softwareList.value) {
     if (type === 'Installed') {
-      item.show = item.installed === true;
+      item.show = item.Installed === true;
     } else {
       item.show = type === item.Type;
     }
@@ -151,6 +151,7 @@ const clickInstall = async (item) => {
     let installer = new Installer(item);
     await installer.install();
     item.installInfo = null;
+    item.Installed = true;
   } catch (error) {
     //catch 不item.installInfo = null，因为installInfo有信息要显示
     item.statusErrorText = error.message;
@@ -162,12 +163,15 @@ const clickStop = (item) => {
 }
 
 const openInstallPath = async (item) => {
-   Navite.openPath(Software.getPath(item));
+  Native.openPath(Software.getPath(item));
 }
 
 const uninstall = async (item) => {
   try {
+    Installer.uninstall(item)
     item.installInfo = null;
+    item.Installed = false;
+    message.info('卸载完成');
   } catch (error) {
     MessageBox.error(error.message ? error.message : error, '卸载出错！');
   }

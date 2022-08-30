@@ -56,7 +56,7 @@ export default class Nginx {
     #SSL_END
 
     #REWRITE_START
-    include vhosts/rewrite/${websiteInfo.serverName}.conf
+    include vhosts/rewrite/${websiteInfo.serverName}.conf;
     #REWRITE_END
     
     #EXTRA_INFO_START
@@ -167,7 +167,7 @@ export default class Nginx {
         let phpPattern = /(?<=#PHP_START)[\s\S]+?(?=#PHP_END)/;
         let phpReplace;
         if (phpVersion) {
-            phpReplace = `${N}${T}include php-${phpVersion}.conf;${N}${T}`;
+            phpReplace = `${N}${T}include php/php-${phpVersion}.conf;${N}${T}`;
         } else {
             phpReplace = `${N}${T}`;
         }

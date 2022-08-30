@@ -45,11 +45,6 @@ export default class GetPath {
     }
 
 
-    static getDownloadsPath(){
-        let corePath = App.getUserCorePath();
-        return path.join(corePath, 'downloads');
-    }
-
     static getMysqlIconPath() {
         return 'file://' + path.join(Software.getIconPath(), 'mysql.png')
     }

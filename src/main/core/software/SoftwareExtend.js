@@ -3,35 +3,37 @@ import {fsExists, getDirsByDir} from "@/main/utils/utils";
 
 
 export default class SoftwareExtend {
-    static async getPHPVersionList() {
+    /**
+     *
+     * @returns {*[]|{name: string, version: string}[]}
+     */
+    static getPHPList() {
         let path = GetPath.getPHPTypePath();
         if (!fsExists(path)) {
             return [];
         }
         let list = getDirsByDir(path, 'php-');
 
-        return await Promise.all(list.map(async item => {
-            let matches = item.match(/php-(.+)/);
-            if (!matches) {
-                return false;
-            }
-            return {version: matches[1], name: matches[0]};
-        }));
+        return list.map(name => {
+            let matches = name.match(/php-(.+)/);
+            return {version: matches[1], name: name};
+        });
     }
 
-    static async getMySQLVersionList() {
+    /**
+     *
+     * @returns {*[]|{name: string, version: string}[]}
+     */
+    static getMySQLList() {
         let path = GetPath.getServerTypePath();
         if (!fsExists(path)) {
             return [];
         }
         let list = getDirsByDir(path, 'mysql-');
 
-        return await Promise.all(list.map(async item => {
-            let matches = item.match(/mysql-(.+)/);
-            if (!matches) {
-                return false;
-            }
-            return {version: matches[1], name: matches[0]};
-        }));
+        return list.map(name => {
+            let matches = name.match(/mysql-(.+)/);
+            return {version: matches[1], name: name};
+        });
     }
 }

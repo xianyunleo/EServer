@@ -41,14 +41,12 @@ const {serverName,search} = inject('website');
 const formData = ref({});
 const phpVersionList = ref([]);
 
-(async () => {
-  formData.value =  Website.getBasicInfo(serverName.value);
-  let list = await SoftwareExtend.getPHPVersionList();
-  phpVersionList.value = list.map(item => {
-    return {value: item.version, label: item.name};
-  });
-  phpVersionList.value.push({value: '', label: STATIC_WEB_NAME})
-})();
+formData.value = Website.getBasicInfo(serverName.value);
+let list = SoftwareExtend.getPHPList();
+phpVersionList.value = list.map(item => {
+  return {value: item.version, label: item.name};
+});
+phpVersionList.value.push({value: '', label: STATIC_WEB_NAME});
 
 const save = async () => {
   try {

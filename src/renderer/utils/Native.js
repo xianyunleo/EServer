@@ -4,11 +4,13 @@ import MessageBox from "@/renderer/utils/MessageBox";
 import is from "electron-is";
 import fixPath from "fix-path";
 import Hosts from "@/main/core/Hosts";
-import fs from "fs";
 import GetPath from "@/shared/utils/GetPath";
 
 export default class Native {
     static async openTextFile(filePath, isSudo = false) {
+        if (is.macOS()) {
+            fixPath();  //mac下修复环境变量不识别的问题
+        }
         try {
             if (!await Native.vscodeIsInstalled()) {
                 throw new Error('VS Code没有安装');
@@ -44,11 +46,7 @@ export default class Native {
     }
 
     static async openHosts() {
-        if (is.macOS()) {
-            fixPath();  //mac下修复环境变量不识别的问题
-        }
-        let path = Hosts.getHostsPath();
-
+        let path = GetPath.getHostsPath();
         if (is.windows()) {
             await Native.openTextFile(path);
         } else {
@@ -59,17 +57,4 @@ export default class Native {
         }
     }
 
-    /**
-     *
-     * @returns {boolean}
-     */
-    static canEditHosts() {
-        let path = GetPath.getHostsPath();
-        try {
-            fs.accessSync(path, fs.constants.R_OK | fs.constants.W_OK);
-            return true;
-        } catch {
-            return false;
-        }
-    }
 }

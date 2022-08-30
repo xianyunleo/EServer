@@ -18,7 +18,7 @@ export default class Software {
         if(Software.list){
             return Software.list;
         }
-        let corePath = App.getUserCorePath();
+        let corePath = App.getCorePath();
         let softPath = path.join(corePath, '/config/software');
         let softConfigPath = path.join(softPath, 'software.json');
         let softIconPath = 'file://' + path.join(softPath, '/icon');
@@ -86,7 +86,7 @@ export default class Software {
     }
 
     static getIconPath() {
-        let corePath = App.getUserCorePath();
+        let corePath = App.getCorePath();
         let softPath = path.join(corePath, '/config/software');
         return path.join(softPath, '/icon');
     }

@@ -18,7 +18,7 @@ remoteMain.initialize();
 async function createWindow() {
   // Create the browser window.
     window = new BrowserWindow({
-    width: 1280,
+    width: isDevelopment ? 1280 : 880,
     height: 650,
     minWidth: 880,
     minHeight: 650,

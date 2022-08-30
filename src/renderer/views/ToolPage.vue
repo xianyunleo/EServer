@@ -13,7 +13,7 @@
               </div>
             </template>
             <template v-else>
-              <img :src="item.avatar" alt="icon">
+              <img :src="item.icon" alt="icon">
             </template>
 
 
@@ -26,7 +26,7 @@
       </a-col>
     </a-row>
   </div>
-  <mysql-reset-pwd-modal v-model:show="mysqlResetPwdModalVisible"></mysql-reset-pwd-modal>
+  <mysql-reset-pwd-modal v-model:show="mysqlResetPwdModalShow"></mysql-reset-pwd-modal>
 </template>
 
 <script setup>
@@ -58,25 +58,24 @@ const editHosts = async () => {
   }
 };
 
-const mysqlResetPwdModalVisible = ref(false);
+const mysqlResetPwdModalShow = ref(false);
 
 const mysqlResetPwd = () => {
-  mysqlResetPwdModalVisible.value = true;
+  mysqlResetPwdModalShow.value = true;
 }
 
 const toolItems = [
   {
     key: 'editHosts',
     iconType: iconTypes.textFile,
-    avatar: 'https://joeschmoe.io/api/v1/random',
     title: '编辑hosts',
     desc: '查看、编辑hosts文件',
     func: editHosts,
   },
   {
     key: 'mysqlResetPwd',
-    avatar: GetPath.getMysqlIconPath(),
-    title: 'MySQL修改密码',
+    icon: GetPath.getMysqlIconPath(),
+    title: 'MySQL重置密码',
     desc: '修改、重置MySQL的root账户的密码',
     func: mysqlResetPwd,
   },

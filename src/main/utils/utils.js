@@ -12,11 +12,12 @@ export function fsExists(path) {
 }
 
 export function fsMove(sourcePath, targetPath) {
+    console.log('移动文件',sourcePath,targetPath)
     return fs.renameSync(sourcePath, targetPath);
 }
 
 export function fsDelete(path) {
-    return fs.rmSync(path);
+    return fs.rmSync(path, {force: true, recursive: true});
 }
 
 export function getFilNameWithoutExt(filename) {

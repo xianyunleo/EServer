@@ -3,9 +3,11 @@ import path from "path";
 import {app} from '@electron/remote'
 import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
 import is from "electron-is";
-import {fsDelete, fsExists, fsMove, getDirsByDir} from "@/main/utils/utils";
+import {fsDelete, fsExists, fsMove} from "@/main/utils/utils";
 import fs from "fs";
-import GetPath from "@/shared/utils/GetPath";
+import Database from "@/main/core/Database";
+import ProcessExtend from "@/main/core/ProcessExtend";
+import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 
 
 export default class App {
@@ -17,7 +19,7 @@ export default class App {
         if (is.windows()) {
             return path.dirname(App.getExecutablePath());
         } else {
-            //mac返回xxx.app/Contents/所在的路径
+            //mac app.getAppPath()返回xxx.app/Contents/所在的路径
             return path.join(app.getAppPath(), '../../')
         }
     }
@@ -26,7 +28,11 @@ export default class App {
         return process.execPath;
     }
 
-    static getUserCorePath() {
+    /**
+     * 获取App核心目录
+     * @returns {string}
+     */
+    static getCorePath(){
         let result = '';
         if (is.windows()) {
             if (App.isDev()) {
@@ -38,14 +44,25 @@ export default class App {
             if (App.isDev()) {
                 result = path.join(App.getPlatformPath(), MAC_CORE_PATH_NAME)
             } else {
-                result = path.join(App.getAppPath(), MAC_CORE_PATH_NAME)
+                result = path.join(App.getAppPath(), MAC_CORE_PATH_NAME);
             }
         }
         return result
     }
 
+    /**
+     * 获取用户操作目录，主要用在MacOS上
+     * @returns {string}
+     */
+    static getUserCorePath() {
+        if (is.macOS() && !App.isDev()) {
+            return MAC_USER_CORE_PATH;
+        }
+        return App.getCorePath();
+    }
+
     static getInitFilePath() {
-        return path.join(App.getUserCorePath(), INIT_FILE_NAME);
+        return path.join(App.getCorePath(), INIT_FILE_NAME);
     }
 
     static getPlatformPath() {
@@ -56,7 +73,7 @@ export default class App {
         return fsExists(App.getInitFilePath());
     }
 
-    static init() {
+    static async init() {
         let initFile = App.getInitFilePath();
         if (!fsExists(initFile)) {
             return;
@@ -68,17 +85,21 @@ export default class App {
                 App.createCoreSubDir(['downloads']);
             }
         }
+        await App.initMySQL();
         fsDelete(initFile);
     }
 
-    static initMySQL() {
-        let serverPath = GetPath.getServerTypePath();
-        let mysqlList = getDirsByDir(serverPath, 'mysql');
-        for (const name of mysqlList) {
-            let mysqlPath = path.join(serverPath, name);
-            if (!fsExists()) {
-                console.log(mysqlPath)
-            }
+    /**
+     * 初始化MySQL data目录和重置密码
+     * @returns {Promise<void>}
+     */
+    static async initMySQL() {
+        let mysqlList = SoftwareExtend.getMySQLList();
+        for (const item of mysqlList) {
+            let version = item.version
+            await Database.initMySQLData(version);
+            await ProcessExtend.killByName('mysqld');
+            await Database.resetMySQLPassword(version);
         }
     }
 
@@ -87,7 +108,7 @@ export default class App {
      * @param dirs
      */
     static moveCoreSubDir(dirs) {
-        let corePath = App.getUserCorePath();
+        let corePath = App.getCorePath();
         for (const dir of dirs) {
             fsMove(path.join(corePath, dir), path.join(MAC_USER_CORE_PATH, dir));
         }

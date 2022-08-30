@@ -34,8 +34,9 @@
       <a-button type="primary" @click="handleOk">确认</a-button>
     </template>
     <p style="text-align: center;font-size: 18px;">{{ APP_NAME }}集成环境</p>
-    <p style="text-align: center">版本：测试版</p>
+    <p style="text-align: center">版本：0.1.9 测试版</p>
     <p style="text-align: center">官网：www.easysrv.cn</p>
+    <p style="text-align: center">Github：github.com/xianyunleo/EasySrv</p>
   </a-modal>
 </template>
 

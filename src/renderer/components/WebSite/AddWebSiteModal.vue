@@ -61,13 +61,11 @@ const formData = reactive({
 });
 
 const phpVersionList = ref([]);
-(async () => {
-  let list = await SoftwareExtend.getPHPVersionList();
-  phpVersionList.value = list.map(item => {
-    return {value: item.version, label: item.name};
-  });
-  phpVersionList.value.push({value: '', label: STATIC_WEB_NAME})
-})();
+let list = SoftwareExtend.getPHPList();
+phpVersionList.value = list.map(item => {
+  return {value: item.version, label: item.name};
+});
+phpVersionList.value.push({value: '', label: STATIC_WEB_NAME});
 
 const serverNameChange = () => {
   formData.rootPath = path.join(wwwPath, formData.serverName);
