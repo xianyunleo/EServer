@@ -10,7 +10,7 @@ export function enumGetName(enumObj, val) {
 }
 
 export function parseTemplateStrings(str, argObj) {
-    return str.replace(/\${(.+?)}/g, (match, p1) => argObj[p1]);
+    return str.replace(/\${(.+?)}/g, (match, p1) => argObj[p1] ?? '');
 }
 
 export function sleep(ms) {

@@ -73,6 +73,7 @@
         "Name": "Redis-6.2",
         "DirName": "redis-6.2",
         "ServerProcessPath": "bin/redis-server",
+        "ServerConfPath": "redis.conf",
         "StartServerCommand":"${ServerProcessPath} ${ServerConfPath}",
         "Type": "Server",
         "CanDelete": true,

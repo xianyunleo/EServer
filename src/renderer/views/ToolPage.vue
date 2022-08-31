@@ -54,7 +54,7 @@ const editHosts = async () => {
   try {
     await Native.openHosts();
   } catch (error) {
-    MessageBox.error(error.message ? error.message : error, '打开hosts文件出错！');
+    MessageBox.error(error.message ?? error, '打开hosts文件出错！');
   }
 };
 

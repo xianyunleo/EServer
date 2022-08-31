@@ -37,7 +37,7 @@ export default class ServerControl {
             let argObj = {
                 ServerProcessPath: serverProcessPath,
                 WorkPath: workPath,
-                ServerConfPath: path.join(workPath, item.ServerConfPath),
+                ServerConfPath: item.ServerConfPath ? path.join(workPath, item.ServerConfPath) : null,
             };
             commandStr = parseTemplateStrings(tempStr, argObj);
             console.log('commandStr',commandStr)

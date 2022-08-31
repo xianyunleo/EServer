@@ -22,7 +22,7 @@ export default class Native {
                 await Command.exec(command);
             }
         } catch (error) {
-            MessageBox.error(error.message ? error.message : error, '打开文件出错！');
+            MessageBox.error(error.message ?? error, '打开文件出错！');
         }
 
     }

@@ -29,7 +29,7 @@ const spinning = ref(false);
   try {
     await App.init();
   } catch (error) {
-    MessageBox.error(error.message ? error.message : error, '软件初始化出错！');
+    MessageBox.error(error.message ?? error, '软件初始化出错！');
   }
   spinning.value = false;
 })()

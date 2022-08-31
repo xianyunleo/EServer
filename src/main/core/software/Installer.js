@@ -56,7 +56,7 @@ export default class Installer {
             await this.download();
         } catch (error) {
             this.changeStatus(EnumSoftwareInstallStatus.DownloadError);
-            let errMsg = error.message ? error.message : '未知错误';
+            let errMsg = error.message ?? '未知错误';
             throw new Error(`下载出错，${errMsg}`);
         }
 
@@ -74,7 +74,7 @@ export default class Installer {
             this.changeStatus(EnumSoftwareInstallStatus.Extracted);
         } catch (error) {
             this.changeStatus(EnumSoftwareInstallStatus.ExtractError);
-            let errMsg = error.message ? error.message : '未知错误';
+            let errMsg = error.message ?? '未知错误';
             throw new Error(`解压出错，${errMsg}`);
         }
         //todo配置中，配置文件
@@ -84,7 +84,7 @@ export default class Installer {
                 Database.InitMySQL();
             }
         } catch (error) {
-            let errMsg = error.message ? error.message : '未知错误';
+            let errMsg = error.message ?? '未知错误';
             throw new Error(`安装出错，${errMsg}`);
         }
 

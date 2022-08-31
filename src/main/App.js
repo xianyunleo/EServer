@@ -81,7 +81,7 @@ export default class App {
         if (is.macOS() && !App.isDev()) {
             if (!fsExists(MAC_USER_CORE_PATH)) {
                 fs.mkdirSync(MAC_USER_CORE_PATH);
-                App.moveCoreSubDir(['software', 'tmp', 'www']);
+                App.moveCoreSubDir(['software', 'tmp', 'www','library']);
                 App.createCoreSubDir(['downloads']);
             }
         }

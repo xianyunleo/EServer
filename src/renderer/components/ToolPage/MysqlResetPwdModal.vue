@@ -73,7 +73,7 @@ const reset = async (version, newPwd) => {
     await Database.resetMySQLPassword(version, newPwd);
     message.info('重置MySQL密码成功！')
   } catch (error) {
-    MessageBox.error(error.message ? error.message : error, '重置MySQL密码出错！');
+    MessageBox.error(error.message ?? error, '重置MySQL密码出错！');
   }
 };
 

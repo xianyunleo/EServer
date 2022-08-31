@@ -82,7 +82,7 @@ const search = async (val) => {
   try {
     list.value = await Website.getList(val);
   } catch (error) {
-    MessageBox.error(error.message ? error.message : error, '获取网站列表出错！');
+    MessageBox.error(error.message ?? error, '获取网站列表出错！');
   }
 }
 

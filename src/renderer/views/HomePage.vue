@@ -132,7 +132,7 @@ const startServerClick = async (item) => {
     });
     await sleep(1000);
   } catch (error) {
-    MessageBox.error(error.message ? error.message : error, '启动服务出错！');
+    MessageBox.error(error.message ?? error, '启动服务出错！');
   }
 }
 
@@ -150,7 +150,7 @@ const restartServerClick = async (item) => {
     });
     await sleep(1000);
   } catch (error) {
-    MessageBox.error(error.message ? error.message : error, '重启服务出错！');
+    MessageBox.error(error.message ?? error, '重启服务出错！');
   }
 }
 
@@ -158,7 +158,7 @@ const stopServerClick = async (item) => {
   try {
     await ServerControl.stop(item);
   } catch (error) {
-    MessageBox.error(error.message ? error.message : error, '启动服务出错！');
+    MessageBox.error(error.message ?? error, '启动服务出错！');
   }
 }
 
