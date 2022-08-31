@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Variable declaration
-prefix='/Applications/EasyEnv/software/php/php-7.4'
-datarootdir='/Applications/EasyEnv/software/php/php-7.4/php'
+prefix='/Applications/EasySrv/software/php/php-7.4'
+datarootdir='/Applications/EasySrv/software/php/php-7.4/php'
 exec_prefix="`eval echo ${prefix}`"
 phpdir="`eval echo ${exec_prefix}/lib/php`/build"
 includedir="`eval echo ${prefix}/include`/php"
@@ -151,7 +151,7 @@ phpize_copy_files()
 phpize_replace_prefix()
 {
   $SED \
-  -e "s#/Applications/EasyEnv/software/php/php-7.4#$prefix#" \
+  -e "s#/Applications/EasySrv/software/php/php-7.4#$prefix#" \
   < "$phpdir/phpize.m4" > configure.ac
 }
 
