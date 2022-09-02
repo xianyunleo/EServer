@@ -12,7 +12,7 @@
 // eslint-disable-next-line no-unused-vars
 import {defineProps, defineEmits, computed, toRef} from "vue";
 import {FolderOpenFilled} from "@ant-design/icons-vue";
-import FileDialog from "@/main/utils/FileDialog";
+import FileDialog from "@/renderer/utils/FileDialog";
 
 
 const props = defineProps(['value'])

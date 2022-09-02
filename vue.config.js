@@ -11,8 +11,8 @@ module.exports ={
       mainProcessFile: "src/main/index.js",
       mainProcessWatch: ['src/main/index.js'],
       builderOptions:{
-        appId:'net.xianYun.EasyEnv',
-        productName:'EasyEnv',
+        appId:'net.xianYun.EasySrv',
+        productName:'EasySrv',
         mac:{
           target:[
             {
