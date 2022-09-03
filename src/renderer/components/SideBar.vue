@@ -34,7 +34,7 @@
       <a-button type="primary" @click="handleOk">确认</a-button>
     </template>
     <p style="text-align: center;font-size: 18px;">{{ APP_NAME }}集成环境</p>
-    <p style="text-align: center">版本：0.1.9 测试版</p>
+    <p style="text-align: center">版本：{{version}} 测试版</p>
     <p style="text-align: center">官网：www.easysrv.cn</p>
     <p style="text-align: center">Github：github.com/xianyunleo/EasySrv</p>
   </a-modal>
@@ -52,10 +52,12 @@ import {
 import { ref } from 'vue';
 import {useRouter} from "vue-router";
 import {APP_NAME} from "@/shared/constant";
+import App from "@/main/App";
 
 const router = useRouter();
 const selectedKeys = ref(['/']);
 const aboutVisible = ref(false);
+const version = App.getVersion();
 const menuItemSelect = e =>{
   let path =  e.key
   if(path ==='/about'){

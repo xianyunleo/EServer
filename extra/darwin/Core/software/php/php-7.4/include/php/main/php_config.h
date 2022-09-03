@@ -383,7 +383,7 @@
 /* #undef HAVE_APPARMOR */
 
 /* Define to 1 if you have the <argon2.h> header file */
-#define HAVE_ARGON2LIB 1
+/* #undef HAVE_ARGON2LIB */
 
 /* Define to 1 if you have the <arpa/inet.h> header file. */
 #define HAVE_ARPA_INET_H 1
@@ -595,7 +595,7 @@
 /* #undef HAVE_ENCHANT_GET_VERSION */
 
 /* Libzip >= 1.2.0 with encryption support */
-#define HAVE_ENCRYPTION 1
+/* #undef HAVE_ENCRYPTION */
 
 /* do we have epoll? */
 /* #undef HAVE_EPOLL */
@@ -721,7 +721,7 @@
 /* #undef HAVE_GD_FREETYPE */
 
 /* */
-/* #undef HAVE_GD_JPG */
+#define HAVE_GD_JPG 1
 
 /* */
 /* #undef HAVE_GD_LIBVERSION */
@@ -1048,7 +1048,7 @@
 /* #undef HAVE_LIBINTL */
 
 /* */
-/* #undef HAVE_LIBJPEG */
+#define HAVE_LIBJPEG 1
 
 /* Define to 1 if you have the `m' library (-lm). */
 #define HAVE_LIBM 1
@@ -1084,7 +1084,7 @@
 /* #undef HAVE_LIBSOCKET */
 
 /* */
-#define HAVE_LIBSODIUMLIB 1
+/* #undef HAVE_LIBSODIUMLIB */
 
 /* */
 /* #undef HAVE_LIBWEBP */
@@ -1093,7 +1093,7 @@
 #define HAVE_LIBXML 1
 
 /* Libzip >= 1.3.1 with zip_libzip_version function */
-#define HAVE_LIBZIP_VERSION 1
+/* #undef HAVE_LIBZIP_VERSION */
 
 /* Define to 1 if you have the <locale.h> header file. */
 #define HAVE_LOCALE_H 1
@@ -1937,10 +1937,10 @@
 #define HAVE_XMLREADER 1
 
 /* */
-#define HAVE_XMLRPC 1
+/* #undef HAVE_XMLRPC */
 
 /* */
-#define HAVE_XMLRPC_BUNDLED 1
+/* #undef HAVE_XMLRPC_BUNDLED */
 
 /* */
 #define HAVE_XMLWRITER 1
@@ -1949,13 +1949,13 @@
 /* #undef HAVE_XPM */
 
 /* */
-#define HAVE_XSL 1
+/* #undef HAVE_XSL */
 
 /* */
-#define HAVE_XSL_EXSLT 1
+/* #undef HAVE_XSL_EXSLT */
 
 /* */
-#define HAVE_ZIP 1
+/* #undef HAVE_ZIP */
 
 /* */
 #define HAVE_ZLIB 1
@@ -2054,7 +2054,7 @@
 #define PHPDBG_DEBUG 0
 
 /* PHP build date */
-#define PHP_BUILD_DATE "2022-08-26"
+#define PHP_BUILD_DATE "2022-09-03"
 
 /* Define if your system has fork/vfork/CreateProcess */
 #define PHP_CAN_SUPPORT_PROC_OPEN 1
@@ -2120,7 +2120,7 @@
 /* #undef PHP_HPUX_TIME_R */
 
 /* Path to iconv.h */
-#define PHP_ICONV_H_PATH </Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk/usr/include/iconv.h>
+#define PHP_ICONV_H_PATH </Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/iconv.h>
 
 /* Which iconv implementation to use */
 /* #undef PHP_ICONV_IMPL */
@@ -2129,7 +2129,7 @@
 /* #undef PHP_IRIX_TIME_R */
 
 /* */
-#define PHP_MHASH_BC 1
+/* #undef PHP_MHASH_BC */
 
 /* */
 /* #undef PHP_MYSQL_UNIX_SOCK_ADDR */
@@ -2159,7 +2159,7 @@
 #define PHP_SIGCHILD 0
 
 /* uname -a output */
-#define PHP_UNAME "Darwin liudeMacBook-Pro.local 20.6.0 Darwin Kernel Version 20.6.0: Mon Aug 30 06:12:21 PDT 2021; root:xnu-7195.141.6~3/RELEASE_X86_64 x86_64"
+#define PHP_UNAME "Darwin liudeMacBook-Pro.local 19.6.0 Darwin Kernel Version 19.6.0: Tue Jun 21 21:18:39 PDT 2022; root:xnu-6153.141.66~1/RELEASE_X86_64 x86_64"
 
 /* Whether PHP has to use its own crypt_r for blowfish, des and ext des */
 #define PHP_USE_PHP_CRYPT_R 1
@@ -2207,7 +2207,7 @@
 #define SIZEOF_SSIZE_T 8
 
 /* have sqlite3 with extension support */
-/* #undef SQLITE_OMIT_LOAD_EXTENSION */
+#define SQLITE_OMIT_LOAD_EXTENSION 1
 
 /* Needed in sqlunix.h for wchar defs */
 /* #undef SS_FBX */
