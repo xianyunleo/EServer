@@ -14,6 +14,5 @@ export const EnumSoftwareInstallStatus = {
 export const EnumSoftwareType = {
     PHP: 0,
     Server: 1,
-    MySQL: 2,
-    Tool: 3,
+    Tool: 2,
 }

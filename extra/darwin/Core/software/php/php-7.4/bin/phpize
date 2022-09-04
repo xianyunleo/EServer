@@ -7,7 +7,7 @@ exec_prefix="`eval echo ${prefix}`"
 phpdir="`eval echo ${exec_prefix}/lib/php`/build"
 includedir="`eval echo ${prefix}/include`/php"
 builddir="`pwd`"
-SED="/opt/local/bin/gsed"
+SED="/usr/bin/sed"
 
 FILES_BUILD="php.m4 shtool libtool.m4 ax_check_compile_flag.m4 ax_gcc_func_attribute.m4 php_cxx_compile_stdcxx.m4 pkg.m4 config.guess config.sub ltmain.sh Makefile.global"
 FILES="run-tests*.php"

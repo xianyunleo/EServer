@@ -78,8 +78,8 @@ export default class Software {
                 return GetPath.getPHPTypePath();
             case EnumSoftwareType.Server:
                 return GetPath.getServerTypePath();
-            case EnumSoftwareType.MySQL:
-                return GetPath.getServerTypePath();
+            case EnumSoftwareType.Tool:
+                return GetPath.getToolTypePath();
             default:
                 return '';
         }

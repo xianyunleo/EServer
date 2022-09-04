@@ -1,3 +1,4 @@
+import path from "path";
 import Command from "@/main/core/Command";
 import {shell} from "@electron/remote";
 import MessageBox from "@/renderer/utils/MessageBox";
@@ -5,6 +6,7 @@ import is from "electron-is";
 import fixPath from "fix-path";
 import Hosts from "@/main/core/Hosts";
 import GetPath from "@/shared/utils/GetPath";
+import {fsExists} from "@/main/utils/utils";
 
 export default class Native {
     static async openTextFile(filePath, isSudo = false) {
@@ -12,10 +14,17 @@ export default class Native {
             fixPath();  //mac下修复环境变量不识别的问题
         }
         try {
-            if (!await Native.vscodeIsInstalled()) {
+            //todo 默认系统文本编辑器，macos打开hosts时提示，可能无法编辑，请在设置里切换文本编辑器
+            let editorPath = path.join('/Applications/','Visual Studio Code.app');
+            if (! fsExists(editorPath)) {
                 throw new Error('VS Code没有安装');
             }
-            let command = `code ${filePath}`;
+            let command;
+            if(is.macOS()){
+                command = `open -a "${editorPath}"  "${filePath}"`;
+            }
+
+            //let command = `code ${filePath}`;
             if (isSudo) {
                 await Command.sudoExec(command);
             } else {

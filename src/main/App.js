@@ -24,6 +24,10 @@ export default class App {
         }
     }
 
+    static getVersion(){
+        return app.getVersion();
+    }
+
     static getExecutablePath() {
         return process.execPath;
     }
@@ -81,7 +85,7 @@ export default class App {
         if (is.macOS() && !App.isDev()) {
             if (!fsExists(MAC_USER_CORE_PATH)) {
                 fs.mkdirSync(MAC_USER_CORE_PATH);
-                App.moveCoreSubDir(['software', 'tmp', 'www','library']);
+                App.moveCoreSubDir(['software', 'tmp', 'www','Library']);
                 App.createCoreSubDir(['downloads']);
             }
         }
