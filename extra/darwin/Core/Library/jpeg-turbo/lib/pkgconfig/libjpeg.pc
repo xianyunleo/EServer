@@ -1,0 +1,10 @@
+prefix=/Applications/EasySrv/Library/jpeg-turbo
+exec_prefix=/Applications/EasySrv/Library/jpeg-turbo
+libdir=/Applications/EasySrv/Library/jpeg-turbo/lib
+includedir=/Applications/EasySrv/Library/jpeg-turbo/include
+
+Name: libjpeg
+Description: A SIMD-accelerated JPEG codec that provides the libjpeg API
+Version: 2.1.4
+Libs: -L${libdir} -ljpeg
+Cflags: -I${includedir}

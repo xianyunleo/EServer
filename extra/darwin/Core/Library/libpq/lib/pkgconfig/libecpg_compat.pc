@@ -1,0 +1,9 @@
+Name: libecpg_compat
+Description: PostgreSQL libecpg_compat library
+Url: https://www.postgresql.org/
+Version: 14.5
+Requires: 
+Requires.private: libecpg libpgtypes
+Cflags: -I/Applications/EasySrv/Library/libpq/include
+Libs: -L/Applications/EasySrv/Library/libpq/lib -lecpg_compat
+Libs.private:  -lpgcommon -lpgport -lpq -lm
