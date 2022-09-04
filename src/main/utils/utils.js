@@ -10,9 +10,8 @@ export function fsExists(path) {
         return false;
     }
 }
-
+//todo mv覆盖，已有子文件不删除
 export function fsMove(sourcePath, targetPath) {
-    console.log('移动文件',sourcePath,targetPath)
     return fs.renameSync(sourcePath, targetPath);
 }
 
