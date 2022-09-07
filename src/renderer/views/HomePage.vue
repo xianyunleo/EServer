@@ -140,7 +140,7 @@ const restartServerClick = async (item) => {
   try {
     //todo 开始前loading，开始后sleep 1-3s
     await ServerControl.stop(item);
-    await sleep(500);
+    await sleep(300);
     if (item.isRunning) {
       MessageBox.error('停止服务出错！', '重启服务出错！');
       return;
