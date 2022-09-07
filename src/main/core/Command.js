@@ -12,6 +12,8 @@ export default class Command {
      * @returns {Promise<string>}
      */
     static async exec(command, options = {}) {
+        if (App.isDev()) console.log('exec command', command)
+
         let formatCommand;
         if (is.windows()) {
             formatCommand = '@chcp 65001 >nul & cmd /d/s/c ';
@@ -21,8 +23,6 @@ export default class Command {
         if (!options.encoding) {
             options.encoding = "utf8";
         }
-
-        if (App.isDev()) console.log('exec command', command)
 
         try {
             return child_process.execSync(command,options);
@@ -41,6 +41,8 @@ export default class Command {
      * @returns {Promise<unknown>}
      */
     static async sudoExec(command) {
+        if (App.isDev()) console.log('sudo exec command', command)
+
         return await new Promise((resolve, reject) => {
             const options = {
                 name: APP_NAME,

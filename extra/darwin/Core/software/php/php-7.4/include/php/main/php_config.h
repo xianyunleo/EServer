@@ -1042,7 +1042,7 @@
 /* #undef HAVE_LIBGD */
 
 /* */
-/* #undef HAVE_LIBICONV */
+#define HAVE_LIBICONV 1
 
 /* */
 /* #undef HAVE_LIBINTL */
@@ -1958,7 +1958,7 @@
 /* #undef HAVE_ZIP */
 
 /* */
-#define HAVE_ZLIB 1
+/* #undef HAVE_ZLIB */
 
 /* whether _controlfp is present usable */
 /* #undef HAVE__CONTROLFP */
@@ -1970,7 +1970,7 @@
 /* #undef HAVE__FPU_SETCW */
 
 /* iconv() is aliased to libiconv() in -liconv */
-/* #undef ICONV_ALIASED_LIBICONV */
+#define ICONV_ALIASED_LIBICONV 1
 
 /* Whether iconv supports IGNORE */
 #define ICONV_BROKEN_IGNORE 0
@@ -2054,7 +2054,7 @@
 #define PHPDBG_DEBUG 0
 
 /* PHP build date */
-#define PHP_BUILD_DATE "2022-09-04"
+#define PHP_BUILD_DATE "2022-09-07"
 
 /* Define if your system has fork/vfork/CreateProcess */
 #define PHP_CAN_SUPPORT_PROC_OPEN 1
@@ -2120,10 +2120,10 @@
 /* #undef PHP_HPUX_TIME_R */
 
 /* Path to iconv.h */
-#define PHP_ICONV_H_PATH </Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/iconv.h>
+#define PHP_ICONV_H_PATH </Applications/EasySrv/Library/libiconv/include/iconv.h>
 
 /* Which iconv implementation to use */
-/* #undef PHP_ICONV_IMPL */
+#define PHP_ICONV_IMPL "libiconv"
 
 /* Whether you have IRIX-style functions */
 /* #undef PHP_IRIX_TIME_R */

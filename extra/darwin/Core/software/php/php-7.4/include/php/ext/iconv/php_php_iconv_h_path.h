@@ -1,1 +1,1 @@
-#define PHP_ICONV_H_PATH </Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/iconv.h>
+#define PHP_ICONV_H_PATH </Applications/EasySrv/Library/libiconv/include/iconv.h>
