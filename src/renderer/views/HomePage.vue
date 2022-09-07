@@ -75,22 +75,16 @@ import {sleep} from "@/shared/utils/utils";
 const columns = [
   {
     title: '服务名',
-    width: 100,
+    width: 180,
     dataIndex: 'Name',
   }, {
     title: '状态',
     dataIndex: 'status',
-    width: 80,
-    align: 'center',
-  }, {
-    title: '自启服务',
-    dataIndex: 'service',
     width: 100,
     align: 'center',
   },{
     title: '操作',
     dataIndex: 'operate',
-    width: 250,
     align: 'center',
   }
 ];
