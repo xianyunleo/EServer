@@ -1,0 +1,9 @@
+Name: libpgtypes
+Description: PostgreSQL libpgtypes library
+Url: https://www.postgresql.org/
+Version: 14.5
+Requires: 
+Requires.private: 
+Cflags: -I/Applications/EasySrv/Library/libpq/include
+Libs: -L/Applications/EasySrv/Library/libpq/lib -lpgtypes
+Libs.private:  -lpgcommon -lpgport -lm

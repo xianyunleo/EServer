@@ -9,6 +9,12 @@ import GetPath from "@/shared/utils/GetPath";
 import {fsExists} from "@/main/utils/utils";
 
 export default class Native {
+    /**
+     *
+     * @param filePath {string}
+     * @param isSudo {boolean}
+     * @returns {Promise<void>}
+     */
     static async openTextFile(filePath, isSudo = false) {
         if (is.macOS()) {
             fixPath();  //mac下修复环境变量不识别的问题

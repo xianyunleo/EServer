@@ -75,22 +75,16 @@ import {sleep} from "@/shared/utils/utils";
 const columns = [
   {
     title: '服务名',
-    width: 100,
+    width: 180,
     dataIndex: 'Name',
   }, {
     title: '状态',
     dataIndex: 'status',
-    width: 80,
-    align: 'center',
-  }, {
-    title: '自启服务',
-    dataIndex: 'service',
     width: 100,
     align: 'center',
   },{
     title: '操作',
     dataIndex: 'operate',
-    width: 250,
     align: 'center',
   }
 ];
@@ -130,7 +124,7 @@ const startServerClick = async (item) => {
         MessageBox.error(errMsg, '启动服务出错！');
       }
     });
-    await sleep(1000);
+    await sleep(500);
   } catch (error) {
     MessageBox.error(error.message ?? error, '启动服务出错！');
   }
@@ -140,7 +134,11 @@ const restartServerClick = async (item) => {
   try {
     //todo 开始前loading，开始后sleep 1-3s
     await ServerControl.stop(item);
-    await sleep(1000);
+    await sleep(300);
+    if (item.isRunning) {
+      MessageBox.error('停止服务出错！', '重启服务出错！');
+      return;
+    }
     await ServerControl.start(item);
     const unwatch = watch(() => item.errMsg, (errMsg) => {
       if (errMsg) {
@@ -148,7 +146,7 @@ const restartServerClick = async (item) => {
         MessageBox.error(errMsg, '重启服务出错！');
       }
     });
-    await sleep(1000);
+    await sleep(500);
   } catch (error) {
     MessageBox.error(error.message ?? error, '重启服务出错！');
   }

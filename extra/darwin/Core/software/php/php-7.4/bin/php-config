@@ -8,8 +8,8 @@ version="7.4.30"
 vernum="70430"
 include_dir="${prefix}/include/php"
 includes="-I$include_dir -I$include_dir/main -I$include_dir/TSRM -I$include_dir/Zend -I$include_dir/ext -I$include_dir/ext/date/lib"
-ldflags=" -L/Applications/EasySrv/Library/openssl@1.1/lib -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -L/Applications/EasySrv/Library/libpng/lib -L/Applications/EasySrv/Library/jpeg-turbo/lib -L/Applications/EasySrv/Library/oniguruma/lib -L/Applications/EasySrv/Library/libpq/lib"
-libs="  -lresolv -lpq -lpq -liconv -lbz2 -lm  -lxml2 -lssl -lcrypto -lsqlite3 -lz -lcurl -lxml2 -lssl -lcrypto -lz -lpng16 -lz -ljpeg -lonig -lsqlite3 -lxml2 -lxml2 -lxml2 -lxml2 -lxml2 -lz -lssl -lcrypto "
+ldflags=" -L/Applications/EasySrv/Library/libxml2/lib -L/Applications/EasySrv/Library/openssl@1.1/lib -L/Applications/EasySrv/Library/bzip2/lib -L/Applications/EasySrv/Library/curl/lib -L/Applications/EasySrv/Library/zlib/lib -L/Applications/EasySrv/Library/libpng/lib -L/Applications/EasySrv/Library/jpeg/lib -L/Applications/EasySrv/Library/libiconv/lib -L/Applications/EasySrv/Library/oniguruma/lib -L/Applications/EasySrv/Library/libpq/lib"
+libs="  -lresolv -lpq -lpq -liconv -liconv -lbz2 -lm  -lxml2 -lssl -lcrypto -lsqlite3 -lcurl -lxml2 -lssl -lcrypto -lz -lpng16 -lz -ljpeg -lonig -lsqlite3 -lxml2 -lxml2 -lxml2 -lxml2 -lxml2 -lz -lssl -lcrypto "
 extension_dir='/Applications/EasySrv/software/php/php-7.4/lib/php/extensions/no-debug-non-zts-20190902'
 man_dir=`eval echo ${datarootdir}/man`
 program_prefix=""
@@ -17,7 +17,7 @@ program_suffix=""
 exe_extension=""
 php_cli_binary=NONE
 php_cgi_binary=NONE
-configure_options=" '--prefix=/Applications/EasySrv/software/php/php-7.4' '--with-config-file-path=/Applications/EasySrv/software/php/php-7.4/etc' '--enable-bcmath' '--enable-calendar' '--enable-exif' '--enable-ftp' '--enable-fpm' '--enable-gd' '--enable-mbstring' '--enable-soap' '--enable-sockets' '--enable-opcache' '--with-bz2=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr' '--with-curl' '--with-iconv=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr' '--with-openssl' '--with-mysqli' '--with-pdo-mysql' '--with-pgsql=/Applications/EasySrv/Library/libpq' '--with-pdo-pgsql=/Applications/EasySrv/Library/libpq' '--with-pdo-sqlite' '--with-sqlite3' '--with-libxml' '--with-jpeg' '--with-zlib' 'PKG_CONFIG_PATH=/Applications/EasySrv/Library/openssl@1.1/lib/pkgconfig:/Applications/EasySrv/Library/libpng/lib/pkgconfig:/Applications/EasySrv/Library/jpeg-turbo/lib/pkgconfig:/Applications/EasySrv/Library/oniguruma/lib/pkgconfig'"
+configure_options=" '--prefix=/Applications/EasySrv/software/php/php-7.4' '--with-config-file-path=/Applications/EasySrv/software/php/php-7.4/etc' '--enable-bcmath' '--enable-calendar' '--enable-exif' '--enable-ftp' '--enable-fpm' '--enable-mbstring' '--enable-soap' '--enable-sockets' '--enable-opcache' '--enable-gd' '--with-bz2=/Applications/EasySrv/Library/bzip2' '--with-openssl' '--with-curl' '--with-iconv=/Applications/EasySrv/Library/libiconv' '--with-mysqli' '--with-pdo-mysql' '--with-pgsql=/Applications/EasySrv/Library/libpq' '--with-pdo-pgsql=/Applications/EasySrv/Library/libpq' '--with-pdo-sqlite' '--with-sqlite3' '--with-libxml' '--with-jpeg' 'PKG_CONFIG_PATH=/Applications/EasySrv/Library/openssl@1.1/lib/pkgconfig:/Applications/EasySrv/Library/curl/lib/pkgconfig:/Applications/EasySrv/Library/libpng/lib/pkgconfig:/Applications/EasySrv/Library/jpeg/lib/pkgconfig:/Applications/EasySrv/Library/oniguruma/lib/pkgconfig:/Applications/EasySrv/Library/zlib/lib/pkgconfig:/Applications/EasySrv/Library/libxml2/lib/pkgconfig'"
 php_sapis=" cli fpm phpdbg cgi"
 ini_dir=""
 ini_path="/Applications/EasySrv/software/php/php-7.4/etc"
