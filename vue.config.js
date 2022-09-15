@@ -44,10 +44,10 @@ module.exports ={
               arch: ["x64"]
             },
           ],
-          extraFiles: {
-            from: "./extra/win32/",
-            to: "./",
-          },
+          // extraFiles: {
+          //   from: "./extra/win32/",
+          //   to: "./",
+          // },
           icon: 'build/icons/icon.ico',
         },
         artifactName:'${productName}-${version}-${arch}.${ext}',
