@@ -31,10 +31,10 @@ module.exports ={
               arch:['x64'],
             },
           ],
-          extraFiles: {
-            from: "./extra/darwin/",
-            to: "./",
-          },
+          // extraFiles: {
+          //   from: "./extra/darwin/",
+          //   to: "./",
+          // },
           icon: 'build/icons/icon.icns',
         },
         win:{
