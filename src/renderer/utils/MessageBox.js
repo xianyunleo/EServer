@@ -3,7 +3,7 @@ import {Modal} from 'ant-design-vue';
 export default class MessageBox {
     static info(message, title) {
         title = title ?? '信息提示';
-        Modal.error({
+        Modal.info({
             title: title,
             content: message,
             centered: true,
@@ -21,7 +21,7 @@ export default class MessageBox {
 
     static Warning(message, title) {
         title = title ?? '警告提示';
-        Modal.error({
+        Modal.warning({
             title: title,
             content: message,
             centered: true,
