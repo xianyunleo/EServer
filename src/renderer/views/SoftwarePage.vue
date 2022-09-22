@@ -150,8 +150,10 @@ const clickInstall = async (item) => {
   try {
     let installer = new Installer(item);
     await installer.install();
+    if (item.installInfo.status === EnumSoftwareInstallStatus.Finish) {
+      item.Installed = true;
+    }
     item.installInfo = null;
-    item.Installed = true;
   } catch (error) {
     //catch 不item.installInfo = null，因为installInfo有信息要显示
     item.statusErrorText = error.message;
