@@ -8,6 +8,7 @@ import fs from "fs";
 import Database from "@/main/core/Database";
 import ProcessExtend from "@/main/core/ProcessExtend";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
+import Settings from "@/main/Settings";
 
 
 export default class App {
@@ -65,6 +66,10 @@ export default class App {
         return App.getCorePath();
     }
 
+    static getSettingsPath(){
+        return App.getUserCorePath();
+    }
+
     static getInitFilePath() {
         return path.join(App.getCorePath(), INIT_FILE_NAME);
     }
@@ -79,6 +84,7 @@ export default class App {
 
     static async init() {
         let initFile = App.getInitFilePath();
+        Settings.getInstance();
         if (!fsExists(initFile)) {
             return;
         }
@@ -86,7 +92,7 @@ export default class App {
             if (!fsExists(MAC_USER_CORE_PATH)) {
                 fs.mkdirSync(MAC_USER_CORE_PATH);
                 App.moveCoreSubDir(['software', 'tmp', 'www','Library']);
-                App.createCoreSubDir(['downloads']);
+                App.createCoreSubDir(['downloads','database']);
             }
         }
         await App.initMySQL();
@@ -120,7 +126,10 @@ export default class App {
 
     static createCoreSubDir(dirs) {
         for (const dir of dirs) {
-            fs.mkdirSync(path.join(MAC_USER_CORE_PATH, dir));
+            let p = path.join(MAC_USER_CORE_PATH, dir);
+            if (!fsExists(p)) {
+                fs.mkdirSync(p);
+            }
         }
     }
 }
