@@ -20,7 +20,7 @@
         </a-menu-item>
       </div>
       <div style="margin-bottom: 25px;" class="non-draggable">
-        <a-menu-item key="/setting">
+        <a-menu-item key="/settings">
           <template #icon><setting-two-tone  /> </template> 设置
         </a-menu-item>
         <a-menu-item key="/about">
