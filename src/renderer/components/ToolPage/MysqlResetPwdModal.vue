@@ -1,6 +1,6 @@
 <template>
   <a-modal
-      title="MySQL修改密码"
+      title="MySQL重置密码"
       ok-text="确认"
       cancel-text="取消"
       @ok="resetClick"
