@@ -4,7 +4,7 @@ import Nginx from "@/main/core/Nginx";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
 
 export default class Website {
-    static async add(websiteInfo) {
+    static add(websiteInfo) {
         if (Nginx.websiteExists(websiteInfo.serverName)) {
             throw new Error('网站已经存在！');
         }
@@ -31,9 +31,8 @@ export default class Website {
         return  webSite.getBasicInfo();
     }
 
-    static  getRewrite(serverName) {
-        let webSite = new NginxWebsite(serverName);
-        return webSite.getRewrite();
+    static getRewrite(serverName) {
+        return NginxWebsite.getRewrite(serverName);
     }
 
     static getConfPath(serverName) {
@@ -58,11 +57,11 @@ export default class Website {
 
     static saveBasicInfo(serverName, websiteInfo) {
         let webSite = new NginxWebsite(serverName);
-        webSite.saveBasicInfo(websiteInfo);
+        webSite.setBasicInfo(websiteInfo);
+        webSite.save();
     }
 
     static saveRewrite(serverName, content) {
-        let webSite = new NginxWebsite(serverName);
-        webSite.saveUrlRewrite(content);
+        NginxWebsite.saveRewrite(serverName, content);
     }
 }

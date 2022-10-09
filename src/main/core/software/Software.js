@@ -1,7 +1,6 @@
 import App from "@/main/App";
 import path from "path";
-import fs from "fs";
-import {fsExists} from "@/main/utils/utils";
+import {fsExists, fsReadFile} from "@/main/utils/utils";
 import {enumGetName} from "@/shared/utils/utils";
 import {EnumSoftwareType} from "@/shared/enum";
 import GetPath from "@/shared/utils/GetPath";
@@ -22,7 +21,7 @@ export default class Software {
         let softPath = path.join(corePath, '/config/software');
         let softConfigPath = path.join(softPath, 'software.json');
         let softIconPath = 'file://' + path.join(softPath, '/icon');
-        let json = fs.readFileSync(softConfigPath);
+        let json = fsReadFile(softConfigPath);
         let list = JSON.parse(json);
 
         for (const item of list) {

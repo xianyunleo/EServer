@@ -29,15 +29,6 @@
       </div>
     </a-menu>
   </div>
-  <a-modal v-model:visible="aboutVisible" title="关于" >
-    <template #footer>
-      <a-button type="primary" @click="handleOk">确认</a-button>
-    </template>
-    <p style="text-align: center;font-size: 18px;">{{ APP_NAME }}集成环境</p>
-    <p style="text-align: center">版本：{{version}} 测试版</p>
-    <p style="text-align: center">官网：www.easysrv.cn</p>
-    <p style="text-align: center">Github：github.com/xianyunleo/EasySrv</p>
-  </a-modal>
 </template>
 
 <script setup>
@@ -51,25 +42,14 @@ import {
 } from "@ant-design/icons-vue";
 import { ref } from 'vue';
 import {useRouter} from "vue-router";
-import {APP_NAME} from "@/shared/constant";
-import App from "@/main/App";
 
 const router = useRouter();
 const selectedKeys = ref(['/']);
-const aboutVisible = ref(false);
-const version = App.getVersion();
-const menuItemSelect = e =>{
-  let path =  e.key
-  if(path ==='/about'){
-    aboutVisible.value = true;
-  }else{
-    router.push({path:e.key})
-  }
 
+const menuItemSelect = e =>{
+  router.push({path:e.key})
 }
-const handleOk = () =>{
-  aboutVisible.value = false;
-}
+
 </script>
 
 <style scoped lang="scss">

@@ -1,13 +1,8 @@
-import {EOL} from "os";
 import fs from "fs";
 import path from "path";
-import {CONF_INDENT} from "@/main/constant";
 import GetPath from "@/shared/utils/GetPath";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
-import {getFilesByDir, fsExists, getFilNameWithoutExt, fsDelete} from "@/main/utils/utils";
-
-const N = EOL;
-const T = CONF_INDENT;
+import {getFilesByDir, fsExists, getFilNameWithoutExt, fsDelete, fsReadFile} from "@/main/utils/utils";
 
 export default class Nginx {
     /**
@@ -33,11 +28,13 @@ export default class Nginx {
      * @param websiteInfo {WebsiteItem}
      */
     static addWebsite(websiteInfo) {
+        let serverName = websiteInfo.serverName;
+        serverName = websiteInfo.extraServerName ? `${serverName} ${websiteInfo.extraServerName}` : serverName;
         let confText =
             `server
 {
     listen ${websiteInfo.port};
-    server_name ${websiteInfo.serverName};
+    server_name ${serverName};
     index index.html index.htm index.php;
     root  ${websiteInfo.rootPath};
 
@@ -93,10 +90,13 @@ export default class Nginx {
     error_log  logs/${websiteInfo.serverName}.error.log;
 }`;
 
-        confText = Nginx.replaceConfPHPVersion(websiteInfo.phpVersion, confText);
-
         let confPath = Nginx.getWebsiteConfPath(websiteInfo.serverName);
         fs.writeFileSync(confPath, confText);
+
+        let website = new NginxWebsite(websiteInfo.serverName);
+        website.setPHPVersion(websiteInfo.phpVersion);
+        website.setExtraInfo({allowSyncHosts: websiteInfo.allowSyncHosts});
+        website.save();
 
         //创建URL重写文件
         let rewritePath = Nginx.getWebsiteRewriteConfPath(websiteInfo.serverName);
@@ -154,24 +154,6 @@ export default class Nginx {
         if (!fsExists(rewritePath)) {
             return '';
         }
-        return fs.readFileSync(rewritePath, {encoding: 'utf8'});
-    }
-
-    /**
-     * 替换配置文件中的PHP版本
-     * @param  phpVersion {string}
-     * @param confText {string}
-     * @returns {string}
-     */
-    static replaceConfPHPVersion(phpVersion, confText) {
-        let phpPattern = /(?<=#PHP_START)[\s\S]+?(?=#PHP_END)/;
-        let phpReplace;
-        if (phpVersion) {
-            phpReplace = `${N}${T}include php/php-${phpVersion}.conf;${N}${T}`;
-        } else {
-            phpReplace = `${N}${T}`;
-        }
-        confText = confText.replace(phpPattern, phpReplace);
-        return confText;
+        return fsReadFile(rewritePath);
     }
 }

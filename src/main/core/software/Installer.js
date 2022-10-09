@@ -106,7 +106,7 @@ export default class Installer {
             let url = this.getDownloadUrl();
             if (App.isDev()) console.log('downloadUrl',url)
 
-            let command = `${downloaderPath} ${url} --check-certificate=false --allow-overwrite=true --dir=${downloadsPath}`;
+            let command = `${downloaderPath} ${url} --dir=${downloadsPath} --check-certificate=false --allow-overwrite=true --remove-control-file=true`;
 
             if (!is.windows()) {
                 command = `${stdbufPath} -o0 ${command}`;

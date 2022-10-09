@@ -65,7 +65,7 @@ export default class Native {
         if (is.windows()) {
             await Native.openTextFile(path);
         } else {
-            if (!await Hosts.canEditHosts()) {
+            if (!Hosts.canEditHosts()) {
                 await Command.sudoExec(`chmod 666 ${path}`);
             }
             await Native.openTextFile(path);
