@@ -19,6 +19,10 @@
           <a-input v-model:value="formData.serverName" @change="serverNameChange"/>
         </a-form-item>
 
+        <a-form-item label="第二域名" name="extraServerName" >
+          <a-input v-model:value="formData.extraServerName"  placeholder="可以不填"/>
+        </a-form-item>
+
         <a-form-item label="端口" name="port" :rules="[{  required: true, type: 'number', min: 80, max: 65535 }]">
           <a-input-number v-model:value="formData.port" min="80" max="65535"/>
         </a-form-item>
@@ -28,7 +32,11 @@
         </a-form-item>
 
         <a-form-item label="PHP版本" name="phpVersion">
-          <a-select style="width: 100px" v-model:value="formData.phpVersion" :options="phpVersionList"/>
+          <a-select style="width: 120px" v-model:value="formData.phpVersion" :options="phpVersionList"/>
+        </a-form-item>
+
+        <a-form-item label="同步hosts" name="allowSyncHosts">
+          <a-switch v-model:checked="formData.allowSyncHosts" />
         </a-form-item>
       </a-form>
 
@@ -47,6 +55,7 @@ import GetPath from "@/shared/utils/GetPath";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {STATIC_WEB_NAME} from "@/shared/constant";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
+import Hosts from "@/main/core/Hosts";
 
 const {search, addModalVisible: visible} = inject('website');
 
@@ -55,9 +64,11 @@ const formRef = ref();
 
 const formData = reactive({
   serverName: '',
+  extraServerName: '',
   port: 80,
   rootPath: wwwPath,
   phpVersion: '',
+  allowSyncHosts:true,
 });
 
 const phpVersionList = ref([]);
@@ -83,12 +94,22 @@ const addWebClick = async () => {
   }
 };
 
-const addWeb = async (websiteInfo) => {
+const addWeb = async (websiteInfo)=>{
   try {
-    await Website.add(websiteInfo);
+    Website.add(websiteInfo);
   } catch (error) {
     MessageBox.error(error.message ?? error, '添加网站出错！');
+    return;
   }
+
+  if(websiteInfo.allowSyncHosts){
+    try {
+      await Hosts.add([websiteInfo.serverName,websiteInfo.extraServerName]);
+    } catch (error) {
+      MessageBox.error(error.message ?? error, '同步Hosts出错！');
+    }
+  }
+
 }
 </script>
 

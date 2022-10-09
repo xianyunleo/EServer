@@ -6,6 +6,9 @@
       :wrapper-col="{ span: 18 }"
       autocomplete="off">
 
+    <a-form-item label="第二域名" name="extraServerName" >
+      <a-input v-model:value="formData.extraServerName"  placeholder="可以不填" />
+    </a-form-item>
 
     <a-form-item label="端口" name="port" :rules="[{  required: true, type: 'number', min: 80, max: 65535 }]">
       <a-input-number v-model:value="formData.port" min="80" max="65535"  />
@@ -16,8 +19,12 @@
     </a-form-item>
 
     <a-form-item label="PHP版本" name="phpVersion" >
-      <a-select  style="width: 100px" v-model:value="formData.phpVersion" :options="phpVersionList">
+      <a-select  style="width: 120px" v-model:value="formData.phpVersion" :options="phpVersionList">
       </a-select>
+    </a-form-item>
+
+    <a-form-item label="同步hosts" name="allowSyncHosts">
+      <a-switch v-model:checked="formData.allowSyncHosts" :disabled="true" />
     </a-form-item>
   </a-form>
 

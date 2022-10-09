@@ -2,6 +2,19 @@
 import fs from "fs";
 import path from "path";
 
+/**
+ * @param path {string}
+ * @returns {string}
+ */
+export function fsReadFile(path){
+    return fs.readFileSync(path,{encoding: 'utf8'});
+}
+
+/**
+ *
+ * @param path {string}
+ * @returns {boolean}
+ */
 export function fsExists(path) {
     try {
         fs.accessSync(path);
