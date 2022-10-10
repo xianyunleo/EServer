@@ -7,7 +7,7 @@ import Software from "@/main/core/software/Software";
 import Database from "@/main/core/Database";
 import is from "electron-is";
 import {DOWNLOAD_URL} from "@/shared/constant";
-import {fsDelete} from "@/main/utils/utils";
+import Directory from "@/main/utils/Directory";
 
 export default class Installer {
     item;
@@ -17,7 +17,6 @@ export default class Installer {
      * @param softItem {SoftwareItem}
      */
     constructor(softItem) {
-        console.log('this.item',this.item)
         this.item = softItem;
         this.item.installInfo = this.item.installInfo ? this.item.installInfo : {}
         this.item.installInfo.status = EnumSoftwareInstallStatus.Ready;
@@ -59,8 +58,6 @@ export default class Installer {
             let errMsg = error.message ?? '未知错误';
             throw new Error(`下载出错，${errMsg}`);
         }
-
-        if (App.isDev()) console.log('判断是否下载完成')
 
         if (this.item.installInfo.status !== EnumSoftwareInstallStatus.Downloaded) {
             this.changeStatus(EnumSoftwareInstallStatus.Abort);
@@ -105,11 +102,19 @@ export default class Installer {
         return await new Promise((resolve, reject) => {
             let downloaderPath = this.getDownloaderPath();
             let downloadsPath = this.getDownloadsPath();
+            let stdbufPath = this.getStdbufPath();
             let url = this.getDownloadUrl();
             if (App.isDev()) console.log('downloadUrl',url)
-            let args = [url, '--check-certificate=false', '--allow-overwrite=true', `--dir=${downloadsPath}`];
 
-            let dlProcess = child_process.spawn(downloaderPath, args);
+            let command = `${downloaderPath} ${url} --dir=${downloadsPath} --check-certificate=false --allow-overwrite=true --remove-control-file=true`;
+
+            if (!is.windows()) {
+                command = `${stdbufPath} -o0 ${command}`;
+            }
+
+            if (App.isDev()) console.log('command',command)
+
+            let dlProcess = child_process.exec(command);
             this.changeStatus(EnumSoftwareInstallStatus.Downloading);
             const progressRegx = /([\d.]+\w+)\/([\d.]+\w+)\((\d+)%\).+DL:([\d.]+\w+)/;
             const errRegx = /errorCode=\d+.+/g;
@@ -143,10 +148,11 @@ export default class Installer {
             });
 
             dlProcess.on('close', (code) => {
+                if (App.isDev()) console.log('errCode', code)
                 if (this.downloadSignal) {
                     this.downloadSignal.removeEventListener('abort', abortDownload);
                 }
-                if (code == null) {
+                if (code == null || code === 7) {
                     this.changeStatus(EnumSoftwareInstallStatus.Abort);
                     return resolve(true);
                 }
@@ -155,7 +161,7 @@ export default class Installer {
                     this.setDownloadInfo({percent: 100})
                     return resolve(true);
                 }
-                console.log('errMsg', this.errMsg)
+                if (App.isDev()) console.log('errMsg', this.errMsg)
                 reject(new Error(this.errMsg));
             });
 
@@ -169,10 +175,8 @@ export default class Installer {
 
     async zipExtract() {
         let filePath = path.join(this.getDownloadsPath(), this.fileName);
-        console.log('filePath',filePath)
-
         let typePath = Software.getTypePath(this.item.Type)
-        console.log('typePath',typePath)
+
         this.changeStatus(EnumSoftwareInstallStatus.Extracting);
         return await extract(filePath, {dir: typePath});
     }
@@ -185,8 +189,12 @@ export default class Installer {
         return path.join(App.getCorePath(), 'aria2c');
     }
 
+    getStdbufPath() {
+        return path.join(App.getCorePath(), 'stdbuf');
+    }
+
     static uninstall(item) {
         let path = Software.getPath(item);
-        fsDelete(path);
+        Directory.Delete(path, true);
     }
 }

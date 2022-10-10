@@ -6,7 +6,7 @@ import is from "electron-is";
 import fixPath from "fix-path";
 import Hosts from "@/main/core/Hosts";
 import GetPath from "@/shared/utils/GetPath";
-import {fsExists} from "@/main/utils/utils";
+import File from "@/main/utils/File";
 
 export default class Native {
     /**
@@ -22,7 +22,7 @@ export default class Native {
         try {
             //todo 默认系统文本编辑器，macos打开hosts时提示，可能无法编辑，请在设置里切换文本编辑器
             let editorPath = path.join('/Applications/','Visual Studio Code.app');
-            if (! fsExists(editorPath)) {
+            if (!File.Exists(editorPath)) {
                 throw new Error('VS Code没有安装');
             }
             let command;
@@ -65,7 +65,7 @@ export default class Native {
         if (is.windows()) {
             await Native.openTextFile(path);
         } else {
-            if (!await Hosts.canEditHosts()) {
+            if (!Hosts.canEditHosts()) {
                 await Command.sudoExec(`chmod 666 ${path}`);
             }
             await Native.openTextFile(path);

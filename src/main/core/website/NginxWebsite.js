@@ -1,9 +1,15 @@
 import fs from "fs";
 import Nginx from "@/main/core/Nginx";
 import {STATIC_WEB_NAME} from "@/shared/constant";
+import {EOL} from "os";
+import {CONF_INDENT} from "@/main/constant";
+import File from "@/main/utils/File";
+
+const N = EOL;
+const T = CONF_INDENT;
 
 /**
- * Nginx网站类，用于生成网站对象
+ * 用去获取和设置Nginx站点配置
  */
 export default class NginxWebsite {
     serverName;
@@ -13,27 +19,28 @@ export default class NginxWebsite {
     constructor(serverName) {
         this.serverName = serverName;
         this.confPath = Nginx.getWebsiteConfPath(this.serverName);
-    }
-
-    initConfText() {
-        if (!this.confText) {
-            this.confText = fs.readFileSync(this.confPath, {encoding: 'utf8'});
-        }
+        this.confText = File.ReadAllText(this.confPath);
     }
 
     getBasicInfo() {
-        this.initConfText();
         return {
             serverName: this.serverName,
+            extraServerName: this.getExtraServerName(),
             port: this.getPort(),
             rootPath: this.getRootPath(),
             phpVersion: this.getPHPVersion() ?? STATIC_WEB_NAME,
+            allowSyncHosts: this.getExtraInfo('allowSyncHosts') ?? false,
         }
     }
 
-    getRewrite() {
-        let rewritePath = Nginx.getWebsiteRewriteConfPath(this.serverName);
-        return fs.readFileSync(rewritePath, {encoding: 'utf8'});
+    getExtraServerName(){
+        let matches = this.confText.match(/server_name\s+[^\s;]+\s*(.+)?\s*;/);
+        return matches ? matches[1] : null;
+    }
+
+    static getRewrite(serverName) {
+        let rewritePath = Nginx.getWebsiteRewriteConfPath(serverName);
+        return File.ReadAllText(rewritePath);
     }
 
     getPort() {
@@ -51,23 +58,66 @@ export default class NginxWebsite {
         return matches ? matches[1] : null;
     }
 
+    getExtraInfo(key = null) {
+        let matches = this.confText.match(/(?<=#EXTRA_INFO_START[\s\S]{0,9}#).*(?=[\s\S]{0,9}#EXTRA_INFO_END)/);
+        if (!matches || !matches[0]) {
+            return null;
+        }
+        let extraObj;
+        try {
+            extraObj = JSON.parse(matches[0]) ?? {};
+        } catch {
+            return null;
+        }
 
-    saveBasicInfo(websiteInfo) {
-        this.initConfText();
-        let text = this.confText;
-        text = text.replace(/(?<=listen\s+)\d+(?=\s*;)/, websiteInfo.port);
-        text = text.replace(/(?<=root\s+)\S+(?=\s*;)/, websiteInfo.rootPath);
-        text = Nginx.replaceConfPHPVersion(websiteInfo.phpVersion, text);
-        this.confText = text;
-        this.saveInfo();
+        return key ? extraObj[key] : extraObj;
     }
 
-    saveUrlRewrite(content) {
-        let rewritePath = Nginx.getWebsiteRewriteConfPath(this.serverName);
+    setBasicInfo(websiteInfo) {
+        let text = this.confText;
+        let serverNameStr;
+        if (websiteInfo.extraServerName) {
+            serverNameStr = `server_name ${this.serverName} ${websiteInfo.extraServerName};`;
+        } else {
+            serverNameStr = `server_name ${this.serverName};`;
+        }
+        text = text.replace(/server_name\s+[^\s;]+\s*(.+)?\s*;/, serverNameStr);
+        text = text.replace(/(?<=listen\s+)\d+(?=\s*;)/, websiteInfo.port);
+        text = text.replace(/(?<=root\s+)\S+(?=\s*;)/, websiteInfo.rootPath);
+        this.confText = text;
+        this.setPHPVersion(websiteInfo.phpVersion);
+        this.setExtraInfo({allowSyncHosts: websiteInfo.allowSyncHosts});
+        fs.writeFileSync(this.confPath, this.confText);
+    }
+
+    static saveRewrite(serverName, content) {
+        let rewritePath = Nginx.getWebsiteRewriteConfPath(serverName);
         fs.writeFileSync(rewritePath, content);
     }
 
-    saveInfo() {
+    /**
+     * 替换配置文件中的PHP版本
+     * @param  phpVersion {string}
+     */
+     setPHPVersion(phpVersion) {
+        let phpPattern = /(?<=#PHP_START)[\s\S]+?(?=#PHP_END)/;
+        let phpReplace;
+        if (phpVersion) {
+            phpReplace = `${N}${T}include php/php-${phpVersion}.conf;${N}${T}`;
+        } else {
+            phpReplace = `${N}${T}`;
+        }
+        this.confText  = this.confText.replace(phpPattern, phpReplace);
+    }
+
+    setExtraInfo(obj) {
+        let extraObj = this.getExtraInfo() ?? {};
+        Object.assign(extraObj, obj);
+        let extraStr = JSON.stringify(extraObj);
+        this.confText = this.confText.replace(/(?<=#EXTRA_INFO_START[\s\S]{0,9}#).*(?=[\s\S]{0,9}#EXTRA_INFO_END)/, extraStr);
+    }
+
+    save() {
         fs.writeFileSync(this.confPath, this.confText);
     }
 }
