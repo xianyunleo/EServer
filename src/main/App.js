@@ -6,10 +6,10 @@ import is from "electron-is";
 import Database from "@/main/core/Database";
 import ProcessExtend from "@/main/core/ProcessExtend";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
-import Settings from "@/main/Settings";
 import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
 import Path from "@/main/utils/Path";
+import child_process from "child_process";
 
 
 export default class App {
@@ -85,7 +85,7 @@ export default class App {
 
     static async init() {
         let initFile = App.getInitFilePath();
-        Settings.getInstance();
+
         if (!File.Exists(initFile)) {
             return;
         }
@@ -123,8 +123,7 @@ export default class App {
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
             let target = Path.Join(MAC_USER_CORE_PATH, dir);
-            Directory.Copy(source, target, {force: true, recursive: true});
-            Directory.Delete(source, true);
+            child_process.execSync(`mv ${source}/* ${target} -f`);
         }
     }
 

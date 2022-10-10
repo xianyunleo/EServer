@@ -1,9 +1,9 @@
 import App from "@/main/App";
-import Store from "electron-store"
+import Store from "electron-store";
 import {SETTINGS_FILE_NAME} from "@/main/constant";
 
 export default class Settings {
-    static instance;
+    static _instance;
 
     static get(key) {
         return Settings.getInstance().get(key);
@@ -18,15 +18,15 @@ export default class Settings {
      * @returns {ElectronStore<T>}
      */
     static getInstance() {
-        if (Settings.instance) {
-            return Settings.instance;
+        if (Settings._instance) {
+            return Settings._instance;
         }
         const options = {
             name:SETTINGS_FILE_NAME,
             cwd: App.getSettingsPath()
         };
         const store = new Store(options);
-        Settings.instance = store;
+        Settings._instance = store;
         return store;
     }
 }
