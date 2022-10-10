@@ -87,7 +87,6 @@ export default class App {
     static async init() {
         let initFile = App.getInitFilePath();
         Settings.getInstance();
-        fs.symlinkSync("/Applications/EasySrv/software/php/php-7.4/bin/php","/Applications/EasySrv/software/php/php-7.4/bin/php.1")
         if (!File.Exists(initFile)) {
             return;
         }
