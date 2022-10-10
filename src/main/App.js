@@ -124,7 +124,7 @@ export default class App {
             let source = Path.Join(corePath, dir);
             let target = Path.Join(MAC_USER_CORE_PATH, dir);
             Directory.Copy(source, target, {force: true, recursive: true});
-            Directory.Delete(source);
+            Directory.Delete(source, true);
         }
     }
 
