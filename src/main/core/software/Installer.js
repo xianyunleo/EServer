@@ -7,7 +7,7 @@ import Software from "@/main/core/software/Software";
 import Database from "@/main/core/Database";
 import is from "electron-is";
 import {DOWNLOAD_URL} from "@/shared/constant";
-import {fsDelete} from "@/main/utils/utils";
+import Directory from "@/main/utils/Directory";
 
 export default class Installer {
     item;
@@ -195,6 +195,6 @@ export default class Installer {
 
     static uninstall(item) {
         let path = Software.getPath(item);
-        fsDelete(path);
+        Directory.Delete(path);
     }
 }

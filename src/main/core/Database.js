@@ -2,10 +2,10 @@ import path from "path";
 import GetPath from "@/shared/utils/GetPath";
 import fs from "fs";
 import Command from "@/main/core/Command";
-import {fsDelete} from "@/main/utils/utils";
 import ProcessExtend from "@/main/core/ProcessExtend";
 import {sleep} from "@/shared/utils/utils";
 import child_process from "child_process";
+import File from "@/main/utils/File";
 
 
 export default class Database {
@@ -56,7 +56,7 @@ export default class Database {
         child_process.exec(command, {cwd: mysqlPath});
         await sleep(1500);
         await ProcessExtend.killByName('mysqld');
-        fsDelete(resetPwdPath);
+        File.Delete(resetPwdPath);
     }
 
 }
