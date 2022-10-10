@@ -3,7 +3,6 @@ import path from "path";
 import {app} from '@electron/remote'
 import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
 import is from "electron-is";
-import fs from "fs";
 import Database from "@/main/core/Database";
 import ProcessExtend from "@/main/core/ProcessExtend";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
