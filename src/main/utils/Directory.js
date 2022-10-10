@@ -48,6 +48,16 @@ export default class Directory {
     }
 
     /**
+     * 将现有目录移动到新目录
+     * @param source {string}
+     * @param dest {string}
+     * @returns {undefined}
+     */
+    static Move(source, dest) {
+        return fs.renameSync(source, dest);
+    }
+
+    /**
      * 将现有目录复制到新目录
      * @param source {string}
      * @param dest {string}
