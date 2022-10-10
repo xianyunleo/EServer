@@ -93,8 +93,9 @@ export default class App {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
             }
-            App.moveCoreSubDir(['software', 'tmp', 'www','Library']);
-            App.createCoreSubDir(['downloads','database']);
+            App.moveCoreSubDir(['tmp', 'www', 'Library']);
+            App.updateCoreSubDir(['software']);
+            App.createCoreSubDir(['downloads', 'database']);
         }
         await App.initMySQL();
         File.Delete(initFile);
@@ -123,7 +124,19 @@ export default class App {
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
             let target = Path.Join(MAC_USER_CORE_PATH, dir);
-            child_process.execSync(`mv ${source}/* ${target} -f`);
+            if (!Directory.Exists(target)) {
+                Directory.Move(source, target);
+            }
+        }
+    }
+
+    static updateCoreSubDir(dirs) {
+        let corePath = App.getCorePath();
+        for (const dir of dirs) {
+            let source = Path.Join(corePath, dir);
+            let target = Path.Join(MAC_USER_CORE_PATH, dir);
+            child_process.execSync(`cp -R ${source}/* ${target}`);
+            Directory.Delete(source);
         }
     }
 
