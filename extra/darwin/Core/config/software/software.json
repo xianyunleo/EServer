@@ -103,6 +103,23 @@
         "Desc": "MySQL是一种关系数据库"
     },
     {
+        "Name": "MySQL-8.0",
+        "DirName": "mysql-8.0",
+        "Type": "Server",
+        "ServerProcessPath": "bin/mysqld",
+        "ServerConfPath": "my.cnf",
+        "StartServerCommand":"${ServerProcessPath} --defaults-file=${ServerConfPath}",
+        "ExtraFile": [
+            {
+                "Name": "日志",
+                "Path": "logs/mysql.log"
+            }
+        ],
+        "CanDelete": true,
+        "Icon": "mysql.png",
+        "Desc": "MySQL是一种关系数据库"
+    },
+    {
         "Name": "Redis-6.2",
         "DirName": "redis-6.2",
         "ServerProcessPath": "bin/redis-server",
