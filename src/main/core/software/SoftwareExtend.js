@@ -1,5 +1,7 @@
 import GetPath from "@/shared/utils/GetPath";
-import {fsExists, getDirsByDir} from "@/main/utils/utils";
+import File from "@/main/utils/File";
+import Directory from "@/main/utils/Directory";
+import Path from "@/main/utils/Path";
 
 
 export default class SoftwareExtend {
@@ -9,12 +11,13 @@ export default class SoftwareExtend {
      */
     static getPHPList() {
         let path = GetPath.getPHPTypePath();
-        if (!fsExists(path)) {
+        if (!File.Exists(path)) {
             return [];
         }
-        let list = getDirsByDir(path, 'php-');
+        let list = Directory.GetDirectories(path, 'php-');
 
-        return list.map(name => {
+        return list.map(path => {
+            let name = Path.GetFileName(path);
             let matches = name.match(/php-(.+)/);
             return {version: matches[1], name: name};
         });
@@ -26,12 +29,13 @@ export default class SoftwareExtend {
      */
     static getMySQLList() {
         let path = GetPath.getServerTypePath();
-        if (!fsExists(path)) {
+        if (!Directory.Exists(path)) {
             return [];
         }
-        let list = getDirsByDir(path, 'mysql-');
+        let list = Directory.GetDirectories(path, 'mysql-');
 
-        return list.map(name => {
+        return list.map(path => {
+            let name = Path.GetFileName(path);
             let matches = name.match(/mysql-(.+)/);
             return {version: matches[1], name: name};
         });

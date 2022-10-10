@@ -43,9 +43,9 @@ const getRewrite = () => {
   return Website.getRewrite(serverName.value);
 }
 
-(async () => {
+(() => {
   formData.value.rewriteContent = getRewrite();
-  let list = await Website.getRewriteRuleList();
+  let list = Website.getRewriteRuleList();
   rewriteList.value = list.map(item => {
     return {value: item, label: item};
   });

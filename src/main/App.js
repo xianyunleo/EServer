@@ -3,12 +3,14 @@ import path from "path";
 import {app} from '@electron/remote'
 import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
 import is from "electron-is";
-import {fsDelete, fsExists, fsMove} from "@/main/utils/utils";
 import fs from "fs";
 import Database from "@/main/core/Database";
 import ProcessExtend from "@/main/core/ProcessExtend";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Settings from "@/main/Settings";
+import Directory from "@/main/utils/Directory";
+import File from "@/main/utils/File";
+import Path from "@/main/utils/Path";
 
 
 export default class App {
@@ -79,24 +81,25 @@ export default class App {
     }
 
     static initFileExists() {
-        return fsExists(App.getInitFilePath());
+        return File.Exists(App.getInitFilePath());
     }
 
     static async init() {
         let initFile = App.getInitFilePath();
         Settings.getInstance();
-        if (!fsExists(initFile)) {
+        fs.symlinkSync("/Applications/EasySrv/software/php/php-7.4/bin/php","/Applications/EasySrv/software/php/php-7.4/bin/php.1")
+        if (!File.Exists(initFile)) {
             return;
         }
         if (is.macOS() && !App.isDev()) {
-            if (!fsExists(MAC_USER_CORE_PATH)) {
-                fs.mkdirSync(MAC_USER_CORE_PATH);
-                App.moveCoreSubDir(['software', 'tmp', 'www','Library']);
-                App.createCoreSubDir(['downloads','database']);
+            if (!Directory.Exists(MAC_USER_CORE_PATH)) {
+                Directory.CreateDirectory(MAC_USER_CORE_PATH);
             }
+            App.moveCoreSubDir(['software', 'tmp', 'www','Library']);
+            App.createCoreSubDir(['downloads','database']);
         }
         await App.initMySQL();
-        fsDelete(initFile);
+        File.Delete(initFile);
     }
 
     /**
@@ -120,15 +123,18 @@ export default class App {
     static moveCoreSubDir(dirs) {
         let corePath = App.getCorePath();
         for (const dir of dirs) {
-            fsMove(path.join(corePath, dir), path.join(MAC_USER_CORE_PATH, dir));
+            let source = Path.Join(corePath, dir);
+            let target = Path.Join(MAC_USER_CORE_PATH, dir);
+            Directory.Copy(source, target, {force: true, recursive: true});
+            Directory.Delete(source);
         }
     }
 
     static createCoreSubDir(dirs) {
         for (const dir of dirs) {
             let p = path.join(MAC_USER_CORE_PATH, dir);
-            if (!fsExists(p)) {
-                fs.mkdirSync(p);
+            if (!Directory.Exists(p)) {
+                Directory.CreateDirectory(p);
             }
         }
     }

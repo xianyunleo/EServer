@@ -2,7 +2,9 @@ import fs from "fs";
 import path from "path";
 import GetPath from "@/shared/utils/GetPath";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
-import {getFilesByDir, fsExists, getFilNameWithoutExt, fsDelete, fsReadFile} from "@/main/utils/utils";
+import Directory from "@/main/utils/Directory";
+import File from "@/main/utils/File";
+import Path from "@/main/utils/Path";
 
 export default class Nginx {
     /**
@@ -12,12 +14,12 @@ export default class Nginx {
      */
     static async getWebsiteList(search) {
         let vhostsPath = GetPath.getNginxVhostsPath();
-        if (!fsExists(vhostsPath)) {
+        if (!Directory.Exists(vhostsPath)) {
             return [];
         }
-        let files = getFilesByDir(vhostsPath, search);
+        let files = Directory.GetFiles(vhostsPath, search);
         return await Promise.all(files.map(async name => {
-            let serverName = getFilNameWithoutExt(name);
+            let serverName = Path.GetFileNameWithoutExtension(name);
             let webSite = new NginxWebsite(serverName);
             return webSite.getBasicInfo();
         }));
@@ -100,25 +102,25 @@ export default class Nginx {
 
         //创建URL重写文件
         let rewritePath = Nginx.getWebsiteRewriteConfPath(websiteInfo.serverName);
-        if (!fsExists(rewritePath)) {
+        if (!File.Exists(rewritePath)) {
             fs.writeFileSync(rewritePath, '');
         }
     }
 
     static delWebsite(serverName) {
         let confPath = Nginx.getWebsiteConfPath(serverName);
-        if (fsExists(confPath)) {
-            fsDelete(confPath);
+        if (File.Exists(confPath)) {
+            File.Delete(confPath);
         }
         let rewritePath = Nginx.getWebsiteRewriteConfPath(serverName);
-        if (fsExists(rewritePath)) {
-            fsDelete(rewritePath);
+        if (File.Exists(rewritePath)) {
+            File.Delete(rewritePath);
         }
     }
 
     static websiteExists(serverName) {
-        let vhosts = getFilesByDir(GetPath.getNginxVhostsPath(), '.conf');
-        return vhosts.includes(`${serverName}.conf`)
+        let vhosts = Directory.GetFiles(GetPath.getNginxVhostsPath(), '.conf');
+        return vhosts.includes(Path.Join(GetPath.getNginxVhostsPath(), `${serverName}.conf`));
     }
 
     static getWebsiteConfPath(serverName) {
@@ -133,15 +135,15 @@ export default class Nginx {
      * 获取URL重写规则列表
      * @returns {Promise<string[]>}
      */
-    static async getRewriteRuleList() {
+    static getRewriteRuleList() {
         let rewritePath = GetPath.getNginxRewritePath();
-        if (!fsExists(rewritePath)) {
+        if (!File.Exists(rewritePath)) {
             return [];
         }
-        let files = getFilesByDir(rewritePath, '.conf');
-        return await Promise.all(files.map(async name => {
-            return getFilNameWithoutExt(name);
-        }));
+        let files = Directory.GetFiles(rewritePath, '.conf');
+        return files.map(name => {
+            return Path.GetFileNameWithoutExtension(name);
+        });
     }
 
     /**
@@ -151,9 +153,9 @@ export default class Nginx {
      */
     static getRewriteByRule(ruleName) {
         let rewritePath = path.join(GetPath.getNginxRewritePath(), `${ruleName}.conf`)
-        if (!fsExists(rewritePath)) {
+        if (!File.Exists(rewritePath)) {
             return '';
         }
-        return fsReadFile(rewritePath);
+        return File.ReadAllText(rewritePath);
     }
 }

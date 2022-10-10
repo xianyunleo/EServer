@@ -1,14 +1,14 @@
 import fs from "fs";
-import {fsExists} from "@/main/utils/utils";
 import Nginx from "@/main/core/Nginx";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
+import File from "@/main/utils/File";
 
 export default class Website {
     static add(websiteInfo) {
         if (Nginx.websiteExists(websiteInfo.serverName)) {
             throw new Error('网站已经存在！');
         }
-        if (!fsExists(websiteInfo.rootPath)) {
+        if (!File.Exists(websiteInfo.rootPath)) {
             try {
                 fs.mkdirSync(websiteInfo.rootPath)
             } catch {
@@ -48,7 +48,7 @@ export default class Website {
      * @returns {Promise<string[]>}
      */
     static async getRewriteRuleList() {
-        return await Nginx.getRewriteRuleList();
+        return Nginx.getRewriteRuleList();
     }
 
     static getRewriteByRule(ruleName) {

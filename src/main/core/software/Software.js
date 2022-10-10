@@ -1,9 +1,10 @@
 import App from "@/main/App";
 import path from "path";
-import {fsExists, fsReadFile} from "@/main/utils/utils";
 import {enumGetName} from "@/shared/utils/utils";
 import {EnumSoftwareType} from "@/shared/enum";
 import GetPath from "@/shared/utils/GetPath";
+import Directory from "@/main/utils/Directory";
+import File from "@/main/utils/File";
 
 export default class Software {
 
@@ -21,7 +22,7 @@ export default class Software {
         let softPath = path.join(corePath, '/config/software');
         let softConfigPath = path.join(softPath, 'software.json');
         let softIconPath = 'file://' + path.join(softPath, '/icon');
-        let json = fsReadFile(softConfigPath);
+        let json = File.ReadAllText(softConfigPath);
         let list = JSON.parse(json);
 
         for (const item of list) {
@@ -38,7 +39,7 @@ export default class Software {
      */
     static IsInStalled(item) {
         let path = Software.getPath(item);
-        return fsExists(path);
+        return Directory.Exists(path);
     }
 
     /**

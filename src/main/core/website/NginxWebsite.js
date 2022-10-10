@@ -3,7 +3,7 @@ import Nginx from "@/main/core/Nginx";
 import {STATIC_WEB_NAME} from "@/shared/constant";
 import {EOL} from "os";
 import {CONF_INDENT} from "@/main/constant";
-import {fsReadFile} from "@/main/utils/utils";
+import File from "@/main/utils/File";
 
 const N = EOL;
 const T = CONF_INDENT;
@@ -19,7 +19,7 @@ export default class NginxWebsite {
     constructor(serverName) {
         this.serverName = serverName;
         this.confPath = Nginx.getWebsiteConfPath(this.serverName);
-        this.confText = fsReadFile(this.confPath);
+        this.confText = File.ReadAllText(this.confPath);
     }
 
     getBasicInfo() {
@@ -40,7 +40,7 @@ export default class NginxWebsite {
 
     static getRewrite(serverName) {
         let rewritePath = Nginx.getWebsiteRewriteConfPath(serverName);
-        return fsReadFile(rewritePath);
+        return File.ReadAllText(rewritePath);
     }
 
     getPort() {
