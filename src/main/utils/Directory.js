@@ -26,9 +26,9 @@ export default class Directory {
     }
 
     /**
-     * 删除目录和子目录
+     * 删除目录
      * @param path {string}
-     * @param recursive {boolean}
+     * @param recursive {boolean} 递归删除子目录和文件
      * @returns {undefined}
      */
     static Delete(path, recursive = false) {
