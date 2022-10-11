@@ -37,7 +37,7 @@ export default class Hosts {
         if (File.Exists(path) && !Hosts.canEditHosts()) {
             await Command.sudoExec(`chmod 666 ${path}`);
         }
-        fs.appendFileSync(path, appendText); //如果文件不存在，则创建改文件
+        File.AppendAllText(path, appendText);
     }
 
     /**
@@ -59,6 +59,6 @@ export default class Hosts {
                 text = text.replaceAll(regx, '');
             }
         }
-        fs.writeFileSync(path, text);
+        File.WriteAllText(path, text);
     }
 }
