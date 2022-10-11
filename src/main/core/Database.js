@@ -48,7 +48,7 @@ export default class Database {
         let confPath = path.join(mysqlPath, 'my.cnf');
         let mysqlBinFilePath = path.join(mysqlPath, 'bin/mysqld');
         let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
-        await fs.promises.writeFile(resetPwdPath, resetCommand);
+        File.WriteAllText(resetPwdPath, resetCommand);
 
         let command = `${mysqlBinFilePath} --defaults-file=${confPath} --init-file=${resetPwdPath}`;
         //mysqld执行此命令会一直前台运行不退出
