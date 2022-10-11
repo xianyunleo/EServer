@@ -1,4 +1,3 @@
-import fs from "fs";
 import Nginx from "@/main/core/Nginx";
 import {STATIC_WEB_NAME} from "@/shared/constant";
 import {EOL} from "os";
