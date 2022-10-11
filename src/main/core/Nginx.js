@@ -1,4 +1,3 @@
-import fs from "fs";
 import path from "path";
 import GetPath from "@/shared/utils/GetPath";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
