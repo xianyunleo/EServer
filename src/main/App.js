@@ -10,6 +10,7 @@ import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
 import Path from "@/main/utils/Path";
 import child_process from "child_process";
+import GetPath from "@/shared/utils/GetPath";
 
 
 export default class App {
@@ -108,7 +109,10 @@ export default class App {
     static async initMySQL() {
         let mysqlList = SoftwareExtend.getMySQLList();
         for (const item of mysqlList) {
-            let version = item.version
+            let version = item.version;
+            if (Directory.Exists(GetPath.getMysqlDataPath(version))) {
+                continue;
+            }
             await Database.initMySQLData(version);
             await ProcessExtend.killByName('mysqld');
             await Database.resetMySQLPassword(version);
