@@ -1,5 +1,4 @@
 import GetPath from "@/shared/utils/GetPath";
-import File from "@/main/utils/File";
 import Directory from "@/main/utils/Directory";
 import Path from "@/main/utils/Path";
 
@@ -11,7 +10,7 @@ export default class SoftwareExtend {
      */
     static getPHPList() {
         let path = GetPath.getPHPTypePath();
-        if (!File.Exists(path)) {
+        if (!Directory.Exists(path)) {
             return [];
         }
         let list = Directory.GetDirectories(path, 'php-');
