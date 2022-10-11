@@ -1,6 +1,5 @@
 import path from "path";
 import GetPath from "@/shared/utils/GetPath";
-import fs from "fs";
 import Command from "@/main/core/Command";
 import ProcessExtend from "@/main/core/ProcessExtend";
 import {sleep} from "@/shared/utils/utils";
