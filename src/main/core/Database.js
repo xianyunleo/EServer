@@ -7,7 +7,6 @@ import {sleep} from "@/shared/utils/utils";
 import child_process from "child_process";
 import File from "@/main/utils/File";
 
-
 export default class Database {
 
     static async initMySQL() {
@@ -20,13 +19,13 @@ export default class Database {
      * @returns {Promise<void>}
      */
     static async initMySQLData(version) {
-        let mysqlPath = GetPath.getMysqlPathByVersion(version);
+        let mysqlPath = GetPath.getMysqlPath(version);
         let mysqlBinFilePath = path.join(mysqlPath, 'bin/mysqld');
         let confPath = path.join(mysqlPath, 'my.cnf');
         let command = `${mysqlBinFilePath} --defaults-file=${confPath} --initialize`;
-        console.log('initMySQLData',command)
         await Command.exec(command, {cwd: mysqlPath});
     }
+
     /**
      *
      * @param version {string}
@@ -45,7 +44,7 @@ export default class Database {
                 break;
             default:
         }
-        let mysqlPath = GetPath.getMysqlPathByVersion(version);
+        let mysqlPath = GetPath.getMysqlPath(version);
         let confPath = path.join(mysqlPath, 'my.cnf');
         let mysqlBinFilePath = path.join(mysqlPath, 'bin/mysqld');
         let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
