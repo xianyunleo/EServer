@@ -1,6 +1,5 @@
 import App from "@/main/App";
 import path from "path";
-import child_process from "child_process";
 import {EnumSoftwareInstallStatus} from "@/shared/enum";
 import extract from "extract-zip";
 import Software from "@/main/core/software/Software";
@@ -8,10 +7,16 @@ import Database from "@/main/core/Database";
 import is from "electron-is";
 import {DOWNLOAD_URL} from "@/shared/constant";
 import Directory from "@/main/utils/Directory";
+import SoftwareExtend from "@/main/core/software/SoftwareExtend";
+import got from "got";
+import {pipeline} from "stream/promises";
+import {createWriteStream} from "fs";
+import Path from "@/main/utils/Path";
 
 export default class Installer {
     item;
     fileName;
+    dlAbortController;
     /**
      *
      * @param softItem {SoftwareItem}
@@ -74,15 +79,15 @@ export default class Installer {
             let errMsg = error.message ?? '未知错误';
             throw new Error(`解压出错，${errMsg}`);
         }
-        //todo配置中，配置文件
+
         try {
-            // eslint-disable-next-line no-constant-condition
-            if ('mysql'===1) {
-                Database.InitMySQL();
+            if (this.item.DirName.includes('mysql')) {
+                this.changeStatus(EnumSoftwareInstallStatus.Configuring);
+                Database.initMySQL(SoftwareExtend.getMysqlVersion(this.item.DirName));
             }
         } catch (error) {
             let errMsg = error.message ?? '未知错误';
-            throw new Error(`安装出错，${errMsg}`);
+            throw new Error(`配置出错，${errMsg}`);
         }
 
         this.changeStatus(EnumSoftwareInstallStatus.Finish);
@@ -100,73 +105,54 @@ export default class Installer {
 
     async download() {
         return await new Promise((resolve, reject) => {
-            let downloaderPath = this.getDownloaderPath();
-            let downloadsPath = this.getDownloadsPath();
-            let stdbufPath = this.getStdbufPath();
             let url = this.getDownloadUrl();
-            if (App.isDev()) console.log('downloadUrl',url)
+            let readStream = got.stream(url, {timeout: {response:5000}}); //todo下载超时，response并不管用
 
-            let command = `${downloaderPath} ${url} --dir=${downloadsPath} --check-certificate=false --allow-overwrite=true --remove-control-file=true`;
-
-            if (!is.windows()) {
-                command = `${stdbufPath} -o0 ${command}`;
-            }
-
-            if (App.isDev()) console.log('command',command)
-
-            let dlProcess = child_process.exec(command);
-            this.changeStatus(EnumSoftwareInstallStatus.Downloading);
-            const progressRegx = /([\d.]+\w+)\/([\d.]+\w+)\((\d+)%\).+DL:([\d.]+\w+)/;
-            const errRegx = /errorCode=\d+.+/g;
-
-            // 触发abort
-            function abortDownload() {
-                dlProcess.kill();
-            }
-
-            if (this.downloadSignal) {
-                //当 abort() 被调用时，这个promise 不会 reject 一个名为 AbortError 的 DOMException
-                this.downloadSignal.addEventListener('abort', abortDownload)
-            }
-
-            dlProcess.stdout.on('data', (data) => {
-                data = data.toString();
-                let matches = data.match(progressRegx)
-                if (matches) {
-                    this.setDownloadInfo({
-                        completedSize: matches[1].replace('i', ''),
-                        totalSize: matches[2].replace('i', ''),
-                        percent: parseFloat(matches[3]),
-                        perSecond: matches[4].replace('i', ''),
-                    })
-                } else {
-                    let errMatches = data.match(errRegx)
-                    if (errMatches && errMatches.length > 0) {
-                        this.errMsg = errMatches.pop();
-                    }
-                }
+            process.on('uncaughtException', error => {
+                return reject(new Error(error.message));
             });
 
-            dlProcess.on('close', (code) => {
-                if (App.isDev()) console.log('errCode', code)
-                if (this.downloadSignal) {
-                    this.downloadSignal.removeEventListener('abort', abortDownload);
-                }
-                if (code == null || code === 7) {
-                    this.changeStatus(EnumSoftwareInstallStatus.Abort);
-                    return resolve(true);
-                }
-                if (code === 0) {
+            if (App.isDev()) console.log('downloadUrl',url)
+
+            let downloadsPath = this.getDownloadsPath();
+            let filePath = Path.Join(downloadsPath,this.fileName);
+            if (App.isDev()) console.log('filePath',filePath)
+            this.changeStatus(EnumSoftwareInstallStatus.Downloading);
+
+            readStream.on('response', async () => {
+                try {
+                    await pipeline(
+                        readStream,
+                        createWriteStream(filePath),
+                        {signal: this.downloadSignal});
+                    this.setDownloadInfo({percent: 100});
                     this.changeStatus(EnumSoftwareInstallStatus.Downloaded);
-                    this.setDownloadInfo({percent: 100})
                     return resolve(true);
+                } catch (error) {
+                    if (error.name === "AbortError") {
+                        this.changeStatus(EnumSoftwareInstallStatus.Abort);
+                        return resolve(true);
+                    } else {
+                        return reject(new Error(error.message));
+                    }
                 }
-                if (App.isDev()) console.log('errMsg', this.errMsg)
-                reject(new Error(this.errMsg));
+            })
+
+            readStream.on('downloadProgress', downloadProgress => {
+                this.setDownloadInfo({
+                    completedSize: '开发中',
+                    totalSize: '开发中',
+                    percent: parseFloat(downloadProgress.percent * 100),
+                    perSecond: '开发中',
+                })
             });
 
         });
 
+    }
+
+    static stopDownload() {
+        this.dlAbortController.abort();
     }
 
     changeStatus(status) {
@@ -185,9 +171,6 @@ export default class Installer {
         return path.join(App.getUserCorePath(), 'downloads');
     }
 
-     getDownloaderPath() {
-        return path.join(App.getCorePath(), 'aria2c');
-    }
 
     getStdbufPath() {
         return path.join(App.getCorePath(), 'stdbuf');

@@ -7,6 +7,7 @@ export const EnumSoftwareInstallStatus = {
     Extracting: 5,
     Extracted: 6,
     ExtractError: 7,
+    Configuring: 8,
     Abort:100,
     Finish: 200,
 }

@@ -143,6 +143,8 @@ const clickInstall = async (item) => {
         return '下载中';
       case EnumSoftwareInstallStatus.Extracting:
         return '解压中';
+      case EnumSoftwareInstallStatus.Configuring:
+        return '配置中';
       default:
         return '';
     }
