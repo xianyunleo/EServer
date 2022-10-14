@@ -1,17 +1,21 @@
 import path from "path";
 import GetPath from "@/shared/utils/GetPath";
-import fs from "fs";
 import Command from "@/main/core/Command";
-import {fsDelete} from "@/main/utils/utils";
 import ProcessExtend from "@/main/core/ProcessExtend";
 import {sleep} from "@/shared/utils/utils";
 import child_process from "child_process";
-
+import File from "@/main/utils/File";
 
 export default class Database {
 
-    static async initMySQL() {
-
+    /**
+     *
+     * @param version {string}
+     * @returns {Promise<void>}
+     */
+    static async initMySQL(version) {
+        await Database.initMySQLData(version);
+        await Database.resetMySQLPassword(version);
     }
 
     /**
@@ -20,13 +24,13 @@ export default class Database {
      * @returns {Promise<void>}
      */
     static async initMySQLData(version) {
-        let mysqlPath = GetPath.getMysqlPathByVersion(version);
-        let mysqlBinFilePath = path.join(mysqlPath, 'bin/mysqld');
+        let mysqlPath = GetPath.getMysqlPath(version);
+        let mysqldBinFilePath = path.join(mysqlPath, 'bin/mysqld');
         let confPath = path.join(mysqlPath, 'my.cnf');
-        let command = `${mysqlBinFilePath} --defaults-file=${confPath} --initialize`;
-        console.log('initMySQLData',command)
+        let command = `${mysqldBinFilePath} --defaults-file=${confPath} --initialize`;
         await Command.exec(command, {cwd: mysqlPath});
     }
+
     /**
      *
      * @param version {string}
@@ -45,18 +49,18 @@ export default class Database {
                 break;
             default:
         }
-        let mysqlPath = GetPath.getMysqlPathByVersion(version);
+        let mysqlPath = GetPath.getMysqlPath(version);
         let confPath = path.join(mysqlPath, 'my.cnf');
         let mysqlBinFilePath = path.join(mysqlPath, 'bin/mysqld');
         let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
-        await fs.promises.writeFile(resetPwdPath, resetCommand);
+        File.WriteAllText(resetPwdPath, resetCommand);
 
         let command = `${mysqlBinFilePath} --defaults-file=${confPath} --init-file=${resetPwdPath}`;
         //mysqld执行此命令会一直前台运行不退出
         child_process.exec(command, {cwd: mysqlPath});
         await sleep(1500);
         await ProcessExtend.killByName('mysqld');
-        fsDelete(resetPwdPath);
+        File.Delete(resetPwdPath);
     }
 
 }

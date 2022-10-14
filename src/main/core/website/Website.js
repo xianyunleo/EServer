@@ -1,16 +1,16 @@
-import fs from "fs";
-import {fsExists} from "@/main/utils/utils";
 import Nginx from "@/main/core/Nginx";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
+import File from "@/main/utils/File";
+import Directory from "@/main/utils/Directory";
 
 export default class Website {
-    static async add(websiteInfo) {
+    static add(websiteInfo) {
         if (Nginx.websiteExists(websiteInfo.serverName)) {
             throw new Error('网站已经存在！');
         }
-        if (!fsExists(websiteInfo.rootPath)) {
+        if (!File.Exists(websiteInfo.rootPath)) {
             try {
-                fs.mkdirSync(websiteInfo.rootPath)
+                Directory.CreateDirectory(websiteInfo.rootPath)
             } catch {
                 throw new Error('创建根目录失败！');
             }
@@ -31,9 +31,8 @@ export default class Website {
         return  webSite.getBasicInfo();
     }
 
-    static  getRewrite(serverName) {
-        let webSite = new NginxWebsite(serverName);
-        return webSite.getRewrite();
+    static getRewrite(serverName) {
+        return NginxWebsite.getRewrite(serverName);
     }
 
     static getConfPath(serverName) {
@@ -49,7 +48,7 @@ export default class Website {
      * @returns {Promise<string[]>}
      */
     static async getRewriteRuleList() {
-        return await Nginx.getRewriteRuleList();
+        return Nginx.getRewriteRuleList();
     }
 
     static getRewriteByRule(ruleName) {
@@ -58,11 +57,11 @@ export default class Website {
 
     static saveBasicInfo(serverName, websiteInfo) {
         let webSite = new NginxWebsite(serverName);
-        webSite.saveBasicInfo(websiteInfo);
+        webSite.setBasicInfo(websiteInfo);
+        webSite.save();
     }
 
     static saveRewrite(serverName, content) {
-        let webSite = new NginxWebsite(serverName);
-        webSite.saveUrlRewrite(content);
+        NginxWebsite.saveRewrite(serverName, content);
     }
 }

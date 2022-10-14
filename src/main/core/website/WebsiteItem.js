@@ -4,4 +4,6 @@ export default class WebsiteItem {
     port;
     rootPath;
     phpVersion;
+    extraServerName;
+    allowSyncHosts;
 }

@@ -1,6 +1,6 @@
 {
   "name": "easysrv",
-  "version": "0.2.5",
+  "version": "0.3.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -18,8 +18,10 @@
     "ant-design-vue": "^3.2.7",
     "core-js": "^3.6.5",
     "electron-is": "^3.0.0",
+    "electron-store": "^8.1.0",
     "extract-zip": "^2.0.1",
     "fix-path": "^3.0.0",
+    "got": "^11.8.5",
     "iconv-lite": "^0.6.3",
     "pinia": "^2.0.16",
     "sudo-prompt": "^9.2.1",

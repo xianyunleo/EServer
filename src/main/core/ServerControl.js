@@ -1,9 +1,7 @@
-import fs from "fs";
 import path from "path";
 import sudo from "sudo-prompt"
 import ProcessExtend from "@/main/core/ProcessExtend";
 import Software from "@/main/core/software/Software";
-import {getFilesByDir} from "@/main/utils/utils";
 import {enumGetName, parseTemplateStrings, sleep} from "@/shared/utils/utils";
 import child_process from "child_process";
 import GetPath from "@/shared/utils/GetPath";
@@ -12,6 +10,8 @@ import Command from "@/main/core/Command";
 import {APP_NAME} from "@/shared/constant";
 import OS from  "@/main/core/OS";
 import is from "electron-is";
+import Directory from "@/main/utils/Directory";
+import File from "@/main/utils/File";
 
 export default class ServerControl {
     /**
@@ -98,14 +98,13 @@ export default class ServerControl {
 
     static async startPHPFPM() {
         let nginxVhostsPath = GetPath.getNginxVhostsPath();
-        let vhosts =  getFilesByDir(nginxVhostsPath, '.conf');
+        let vhosts =  Directory.GetFiles(nginxVhostsPath, '.conf');
         if (!vhosts || vhosts.length === 0) {
             return;
         }
         //获取所有网站PHP版本数组，并发读文件并匹配PHP版本
-        let phpVersionList = await Promise.all(vhosts.map(async fileName => {
-            let confPath = path.join(nginxVhostsPath, fileName)
-            let text = await fs.promises.readFile(confPath, {encoding: 'utf8'});
+        let phpVersionList = await Promise.all(vhosts.map(async confPath => {
+            let text = File.ReadAllText(confPath);
             let matches = text.match(/php-(\S+?)\.conf/);
             return matches ? matches[1] : null;
         }));

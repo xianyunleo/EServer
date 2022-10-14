@@ -40,8 +40,16 @@ export default class GetPath {
         return path.join(GetPath.getNginxVhostsPath(), 'rewrite');
     }
 
-    static getMysqlPathByVersion(version) {
+    static getDatabasePath() {
+        return path.join(App.getUserCorePath(), 'database');
+    }
+
+    static getMysqlPath(version) {
         return path.join(GetPath.getServerTypePath(), `mysql-${version}`);
+    }
+
+    static getMysqlDataPath(version) {
+        return path.join(GetPath.getDatabasePath(), `mysql-${version}-data`);
     }
 
     static getWWWPath(){

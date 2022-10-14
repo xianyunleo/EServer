@@ -1,13 +1,9 @@
-import {EOL} from "os";
-import fs from "fs";
 import path from "path";
-import {CONF_INDENT} from "@/main/constant";
 import GetPath from "@/shared/utils/GetPath";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
-import {getFilesByDir, fsExists, getFilNameWithoutExt, fsDelete} from "@/main/utils/utils";
-
-const N = EOL;
-const T = CONF_INDENT;
+import Directory from "@/main/utils/Directory";
+import File from "@/main/utils/File";
+import Path from "@/main/utils/Path";
 
 export default class Nginx {
     /**
@@ -17,12 +13,12 @@ export default class Nginx {
      */
     static async getWebsiteList(search) {
         let vhostsPath = GetPath.getNginxVhostsPath();
-        if (!fsExists(vhostsPath)) {
+        if (!Directory.Exists(vhostsPath)) {
             return [];
         }
-        let files = getFilesByDir(vhostsPath, search);
+        let files = Directory.GetFiles(vhostsPath, search);
         return await Promise.all(files.map(async name => {
-            let serverName = getFilNameWithoutExt(name);
+            let serverName = Path.GetFileNameWithoutExtension(name);
             let webSite = new NginxWebsite(serverName);
             return webSite.getBasicInfo();
         }));
@@ -33,11 +29,13 @@ export default class Nginx {
      * @param websiteInfo {WebsiteItem}
      */
     static addWebsite(websiteInfo) {
+        let serverName = websiteInfo.serverName;
+        serverName = websiteInfo.extraServerName ? `${serverName} ${websiteInfo.extraServerName}` : serverName;
         let confText =
             `server
 {
     listen ${websiteInfo.port};
-    server_name ${websiteInfo.serverName};
+    server_name ${serverName};
     index index.html index.htm index.php;
     root  ${websiteInfo.rootPath};
 
@@ -93,32 +91,35 @@ export default class Nginx {
     error_log  logs/${websiteInfo.serverName}.error.log;
 }`;
 
-        confText = Nginx.replaceConfPHPVersion(websiteInfo.phpVersion, confText);
-
         let confPath = Nginx.getWebsiteConfPath(websiteInfo.serverName);
-        fs.writeFileSync(confPath, confText);
+        File.WriteAllText(confPath, confText);
+
+        let website = new NginxWebsite(websiteInfo.serverName);
+        website.setPHPVersion(websiteInfo.phpVersion);
+        website.setExtraInfo({allowSyncHosts: websiteInfo.allowSyncHosts});
+        website.save();
 
         //创建URL重写文件
         let rewritePath = Nginx.getWebsiteRewriteConfPath(websiteInfo.serverName);
-        if (!fsExists(rewritePath)) {
-            fs.writeFileSync(rewritePath, '');
+        if (!File.Exists(rewritePath)) {
+            File.WriteAllText(rewritePath, '');
         }
     }
 
     static delWebsite(serverName) {
         let confPath = Nginx.getWebsiteConfPath(serverName);
-        if (fsExists(confPath)) {
-            fsDelete(confPath);
+        if (File.Exists(confPath)) {
+            File.Delete(confPath);
         }
         let rewritePath = Nginx.getWebsiteRewriteConfPath(serverName);
-        if (fsExists(rewritePath)) {
-            fsDelete(rewritePath);
+        if (File.Exists(rewritePath)) {
+            File.Delete(rewritePath);
         }
     }
 
     static websiteExists(serverName) {
-        let vhosts = getFilesByDir(GetPath.getNginxVhostsPath(), '.conf');
-        return vhosts.includes(`${serverName}.conf`)
+        let vhosts = Directory.GetFiles(GetPath.getNginxVhostsPath(), '.conf');
+        return vhosts.includes(Path.Join(GetPath.getNginxVhostsPath(), `${serverName}.conf`));
     }
 
     static getWebsiteConfPath(serverName) {
@@ -133,15 +134,15 @@ export default class Nginx {
      * 获取URL重写规则列表
      * @returns {Promise<string[]>}
      */
-    static async getRewriteRuleList() {
+    static getRewriteRuleList() {
         let rewritePath = GetPath.getNginxRewritePath();
-        if (!fsExists(rewritePath)) {
+        if (!File.Exists(rewritePath)) {
             return [];
         }
-        let files = getFilesByDir(rewritePath, '.conf');
-        return await Promise.all(files.map(async name => {
-            return getFilNameWithoutExt(name);
-        }));
+        let files = Directory.GetFiles(rewritePath, '.conf');
+        return files.map(name => {
+            return Path.GetFileNameWithoutExtension(name);
+        });
     }
 
     /**
@@ -151,27 +152,9 @@ export default class Nginx {
      */
     static getRewriteByRule(ruleName) {
         let rewritePath = path.join(GetPath.getNginxRewritePath(), `${ruleName}.conf`)
-        if (!fsExists(rewritePath)) {
+        if (!File.Exists(rewritePath)) {
             return '';
         }
-        return fs.readFileSync(rewritePath, {encoding: 'utf8'});
-    }
-
-    /**
-     * 替换配置文件中的PHP版本
-     * @param  phpVersion {string}
-     * @param confText {string}
-     * @returns {string}
-     */
-    static replaceConfPHPVersion(phpVersion, confText) {
-        let phpPattern = /(?<=#PHP_START)[\s\S]+?(?=#PHP_END)/;
-        let phpReplace;
-        if (phpVersion) {
-            phpReplace = `${N}${T}include php/php-${phpVersion}.conf;${N}${T}`;
-        } else {
-            phpReplace = `${N}${T}`;
-        }
-        confText = confText.replace(phpPattern, phpReplace);
-        return confText;
+        return File.ReadAllText(rewritePath);
     }
 }
