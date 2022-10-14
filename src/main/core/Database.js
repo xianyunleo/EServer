@@ -8,8 +8,14 @@ import File from "@/main/utils/File";
 
 export default class Database {
 
-    static async initMySQL() {
-
+    /**
+     *
+     * @param version {string}
+     * @returns {Promise<void>}
+     */
+    static async initMySQL(version) {
+        await Database.initMySQLData(version);
+        await Database.resetMySQLPassword(version);
     }
 
     /**
@@ -19,9 +25,9 @@ export default class Database {
      */
     static async initMySQLData(version) {
         let mysqlPath = GetPath.getMysqlPath(version);
-        let mysqlBinFilePath = path.join(mysqlPath, 'bin/mysqld');
+        let mysqldBinFilePath = path.join(mysqlPath, 'bin/mysqld');
         let confPath = path.join(mysqlPath, 'my.cnf');
-        let command = `${mysqlBinFilePath} --defaults-file=${confPath} --initialize`;
+        let command = `${mysqldBinFilePath} --defaults-file=${confPath} --initialize`;
         await Command.exec(command, {cwd: mysqlPath});
     }
 

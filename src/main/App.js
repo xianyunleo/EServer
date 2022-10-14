@@ -4,7 +4,6 @@ import {app} from '@electron/remote'
 import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
 import is from "electron-is";
 import Database from "@/main/core/Database";
-import ProcessExtend from "@/main/core/ProcessExtend";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
@@ -113,9 +112,7 @@ export default class App {
             if (Directory.Exists(GetPath.getMysqlDataPath(version))) {
                 continue;
             }
-            await Database.initMySQLData(version);
-            await ProcessExtend.killByName('mysqld');
-            await Database.resetMySQLPassword(version);
+            await Database.initMySQL(version);
         }
     }
 
