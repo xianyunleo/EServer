@@ -1,7 +1,7 @@
-import fs from "fs";
 import Nginx from "@/main/core/Nginx";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
 import File from "@/main/utils/File";
+import Directory from "@/main/utils/Directory";
 
 export default class Website {
     static add(websiteInfo) {
@@ -10,7 +10,7 @@ export default class Website {
         }
         if (!File.Exists(websiteInfo.rootPath)) {
             try {
-                fs.mkdirSync(websiteInfo.rootPath)
+                Directory.CreateDirectory(websiteInfo.rootPath)
             } catch {
                 throw new Error('创建根目录失败！');
             }

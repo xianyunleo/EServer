@@ -4,12 +4,12 @@ import {app} from '@electron/remote'
 import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
 import is from "electron-is";
 import Database from "@/main/core/Database";
-import ProcessExtend from "@/main/core/ProcessExtend";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
 import Path from "@/main/utils/Path";
 import child_process from "child_process";
+import GetPath from "@/shared/utils/GetPath";
 
 
 export default class App {
@@ -108,10 +108,11 @@ export default class App {
     static async initMySQL() {
         let mysqlList = SoftwareExtend.getMySQLList();
         for (const item of mysqlList) {
-            let version = item.version
-            await Database.initMySQLData(version);
-            await ProcessExtend.killByName('mysqld');
-            await Database.resetMySQLPassword(version);
+            let version = item.version;
+            if (Directory.Exists(GetPath.getMysqlDataPath(version))) {
+                continue;
+            }
+            await Database.initMySQL(version);
         }
     }
 

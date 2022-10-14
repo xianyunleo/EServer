@@ -1,4 +1,3 @@
-import fs from "fs";
 import path from "path";
 import GetPath from "@/shared/utils/GetPath";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
@@ -93,7 +92,7 @@ export default class Nginx {
 }`;
 
         let confPath = Nginx.getWebsiteConfPath(websiteInfo.serverName);
-        fs.writeFileSync(confPath, confText);
+        File.WriteAllText(confPath, confText);
 
         let website = new NginxWebsite(websiteInfo.serverName);
         website.setPHPVersion(websiteInfo.phpVersion);
@@ -103,7 +102,7 @@ export default class Nginx {
         //创建URL重写文件
         let rewritePath = Nginx.getWebsiteRewriteConfPath(websiteInfo.serverName);
         if (!File.Exists(rewritePath)) {
-            fs.writeFileSync(rewritePath, '');
+            File.WriteAllText(rewritePath, '');
         }
     }
 

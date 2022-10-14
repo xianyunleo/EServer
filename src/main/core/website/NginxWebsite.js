@@ -1,4 +1,3 @@
-import fs from "fs";
 import Nginx from "@/main/core/Nginx";
 import {STATIC_WEB_NAME} from "@/shared/constant";
 import {EOL} from "os";
@@ -87,12 +86,12 @@ export default class NginxWebsite {
         this.confText = text;
         this.setPHPVersion(websiteInfo.phpVersion);
         this.setExtraInfo({allowSyncHosts: websiteInfo.allowSyncHosts});
-        fs.writeFileSync(this.confPath, this.confText);
+        File.WriteAllText(this.confPath, this.confText);
     }
 
     static saveRewrite(serverName, content) {
         let rewritePath = Nginx.getWebsiteRewriteConfPath(serverName);
-        fs.writeFileSync(rewritePath, content);
+        File.WriteAllText(rewritePath, content);
     }
 
     /**
@@ -118,6 +117,6 @@ export default class NginxWebsite {
     }
 
     save() {
-        fs.writeFileSync(this.confPath, this.confText);
+        File.WriteAllText(this.confPath, this.confText);
     }
 }

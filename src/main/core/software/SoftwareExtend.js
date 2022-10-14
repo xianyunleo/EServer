@@ -1,5 +1,4 @@
 import GetPath from "@/shared/utils/GetPath";
-import File from "@/main/utils/File";
 import Directory from "@/main/utils/Directory";
 import Path from "@/main/utils/Path";
 
@@ -11,15 +10,15 @@ export default class SoftwareExtend {
      */
     static getPHPList() {
         let path = GetPath.getPHPTypePath();
-        if (!File.Exists(path)) {
+        if (!Directory.Exists(path)) {
             return [];
         }
         let list = Directory.GetDirectories(path, 'php-');
 
         return list.map(path => {
-            let name = Path.GetFileName(path);
-            let matches = name.match(/php-(.+)/);
-            return {version: matches[1], name: name};
+            let name = Path.GetDirectoryName(path);
+            let version = SoftwareExtend.getPHPVersion(name);
+            return {version, name};
         });
     }
 
@@ -35,9 +34,30 @@ export default class SoftwareExtend {
         let list = Directory.GetDirectories(path, 'mysql-');
 
         return list.map(path => {
-            let name = Path.GetFileName(path);
-            let matches = name.match(/mysql-(.+)/);
-            return {version: matches[1], name: name};
+            let name = Path.GetDirectoryName(path);
+            let version = SoftwareExtend.getMysqlVersion(name);
+            return {version, name};
         });
     }
+
+    /**
+     *
+     * @param dirName {string}
+     * @returns {string|null}
+     */
+    static getPHPVersion(dirName) {
+        let matches = dirName.match(/php-(.+)/);
+        return matches ? matches[1] : null;
+    }
+
+    /**
+     *
+     * @param dirName {string}
+     * @returns {string|null}
+     */
+    static getMysqlVersion(dirName) {
+        let matches = dirName.match(/mysql-(.+)/);
+        return matches ? matches[1] : null;
+    }
+
 }
