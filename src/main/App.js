@@ -136,6 +136,9 @@ export default class App {
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
             let target = Path.Join(MAC_USER_CORE_PATH, dir);
+            if (!Directory.Exists(target)) {
+                Directory.CreateDirectory(target);
+            }
             child_process.execSync(`cp -R ${source}/* ${target}`);
             Directory.Delete(source, true);
         }
