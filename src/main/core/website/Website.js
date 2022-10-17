@@ -47,7 +47,7 @@ export default class Website {
      * 获取URL重写规则列表
      * @returns {Promise<string[]>}
      */
-    static async getRewriteRuleList() {
+    static getRewriteRuleList() {
         return Nginx.getRewriteRuleList();
     }
 
