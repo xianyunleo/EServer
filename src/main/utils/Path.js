@@ -3,11 +3,11 @@ import nodePath from "path";
 export default class Path {
 
     /**
-     * 获取文件名
+     * 获取目录的最后一部分
      * @param path {string}
      * @returns {string}
      */
-    static GetFileName(path) {
+    static GetBaseName(path) {
         return nodePath.basename(path);
     }
 
