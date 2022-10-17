@@ -12,10 +12,13 @@ import got from "got";
 import {pipeline} from "stream/promises";
 import {createWriteStream} from "fs";
 import Path from "@/main/utils/Path";
+import File from "@/main/utils/File";
 
 export default class Installer {
     item;
     fileName;
+    filePath;
+    tempFilePath;
     dlAbortController;
     /**
      *
@@ -27,6 +30,9 @@ export default class Installer {
         this.item.installInfo.status = EnumSoftwareInstallStatus.Ready;
         this.resetDownloadInfo();
         this.fileName = `${this.item.DirName}.zip`;
+        let downloadsPath = this.getDownloadsPath();
+        this.filePath = Path.Join(downloadsPath, this.fileName);
+        this.tempFilePath = `${this.filePath}.dl`;
         this.downloadSignal = this.item.downloadAbortController?.signal;
     }
 
@@ -56,6 +62,11 @@ export default class Installer {
 
     async install() {
         this.resetDownloadInfo();
+
+        if(File.Exists(this.tempFilePath)){
+            File.Delete(this.tempFilePath);
+        }
+
         try {
             await this.download();
         } catch (error) {
@@ -105,6 +116,7 @@ export default class Installer {
 
     async download() {
         return await new Promise((resolve, reject) => {
+
             let url = this.getDownloadUrl();
             let readStream = got.stream(url, {timeout: {response:5000}}); //todo下载超时，response并不管用
 
@@ -113,20 +125,19 @@ export default class Installer {
             });
 
             if (App.isDev()) console.log('downloadUrl',url)
+            if (App.isDev()) console.log('filePath',this.filePath)
 
-            let downloadsPath = this.getDownloadsPath();
-            let filePath = Path.Join(downloadsPath,this.fileName);
-            if (App.isDev()) console.log('filePath',filePath)
             this.changeStatus(EnumSoftwareInstallStatus.Downloading);
 
             readStream.on('response', async () => {
                 try {
                     await pipeline(
                         readStream,
-                        createWriteStream(filePath),
+                        createWriteStream(this.tempFilePath),
                         {signal: this.downloadSignal});
                     this.setDownloadInfo({percent: 100});
                     this.changeStatus(EnumSoftwareInstallStatus.Downloaded);
+                    File.Move(this.tempFilePath, this.filePath);
                     return resolve(true);
                 } catch (error) {
                     if (error.name === "AbortError") {

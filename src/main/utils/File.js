@@ -32,7 +32,7 @@ export default class File {
     }
 
     /**
-     * 将文件移动到新位置
+     * 将文件移动到新位置，如果文件存在，则覆盖
      * @param sourcePath {string}
      * @param destPath {string}
      * @returns {boolean}
