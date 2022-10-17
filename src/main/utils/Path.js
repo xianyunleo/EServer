@@ -3,39 +3,39 @@ import nodePath from "path";
 export default class Path {
 
     /**
-     * 获取文件名
+     * 获取目录的最后一部分
      * @param path {string}
-     * @returns {string|null}
+     * @returns {string}
      */
-    static GetFileName(path) {
-        return nodePath.parse(path)?.base;
+    static GetBaseName(path) {
+        return nodePath.basename(path);
     }
 
     /**
      * 获取文件名，不带扩展名
      * @param path {string}
-     * @returns {string|null}
+     * @returns {string}
      */
     static GetFileNameWithoutExtension(path) {
-        return nodePath.parse(path)?.name;
+        return nodePath.parse(path).name;
     }
 
     /**
      * 获取文件扩展名
      * @param path {string}
-     * @returns {string|null}
+     * @returns {string}
      */
     static GetExtension(path) {
-        return nodePath.parse(path)?.ext;
+        return nodePath.extname(path);
     }
 
     /**
      * 获取目录名
      * @param path {string}
-     * @returns {string|null}
+     * @returns {string}
      */
     static GetDirectoryName(path) {
-        return nodePath.parse(path)?.dir;
+        return nodePath.dirname(path);
     }
 
     static Combine(...path) {

@@ -16,7 +16,7 @@ export default class SoftwareExtend {
         let list = Directory.GetDirectories(path, 'php-');
 
         return list.map(path => {
-            let name = Path.GetDirectoryName(path);
+            let name = Path.GetBaseName(path);
             let version = SoftwareExtend.getPHPVersion(name);
             return {version, name};
         });
@@ -34,7 +34,7 @@ export default class SoftwareExtend {
         let list = Directory.GetDirectories(path, 'mysql-');
 
         return list.map(path => {
-            let name = Path.GetDirectoryName(path);
+            let name = Path.GetBaseName(path);
             let version = SoftwareExtend.getMysqlVersion(name);
             return {version, name};
         });
