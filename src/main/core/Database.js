@@ -58,7 +58,7 @@ export default class Database {
         let command = `${mysqlBinFilePath} --defaults-file=${confPath} --init-file=${resetPwdPath}`;
         //mysqld执行此命令会一直前台运行不退出
         child_process.exec(command, {cwd: mysqlPath});
-        await sleep(1500);
+        await sleep(3000);
         await ProcessExtend.killByName('mysqld');
         File.Delete(resetPwdPath);
     }
