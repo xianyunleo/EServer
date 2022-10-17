@@ -19,7 +19,7 @@ export default class File {
      * @returns {undefined}
      */
     static Delete(path) {
-        return fs.rm(path);
+        return fs.rmSync(path);
     }
 
     /**
@@ -29,6 +29,16 @@ export default class File {
      */
     static Exists(path) {
         return fs.existsSync(path) && fs.lstatSync(path).isFile();
+    }
+
+    /**
+     * 将文件移动到新位置
+     * @param sourcePath {string}
+     * @param destPath {string}
+     * @returns {boolean}
+     */
+    static Move(sourcePath, destPath) {
+        return fs.renameSync(sourcePath, destPath);
     }
 
     /**
