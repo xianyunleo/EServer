@@ -189,6 +189,8 @@ export default class Installer {
 
     static uninstall(item) {
         let path = Software.getPath(item);
-        Directory.Delete(path, true);
+        if (Directory.Exists(path)) {
+            Directory.Delete(path, true);
+        }
     }
 }
