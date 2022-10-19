@@ -109,8 +109,8 @@ export default class App {
         let mysqlList = SoftwareExtend.getMySQLList();
         for (const item of mysqlList) {
             let version = item.version;
-            if (Directory.Exists(GetPath.getMysqlDataPath(version))) {
-                continue;
+            if (!Directory.Exists(GetPath.getMysqlDataPath(version))) {
+                await Database.initMySQLData(version);
             }
             await Database.initMySQL(version);
         }

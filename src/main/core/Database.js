@@ -5,6 +5,7 @@ import ProcessExtend from "@/main/core/ProcessExtend";
 import {sleep} from "@/shared/utils/utils";
 import child_process from "child_process";
 import File from "@/main/utils/File";
+import Directory from "@/main/utils/Directory";
 
 export default class Database {
 
@@ -14,7 +15,9 @@ export default class Database {
      * @returns {Promise<void>}
      */
     static async initMySQL(version) {
-        await Database.initMySQLData(version);
+        if (!Directory.Exists(GetPath.getMysqlDataPath(version))) {
+            await Database.initMySQLData(version);
+        }
         await Database.resetMySQLPassword(version);
     }
 
