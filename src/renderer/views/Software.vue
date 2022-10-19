@@ -60,7 +60,7 @@
             <div class="progress-info">
               <div class="progress-info-left">
                 <span v-show="item.installInfo?.status === EnumSoftwareInstallStatus.Downloading">
-                  {{ item.installInfo?.dlInfo?.completedSize }}/{{ item.installInfo?.dlInfo?.totalSize }}
+                  {{ item.installInfo?.dlInfo?.completedSizeText }}/{{ item.installInfo?.dlInfo?.totalSizeText }}
                 </span>
               </div>
               <div class="status-text-error" v-show="item.showStatusErrorText">
@@ -71,7 +71,7 @@
               </div>
               <div class="progress-info-right">
                 <span v-if="item.installInfo?.status === EnumSoftwareInstallStatus.Downloading">
-                  ↓{{ item.installInfo?.dlInfo?.perSecond }}/S
+                  ↓{{ item.installInfo?.dlInfo?.perSecondText }}/S
                 </span>
                 <span v-else>
                   {{ item.statusText }}
@@ -98,7 +98,6 @@ import Software from "@/main/core/software/Software";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {enumGetName} from "@/shared/utils/utils";
 import Native from "@/renderer/utils/Native";
-//import path from "path";
 
 const mainStore = useMainStore();
 const {softwareList,  softwareTypeSelected} = storeToRefs(mainStore);
@@ -130,7 +129,6 @@ const clickInstall = async (item) => {
     return;
   }
   item.installInfo = {};
-  item.downloadAbortController = new AbortController();
   item.showStatusErrorText = false;
   item.statusText = computed(() => {
     if (!item.installInfo) {
@@ -163,7 +161,7 @@ const clickInstall = async (item) => {
   }
 }
 const clickStop = (item) => {
-  item.downloadAbortController.abort();
+  Installer.stopDownload(item);
 }
 
 const openInstallPath = async (item) => {
