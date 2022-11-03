@@ -103,8 +103,10 @@ search();
 
 const del = async (item) => {
   try {
-    Website.delete(item.serverName);
-  } catch (error) {
+    if (await MessageBox.Confirm({content:'确定删除吗?'})) {
+      Website.delete(item.serverName);
+    }
+   } catch (error) {
     MessageBox.error(error.message ?? error, '删除出错！');
     return;
   }

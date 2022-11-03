@@ -27,4 +27,28 @@ export default class MessageBox {
             centered: true,
         });
     }
+
+    /**
+     * @param options
+     * @returns {Promise<boolean>}
+     */
+    static async Confirm(options={}) {
+        options.title = options.title ?? '提示';
+        let result = true;
+
+        await new Promise((resolve, reject) => {
+            options = Object.assign(options, {
+                centered: true,
+                onOk() {
+                    resolve(true);
+                },
+                onCancel() {
+                    reject(false);
+                },
+            })
+            Modal.confirm(options);
+        }).catch(() => result = false);
+
+        return result;
+    }
 }
