@@ -2,12 +2,12 @@ import path from "path";
 import Command from "@/main/core/Command";
 import {shell} from "@electron/remote";
 import MessageBox from "@/renderer/utils/MessageBox";
-import is from "electron-is";
 import fixPath from "fix-path";
 import Hosts from "@/main/core/Hosts";
 import GetPath from "@/shared/utils/GetPath";
 import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
+import OS from "@/main/core/OS";
 
 export default class Native {
     /**
@@ -17,7 +17,7 @@ export default class Native {
      * @returns {Promise<void>}
      */
     static async openTextFile(filePath, isSudo = false) {
-        if (is.macOS()) {
+        if (OS.isMacOS()) {
             fixPath();  //mac下修复环境变量不识别的问题
         }
         try {
@@ -31,7 +31,7 @@ export default class Native {
                 throw new Error('VS Code没有安装');
             }
             let command;
-            if(is.macOS()){
+            if(OS.isMacOS()){
                 command = `open -a "${editorPath}"  "${filePath}"`;
             }
 
@@ -67,7 +67,7 @@ export default class Native {
 
     static async openHosts() {
         let path = GetPath.getHostsPath();
-        if (is.windows()) {
+        if (OS.isWindows()) {
             await Native.openTextFile(path);
         } else {
             if (!Hosts.canEditHosts()) {

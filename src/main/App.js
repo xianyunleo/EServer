@@ -2,7 +2,6 @@
 import path from "path";
 import {app} from '@electron/remote'
 import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
-import is from "electron-is";
 import Database from "@/main/core/Database";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Directory from "@/main/utils/Directory";
@@ -10,6 +9,7 @@ import File from "@/main/utils/File";
 import Path from "@/main/utils/Path";
 import child_process from "child_process";
 import GetPath from "@/shared/utils/GetPath";
+import OS from "@/main/core/OS";
 
 
 export default class App {
@@ -18,7 +18,7 @@ export default class App {
     }
 
     static getAppPath() {
-        if (is.windows()) {
+        if (OS.isWindows()) {
             return path.dirname(App.getExecutablePath());
         } else {
             //mac app.getAppPath()返回xxx.app/Contents/所在的路径
@@ -40,13 +40,13 @@ export default class App {
      */
     static getCorePath(){
         let result = '';
-        if (is.windows()) {
+        if (OS.isWindows()) {
             if (App.isDev()) {
                 result = path.join(App.getPlatformPath(), WIN_CORE_PATH_NAME)
             } else {
                 result = path.join(App.getAppPath(), WIN_CORE_PATH_NAME)
             }
-        } else if (is.macOS()) {
+        } else if (OS.isMacOS()) {
             if (App.isDev()) {
                 result = path.join(App.getPlatformPath(), MAC_CORE_PATH_NAME)
             } else {
@@ -61,7 +61,7 @@ export default class App {
      * @returns {string}
      */
     static getUserCorePath() {
-        if (is.macOS() && !App.isDev()) {
+        if (OS.isMacOS() && !App.isDev()) {
             return MAC_USER_CORE_PATH;
         }
         return App.getCorePath();
@@ -89,7 +89,7 @@ export default class App {
         if (!File.Exists(initFile)) {
             return;
         }
-        if (is.macOS() && !App.isDev()) {
+        if (OS.isMacOS() && !App.isDev()) {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
             }

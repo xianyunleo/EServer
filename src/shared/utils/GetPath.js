@@ -1,7 +1,7 @@
 import path from "path";
 import App from "@/main/App";
 import Software from "@/main/core/software/Software";
-import is from "electron-is";
+import OS from "@/main/core/OS";
 
 export default class GetPath {
     static getSoftwarePath(){
@@ -62,7 +62,7 @@ export default class GetPath {
     }
 
     static getHostsPath() {
-        if (is.windows()) {
+        if (OS.isWindows()) {
             return 'C:\\Windows\\System32\\drivers\\etc\\hosts';
         } else {
             return '/etc/hosts';
