@@ -9,7 +9,6 @@ import {EnumSoftwareType} from "@/shared/enum";
 import Command from "@/main/core/Command";
 import {APP_NAME} from "@/shared/constant";
 import OS from  "@/main/core/OS";
-import is from "electron-is";
 import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
 
@@ -157,7 +156,7 @@ export default class ServerControl {
      * @returns {boolean}
      */
     static useSudoExec(itemName) {
-        if (is.macOS()) {
+        if (OS.isMacOS()) {
             let mainVersion = OS.getReleaseVersion().split('.')[0];
             const itemNameArr = ['Nginx'];
             //https://en.wikipedia.org/wiki/Darwin_(operating_system)

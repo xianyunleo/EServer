@@ -4,7 +4,6 @@ import {EnumSoftwareInstallStatus} from "@/shared/enum";
 import extract from "extract-zip";
 import Software from "@/main/core/software/Software";
 import Database from "@/main/core/Database";
-import is from "electron-is";
 import {DOWNLOAD_URL} from "@/shared/constant";
 import Directory from "@/main/utils/Directory";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
@@ -13,6 +12,7 @@ import {pipeline} from "stream/promises";
 import {createWriteStream} from "fs";
 import Path from "@/main/utils/Path";
 import File from "@/main/utils/File";
+import OS from "@/main/core/OS";
 
 export default class Installer {
     item; //用于和前端对接数据
@@ -126,7 +126,7 @@ export default class Installer {
 
     getDownloadUrl() {
         let url
-        if (is.windows()) {
+        if (OS.isWindows()) {
             url = `${DOWNLOAD_URL}/win`;
         } else {
             url = `${DOWNLOAD_URL}/mac`;

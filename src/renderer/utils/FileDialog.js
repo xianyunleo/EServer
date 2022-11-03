@@ -1,5 +1,5 @@
 import {dialog} from '@electron/remote';
-import is from "electron-is";
+import OS from "@/main/core/OS";
 
 export default class FileDialog {
     static showOpenDirectory(defaultPath = null) {
@@ -26,10 +26,10 @@ export default class FileDialog {
 
     static showOpenApp(defaultPath = null) {
         let filters;
-        if (is.windows()) {
+        if (OS.isWindows()) {
             filters = [{name: '应用程序', extensions: ['exe']}];
         }
-        if (is.macOS()) {
+        if (OS.isMacOS()) {
             filters = [{name: '应用程序', extensions: ['app']}];
         }
         let options = {

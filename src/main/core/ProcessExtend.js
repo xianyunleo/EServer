@@ -1,5 +1,5 @@
 import Command from "@/main/core/Command";
-import is from "electron-is";
+import OS from "@/main/core/OS";
 
 export default class ProcessExtend {
     /**
@@ -10,7 +10,7 @@ export default class ProcessExtend {
      */
     static async killByName(name, isSudo = false) {
         // eslint-disable-next-line no-empty
-        if (is.windows()) {
+        if (OS.isWindows()) {
 
         } else {
             try {
