@@ -8,6 +8,7 @@
       centered
       :maskClosable="false">
     <div class="modal-content">
+      <div style="text-align: center;padding-bottom: 20px">重置密码前，请先停止对应版本的MySQL服务</div>
       <a-form
           :model="formData"
           ref="formRef"
@@ -32,7 +33,6 @@ import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Database from "@/main/core/Database";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {message} from "ant-design-vue";
-import ProcessExtend from "@/main/core/ProcessExtend";
 import {sleep} from "@/shared/utils/utils";
 
 const props = defineProps(['show'])
@@ -69,9 +69,9 @@ const reset = async (version, newPwd) => {
   try {
     message.info('重置中，请等待...');
     await sleep(100);
-    await ProcessExtend.killByName('mysqld');
+    //todo MySQL服务检测
     await Database.resetMySQLPassword(version, newPwd);
-    message.info('重置MySQL密码成功！')
+    message.info('执行重置MySQL密码的命令成功！')
   } catch (error) {
     MessageBox.error(error.message ?? error, '重置MySQL密码出错！');
   }
