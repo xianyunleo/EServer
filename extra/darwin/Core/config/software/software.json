@@ -5,7 +5,7 @@
         "ServerProcessPath": "sbin/nginx",
         "ServerConfPath": "conf/nginx.conf",
         "StartServerCommand":"${ServerProcessPath} -p ${WorkPath} -g 'daemon off;'",
-        "ExtraFile": [
+        "ExtraFiles": [
             {
                 "Name": "访问日志",
                 "Path": "logs/access.log"
@@ -92,7 +92,7 @@
         "ServerProcessPath": "bin/mysqld",
         "ServerConfPath": "my.cnf",
         "StartServerCommand":"${ServerProcessPath} --defaults-file=${ServerConfPath}",
-        "ExtraFile": [
+        "ExtraFiles": [
             {
                 "Name": "日志",
                 "Path": "logs/mysql.log"
@@ -109,7 +109,7 @@
         "ServerProcessPath": "bin/mysqld",
         "ServerConfPath": "my.cnf",
         "StartServerCommand":"${ServerProcessPath} --defaults-file=${ServerConfPath}",
-        "ExtraFile": [
+        "ExtraFiles": [
             {
                 "Name": "日志",
                 "Path": "logs/mysql.log"

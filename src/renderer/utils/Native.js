@@ -7,6 +7,7 @@ import fixPath from "fix-path";
 import Hosts from "@/main/core/Hosts";
 import GetPath from "@/shared/utils/GetPath";
 import Directory from "@/main/utils/Directory";
+import File from "@/main/utils/File";
 
 export default class Native {
     /**
@@ -20,6 +21,10 @@ export default class Native {
             fixPath();  //mac下修复环境变量不识别的问题
         }
         try {
+            if (!File.Exists(filePath)) {
+                throw new Error('文件不存在');
+            }
+
             //todo 默认系统文本编辑器，macos打开hosts时提示，可能无法编辑，请在设置里切换文本编辑器
             let editorPath = path.join('/Applications/','Visual Studio Code.app');
             if (!Directory.Exists(editorPath)) {
