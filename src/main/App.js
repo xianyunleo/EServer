@@ -10,6 +10,7 @@ import Path from "@/main/utils/Path";
 import child_process from "child_process";
 import GetPath from "@/shared/utils/GetPath";
 import OS from "@/main/core/OS";
+import Settings from "@/main/Settings";
 
 
 export default class App {
@@ -98,6 +99,7 @@ export default class App {
             App.createCoreSubDir(['downloads', 'database']);
         }
         await App.initMySQL();
+        Settings.init();
         File.Delete(initFile);
     }
 
