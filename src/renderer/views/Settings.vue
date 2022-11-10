@@ -17,7 +17,8 @@
       <a-col :span="12">
         <div style="display: flex;align-items: center">
           <span>启用Composer：</span>
-          <a-switch v-model:checked="enableComposer" @change="changeEnableComposer" :disabled="!enableEnv" />
+          <a-switch v-model:checked="enableComposer" @change="changeEnableComposer"
+                    :disabled="!enableEnv || phpCliVersion===''" />
         </div>
       </a-col>
     </a-row>
