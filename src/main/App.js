@@ -124,8 +124,8 @@ export default class App {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
             }
-            App.moveCoreSubDir(['tmp', 'www', 'Library']);
-            App.updateCoreSubDir(['software']);
+            App.moveCoreSubDir(['tmp', 'www', 'Library','software']);
+            //App.updateCoreSubDir(['software']);
             App.createCoreSubDir(['downloads', 'database', 'bin']);
         }
         await App.initMySQL();
@@ -142,9 +142,9 @@ export default class App {
         for (const item of mysqlList) {
             let version = item.version;
             if (!Directory.Exists(GetPath.getMysqlDataPath(version))) {
-                await Database.initMySQLData(version);
+                //如果mysql data目录不存在，初始化生成data目录，并重置密码
+                await Database.initMySQL(version);
             }
-            await Database.initMySQL(version);
         }
     }
 
