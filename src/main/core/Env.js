@@ -12,13 +12,16 @@ export default class Env {
 
     static createBinLink(targetPath, binName) {
         let path = Path.Join(GetPath.getBinPath(), binName);
+        if (File.Exists(path)) {
+            File.Delete(path);
+        }
         File.CreateSymbolicLink(path, targetPath);
     }
 
     static deleteBinLink(binName) {
-        let target = Path.Join(GetPath.getBinPath(), binName);
-        if(File.Exists(target)){
-            File.Delete(target);
+        let path = Path.Join(GetPath.getBinPath(), binName);
+        if (File.Exists(path)) {
+            File.Delete(path);
         }
     }
 
