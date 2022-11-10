@@ -129,5 +129,13 @@
         "CanDelete": true,
         "Icon": "redis.png",
         "Desc": "一款高性能的Key-Value数据库"
+    },
+    {
+        "Name": "Composer",
+        "DirName": "Composer",
+        "Type": "Tool",
+        "CanDelete": true,
+        "Icon": "Composer.png",
+        "Desc": "PHP依赖管理工具（需要在设置里启用）"
     }
 ]
