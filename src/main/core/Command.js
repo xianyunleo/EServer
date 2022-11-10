@@ -46,6 +46,7 @@ export default class Command {
         return await new Promise((resolve, reject) => {
             const options = {
                 name: APP_NAME,
+                icns:App.getIcnsPath(),
             }
             sudo.exec(command, options, (err, stdout, stderr) => {
                 if (err) {

@@ -18,13 +18,43 @@ export default class App {
         return !app.isPackaged;
     }
 
+    /**
+     * 获取APP运行的目录
+     * @returns {string}
+     */
     static getAppPath() {
         if (OS.isWindows()) {
             return path.dirname(App.getExecutablePath());
-        } else {
-            //mac app.getAppPath()返回xxx.app/Contents/所在的路径
-            return path.join(app.getAppPath(), '../../')
+        } else if (OS.isMacOS()) {
+            return path.join(App.getContentsPath(), '../../')
         }
+        return '';
+    }
+
+    /**
+     * 当系统是macOS时，返回APP的Contents目录的绝对路径
+     * @returns {string}
+     */
+    static getContentsPath() {
+        if (!App.isDev() && OS.isMacOS()) {
+            return app.getAppPath();
+        }
+        return '';
+    }
+
+    /**
+     * 当系统是macOS时，返回APP的icon.icns绝对路径
+     * @returns {string}
+     */
+    static getIcnsPath() {
+        if (OS.isMacOS()) {
+            if (App.isDev()) {
+                return Path.Join(__static, `../build/icons/icon.icns`);
+            } else {
+                return Path.Join(App.getContentsPath(), 'Resources/icon.icns');
+            }
+        }
+        return '';
     }
 
     static getVersion(){
@@ -58,7 +88,7 @@ export default class App {
     }
 
     /**
-     * 获取用户操作目录，主要用在MacOS上
+     * 获取便于用户操作的核心目录
      * @returns {string}
      */
     static getUserCorePath() {
