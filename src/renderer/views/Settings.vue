@@ -42,7 +42,7 @@ const changeEnableEnv = async () => {
   try {
     await Env.switch(val);
     Settings.set('EnableEnv', val);
-    message.info('设置成功，重启终端后生效！')
+    message.info('设置成功，已生效，不需要重启终端！')
   } catch (error) {
     MessageBox.error(error.message ?? error, '设置出错！');
     enableEnv.value = originVal;
@@ -68,7 +68,7 @@ const phpCliVersionChange = () => {
       Env.deleteBinLink('php')
     }
     Settings.set('PhpVersion', val);
-    message.info('设置成功，重启终端后生效！')
+    message.info('设置成功，已生效，不需要重启终端！')
   } catch (error) {
     MessageBox.error(error.message ?? error, '设置出错！');
   }
@@ -87,7 +87,7 @@ const changeEnableComposer = async () => {
       Env.deleteBinLink('composer')
     }
     Settings.set('EnableComposer', val);
-    message.info('设置成功，重启终端后生效！')
+    message.info('设置成功，已生效，不需要重启终端！')
   } catch (error) {
     MessageBox.error(error.message ?? error, '设置出错！');
     enableComposer.value = originVal;
