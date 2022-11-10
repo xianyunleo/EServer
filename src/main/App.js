@@ -126,7 +126,7 @@ export default class App {
             }
             App.moveCoreSubDir(['tmp', 'www', 'Library']);
             App.updateCoreSubDir(['software']);
-            App.createCoreSubDir(['downloads', 'database']);
+            App.createCoreSubDir(['downloads', 'database', 'bin']);
         }
         await App.initMySQL();
         Settings.init();
@@ -149,7 +149,7 @@ export default class App {
     }
 
     /**
-     * 将App包内的Core子目录移动到用户Core目录
+     * 将App包内的Core子目录移动到用户Core目录，如果目录不存在的情况下
      * @param dirs
      */
     static moveCoreSubDir(dirs) {
@@ -163,6 +163,10 @@ export default class App {
         }
     }
 
+    /**
+     *  覆盖目录内容，如果目录不存在，则创建
+      * @param dirs
+     */
     static updateCoreSubDir(dirs) {
         let corePath = App.getCorePath();
         for (const dir of dirs) {
@@ -176,6 +180,10 @@ export default class App {
         }
     }
 
+    /**
+     * 创建目录，如果目录不存在的情况下
+     * @param dirs
+     */
     static createCoreSubDir(dirs) {
         for (const dir of dirs) {
             let p = path.join(MAC_USER_CORE_PATH, dir);

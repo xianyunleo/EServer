@@ -47,7 +47,9 @@ export default class Settings {
      */
     static getDefault() {
         return {
-            phpVersion:'7.4',
+            EnableEnv: false,
+            PhpVersion: '',
+            EnableComposer: false,
         };
     }
 
