@@ -124,8 +124,8 @@ export default class App {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
             }
-            App.moveCoreSubDir(['tmp', 'www', 'Library','software']);
-            //App.updateCoreSubDir(['software']);
+            App.moveCoreSubDir(['tmp', 'www', 'Library']);
+            App.updateCoreSubDir(['software']);
             App.createCoreSubDir(['downloads', 'database', 'bin']);
         }
         await App.initMySQL();
@@ -164,7 +164,7 @@ export default class App {
     }
 
     /**
-     *  覆盖目录内容，如果目录不存在，则创建
+     *  覆盖合并目录内容，如果目录不存在，则创建
       * @param dirs
      */
     static updateCoreSubDir(dirs) {
