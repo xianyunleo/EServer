@@ -9,7 +9,7 @@ export default class SoftwareExtend {
      * @returns {*[]|{name: string, version: string}[]}
      */
     static getPHPList() {
-        let path = GetPath.getPHPTypePath();
+        let path = GetPath.getPhpTypePath();
         if (!Directory.Exists(path)) {
             return [];
         }

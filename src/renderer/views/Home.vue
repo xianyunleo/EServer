@@ -107,7 +107,7 @@ const corePathClick = ()=>{
   Native.openPath(App.getUserCorePath());
 }
 const wwwPathClick = ()=>{
-  Native.openPath(GetPath.getWWWPath());
+  Native.openPath(GetPath.getWebsitePath());
 }
 
 const openInstallPath = (item) => {

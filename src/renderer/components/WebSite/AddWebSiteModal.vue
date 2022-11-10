@@ -59,7 +59,7 @@ import Hosts from "@/main/core/Hosts";
 
 const {search, addModalVisible: visible} = inject('website');
 
-const wwwPath = GetPath.getWWWPath();
+const wwwPath = GetPath.getWebsitePath();
 const formRef = ref();
 
 const formData = reactive({

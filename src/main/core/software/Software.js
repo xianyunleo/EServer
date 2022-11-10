@@ -75,7 +75,7 @@ export default class Software {
         type = EnumSoftwareType[type];
         switch (type) {
             case EnumSoftwareType.PHP:
-                return GetPath.getPHPTypePath();
+                return GetPath.getPhpTypePath();
             case EnumSoftwareType.Server:
                 return GetPath.getServerTypePath();
             case EnumSoftwareType.Tool:

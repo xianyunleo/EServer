@@ -6,6 +6,10 @@ export default class OS {
         return os.release();
     }
 
+    static getUserName() {
+        return os.userInfo().username;
+    }
+
     static isMacOS() {
         return is.macOS();
     }

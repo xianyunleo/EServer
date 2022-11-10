@@ -5,8 +5,8 @@ export default class File {
 
     /**
      * 创建文件符号链接
-     * @param path {string}
-     * @param pathToTarget {string}
+     * @param path {string} 符号链接的路径
+     * @param pathToTarget {string} 符号链接指向的目标的路径
      * @returns {undefined}
      */
     static CreateSymbolicLink(path, pathToTarget) {
@@ -28,7 +28,7 @@ export default class File {
      * @returns {boolean}
      */
     static Exists(path) {
-        return fs.existsSync(path) && fs.lstatSync(path).isFile();
+        return fs.existsSync(path) && !fs.lstatSync(path).isDirectory();
     }
 
     /**
