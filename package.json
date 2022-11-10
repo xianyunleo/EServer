@@ -1,6 +1,6 @@
 {
   "name": "easysrv",
-  "version": "0.3.8",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
