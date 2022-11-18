@@ -2,7 +2,6 @@
 import path from "path";
 import {app} from '@electron/remote'
 import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
-import is from "electron-is";
 import Database from "@/main/core/Database";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Directory from "@/main/utils/Directory";
@@ -10,6 +9,8 @@ import File from "@/main/utils/File";
 import Path from "@/main/utils/Path";
 import child_process from "child_process";
 import GetPath from "@/shared/utils/GetPath";
+import OS from "@/main/core/OS";
+import Settings from "@/main/Settings";
 
 
 export default class App {
@@ -17,21 +18,42 @@ export default class App {
         return !app.isPackaged;
     }
 
-    static getAppPath() {
-        if (is.windows()) {
-            return path.dirname(App.getExecutablePath());
-        } else {
-            //mac app.getAppPath()返回xxx.app/Contents/所在的路径
-            return path.join(app.getAppPath(), '../../')
+    /**
+     * 返回可执行文件路径，Mac返回路径为 AppName.app/Contents/MacOS/AppName
+     * @returns {string}
+     */
+    static getExePath() {
+        return app.getPath('exe');
+    }
+
+    /**
+     * 当系统是macOS时，返回App的Contents目录的路径
+     * @returns {string}
+     */
+    static getContentsPath() {
+        if (OS.isMacOS()) {
+            return Path.Join(Path.GetDirectoryName(App.getExePath()), '..');
         }
+        return '';
+    }
+
+    /**
+     * 当系统是macOS时，返回APP的icon.icns绝对路径
+     * @returns {string}
+     */
+    static getIcnsPath() {
+        if (OS.isMacOS()) {
+            if (App.isDev()) {
+                return Path.Join(__static, `../build/icons/icon.icns`);
+            } else {
+                return Path.Join(App.getContentsPath(), 'Resources/icon.icns');
+            }
+        }
+        return '';
     }
 
     static getVersion(){
         return app.getVersion();
-    }
-
-    static getExecutablePath() {
-        return process.execPath;
     }
 
     /**
@@ -40,28 +62,28 @@ export default class App {
      */
     static getCorePath(){
         let result = '';
-        if (is.windows()) {
+        if (OS.isWindows()) {
             if (App.isDev()) {
                 result = path.join(App.getPlatformPath(), WIN_CORE_PATH_NAME)
             } else {
                 result = path.join(App.getAppPath(), WIN_CORE_PATH_NAME)
             }
-        } else if (is.macOS()) {
+        } else if (OS.isMacOS()) {
             if (App.isDev()) {
                 result = path.join(App.getPlatformPath(), MAC_CORE_PATH_NAME)
             } else {
-                result = path.join(App.getAppPath(), MAC_CORE_PATH_NAME);
+                result = path.join(App.getContentsPath(), MAC_CORE_PATH_NAME);
             }
         }
         return result
     }
 
     /**
-     * 获取用户操作目录，主要用在MacOS上
+     * 获取便于用户操作的核心目录
      * @returns {string}
      */
     static getUserCorePath() {
-        if (is.macOS() && !App.isDev()) {
+        if (OS.isMacOS() && !App.isDev()) {
             return MAC_USER_CORE_PATH;
         }
         return App.getCorePath();
@@ -89,15 +111,16 @@ export default class App {
         if (!File.Exists(initFile)) {
             return;
         }
-        if (is.macOS() && !App.isDev()) {
+        if (OS.isMacOS() && !App.isDev()) {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
             }
             App.moveCoreSubDir(['tmp', 'www', 'Library']);
             App.updateCoreSubDir(['software']);
-            App.createCoreSubDir(['downloads', 'database']);
+            App.createCoreSubDir(['downloads', 'database', 'bin']);
         }
         await App.initMySQL();
+        Settings.init();
         File.Delete(initFile);
     }
 
@@ -109,15 +132,15 @@ export default class App {
         let mysqlList = SoftwareExtend.getMySQLList();
         for (const item of mysqlList) {
             let version = item.version;
-            if (Directory.Exists(GetPath.getMysqlDataPath(version))) {
-                continue;
+            if (!Directory.Exists(GetPath.getMysqlDataPath(version))) {
+                //如果mysql data目录不存在，初始化生成data目录，并重置密码
+                await Database.initMySQL(version);
             }
-            await Database.initMySQL(version);
         }
     }
 
     /**
-     * 将App包内的Core子目录移动到用户Core目录
+     * 将App包内的Core子目录移动到用户Core目录，如果目录不存在的情况下
      * @param dirs
      */
     static moveCoreSubDir(dirs) {
@@ -131,6 +154,10 @@ export default class App {
         }
     }
 
+    /**
+     *  覆盖合并目录内容，如果目录不存在，则创建
+      * @param dirs
+     */
     static updateCoreSubDir(dirs) {
         let corePath = App.getCorePath();
         for (const dir of dirs) {
@@ -144,6 +171,10 @@ export default class App {
         }
     }
 
+    /**
+     * 创建目录，如果目录不存在的情况下
+     * @param dirs
+     */
     static createCoreSubDir(dirs) {
         for (const dir of dirs) {
             let p = path.join(MAC_USER_CORE_PATH, dir);

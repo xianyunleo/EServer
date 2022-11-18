@@ -31,7 +31,10 @@
               <template #overlay>
                 <a-menu >
                   <a-menu-item @click="openInstallPath(record)">打开所在目录</a-menu-item>
-                  <a-menu-item v-if="record.ServerConfPath" @click="openConfPath(record)">打开配置文件</a-menu-item>
+                  <a-menu-item v-if="record.ServerConfPath" @click="openConfFile(record)">打开配置文件</a-menu-item>
+                  <a-menu-item v-for="(item,i) in record.ExtraFiles" :key="i" @click="openExtraFile(record,item)">
+                    打开{{item.Name}}
+                  </a-menu-item>
                 </a-menu>
               </template>
               <a-button>
@@ -70,6 +73,7 @@ import {storeToRefs} from "pinia/dist/pinia";
 import {APP_NAME} from "@/shared/constant";
 import Native from "@/renderer/utils/Native";
 import {sleep} from "@/shared/utils/utils";
+import Path from "@/main/utils/Path";
 //import {sleep} from "@/main/utils";
 
 const columns = [
@@ -103,15 +107,19 @@ const corePathClick = ()=>{
   Native.openPath(App.getUserCorePath());
 }
 const wwwPathClick = ()=>{
-  Native.openPath(GetPath.getWWWPath());
+  Native.openPath(GetPath.getWebsitePath());
 }
 
 const openInstallPath = (item) => {
   Native.openPath(Software.getPath(item));
 }
 
-const openConfPath = (item) => {
+const openConfFile = (item) => {
   Native.openTextFile(Software.getServerConfPath(item));
+}
+
+const openExtraFile = (item, extraFile) => {
+  Native.openTextFile(Path.Join(Software.getPath(item), extraFile.Path));
 }
 
 const startServerClick = async (item) => {

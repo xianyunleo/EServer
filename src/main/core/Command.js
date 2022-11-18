@@ -1,8 +1,8 @@
 import child_process from "child_process";
 import sudo from "sudo-prompt"
 import {APP_NAME} from "@/shared/constant";
-import is from "electron-is";
 import App from "@/main/App";
+import OS from "@/main/core/OS";
 
 export default class Command {
     /**
@@ -15,7 +15,7 @@ export default class Command {
         if (App.isDev()) console.log('exec command', command)
 
         let formatCommand;
-        if (is.windows()) {
+        if (OS.isWindows()) {
             formatCommand = '@chcp 65001 >nul & cmd /d/s/c ';
             command = formatCommand + command;
         }
@@ -27,7 +27,7 @@ export default class Command {
         try {
             return child_process.execSync(command,options);
         } catch (error) {
-            if (is.windows()) {
+            if (OS.isWindows()) {
                 // eslint-disable-next-line no-ex-assign
                 error = new Error(error.message.replace(formatCommand, ''))
             }
@@ -46,6 +46,7 @@ export default class Command {
         return await new Promise((resolve, reject) => {
             const options = {
                 name: APP_NAME,
+                icns:App.getIcnsPath(),
             }
             sudo.exec(command, options, (err, stdout, stderr) => {
                 if (err) {

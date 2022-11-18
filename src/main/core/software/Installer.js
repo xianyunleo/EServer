@@ -4,7 +4,6 @@ import {EnumSoftwareInstallStatus} from "@/shared/enum";
 import extract from "extract-zip";
 import Software from "@/main/core/software/Software";
 import Database from "@/main/core/Database";
-import is from "electron-is";
 import {DOWNLOAD_URL} from "@/shared/constant";
 import Directory from "@/main/utils/Directory";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
@@ -13,13 +12,14 @@ import {pipeline} from "stream/promises";
 import {createWriteStream} from "fs";
 import Path from "@/main/utils/Path";
 import File from "@/main/utils/File";
+import OS from "@/main/core/OS";
 
 export default class Installer {
-    item;
+    item; //用于和前端对接数据
     fileName;
-    filePath;
-    tempFilePath;
-    dlAbortController;
+    filePath; //下载文件路径
+    tempFilePath; //临时下载文件路径
+    dlInfo; //下载信息
     /**
      *
      * @param softItem {SoftwareItem}
@@ -28,35 +28,53 @@ export default class Installer {
         this.item = softItem;
         this.item.installInfo = this.item.installInfo ? this.item.installInfo : {}
         this.item.installInfo.status = EnumSoftwareInstallStatus.Ready;
+        this.item.installInfo.dlAbortController = new AbortController();
+        this.item.installInfo.dlIntervalId = 0;
         this.resetDownloadInfo();
+
         this.fileName = `${this.item.DirName}.zip`;
-        let downloadsPath = this.getDownloadsPath();
-        this.filePath = Path.Join(downloadsPath, this.fileName);
+        this.filePath = Path.Join(this.getDownloadsPath(), this.fileName);
         this.tempFilePath = `${this.filePath}.dl`;
-        this.downloadSignal = this.item.downloadAbortController?.signal;
     }
 
     resetDownloadInfo() {
-        this.item.installInfo.dlInfo = {
+        this.dlInfo = {
             completedSize: 0,
             totalSize: 0,
             percent: 0,
-            perSecond: '0KB',
+        }
+        this.item.installInfo.dlInfo = {
+            completedSizeText: '',
+            totalSizeText: '',
+            percent: 0,
+            perSecondText: '0KB',
         }
     }
 
     setDownloadInfo(dlInfo) {
         if (dlInfo.completedSize) {
-            this.item.installInfo.dlInfo.completedSize = dlInfo.completedSize;
+            this.dlInfo.completedSize = dlInfo.completedSize;
         }
         if (dlInfo.totalSize) {
-            this.item.installInfo.dlInfo.totalSize = dlInfo.totalSize;
+            this.dlInfo.totalSize = dlInfo.totalSize;
+        }
+        if (dlInfo.percent) {
+            this.dlInfo.percent = dlInfo.percent;
+        }
+    }
+
+    setItemDownloadInfo(dlInfo) {
+        if (dlInfo.completedSizeText) {
+            this.item.installInfo.dlInfo.completedSizeText = dlInfo.completedSizeText;
+        }
+        if (dlInfo.totalSizeText) {
+            this.item.installInfo.dlInfo.totalSizeText = dlInfo.totalSizeText;
         }
         if (dlInfo.percent) {
             this.item.installInfo.dlInfo.percent = dlInfo.percent;
         }
-        if (dlInfo.perSecond) {
-            this.item.installInfo.dlInfo.perSecond = dlInfo.perSecond;
+        if (dlInfo.perSecondText) {
+            this.item.installInfo.dlInfo.perSecondText = dlInfo.perSecondText;
         }
     }
 
@@ -69,7 +87,9 @@ export default class Installer {
 
         try {
             await this.download();
+            clearInterval(this.item.installInfo.dlIntervalId);
         } catch (error) {
+            clearInterval(this.item.installInfo.dlIntervalId);
             this.changeStatus(EnumSoftwareInstallStatus.DownloadError);
             let errMsg = error.message ?? '未知错误';
             throw new Error(`下载出错，${errMsg}`);
@@ -94,7 +114,7 @@ export default class Installer {
         try {
             if (this.item.DirName.includes('mysql')) {
                 this.changeStatus(EnumSoftwareInstallStatus.Configuring);
-                Database.initMySQL(SoftwareExtend.getMysqlVersion(this.item.DirName));
+                await Database.initMySQL(SoftwareExtend.getMysqlVersion(this.item.DirName));
             }
         } catch (error) {
             let errMsg = error.message ?? '未知错误';
@@ -106,7 +126,7 @@ export default class Installer {
 
     getDownloadUrl() {
         let url
-        if (is.windows()) {
+        if (OS.isWindows()) {
             url = `${DOWNLOAD_URL}/win`;
         } else {
             url = `${DOWNLOAD_URL}/mac`;
@@ -134,8 +154,8 @@ export default class Installer {
                     await pipeline(
                         readStream,
                         createWriteStream(this.tempFilePath),
-                        {signal: this.downloadSignal});
-                    this.setDownloadInfo({percent: 100});
+                        {signal: this.item.installInfo.dlAbortController.signal});
+                    this.setItemDownloadInfo({percent: 100});
                     this.changeStatus(EnumSoftwareInstallStatus.Downloaded);
                     File.Move(this.tempFilePath, this.filePath);
                     return resolve(true);
@@ -151,19 +171,39 @@ export default class Installer {
 
             readStream.on('downloadProgress', downloadProgress => {
                 this.setDownloadInfo({
-                    completedSize: '开发中',
-                    totalSize: '开发中',
-                    percent: parseFloat(downloadProgress.percent * 100),
-                    perSecond: '开发中',
+                    completedSize: downloadProgress.transferred,
+                    totalSize: downloadProgress.total,
+                    percent: downloadProgress.percent,
                 })
             });
+
+            let beforeCompletedSize = 0;
+            this.item.installInfo.dlIntervalId = setInterval(() => {
+                let dlInfo = this.dlInfo;
+                this.setItemDownloadInfo({
+                    completedSizeText: this.getSizeText(dlInfo.completedSize),
+                    totalSizeText: this.getSizeText(dlInfo.totalSize),
+                    percent :  parseInt(dlInfo.percent * 100),
+                    perSecondText: this.getSizeText(dlInfo.completedSize - beforeCompletedSize),
+                })
+                beforeCompletedSize = dlInfo.completedSize;
+                if (App.isDev()) console.log('Call setInterval',url);
+            }, 1000);
 
         });
 
     }
 
-    static stopDownload() {
-        this.dlAbortController.abort();
+    getSizeText(byteSize){
+        if(byteSize > 1024*1024){
+            return parseInt(byteSize/(1024*1024)) + 'MB';
+        }
+        return parseInt(byteSize/1024) + 'KB';
+    }
+
+    static stopDownload(item) {
+        item.installInfo.dlAbortController.abort();
+        clearInterval(item.installInfo.dlIntervalId);
     }
 
     changeStatus(status) {
@@ -189,6 +229,8 @@ export default class Installer {
 
     static uninstall(item) {
         let path = Software.getPath(item);
-        Directory.Delete(path, true);
+        if (Directory.Exists(path)) {
+            Directory.Delete(path, true);
+        }
     }
 }

@@ -1,14 +1,18 @@
 import path from "path";
 import App from "@/main/App";
 import Software from "@/main/core/software/Software";
-import is from "electron-is";
+import OS from "@/main/core/OS";
 
 export default class GetPath {
+    static getBinPath(){
+        return path.join(App.getUserCorePath(), 'bin');
+    }
+
     static getSoftwarePath(){
         return path.join(App.getUserCorePath(), 'software');
     }
 
-    static getPHPTypePath(){
+    static getPhpTypePath(){
         return path.join(GetPath.getSoftwarePath(), 'php');
     }
 
@@ -44,6 +48,18 @@ export default class GetPath {
         return path.join(App.getUserCorePath(), 'database');
     }
 
+    static getPhpPath(version) {
+        return path.join(GetPath.getPhpTypePath(), `php-${version}`);
+    }
+
+    static getPhpBinPath(version) {
+        return path.join(GetPath.getPhpPath(version), 'bin/php');
+    }
+
+    static getComposerBinPath() {
+        return path.join(GetPath.getToolTypePath(), 'Composer/composer.phar');
+    }
+
     static getMysqlPath(version) {
         return path.join(GetPath.getServerTypePath(), `mysql-${version}`);
     }
@@ -52,7 +68,7 @@ export default class GetPath {
         return path.join(GetPath.getDatabasePath(), `mysql-${version}-data`);
     }
 
-    static getWWWPath(){
+    static getWebsitePath(){
         return path.join(App.getUserCorePath(), 'www');
     }
 
@@ -62,7 +78,7 @@ export default class GetPath {
     }
 
     static getHostsPath() {
-        if (is.windows()) {
+        if (OS.isWindows()) {
             return 'C:\\Windows\\System32\\drivers\\etc\\hosts';
         } else {
             return '/etc/hosts';

@@ -55,7 +55,7 @@ export default class Hosts {
         let text = File.ReadAllText(path);
         for (const domain of domains) {
             if(domain){
-                let regx = new RegExp('.*' + domain.replaceAll('.', '\\.') + '\\s*','g');
+                let regx = new RegExp('.*127\\.0\\.0\\.1.*' + domain.replaceAll('.', '\\.') + '\\s*','g');
                 text = text.replaceAll(regx, '');
             }
         }
