@@ -1,6 +1,6 @@
 {
   "name": "easysrv",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -40,6 +40,7 @@
     "eslint-plugin-vue": "^7.0.0",
     "node-sass": "^6.0.1",
     "sass-loader": "^10.2.1",
+    "electron-builder": "^23.6.0",
     "vue-cli-plugin-electron-builder": "~2.1.1",
     "vue-loader": "^17.0.0",
     "vue-template-compiler": "^2.7.10"
