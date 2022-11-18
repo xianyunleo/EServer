@@ -19,25 +19,20 @@ export default class App {
     }
 
     /**
-     * 获取APP运行的目录
+     * 返回可执行文件路径，Mac返回路径为 AppName.app/Contents/MacOS/AppName
      * @returns {string}
      */
-    static getAppPath() {
-        if (OS.isWindows()) {
-            return path.dirname(App.getExecutablePath());
-        } else if (OS.isMacOS()) {
-            return path.join(App.getContentsPath(), '../../')
-        }
-        return '';
+    static getExePath() {
+        return app.getPath('exe');
     }
 
     /**
-     * 当系统是macOS时，返回APP的Contents目录的绝对路径
+     * 当系统是macOS时，返回App的Contents目录的路径
      * @returns {string}
      */
     static getContentsPath() {
-        if (!App.isDev() && OS.isMacOS()) {
-            return app.getAppPath();
+        if (OS.isMacOS()) {
+            return Path.Join(Path.GetDirectoryName(App.getExePath()), '..');
         }
         return '';
     }
@@ -61,10 +56,6 @@ export default class App {
         return app.getVersion();
     }
 
-    static getExecutablePath() {
-        return process.execPath;
-    }
-
     /**
      * 获取App核心目录
      * @returns {string}
@@ -81,7 +72,7 @@ export default class App {
             if (App.isDev()) {
                 result = path.join(App.getPlatformPath(), MAC_CORE_PATH_NAME)
             } else {
-                result = path.join(App.getAppPath(), MAC_CORE_PATH_NAME);
+                result = path.join(App.getContentsPath(), MAC_CORE_PATH_NAME);
             }
         }
         return result
