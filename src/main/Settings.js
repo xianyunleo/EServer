@@ -1,8 +1,8 @@
 import App from "@/main/App";
 import Store from "electron-store";
-import {SETTINGS_FILE_NAME} from "@/main/constant";
+import {MAC_USER_CORE_PATH, SETTINGS_FILE_NAME} from "@/main/constant";
 import Path from "@/main/utils/Path";
-import File from "@/main/utils/File";
+import OS from "@/main/core/OS";
 
 export default class Settings {
     static _instance;
@@ -35,10 +35,7 @@ export default class Settings {
             fileExtension: Settings._fileExtension,
             cwd: Settings.getFileDirPath(),
         };
-        if (!File.Exists(Settings.getFilePath())) {
-            if (App.isDev()) console.log('配置文件不存在，初始化设置！');
-            options.defaults = Settings.getDefault();
-        }
+        options.defaults = Settings.getDefault();
         Settings._instance = new Store(options);
     }
 
@@ -46,11 +43,15 @@ export default class Settings {
      * @returns {object}
      */
     static getDefault() {
-        return {
+        let obj = {
             EnableEnv: false,
             PhpVersion: '',
             EnableComposer: false,
         };
+        if (OS.isMacOS()) {
+            obj.TextEditor = Path.Join(MAC_USER_CORE_PATH, 'software/tool/NotepadNext.app');
+        }
+        return obj;
     }
 
     static getFileDirPath(){

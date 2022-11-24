@@ -6,6 +6,7 @@ export default class SoftwareItem {
     ServerConfPath;
     StartServerCommand;
     Type;
+    IsMacApp;
     CanDelete;
     Icon;
     Desc;
