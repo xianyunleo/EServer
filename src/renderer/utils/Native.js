@@ -1,4 +1,3 @@
-import path from "path";
 import Command from "@/main/core/Command";
 import {shell} from "@electron/remote";
 import MessageBox from "@/renderer/utils/MessageBox";
@@ -8,6 +7,7 @@ import GetPath from "@/shared/utils/GetPath";
 import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
 import OS from "@/main/core/OS";
+import Settings from "@/main/Settings";
 
 export default class Native {
     /**
@@ -25,10 +25,9 @@ export default class Native {
                 throw new Error('文件不存在');
             }
 
-            //todo 默认系统文本编辑器，macos打开hosts时提示，可能无法编辑，请在设置里切换文本编辑器
-            let editorPath = path.join('/Applications/','Visual Studio Code.app');
+            let editorPath = Settings.get('TextEditor');
             if (!Directory.Exists(editorPath)) {
-                throw new Error('VS Code没有安装');
+                throw new Error(`${editorPath} 不存在！`);
             }
             let command;
             if(OS.isMacOS()){

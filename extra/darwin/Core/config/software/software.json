@@ -4,7 +4,7 @@
         "DirName": "nginx",
         "ServerProcessPath": "sbin/nginx",
         "ServerConfPath": "conf/nginx.conf",
-        "StartServerCommand":"${ServerProcessPath} -p ${WorkPath} -g 'daemon off;'",
+        "StartServerCommand": "${ServerProcessPath} -p ${WorkPath} -g 'daemon off;'",
         "ExtraFiles": [
             {
                 "Name": "访问日志",
@@ -27,8 +27,7 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerCommand":"${ServerProcessPath} -c ${ConfPath} -y ${ServerConfPath}",
-        "Type": "PHP",
+        "StartServerCommand": "${ServerProcessPath} -c ${ConfPath} -y ${ServerConfPath}",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP是世界上最好的编程语言"
@@ -40,7 +39,7 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerCommand":"${ServerProcessPath} -c ${ConfPath} -y ${ServerConfPath}",
+        "StartServerCommand": "${ServerProcessPath} -c ${ConfPath} -y ${ServerConfPath}",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -53,20 +52,20 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerCommand":"${ServerProcessPath} -c ${ConfPath} -y ${ServerConfPath}",
+        "StartServerCommand": "${ServerProcessPath} -c ${ConfPath} -y ${ServerConfPath}",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP是世界上最好的编程语言"
     },
-	{
+    {
         "Name": "PHP-7.4",
         "ServerName": "PHP-FPM-7.4",
         "DirName": "php-7.4",
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerCommand":"${ServerProcessPath} -c ${ConfPath} -y ${ServerConfPath}",
+        "StartServerCommand": "${ServerProcessPath} -c ${ConfPath} -y ${ServerConfPath}",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -79,7 +78,7 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerCommand":"${ServerProcessPath} -c ${ConfPath} -y ${ServerConfPath}",
+        "StartServerCommand": "${ServerProcessPath} -c ${ConfPath} -y ${ServerConfPath}",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -91,7 +90,7 @@
         "Type": "Server",
         "ServerProcessPath": "bin/mysqld",
         "ServerConfPath": "my.cnf",
-        "StartServerCommand":"${ServerProcessPath} --defaults-file=${ServerConfPath}",
+        "StartServerCommand": "${ServerProcessPath} --defaults-file=${ServerConfPath}",
         "ExtraFiles": [
             {
                 "Name": "日志",
@@ -108,7 +107,7 @@
         "Type": "Server",
         "ServerProcessPath": "bin/mysqld",
         "ServerConfPath": "my.cnf",
-        "StartServerCommand":"${ServerProcessPath} --defaults-file=${ServerConfPath}",
+        "StartServerCommand": "${ServerProcessPath} --defaults-file=${ServerConfPath}",
         "ExtraFiles": [
             {
                 "Name": "日志",
@@ -124,7 +123,7 @@
         "DirName": "redis-6.2",
         "ServerProcessPath": "bin/redis-server",
         "ServerConfPath": "redis.conf",
-        "StartServerCommand":"${ServerProcessPath} ${ServerConfPath}",
+        "StartServerCommand": "${ServerProcessPath} ${ServerConfPath}",
         "Type": "Server",
         "CanDelete": true,
         "Icon": "redis.png",
@@ -137,5 +136,14 @@
         "CanDelete": true,
         "Icon": "Composer.png",
         "Desc": "PHP依赖管理工具（需要在设置里启用）"
+    },
+    {
+        "Name": "NotepadNext",
+        "DirName": "NotepadNext.app",
+        "Type": "Tool",
+        "IsMacApp": true,
+        "CanDelete": true,
+        "Icon": "NotepadNext.svg",
+        "Desc": "跨平台文本编辑器"
     }
 ]
