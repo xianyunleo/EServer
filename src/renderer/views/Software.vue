@@ -104,7 +104,7 @@ const {softwareList,  softwareTypeSelected} = storeToRefs(mainStore);
 softwareTypeSelected.value = 'Installed';
 
 for (const item of softwareList.value) {
-  item.Installed = Software.IsInStalled(item);
+  item.Installed = Software.IsInstalled(item);
 }
 
 const setShowList = (type) => {
