@@ -74,6 +74,7 @@ import {APP_NAME} from "@/shared/constant";
 import Native from "@/renderer/utils/Native";
 import {sleep} from "@/shared/utils/utils";
 import Path from "@/main/utils/Path";
+import ProcessExtend from "@/main/core/ProcessExtend";
 //import {sleep} from "@/main/utils";
 
 const columns = [
@@ -96,8 +97,17 @@ const columns = [
 const mainStore = useMainStore();
 const {serverSoftwareList} = storeToRefs(mainStore);
 
-//todo 检查所有服务状态，不加await，配合自启服务显示，放到运行日志里
-let serverList = serverSoftwareList.value.filter(item => Software.IsInStalled(item));
+let serverList = serverSoftwareList.value.filter(item => Software.IsInstalled(item));
+
+const refreshServerStatus = async () => {
+  let processListStr = await ProcessExtend.getListString({directory: GetPath.getSoftwarePath()});
+  for (const item of serverList) {
+    let processPath = Software.getServerProcessPath(item);
+    item.isRunning = processListStr.includes(processPath);
+  }
+};
+
+refreshServerStatus();
 
 const serviceChange = ()=>{
   message.info('下个版本开放！！！');
@@ -163,6 +173,7 @@ const restartServerClick = async (item) => {
 const stopServerClick = async (item) => {
   try {
     await ServerControl.stop(item);
+    await refreshServerStatus();
   } catch (error) {
     MessageBox.error(error.message ?? error, '启动服务出错！');
   }

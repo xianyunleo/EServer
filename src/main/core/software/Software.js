@@ -37,7 +37,7 @@ export default class Software {
      * @param item {SoftwareItem}
      * @returns {boolean}
      */
-    static IsInStalled(item) {
+    static IsInstalled(item) {
         let path = Software.getPath(item);
         return Directory.Exists(path);
     }
@@ -65,6 +65,17 @@ export default class Software {
         let softPath = Software.getPath(item);
         return path.join(softPath, item.ServerConfPath);
     }
+
+    /**
+     * 获取软件服务进程绝对路径
+     * @param item {SoftwareItem}
+     * @returns {string}
+     */
+    static getServerProcessPath(item) {
+        let workPath = Software.getPath(item); //服务目录
+        return path.join(workPath, item.ServerProcessPath);  //服务的进程目录
+    }
+
 
     /**
      * 根据软件类型，获取软件的类型目录

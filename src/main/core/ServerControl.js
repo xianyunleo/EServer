@@ -49,7 +49,7 @@ export default class ServerControl {
         }
 
         let exec;
-        if (ServerControl.useSudoExec(item.Name)) {
+        if (ServerControl.needSudoExec(item.Name)) {
             exec = sudo.exec; //todo用sudo.exec服务状态好像有问题
             options.name = APP_NAME;
         } else {
@@ -77,7 +77,7 @@ export default class ServerControl {
         const item = softItem;
         let processName = path.parse(item.ServerProcessPath)?.name;
 
-        if (ServerControl.useSudoExec(item.Name)) {
+        if (ServerControl.needSudoExec(item.Name)) {
             await ProcessExtend.killByName(processName, true);
         } else {
             await ProcessExtend.killByName(processName);
@@ -151,11 +151,11 @@ export default class ServerControl {
     }
 
     /**
-     * 根据软件名判断是否使用sudoExec
+     * 根据软件名以及操作系统版本判断是否需要使用sudoExec
      * @param itemName {string}
      * @returns {boolean}
      */
-    static useSudoExec(itemName) {
+    static needSudoExec(itemName) {
         if (OS.isMacOS()) {
             let mainVersion = OS.getReleaseVersion().split('.')[0];
             const itemNameArr = ['Nginx'];
