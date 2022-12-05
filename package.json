@@ -1,6 +1,6 @@
 {
   "name": "easysrv",
-  "version": "0.5.2",
+  "version": "0.7.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -43,6 +43,11 @@
     "vue-cli-plugin-electron-builder": "~2.1.1",
     "vue-loader": "^17.0.0",
     "vue-template-compiler": "^2.7.10"
+  },
+  "overrides": {
+    "vue-cli-plugin-electron-builder": {
+      "electron-builder": "^23.6.0"
+    }
   },
   "eslintConfig": {
     "root": true,

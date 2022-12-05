@@ -38,6 +38,10 @@ export default class FileDialog {
         }
         if (defaultPath) {
             options.defaultPath = defaultPath;
+        }else {
+            if(OS.isMacOS()){
+                options.defaultPath = '/Applications';
+            }
         }
         let res = dialog.showOpenDialogSync(options);
         return res ? res[0] : null;

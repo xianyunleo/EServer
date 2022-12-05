@@ -104,7 +104,7 @@ const {softwareList,  softwareTypeSelected} = storeToRefs(mainStore);
 softwareTypeSelected.value = 'Installed';
 
 for (const item of softwareList.value) {
-  item.Installed = Software.IsInStalled(item);
+  item.Installed = Software.IsInstalled(item);
 }
 
 const setShowList = (type) => {
@@ -165,7 +165,8 @@ const clickStop = (item) => {
 }
 
 const openInstallPath = async (item) => {
-  Native.openPath(Software.getPath(item));
+  let path = item.IsMacApp ? Software.getTypePath(item.Type) : Software.getPath(item);
+  Native.openPath(path);
 }
 
 const uninstall = async (item) => {

@@ -13,6 +13,7 @@ import {createWriteStream} from "fs";
 import Path from "@/main/utils/Path";
 import File from "@/main/utils/File";
 import OS from "@/main/core/OS";
+import GetPath from "@/shared/utils/GetPath";
 
 export default class Installer {
     item; //用于和前端对接数据
@@ -112,10 +113,7 @@ export default class Installer {
         }
 
         try {
-            if (this.item.DirName.includes('mysql')) {
-                this.changeStatus(EnumSoftwareInstallStatus.Configuring);
-                await Database.initMySQL(SoftwareExtend.getMysqlVersion(this.item.DirName));
-            }
+            await this.configure();
         } catch (error) {
             let errMsg = error.message ?? '未知错误';
             throw new Error(`配置出错，${errMsg}`);
@@ -123,6 +121,18 @@ export default class Installer {
 
         this.changeStatus(EnumSoftwareInstallStatus.Finish);
     }
+
+    async configure() {
+        let dirName = this.item.DirName;
+        if (dirName.includes('mysql')) {
+            let version = SoftwareExtend.getMysqlVersion(dirName);
+            if (!Directory.Exists(GetPath.getMysqlDataPath(version))) {
+                this.changeStatus(EnumSoftwareInstallStatus.Configuring);
+                await Database.initMySQL(version);
+            }
+        }
+    }
+
 
     getDownloadUrl() {
         let url
