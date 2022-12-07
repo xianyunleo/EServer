@@ -115,8 +115,8 @@ export default class App {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
             }
-            App.moveCoreSubDir(['tmp', 'www', 'Library']);
-            App.updateCoreSubDir(['software']);
+            App.moveCoreSubDir(['tmp', 'www', 'software']);
+            App.updateCoreSubDir(['Library']);
             App.createCoreSubDir(['downloads', 'database', 'bin']);
         }
         await App.initMySQL();
