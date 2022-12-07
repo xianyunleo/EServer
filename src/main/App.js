@@ -166,7 +166,7 @@ export default class App {
             if (!Directory.Exists(target)) {
                 Directory.CreateDirectory(target);
             }
-            child_process.execSync(`cp -R ${source}/* ${target}`);
+            child_process.execSync(`rsync -a ${source}/* ${target}`);
             Directory.Delete(source, true);
         }
     }
