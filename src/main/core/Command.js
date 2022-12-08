@@ -12,7 +12,7 @@ export default class Command {
      * @returns {Promise<string>}
      */
     static async exec(command, options = {}) {
-        if (App.isDev()) console.log('exec command', command)
+        if (App.isDev()) console.log('Command.exec command', command)
 
         let formatCommand;
         if (OS.isWindows()) {
