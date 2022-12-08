@@ -100,10 +100,11 @@ const {serverSoftwareList} = storeToRefs(mainStore);
 let serverList = serverSoftwareList.value.filter(item => Software.IsInstalled(item));
 
 const refreshServerStatus = async () => {
-  let processListStr = await ProcessExtend.getListString({directory: GetPath.getSoftwarePath()});
+  let processList = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
+  let pathList = processList.map(item => item.path);
   for (const item of serverList) {
     let processPath = Software.getServerProcessPath(item);
-    item.isRunning = processListStr.includes(processPath);
+    item.isRunning = pathList.includes(processPath);
   }
 };
 
