@@ -183,6 +183,11 @@ export default class App {
             }
         }
     }
+
+    //判断是否设置了用户密码
+    static isUserPasswordSet(){
+        return !!Settings.get('userPassword');
+    }
 }
 
 
