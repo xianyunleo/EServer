@@ -11,6 +11,7 @@ import {APP_NAME} from "@/shared/constant";
 import OS from  "@/main/core/OS";
 import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
+import App from "@/main/App";
 
 export default class ServerControl {
     /**
@@ -43,7 +44,7 @@ export default class ServerControl {
                 ServerConfPath: item.ServerConfPath ? path.join(workPath, item.ServerConfPath) : null,
             };
             commandStr = parseTemplateStrings(tempStr, argObj);
-            console.log('commandStr',commandStr)
+            if (App.isDev()) console.log('ServerControl.start command', commandStr)
         } else {
             commandStr = serverProcessPath;
         }
