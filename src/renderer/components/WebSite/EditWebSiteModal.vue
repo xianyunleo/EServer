@@ -2,7 +2,7 @@
   <a-modal
       width="550px"
       :title="`修改网站[${serverName}]`"
-      ok-text="确认"
+      ok-text="确定"
       cancel-text="取消"
       v-model:visible="visible"
       :footer="null"
