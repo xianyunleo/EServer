@@ -1,22 +1,20 @@
 import path from "path";
-import sudo from "sudo-prompt"
 import ProcessExtend from "@/main/core/ProcessExtend";
 import Software from "@/main/core/software/Software";
-import {enumGetName, parseTemplateStrings, sleep} from "@/shared/utils/utils";
+import {enumGetName, parseTemplateStrings} from "@/shared/utils/utils";
 import child_process from "child_process";
 import GetPath from "@/shared/utils/GetPath";
 import {EnumSoftwareType} from "@/shared/enum";
 import Command from "@/main/core/Command";
-import {APP_NAME} from "@/shared/constant";
-import OS from  "@/main/core/OS";
 import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
 import App from "@/main/App";
+import Path from "@/main/utils/Path";
 
 export default class ServerControl {
     /**
      * SoftwareItem
-     * @param softItem
+     * @param softItem {SoftwareItem}
      * @returns {Promise<void>}
      */
     static async start(softItem) {
@@ -49,18 +47,9 @@ export default class ServerControl {
             commandStr = serverProcessPath;
         }
 
-        let exec;
-        if (ServerControl.needSudoExec(item.Name)) {
-            exec = sudo.exec; //todo用sudo.exec服务状态好像有问题
-            options.name = APP_NAME;
-        } else {
-            exec = child_process.exec;
-        }
-
         item.isRunning = true;
         item.errMsg = '';
-        exec(commandStr, options, (error, stdout, stderr) => {
-            console.log('exec callback')
+        child_process.exec(commandStr, options, (error, stdout, stderr) => {
             item.isRunning = false;
             if (stderr) {
                 item.errMsg = stderr;
@@ -70,25 +59,17 @@ export default class ServerControl {
 
     /**
      * SoftwareItem
-     * @param softItem
+     * @param softItem{SoftwareItem}
      * @returns {Promise<void>}
      */
     static async stop(softItem) {
-        //todo 只杀本项目的服务
         const item = softItem;
-        let processName = path.parse(item.ServerProcessPath)?.name;
+        let processName = Path.GetBaseName(item.ServerProcessPath);
 
-        if (ServerControl.needSudoExec(item.Name)) {
-            await ProcessExtend.killByName(processName, true);
-        } else {
-            await ProcessExtend.killByName(processName);
-        }
+        await ProcessExtend.killByName(processName);
 
-        await sleep(100);//等待回调函数改变 item.isRunning 的状态，todo改ps查询
         if (item.Name === 'Nginx') {
-            if (!item.isRunning) { //nginx杀死成功，再杀php-fpm
-                await ServerControl.killPHPFPM();
-            }
+            await ServerControl.killPHPFPM();
         }
     }
 
@@ -151,21 +132,5 @@ export default class ServerControl {
         ]);
     }
 
-    /**
-     * 根据软件名以及操作系统版本判断是否需要使用sudoExec
-     * @param itemName {string}
-     * @returns {boolean}
-     */
-    static needSudoExec(itemName) {
-        if (OS.isMacOS()) {
-            let mainVersion = OS.getReleaseVersion().split('.')[0];
-            const itemNameArr = ['Nginx'];
-            //https://en.wikipedia.org/wiki/Darwin_(operating_system)
-            //<=macOS 10.13 High Sierra
-            if (Number(mainVersion) <= 17 && itemNameArr.includes(itemName)) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 }
