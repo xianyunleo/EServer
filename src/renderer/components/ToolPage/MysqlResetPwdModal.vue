@@ -1,7 +1,7 @@
 <template>
   <a-modal
       title="MySQL重置密码"
-      ok-text="确认"
+      ok-text="确定"
       cancel-text="取消"
       @ok="resetClick"
       v-model:visible="visible"
