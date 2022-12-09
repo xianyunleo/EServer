@@ -13,10 +13,9 @@ export default class Native {
     /**
      *
      * @param filePath {string}
-     * @param isSudo {boolean}
      * @returns {Promise<void>}
      */
-    static async openTextFile(filePath, isSudo = false) {
+    static async openTextFile(filePath) {
         if (OS.isMacOS()) {
             fixPath();  //mac下修复环境变量不识别的问题
         }
@@ -33,13 +32,8 @@ export default class Native {
             if(OS.isMacOS()){
                 command = `open -a "${editorPath}"  "${filePath}"`;
             }
+            await Command.exec(command);
 
-            //let command = `code ${filePath}`;
-            if (isSudo) {
-                await Command.sudoExec(command);
-            } else {
-                await Command.exec(command);
-            }
         } catch (error) {
             MessageBox.error(error.message ?? error, '打开文件出错！');
         }
@@ -52,16 +46,6 @@ export default class Native {
 
     static async openUrl(url) {
         return await shell.openExternal(url);
-    }
-
-    static async vscodeIsInstalled() {
-        let command = "which code";
-        try {
-            let output = await Command.exec(command);
-            return output && output.trim() !== '';
-        } catch {
-            return false;
-        }
     }
 
     static async openHosts() {
