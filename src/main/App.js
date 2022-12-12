@@ -184,6 +184,11 @@ export default class App {
         }
     }
 
+    static exit() {
+        app.exit();
+    }
+
+
 }
 
 

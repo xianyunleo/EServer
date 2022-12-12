@@ -55,11 +55,12 @@
 <!--      </div>-->
     </a-card>
   </div>
+  <user-pwd-modal v-model:show="userPwdModalShow" :cancel-is-exit="true" />
 </template>
 
 <script setup>
 // eslint-disable-next-line no-unused-vars
-import {watch} from 'vue';
+import {ref, watch} from 'vue';
 import {useMainStore} from '@/renderer/store'
 import {DownOutlined, RightSquareFilled} from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
@@ -74,6 +75,13 @@ import Native from "@/renderer/utils/Native";
 //import {sleep} from "@/shared/utils/utils";
 import Path from "@/main/utils/Path";
 import ProcessExtend from "@/main/core/ProcessExtend";
+import UserPwdModal from "@/renderer/components/UserPwdModal";
+import SettingsExtend from "@/main/core/SettingsExtend";
+
+const userPwdModalShow = ref(false);
+if (!SettingsExtend.isUserPwdSet()) {
+  userPwdModalShow.value = true;
+}
 
 const columns = [
   {
