@@ -595,7 +595,7 @@
 /* #undef HAVE_ENCHANT_GET_VERSION */
 
 /* Libzip >= 1.2.0 with encryption support */
-/* #undef HAVE_ENCRYPTION */
+#define HAVE_ENCRYPTION 1
 
 /* do we have epoll? */
 /* #undef HAVE_EPOLL */
@@ -718,7 +718,7 @@
 #define HAVE_GD_BUNDLED 1
 
 /* */
-/* #undef HAVE_GD_FREETYPE */
+#define HAVE_GD_FREETYPE 1
 
 /* */
 #define HAVE_GD_JPG 1
@@ -1036,7 +1036,7 @@
 /* #undef HAVE_LIBEXPAT */
 
 /* */
-/* #undef HAVE_LIBFREETYPE */
+#define HAVE_LIBFREETYPE 1
 
 /* */
 /* #undef HAVE_LIBGD */
@@ -1093,7 +1093,7 @@
 #define HAVE_LIBXML 1
 
 /* Libzip >= 1.3.1 with zip_libzip_version function */
-/* #undef HAVE_LIBZIP_VERSION */
+#define HAVE_LIBZIP_VERSION 1
 
 /* Define to 1 if you have the <locale.h> header file. */
 #define HAVE_LOCALE_H 1
@@ -1955,10 +1955,10 @@
 /* #undef HAVE_XSL_EXSLT */
 
 /* */
-/* #undef HAVE_ZIP */
+#define HAVE_ZIP 1
 
 /* */
-/* #undef HAVE_ZLIB */
+#define HAVE_ZLIB 1
 
 /* whether _controlfp is present usable */
 /* #undef HAVE__CONTROLFP */
@@ -2054,7 +2054,7 @@
 #define PHPDBG_DEBUG 0
 
 /* PHP build date */
-#define PHP_BUILD_DATE "2022-09-08"
+#define PHP_BUILD_DATE "2022-12-12"
 
 /* Define if your system has fork/vfork/CreateProcess */
 #define PHP_CAN_SUPPORT_PROC_OPEN 1
@@ -2159,7 +2159,7 @@
 #define PHP_SIGCHILD 0
 
 /* uname -a output */
-#define PHP_UNAME "Darwin liudeMacBook-Pro.local 20.6.0 Darwin Kernel Version 20.6.0: Tue Jun 21 20:50:28 PDT 2022; root:xnu-7195.141.32~1/RELEASE_X86_64 x86_64"
+#define PHP_UNAME "Darwin liudeMacBook-Pro.local 20.6.0 Darwin Kernel Version 20.6.0: Thu Sep 29 20:15:11 PDT 2022; root:xnu-7195.141.42~1/RELEASE_X86_64 x86_64"
 
 /* Whether PHP has to use its own crypt_r for blowfish, des and ext des */
 #define PHP_USE_PHP_CRYPT_R 1
