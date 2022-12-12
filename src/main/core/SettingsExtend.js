@@ -1,6 +1,5 @@
 import Settings from "@/main/Settings";
 
-
 export default class SettingsExtend {
     static _userPwd = null;
 
