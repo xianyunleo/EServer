@@ -1,0 +1,14 @@
+prefix=/Applications/EasySrv/Library/freetype
+exec_prefix=/Applications/EasySrv/Library/freetype
+libdir=/Applications/EasySrv/Library/freetype/lib
+includedir=/Applications/EasySrv/Library/freetype/include
+
+Name: FreeType 2
+URL: https://freetype.org
+Description: A free, high-quality, and portable font engine.
+Version: 24.3.18
+Requires: 
+Requires.private: zlib, libpng
+Libs: -L/Applications/EasySrv/Library/freetype/lib -lfreetype
+Libs.private: -L/Applications/EasySrv/Library/bzip2/lib -lbz2
+Cflags: -I${includedir}/freetype2
