@@ -136,7 +136,7 @@ export default class Nginx {
      */
     static getRewriteRuleList() {
         let rewritePath = GetPath.getNginxRewritePath();
-        if (!File.Exists(rewritePath)) {
+        if (!Directory.Exists(rewritePath)) {
             return [];
         }
         let files = Directory.GetFiles(rewritePath, '.conf');

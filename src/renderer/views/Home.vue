@@ -55,15 +55,15 @@
 <!--      </div>-->
     </a-card>
   </div>
+  <user-pwd-modal v-model:show="userPwdModalShow" :cancel-is-exit="true" />
 </template>
 
 <script setup>
 // eslint-disable-next-line no-unused-vars
-import {watch} from 'vue';
+import {ref, watch} from 'vue';
 import {useMainStore} from '@/renderer/store'
 import {DownOutlined, RightSquareFilled} from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
-
 import App from "@/main/App";
 import GetPath from "@/shared/utils/GetPath";
 import Software from "@/main/core/software/Software";
@@ -72,10 +72,16 @@ import MessageBox from "@/renderer/utils/MessageBox";
 import {storeToRefs} from "pinia/dist/pinia";
 import {APP_NAME} from "@/shared/constant";
 import Native from "@/renderer/utils/Native";
-import {sleep} from "@/shared/utils/utils";
+//import {sleep} from "@/shared/utils/utils";
 import Path from "@/main/utils/Path";
 import ProcessExtend from "@/main/core/ProcessExtend";
-//import {sleep} from "@/main/utils";
+import UserPwdModal from "@/renderer/components/UserPwdModal";
+import SettingsExtend from "@/main/core/SettingsExtend";
+
+const userPwdModalShow = ref(false);
+if (!SettingsExtend.isUserPwdSet()) {
+  userPwdModalShow.value = true;
+}
 
 const columns = [
   {
@@ -100,10 +106,11 @@ const {serverSoftwareList} = storeToRefs(mainStore);
 let serverList = serverSoftwareList.value.filter(item => Software.IsInstalled(item));
 
 const refreshServerStatus = async () => {
-  let processListStr = await ProcessExtend.getListString({directory: GetPath.getSoftwarePath()});
+  let processList = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
+  let pathList = processList.map(item => item.path);
   for (const item of serverList) {
     let processPath = Software.getServerProcessPath(item);
-    item.isRunning = processListStr.includes(processPath);
+    item.isRunning = pathList.includes(processPath);
   }
 };
 
@@ -136,13 +143,13 @@ const startServerClick = async (item) => {
   try {
     //todo 开始前loading，开始后sleep 1-3s
     await ServerControl.start(item);
-    const unwatch = watch(() => item.errMsg, (errMsg) => {
-      if (errMsg) {
-        unwatch();
-        MessageBox.error(errMsg, '启动服务出错！');
-      }
-    });
-    await sleep(500);
+    if (!item.unwatch) {
+      item.unwatch = watch(() => item.errMsg, (errMsg) => {
+        if (errMsg) {
+          MessageBox.error(errMsg, '启动服务出错！');
+        }
+      });
+    }
   } catch (error) {
     MessageBox.error(error.message ?? error, '启动服务出错！');
   }
@@ -152,19 +159,11 @@ const restartServerClick = async (item) => {
   try {
     //todo 开始前loading，开始后sleep 1-3s
     await ServerControl.stop(item);
-    await sleep(300);
     if (item.isRunning) {
-      MessageBox.error('停止服务出错！', '重启服务出错！');
+      MessageBox.error('服务没有成功停止！', '重启服务出错！');
       return;
     }
     await ServerControl.start(item);
-    const unwatch = watch(() => item.errMsg, (errMsg) => {
-      if (errMsg) {
-        unwatch();
-        MessageBox.error(errMsg, '重启服务出错！');
-      }
-    });
-    await sleep(500);
   } catch (error) {
     MessageBox.error(error.message ?? error, '重启服务出错！');
   }

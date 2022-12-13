@@ -1,7 +1,7 @@
 <template>
   <a-modal
       title="添加网站"
-      ok-text="确认"
+      ok-text="确定"
       cancel-text="取消"
       @ok="addWebClick"
       v-model:visible="visible"

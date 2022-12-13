@@ -5,21 +5,16 @@ export default class ProcessExtend {
     /**
      *
      * @param name {string}
-     * @param isSudo {boolean}
      * @returns {Promise<*>}
      */
-    static async killByName(name, isSudo = false) {
+    static async killByName(name) {
         // eslint-disable-next-line no-empty
         if (OS.isWindows()) {
 
         } else {
             try {
                 //pkill杀不存在的进程会有标准错误，从而引发异常
-                if (isSudo) {
-                    return await Command.sudoExec(`pkill -9 ${name}`);
-                } else {
-                    return await Command.exec(`pkill -9 ${name}`);
-                }
+                await Command.sudoExec(`pkill -9 ${name}`);
                 // eslint-disable-next-line no-empty
             } catch {
 
@@ -28,24 +23,39 @@ export default class ProcessExtend {
         }
     }
 
-    static async getListString(searchObj={}) {
+    static async getList(searchObj={}) {
         if (OS.isMacOS()) {
-            return await ProcessExtend.getListStringByMacOS(searchObj);
+            return await ProcessExtend.getListByMacOS(searchObj);
         }
-        return '';
+        return [];
     }
 
-    static async getListStringByMacOS(searchObj={}) {
+    static async getListByMacOS(searchObj={}) {
         let command = 'lsof -w -d txt';
         if (searchObj) {
             if(searchObj.directory){
-                command += `|grep ${searchObj.directory}`;  //这里不能使用lsof的+D参数，会有exit code
+                command += `|grep ${searchObj.directory}`;  //这里不能使用lsof的+D参数，会有exit code，且性能不好
             }
         }
+        command += "|awk '{print $1,$2,$9}'";
         try {
-            return await Command.exec(command);
+            let str =  await Command.sudoExec(command);
+            str = str.trim();
+            if(!str){
+                return [];
+            }
+            let list = str.split('\n');
+
+            list = list.map(item => {
+                let arr = item.split(' ');
+                let name, pid, path;
+                [name, pid, path] = arr;
+                return {name, pid, path};
+            });
+
+            return list;
         }catch(e){
-            return '';
+            return  [];
         }
 
     }

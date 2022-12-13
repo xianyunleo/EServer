@@ -105,7 +105,7 @@ const del = async (item) => {
   try {
     let options = {
       content:'确定删除吗?',
-      okText:'确认',
+      okText:'确定',
       cancelText:'取消',
     };
     if (await MessageBox.Confirm(options)) {
