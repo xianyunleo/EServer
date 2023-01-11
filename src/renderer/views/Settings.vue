@@ -10,19 +10,20 @@
   </a-card>
   <a-card title="环境变量" class="settings-card">
     <a-row type="flex"  align="middle" class="settings-card-row">
-      <a-col :span="12">
+      <a-col :span="24">
         <span>启用环境变量：</span>
         <a-switch v-model:checked="enableEnv" @change="changeEnableEnv" />
+        <span style="margin-left: 20px;color: red">* 开关此项，需要重启终端后才能生效</span>
       </a-col>
     </a-row>
     <a-row type="flex" justify="space-around" align="middle" class="settings-card-row">
       <a-col :span="12" style="display: flex;align-items: center">
-        <span>PHP-CLI版本：</span>
+        <span :class="!enableEnv?'disabled-text':''">PHP-CLI版本：</span>
         <a-select style="width: 120px" :options="phpVersionList" :disabled="!enableEnv"
                   v-model:value="phpCliVersion" @change="phpCliVersionChange" />
       </a-col>
       <a-col :span="12" style="display: flex;align-items: center">
-        <span>启用Composer：</span>
+        <span :class="!enableEnv?'disabled-text':''">启用Composer：</span>
         <a-switch v-model:checked="enableComposer" @change="changeEnableComposer"
                   :disabled="!enableEnv || phpCliVersion===''" />
       </a-col>
@@ -77,7 +78,7 @@ const changeEnableEnv = async () => {
   try {
     await Env.switch(val);
     Settings.set('EnableEnv', val);
-    message.info('设置成功，已生效，不需要重启终端！')
+    message.warning('设置成功，未生效，请重启终端！')
   } catch (error) {
     MessageBox.error(error.message ?? error, '设置出错！');
     enableEnv.value = originVal;
@@ -148,6 +149,9 @@ const resetUserPwd = ()=>{
   }
 }
 
+.disabled-text{
+  color:#999;
+}
 
 
 .settings-card-content {
