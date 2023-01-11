@@ -5,6 +5,7 @@ import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 import Store from "electron-store"
+import TrayManager from "@/main/TrayManager";
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -77,7 +78,8 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
-  createWindow()
+  createWindow();
+  TrayManager.init();
 })
 
 // Exit cleanly on request from parent process in development mode.
