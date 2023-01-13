@@ -14,7 +14,7 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-export let window;
+ let window;
 
 remoteMain.initialize();
 Store.initRenderer();
@@ -79,8 +79,16 @@ app.on('ready', async () => {
     }
   }
   createWindow();
-  TrayManager.init();
+
+  // window.on('close', (event) => {
+  //   event.preventDefault();
+  //   window.hide();
+  //   });
+
+  TrayManager.init(window);
 })
+
+
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

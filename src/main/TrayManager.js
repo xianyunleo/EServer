@@ -1,19 +1,31 @@
 /* global __static */
-import {Tray, Menu, nativeImage} from 'electron'
+import {app, Tray, Menu, nativeImage} from 'electron'
 import Path from "@/main/utils/Path";
+import {APP_NAME} from "@/shared/constant";
 
 export default class TrayManager {
-    static init(){
-        let iconPath = Path.Join(__static,'img/icons/icon-Mac-tray.png');
-        let icon = nativeImage.createFromPath(iconPath).resize({width:18,height:18})
+    /**
+     *
+     * @param mainWindow {BrowserWindow}
+     */
+    static init(mainWindow) {
+        let iconPath = Path.Join(__static, 'img/icons/icon-Mac-tray.png');
+        let icon = nativeImage.createFromPath(iconPath).resize({width: 18, height: 18})
+        icon.setTemplateImage(true);
         let tray = new Tray(icon);
         const contextMenu = Menu.buildFromTemplate([
-            { label: 'Item1', type: 'radio' },
-            { label: 'Item2', type: 'radio' },
-            { label: 'Item3', type: 'radio', checked: true },
-            { label: 'Item4', type: 'radio' }
+            {
+                label: '主面板', click: () => {
+                    mainWindow.show();
+                }
+            },
+            {
+                label: '退出', click: () => {
+                    app.exit();
+                }
+            },
         ])
-        tray.setToolTip('This is my application.')
+        tray.setToolTip(APP_NAME)
         tray.setContextMenu(contextMenu)
     }
 }
