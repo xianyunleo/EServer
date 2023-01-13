@@ -5,7 +5,7 @@
       <input-with-search placeholder="请输入域名" style="width: 200px" @search="search"/>
     </div>
 
-    <a-table :scroll="{y: true}"
+    <a-table :scroll="{y: 'calc(100vh - 170px)'}"
              :columns="columns"
              :data-source="list"
              class="content-table web-table scroller"
@@ -160,32 +160,6 @@ const openRootPath = (item) => {
   justify-content: space-between;
   margin-top: 10px;
   padding: 15px 15px;
-}
-
-.web-table {
-  display: flex;
-  height: 0;
-
-  :deep(.ant-spin-nested-loading) {
-    display: flex;
-  }
-
-  :deep(.ant-spin-container) {
-    display: flex;
-  }
-
-  :deep(.ant-table) {
-    display: flex;
-  }
-
-  :deep( .ant-table-container) {
-    display: flex;
-    flex-direction: column;
-  }
-
-  :deep(.ant-table-header) {
-    overflow: visible !important;
-  }
 }
 
 </style>

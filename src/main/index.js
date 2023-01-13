@@ -5,6 +5,7 @@ import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 import Store from "electron-store"
+import TrayManager from "@/main/TrayManager";
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -13,7 +14,7 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-export let window;
+ let window;
 
 remoteMain.initialize();
 Store.initRenderer();
@@ -77,8 +78,17 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
-  createWindow()
+  createWindow();
+
+  // window.on('close', (event) => {
+  //   event.preventDefault();
+  //   window.hide();
+  //   });
+
+  TrayManager.init(window);
 })
+
+
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
