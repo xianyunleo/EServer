@@ -8,7 +8,7 @@ import {APP_NAME} from "@/shared/constant";
 import GetPath from "@/shared/utils/GetPath";
 
 export default class Env {
-    static EnvFileName = '.zshrc';
+    static #EnvFileName = '.zshrc';
 
     static createBinLink(targetPath, binName) {
         let path = Path.Join(GetPath.getBinPath(), binName);
@@ -85,6 +85,6 @@ export default class Env {
     }
 
     static getEnvFilePath() {
-        return Path.Join(app.getPath('home'), Env.EnvFileName);
+        return Path.Join(app.getPath('home'), Env.#EnvFileName);
     }
 }
