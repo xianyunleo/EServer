@@ -5,9 +5,9 @@ import Path from "@/main/utils/Path";
 import OS from "@/main/core/OS";
 
 export default class Settings {
-    static _instance;
-    static _fileName = SETTINGS_FILE_NAME;
-    static _fileExtension = 'json';
+    static #instance;
+    static #fileName = SETTINGS_FILE_NAME;
+    static #fileExtension = 'json';
 
     static get(key) {
         return Settings.getInstance().get(key);
@@ -22,21 +22,21 @@ export default class Settings {
      * @returns {ElectronStore<T>}
      */
     static getInstance() {
-        if (Settings._instance) {
-            return Settings._instance;
+        if (Settings.#instance) {
+            return Settings.#instance;
         }
         Settings.init();
-        return Settings._instance;
+        return Settings.#instance;
     }
 
     static init() {
         const options = {
-            name: Settings._fileName,
-            fileExtension: Settings._fileExtension,
+            name: Settings.#fileName,
+            fileExtension: Settings.#fileExtension,
             cwd: Settings.getFileDirPath(),
         };
         options.defaults = Settings.getDefault();
-        Settings._instance = new Store(options);
+        Settings.#instance = new Store(options);
     }
 
     /**
@@ -63,6 +63,6 @@ export default class Settings {
      * @returns {string}
      */
     static getFilePath(){
-        return Path.Join(Settings.getFileDirPath(), `${Settings._fileName}.${Settings._fileExtension}`);
+        return Path.Join(Settings.getFileDirPath(), `${Settings.#fileName}.${Settings.#fileExtension}`);
     }
 }

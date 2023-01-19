@@ -8,15 +8,15 @@ import File from "@/main/utils/File";
 
 export default class Software {
 
-    static list;
+    static #list;
 
     /**
      *
      * @returns {[]}
      */
     static getList() {
-        if(Software.list){
-            return Software.list;
+        if(Software.#list){
+            return Software.#list;
         }
         let corePath = App.getCorePath();
         let softPath = path.join(corePath, '/config/software');
@@ -28,7 +28,7 @@ export default class Software {
         for (const item of list) {
             item.Icon = path.join(softIconPath, item.Icon);
         }
-        Software.list = list;
+        Software.#list = list;
         return list;
     }
 
