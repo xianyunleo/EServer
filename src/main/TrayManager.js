@@ -2,6 +2,7 @@
 import {app, Tray, Menu, nativeImage} from 'electron'
 import Path from "@/main/utils/Path";
 import {APP_NAME} from "@/shared/constant";
+import OS from "@/main/core/OS";
 
 export default class TrayManager {
     /**
@@ -9,7 +10,7 @@ export default class TrayManager {
      * @param mainWindow {BrowserWindow}
      */
     static init(mainWindow) {
-        let iconPath = Path.Join(__static, 'img/icons/icon-Mac-tray.png');
+        let iconPath = TrayManager.getIconPath();
         let icon = nativeImage.createFromPath(iconPath).resize({width: 18, height: 18})
         icon.setTemplateImage(true);
         let tray = new Tray(icon);
@@ -27,5 +28,12 @@ export default class TrayManager {
         ])
         tray.setToolTip(APP_NAME)
         tray.setContextMenu(contextMenu)
+    }
+
+    static getIconPath(){
+        if(OS.isMacOS()){
+            return Path.Join(__static, 'img/icons/icon-tray-Mac.png');
+        }
+        return Path.Join(__static, 'img/icons/icon-tray.png');
     }
 }
