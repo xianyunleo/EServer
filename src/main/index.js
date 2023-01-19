@@ -6,6 +6,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 import Store from "electron-store"
 import TrayManager from "@/main/TrayManager";
+import MainWindow from "@/main/MainWindow";
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -86,6 +87,7 @@ app.on('ready', async () => {
   //   });
 
   TrayManager.init(window);
+  MainWindow.init(window)
 })
 
 

@@ -16,6 +16,7 @@
   "main": "background.js",
   "dependencies": {
     "@electron/remote": "^2.0.8",
+    "@vscode/codicons": "^0.0.32",
     "ant-design-vue": "^3.2.7",
     "core-js": "^3.6.5",
     "electron-is": "^3.0.0",

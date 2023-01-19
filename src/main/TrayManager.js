@@ -17,7 +17,7 @@ export default class TrayManager {
         const contextMenu = Menu.buildFromTemplate([
             {
                 label: '主面板', click: () => {
-                    mainWindow.show();
+                    TrayManager.mainWindowShow(mainWindow);
                 }
             },
             {
@@ -26,8 +26,19 @@ export default class TrayManager {
                 }
             },
         ])
-        tray.setToolTip(APP_NAME)
-        tray.setContextMenu(contextMenu)
+        tray.setToolTip(APP_NAME);
+        tray.setContextMenu(contextMenu);
+        tray.on('click',()=>{
+            TrayManager.mainWindowShow(mainWindow);
+        })
+    }
+
+    static mainWindowShow(mainWindow) {
+        mainWindow.setSkipTaskbar(false);
+        if(mainWindow.isMinimized()){
+            mainWindow.restore();
+        }
+        mainWindow.show();
     }
 
     static getIconPath(){
