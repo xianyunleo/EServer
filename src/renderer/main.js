@@ -4,6 +4,7 @@ import App from './App.vue'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 import './assets/css/index.scss'
+import '@vscode/codicons/dist/codicon.css';
 import router from './router'
 import {createPinia} from 'pinia'
 
