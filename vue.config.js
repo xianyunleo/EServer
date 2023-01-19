@@ -52,6 +52,17 @@ module.exports ={
         },
         artifactName:'${productName}-${version}-${arch}.${ext}',
 
+      },
+      chainWebpackMainProcess: (config) => {
+        config.module
+            .rule('babel')
+            .test(/\.js$/)
+            .use('babel')
+            .loader('babel-loader')
+            .options({
+              presets: [['@babel/preset-env', { modules: false }]],
+              plugins: ['@babel/plugin-proposal-class-properties']
+            })
       }
     }
   }
