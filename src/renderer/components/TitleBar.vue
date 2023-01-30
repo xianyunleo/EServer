@@ -5,13 +5,13 @@
     </div>
     <div class="window-controls-container non-draggable" v-if="isWindows">
       <div class="window-icon codicon codicon-chrome-minimize"
-           :class="{'window-icon-hover': minimizeIsHover}"
+           :class="{'window-icon-background-gray': minimizeIsHover}"
            @click="minimizeClick"
            @mouseover="minimizeIsHover=true"
            @mouseout="minimizeIsHover=false">
       </div>
 
-      <div class="window-icon codicon codicon-chrome-restore"
+      <div class="window-icon codicon codicon-chrome-restore window-icon-hover"
            :class="{
               'codicon-chrome-restore': isWindowMax,
               'codicon-chrome-maximize': !isWindowMax,
@@ -93,8 +93,14 @@ mainWindow.on('unmaximize',()=>{
   }
 }
 
-.window-icon-hover{
+.window-icon-background-gray{
   background-color:#ccc;
+}
+
+.window-icon-hover{
+  &:hover {
+    background-color:#ccc;
+  }
 }
 
 .window-icon-close-hover{
