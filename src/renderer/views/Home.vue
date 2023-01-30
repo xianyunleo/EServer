@@ -77,11 +77,15 @@ import Path from "@/main/utils/Path";
 import ProcessExtend from "@/main/core/ProcessExtend";
 import UserPwdModal from "@/renderer/components/UserPwdModal";
 import SettingsExtend from "@/main/core/SettingsExtend";
+import OS from "@/main/core/OS";
 
-const userPwdModalShow = ref(false);
-if (!SettingsExtend.isUserPwdSet()) {
-  userPwdModalShow.value = true;
+if(OS.isMacOS()){
+  const userPwdModalShow = ref(false);
+  if (!SettingsExtend.isUserPwdSet()) {
+    userPwdModalShow.value = true;
+  }
 }
+
 
 const columns = [
   {
