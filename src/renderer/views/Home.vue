@@ -79,8 +79,8 @@ import UserPwdModal from "@/renderer/components/UserPwdModal";
 import SettingsExtend from "@/main/core/SettingsExtend";
 import OS from "@/main/core/OS";
 
+const userPwdModalShow = ref(false);
 if(OS.isMacOS()){
-  const userPwdModalShow = ref(false);
   if (!SettingsExtend.isUserPwdSet()) {
     userPwdModalShow.value = true;
   }
