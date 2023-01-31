@@ -10,8 +10,14 @@ import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
 import App from "@/main/App";
 import Path from "@/main/utils/Path";
+import OS from "@/main/core/OS";
 
 export default class ServerControl {
+
+    static WinPHPCGI_ProcessName = 'php-cgi.exe';
+    static WinPHPFPM_ProcessName = 'php-cgi-spawner.exe';
+
+
     /**
      * SoftwareItem
      * @param softItem {SoftwareItem}
@@ -24,7 +30,6 @@ export default class ServerControl {
         const options = {cwd: workPath};
         //杀死同名的或者同类的其他服务
         if (item.Name === 'Nginx') {
-            await ServerControl.killPHPFPM();
             ServerControl.startPHPFPM();
             await ServerControl.killWebServer();
         } else {
@@ -74,10 +79,20 @@ export default class ServerControl {
     }
 
     static async killPHPFPM() {
-        await ProcessExtend.killByName('php-fpm');
+        if (OS.isWindows()) {
+            return await Promise.all([
+                ProcessExtend.killByName(ServerControl.WinPHPFPM_ProcessName),
+                ProcessExtend.killByName(ServerControl.WinPHPCGI_ProcessName),
+            ]);
+        } else {
+            await ProcessExtend.killByName('php-fpm');
+        }
+
     }
 
     static async startPHPFPM() {
+        await ServerControl.killPHPFPM();
+
         let nginxVhostsPath = GetPath.getNginxVhostsPath();
         let vhosts =  Directory.GetFiles(nginxVhostsPath, '.conf');
         if (!vhosts || vhosts.length === 0) {
@@ -102,23 +117,33 @@ export default class ServerControl {
             phpItemMap.set(item.Name, item);
         }
 
-        await Promise.all(phpVersionList.map(async phpVersion => {
-            const phpName = `PHP-${phpVersion}`;
-            const item = phpItemMap.get(phpName);
+        try {
+            await Promise.all(phpVersionList.map(async phpVersion => {
+                const phpName = `PHP-${phpVersion}`;
+                const item = phpItemMap.get(phpName);
 
-            let workPath = Software.getPath(item); //服务目录
-            let serverProcessPath = path.join(workPath, item.ServerProcessPath);  //服务的进程目录
+                let workPath = Software.getPath(item); //服务目录
+                let serverProcessPath = path.join(workPath, item.ServerProcessPath);  //服务的进程目录
 
-            let tempStr = item.StartServerCommand.trim();
-            let argObj = {
-                ServerProcessPath: serverProcessPath,
-                ConfPath: path.join(workPath, item.ConfPath),
-                ServerConfPath: path.join(workPath, item.ServerConfPath),
-            };
-            let commandStr = parseTemplateStrings(tempStr, argObj);
-            const options = {cwd: workPath};
-            await Command.exec(commandStr, options);
-        }));
+                let tempStr = item.StartServerCommand.trim();
+                let argObj = {
+                    ServerProcessPath: serverProcessPath,
+                    ConfPath: path.join(workPath, item.ConfPath),
+                    ServerConfPath: path.join(workPath, item.ServerConfPath),
+                };
+
+                if (item.ExtraProcessPath) {
+                    argObj.ExtraProcessPath = path.join(workPath, item.ExtraProcessPath);
+                }
+
+                let commandStr = parseTemplateStrings(tempStr, argObj);
+                const options = {cwd: workPath};
+                await Command.exec(commandStr, options);
+            }));
+            // eslint-disable-next-line no-empty
+        } catch {
+
+        }
     }
 
     /**
