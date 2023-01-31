@@ -1,4 +1,3 @@
-import path from "path";
 import ProcessExtend from "@/main/core/ProcessExtend";
 import Software from "@/main/core/software/Software";
 import {enumGetName, parseTemplateStrings} from "@/shared/utils/utils";
@@ -26,14 +25,14 @@ export default class ServerControl {
     static async start(softItem) {
         const item = softItem;
         let workPath = Software.getPath(item); //服务目录
-        let serverProcessPath = path.join(workPath, item.ServerProcessPath);  //服务的进程目录
+        let serverProcessPath = Path.Join(workPath, item.ServerProcessPath);  //服务的进程目录
         const options = {cwd: workPath};
         //杀死同名的或者同类的其他服务
         if (item.Name === 'Nginx') {
             ServerControl.startPHPFPM();
             await ServerControl.killWebServer();
         } else {
-            let processName = path.parse(serverProcessPath)?.name;
+            let processName = Path.GetBaseName(serverProcessPath);
             await ProcessExtend.killByName(processName);
         }
 
@@ -44,7 +43,7 @@ export default class ServerControl {
             let argObj = {
                 ServerProcessPath: serverProcessPath,
                 WorkPath: workPath,
-                ServerConfPath: item.ServerConfPath ? path.join(workPath, item.ServerConfPath) : null,
+                ServerConfPath: item.ServerConfPath ? Path.Join(workPath, item.ServerConfPath) : null,
             };
             commandStr = parseTemplateStrings(tempStr, argObj);
             if (App.isDev()) console.log('ServerControl.start command', commandStr)
@@ -123,17 +122,17 @@ export default class ServerControl {
                 const item = phpItemMap.get(phpName);
 
                 let workPath = Software.getPath(item); //服务目录
-                let serverProcessPath = path.join(workPath, item.ServerProcessPath);  //服务的进程目录
+                let serverProcessPath = Path.Join(workPath, item.ServerProcessPath);  //服务的进程目录
 
                 let tempStr = item.StartServerCommand.trim();
                 let argObj = {
                     ServerProcessPath: serverProcessPath,
-                    ConfPath: path.join(workPath, item.ConfPath),
-                    ServerConfPath: path.join(workPath, item.ServerConfPath),
+                    ConfPath: Path.Join(workPath, item.ConfPath),
+                    ServerConfPath: Path.Join(workPath, item.ServerConfPath),
                 };
 
                 if (item.ExtraProcessPath) {
-                    argObj.ExtraProcessPath = path.join(workPath, item.ExtraProcessPath);
+                    argObj.ExtraProcessPath = Path.Join(workPath, item.ExtraProcessPath);
                 }
 
                 let commandStr = parseTemplateStrings(tempStr, argObj);
