@@ -22,7 +22,7 @@ import MessageBox from "@/renderer/utils/MessageBox";
 const spinning = ref(false);
 
 (async () => {
-  if (!App.initFileExists()) {
+  if (!App.initFileExists() || App.isDev()) {
     return;
   }
   spinning.value = true;
