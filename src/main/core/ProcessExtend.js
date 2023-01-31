@@ -8,8 +8,14 @@ export default class ProcessExtend {
      * @returns {Promise<*>}
      */
     static async killByName(name) {
-        // eslint-disable-next-line no-empty
         if (OS.isWindows()) {
+            try {
+                //taskkill杀不存在的进程会有标准错误，从而引发异常
+                await Command.exec(`taskkill /f /t /im ${name}`);
+                // eslint-disable-next-line no-empty
+            } catch {
+
+            }
 
         } else {
             try {
