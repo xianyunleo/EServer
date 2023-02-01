@@ -24,9 +24,22 @@
         </template>
         <template v-if="column.dataIndex === 'operate'">
           <div class="operate-td">
-            <a-button type="primary" @click="startServerClick(record)" v-show="!record.isRunning">启动</a-button>
-            <a-button type="primary" @click="stopServerClick(record)" v-show="record.isRunning">停止</a-button>
-            <a-button type="primary" @click="restartServerClick(record)">重启</a-button>
+            <a-button type="primary" @click="startServerClick(record)" v-show="!record.isRunning"
+                      :loading="record.btnLoading">
+              <template #icon>
+                <PoweroffOutlined/>
+              </template>
+              启动
+            </a-button>
+            <a-button type="primary" @click="stopServerClick(record)" v-show="record.isRunning"
+                      :loading="record.btnLoading">
+              <template #icon><PoweroffOutlined/></template>
+              停止
+            </a-button>
+            <a-button type="primary" @click="restartServerClick(record)" :loading="record.btnLoading">
+              <template #icon><ReloadOutlined /></template>
+              重启
+            </a-button>
             <a-dropdown :trigger="['click']">
               <template #overlay>
                 <a-menu >
@@ -62,7 +75,7 @@
 // eslint-disable-next-line no-unused-vars
 import {ref, watch} from 'vue';
 import {useMainStore} from '@/renderer/store'
-import {DownOutlined, RightSquareFilled} from '@ant-design/icons-vue';
+import {DownOutlined, RightSquareFilled,PoweroffOutlined,ReloadOutlined} from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import App from "@/main/App";
 import GetPath from "@/shared/utils/GetPath";
@@ -144,8 +157,15 @@ const openExtraFile = (item, extraFile) => {
 }
 
 const startServerClick = async (item) => {
+  item.btnLoading = true;
   try {
-    //todo 开始前loading，开始后sleep 1-3s
+    if (item.Name === 'Nginx') {
+      ServerControl.restartPHPFPM();
+      await ServerControl.killWebServer();
+    } else {
+      await ServerControl.stop(item);
+    }
+
     await ServerControl.start(item);
     if (!item.unwatch) {
       item.unwatch = watch(() => item.errMsg, (errMsg) => {
@@ -157,29 +177,40 @@ const startServerClick = async (item) => {
   } catch (error) {
     MessageBox.error(error.message ?? error, '启动服务出错！');
   }
+  item.btnLoading = false;
 }
 
 const restartServerClick = async (item) => {
+  item.btnLoading = true;
   try {
-    //todo 开始前loading，开始后sleep 1-3s
     await ServerControl.stop(item);
     if (item.isRunning) {
       MessageBox.error('服务没有成功停止！', '重启服务出错！');
       return;
     }
     await ServerControl.start(item);
+    if (item.Name === 'Nginx') {
+      ServerControl.restartPHPFPM();
+    }
+    await refreshServerStatus();
   } catch (error) {
     MessageBox.error(error.message ?? error, '重启服务出错！');
   }
+  item.btnLoading = false;
 }
 
 const stopServerClick = async (item) => {
+  item.btnLoading = true;
   try {
     await ServerControl.stop(item);
+    if (item.Name === 'Nginx') {
+      ServerControl.killPHPFPM();
+    }
     await refreshServerStatus();
   } catch (error) {
     MessageBox.error(error.message ?? error, '启动服务出错！');
   }
+  item.btnLoading = false;
 }
 
 </script>

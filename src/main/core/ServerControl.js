@@ -27,14 +27,6 @@ export default class ServerControl {
         let workPath = Software.getPath(item); //服务目录
         let serverProcessPath = Path.Join(workPath, item.ServerProcessPath);  //服务的进程目录
         const options = {cwd: workPath};
-        //杀死同名的或者同类的其他服务
-        if (item.Name === 'Nginx') {
-            ServerControl.startPHPFPM();
-            await ServerControl.killWebServer();
-        } else {
-            let processName = Path.GetBaseName(serverProcessPath);
-            await ProcessExtend.killByName(processName);
-        }
 
         let commandStr;
 
@@ -67,14 +59,13 @@ export default class ServerControl {
      * @returns {Promise<void>}
      */
     static async stop(softItem) {
-        const item = softItem;
-        let processName = Path.GetBaseName(item.ServerProcessPath);
-
+        let processName = Path.GetBaseName(softItem.ServerProcessPath);
         await ProcessExtend.killByName(processName);
+    }
 
-        if (item.Name === 'Nginx') {
-            await ServerControl.killPHPFPM();
-        }
+    static async restartPHPFPM() {
+        await ServerControl.killPHPFPM();
+        await ServerControl.startPHPFPM();
     }
 
     static async killPHPFPM() {
@@ -90,8 +81,6 @@ export default class ServerControl {
     }
 
     static async startPHPFPM() {
-        await ServerControl.killPHPFPM();
-
         let nginxVhostsPath = GetPath.getNginxVhostsPath();
         let vhosts =  Directory.GetFiles(nginxVhostsPath, '.conf');
         if (!vhosts || vhosts.length === 0) {
