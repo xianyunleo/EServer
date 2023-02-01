@@ -32,6 +32,8 @@ export default class ProcessExtend {
     static async getList(searchObj={}) {
         if (OS.isMacOS()) {
             return await ProcessExtend.getListByMacOS(searchObj);
+        }else if(OS.isWindows()){
+            return await ProcessExtend.getListByWindows(searchObj);
         }
         return [];
     }
@@ -64,5 +66,34 @@ export default class ProcessExtend {
             return  [];
         }
 
+    }
+
+    static async getListByWindows(searchObj={}) {
+        let command = 'wmic process where ';
+        if (searchObj) {
+            if(searchObj.directory){
+                let formatDir =searchObj.directory.replaceAll('\\','\\\\');
+                command += `"ExecutablePath like '${formatDir}%'"`;
+            }
+        }
+        command += " get ProcessID, Name, ExecutablePath";
+
+        try {
+            let str =  await Command.exec(command);
+            str = str.trim();
+            if(!str){
+                return [];
+            }
+            let list = str.split('\n');
+            list = list.map(item => {
+                let arr = item.split(/\s+/);
+                let name, pid, path;
+                [path,name, pid] = arr;
+                return {name, pid, path};
+            });
+            return list;
+        }catch(e){
+            return  [];
+        }
     }
 }
