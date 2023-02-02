@@ -8,6 +8,10 @@ export default class GetPath {
         return path.join(App.getUserCorePath(), 'bin');
     }
 
+    static geTempPath(){
+        return path.join(App.getUserCorePath(), 'temp');
+    }
+
     static getSoftwarePath(){
         return path.join(App.getUserCorePath(), 'software');
     }
