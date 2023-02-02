@@ -5,6 +5,7 @@ import ProcessExtend from "@/main/core/ProcessExtend";
 import {sleep} from "@/shared/utils/utils";
 import child_process from "child_process";
 import File from "@/main/utils/File";
+import OS from "@/main/core/OS";
 
 export default class Database {
 
@@ -26,9 +27,7 @@ export default class Database {
      */
     static async initMySQLData(version) {
         let mysqlPath = GetPath.getMysqlPath(version);
-        let mysqldBinFilePath = path.join(mysqlPath, 'bin/mysqld');
-        let confPath = path.join(mysqlPath, 'my.cnf');
-        let command = `${mysqldBinFilePath} --defaults-file=${confPath} --initialize`;
+        let command = `${this.getMySQLDFilePath()} --defaults-file=${this.getMySQLConfFilePath()} --initialize`;
         await Command.exec(command, {cwd: mysqlPath});
     }
 
@@ -51,12 +50,10 @@ export default class Database {
             default:
         }
         let mysqlPath = GetPath.getMysqlPath(version);
-        let confPath = path.join(mysqlPath, 'my.cnf');
-        let mysqlBinFilePath = path.join(mysqlPath, 'bin/mysqld');
         let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
         File.WriteAllText(resetPwdPath, resetCommand);
 
-        let command = `${mysqlBinFilePath} --defaults-file=${confPath} --init-file=${resetPwdPath}`;
+        let command = `${this.getMySQLDFilePath()} --defaults-file=${this.getMySQLConfFilePath()} --init-file=${resetPwdPath}`;
         //mysqld执行此命令会一直前台运行不退出
         child_process.exec(command, {cwd: mysqlPath});
         await sleep(3000);
@@ -64,4 +61,15 @@ export default class Database {
         File.Delete(resetPwdPath);
     }
 
+    static getMySQLConfFilePath(version) {
+        let mysqlPath = GetPath.getMysqlPath(version);
+        let name = OS.isWindows() ? 'mysqld.exe' : 'mysqld';
+        return path.join(mysqlPath, name);
+    }
+
+    static getMySQLDFilePath(version) {
+        let mysqlPath = GetPath.getMysqlPath(version);
+        let name = OS.isWindows() ? 'my.ini' : 'my.cnf';
+        return path.join(mysqlPath, 'bin', name);
+    }
 }
