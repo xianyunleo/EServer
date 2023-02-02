@@ -11,6 +11,7 @@ import child_process from "child_process";
 import GetPath from "@/shared/utils/GetPath";
 import OS from "@/main/core/OS";
 import Settings from "@/main/Settings";
+import SoftwareInit from "@/main/core/software/SoftwareInit";
 
 
 export default class App {
@@ -119,6 +120,7 @@ export default class App {
             App.updateCoreSubDir(['Library']);
             App.createCoreSubDir(['downloads', 'database', 'bin']);
         }
+        await SoftwareInit.initAll();
         await App.initMySQL();
         Settings.init();
         File.Delete(initFile);
