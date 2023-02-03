@@ -44,6 +44,7 @@ module.exports ={
               arch: ["x64"]
             },
           ],
+          requestedExecutionLevel: "requireAdministrator",
           extraFiles: {
             from: "./extra/win32/",
             to: "./",
