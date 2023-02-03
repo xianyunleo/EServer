@@ -1,8 +1,9 @@
 import App from "@/main/App";
 import Store from "electron-store";
-import {MAC_USER_CORE_PATH, SETTINGS_FILE_NAME} from "@/main/constant";
+import {SETTINGS_FILE_NAME} from "@/main/constant";
 import Path from "@/main/utils/Path";
 import OS from "@/main/core/OS";
+import GetPath from "@/shared/utils/GetPath";
 
 export default class Settings {
     static #instance;
@@ -47,11 +48,18 @@ export default class Settings {
             EnableEnv: false,
             PhpVersion: '',
             EnableComposer: false,
+            TextEditor: this.getDefaultTextEditorPath(),
         };
-        if (OS.isMacOS()) {
-            obj.TextEditor = Path.Join(MAC_USER_CORE_PATH, 'software/tool/NotepadNext.app');
-        }
         return obj;
+    }
+
+    static getDefaultTextEditorPath() {
+        let toolTypePath =  GetPath.getToolTypePath();
+        if (OS.isMacOS()) {
+           return Path.Join(toolTypePath, 'NotepadNext.app');
+        } else if (OS.isWindows()) {
+            return Path.Join(toolTypePath, 'Notepad3/Notepad3.exe');
+        }
     }
 
     static getFileDirPath(){

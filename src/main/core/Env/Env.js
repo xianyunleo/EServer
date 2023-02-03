@@ -6,19 +6,35 @@ import EnvMacOS from "@/main/core/Env/EnvMacOS";
 import EnvWindows from "@/main/core/Env/EnvWindows";
 
 export default class Env {
-    static createBinLink(targetPath, binName) {
-        let path = Path.Join(GetPath.getBinPath(), binName);
+    static createBinFile(targetPath, binName) {
+        let path = Path.Join(GetPath.getBinPath(), this.getBinFileName(binName));
         if (File.Exists(path)) {
             File.Delete(path);
         }
-        File.CreateSymbolicLink(path, targetPath);
+        if (OS.isWindows()) {
+            let text;
+            if (binName === 'composer') {
+                text = `@echo off\r\nphp "${targetPath}" %*`;
+            } else {
+                text = `@echo off\r\n"${targetPath}" %*`
+            }
+            File.WriteAllText(path, text);
+        } else {
+            File.CreateSymbolicLink(path, targetPath);
+        }
+
     }
 
-    static deleteBinLink(binName) {
-        let path = Path.Join(GetPath.getBinPath(), binName);
+    static deleteBinFile(binName) {
+        let path = Path.Join(GetPath.getBinPath(), this.getBinFileName(binName));
+        console.log(path)
         if (File.Exists(path)) {
             File.Delete(path);
         }
+    }
+
+    static getBinFileName(binName) {
+        return OS.isWindows() ? `${binName}.bat` : binName;
     }
 
     static async switch(enable) {
@@ -29,11 +45,11 @@ export default class Env {
         }
     }
 
-    static IsEnabled() {
+    static async IsEnabled() {
         if (OS.isMacOS()) {
-            return EnvMacOS.IsEnabled();
+            return await EnvMacOS.IsEnabled();
         } else if (OS.isWindows()) {
-            return EnvWindows.IsEnabled();
+            return await EnvWindows.IsEnabled();
         }
         return false;
     }
