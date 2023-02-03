@@ -14,6 +14,7 @@ import Path from "@/main/utils/Path";
 import File from "@/main/utils/File";
 import OS from "@/main/core/OS";
 import GetPath from "@/shared/utils/GetPath";
+import SoftwareInit from "@/main/core/software/SoftwareInit";
 
 export default class Installer {
     item; //用于和前端对接数据
@@ -123,14 +124,24 @@ export default class Installer {
     }
 
     async configure() {
+        this.changeStatus(EnumSoftwareInstallStatus.Configuring);
+
         let dirName = this.item.DirName;
-        if (dirName.includes('mysql')) {
+        if (dirName.match(/mysql-[.\d]+$/)) {
             let version = SoftwareExtend.getMysqlVersion(dirName);
+            if (OS.isWindows()) {
+                await SoftwareInit.initMySQLConf(version);
+            }
             if (!Directory.Exists(GetPath.getMysqlDataPath(version))) {
-                this.changeStatus(EnumSoftwareInstallStatus.Configuring);
                 await Database.initMySQL(version);
             }
+        } else if (dirName.match(/php-[.\d]+$/)) {
+            let version = SoftwareExtend.getPHPVersion(dirName);
+            if (OS.isWindows()) {
+                await SoftwareInit.initPHPConf(version);
+            }
         }
+
     }
 
 
