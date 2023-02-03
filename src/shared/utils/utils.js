@@ -16,3 +16,13 @@ export function parseTemplateStrings(str, argObj) {
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
+
+
+/**
+ * 将字符串里的所有反斜杠替换成正斜杠
+ * @param str {string}
+ * @returns {string}
+ */
+export function replaceSlash(str) {
+    return str.replaceAll("\\", "/")
+}
