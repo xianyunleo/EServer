@@ -57,6 +57,9 @@ export default class GetPath {
     }
 
     static getPhpBinPath(version) {
+        if(OS.isWindows()){
+            return path.join(GetPath.getPhpPath(version), 'php.exe');
+        }
         return path.join(GetPath.getPhpPath(version), 'bin/php');
     }
 
