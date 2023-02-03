@@ -43,7 +43,7 @@ export default class SoftwareInit extends StringExtend{
             let text = File.ReadAllText(path);
             let pattern = /root\s+\S+\s*;/g;
             let localhostWWWPath = Path.Join(GetPath.getWebsitePath(), 'localhost').replaceSlash();
-            let replaceStr = `"root ${localhostWWWPath};`;
+            let replaceStr = `root ${localhostWWWPath};`;
             text = text.replaceAll(pattern, replaceStr);
             File.WriteAllText(path, text);
         }
