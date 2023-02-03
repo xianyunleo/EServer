@@ -3,7 +3,7 @@
     <a-row type="flex"  align="middle" class="settings-card-row">
       <a-col :span="24" style="display:flex;align-items: center">
         <span>文本编辑器：</span>
-        <a-input v-model:value="textEditor" style="flex: 1"></a-input>
+        <a-input v-model:value="textEditor" readonly style="flex: 1"></a-input>
         <a-button @click="clickTextEditor" style="margin-left: 5px">...</a-button>
       </a-col>
     </a-row>
@@ -29,7 +29,7 @@
       </a-col>
     </a-row>
   </a-card>
-  <a-card title="电脑的用户密码" class="settings-card">
+  <a-card title="电脑的用户密码" class="settings-card" v-if="!isWindows">
     <a-row type="flex"  align="middle" class="settings-card-row">
       <a-col :span="12">
         <a-input-password v-model:value="userPwd"  readonly />
@@ -45,13 +45,16 @@
 <script setup>
 import {ref} from "vue";
 import {message} from 'ant-design-vue';
-import Env from "@/main/core/Env";
+import Env from "@/main/core/Env/Env";
 import MessageBox from "@/renderer/utils/MessageBox";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Settings from "@/main/Settings";
 import GetPath from "@/shared/utils/GetPath";
 import FileDialog from "@/renderer/utils/FileDialog";
 import UserPwdModal from "@/renderer/components/UserPwdModal";
+import OS from "@/main/core/OS";
+
+const isWindows = ref(OS.isWindows());
 
 const textEditor = ref(Settings.get('TextEditor'));
 
@@ -99,9 +102,9 @@ const phpCliVersionChange = () => {
   try {
     if (val) {
       let path = GetPath.getPhpBinPath(val);
-      Env.createBinLink(path, 'php')
+      Env.createBinFile(path, 'php')
     } else {
-      Env.deleteBinLink('php')
+      Env.deleteBinFile('php')
     }
     Settings.set('PhpVersion', val);
     message.info('设置成功，已生效，不需要重启终端！')
@@ -118,9 +121,9 @@ const changeEnableComposer = async () => {
   try {
     if (val) {
       let path = GetPath.getComposerBinPath();
-      Env.createBinLink(path, 'composer')
+      Env.createBinFile(path, 'composer')
     } else {
-      Env.deleteBinLink('composer')
+      Env.deleteBinFile('composer')
     }
     Settings.set('EnableComposer', val);
     message.info('设置成功，已生效，不需要重启终端！')

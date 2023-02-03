@@ -46,22 +46,20 @@ export default class EnvMacOS {
             }
             File.AppendAllText(envFilePath, appendText);
         } else {
-            let regx = new RegExp('export\\s+PATH.+' + APP_NAME + '.+', 'g');
+            let regx = new RegExp(`export\\s+PATH.+${APP_NAME}.+`, 'g');
             text = text.replaceAll(regx, '');
             File.WriteAllText(envFilePath, text);
         }
     }
 
-    static IsEnabled() {
+    static async IsEnabled() {
         let envFilePath = this.getEnvFilePath();
         if (!File.Exists(envFilePath)) {
             return false;
         }
+        let binPath  = GetPath.getBinPath();
         let text = File.ReadAllText(envFilePath);
-        let regx = new RegExp('export\\s+PATH.+' + APP_NAME + '.+', 'g');
-        return regx.test(text);
+        return text.includes(binPath);
     }
-
-
 
 }

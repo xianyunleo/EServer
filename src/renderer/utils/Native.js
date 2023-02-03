@@ -4,10 +4,10 @@ import MessageBox from "@/renderer/utils/MessageBox";
 import fixPath from "fix-path";
 import Hosts from "@/main/core/Hosts";
 import GetPath from "@/shared/utils/GetPath";
-import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
 import OS from "@/main/core/OS";
 import Settings from "@/main/Settings";
+import fs from "fs";
 
 export default class Native {
     /**
@@ -25,12 +25,15 @@ export default class Native {
             }
 
             let editorPath = Settings.get('TextEditor');
-            if (!Directory.Exists(editorPath)) {
+            //mac app是目录，Windows是文件，所以这里用existsSync方法
+            if (!fs.existsSync(editorPath)) {
                 throw new Error(`${editorPath} 不存在！`);
             }
             let command;
             if(OS.isMacOS()){
                 command = `open -a "${editorPath}"  "${filePath}"`;
+            }else if(OS.isWindows()){
+                command = `${editorPath} "${filePath}"`;
             }
             await Command.exec(command);
 
