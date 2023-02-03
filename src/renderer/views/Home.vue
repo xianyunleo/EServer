@@ -126,8 +126,8 @@ const refreshServerStatus = async () => {
   let processList = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
   let pathList = processList.map(item => item.path);
   for (const item of serverList) {
-    let processPath = Software.getServerProcessPath(item);
-    item.isRunning = pathList.includes(processPath);
+    let serverProcessPath = Software.getServerProcessPath(item);
+    item.isRunning = pathList.includes(serverProcessPath);
   }
 };
 
