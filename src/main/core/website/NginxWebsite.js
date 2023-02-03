@@ -4,8 +4,8 @@ import {EOL} from "os";
 import {CONF_INDENT} from "@/main/constant";
 import File from "@/main/utils/File";
 
-const N = EOL;
-const T = CONF_INDENT;
+const N = EOL; //换行符
+const T = CONF_INDENT; //缩进符
 
 /**
  * 用去获取和设置Nginx站点配置
