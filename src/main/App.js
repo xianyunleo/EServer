@@ -125,8 +125,9 @@ export default class App {
             }
             App.moveCoreSubDir(['tmp', 'www', 'software']);
             App.updateCoreSubDir(['Library']);
-            App.createCoreSubDir(['downloads', 'database', 'bin']);
         }
+        App.createCoreSubDir(['downloads', 'database', 'bin']);
+
         await SoftwareInit.initAll();
         await App.initMySQL();
         Settings.init();
@@ -186,7 +187,7 @@ export default class App {
      */
     static createCoreSubDir(dirs) {
         for (const dir of dirs) {
-            let p = path.join(MAC_USER_CORE_PATH, dir);
+            let p = path.join(this.getUserCorePath(), dir);
             if (!Directory.Exists(p)) {
                 Directory.CreateDirectory(p);
             }
