@@ -27,7 +27,7 @@ export default class Database {
      */
     static async initMySQLData(version) {
         let mysqlPath = GetPath.getMysqlPath(version);
-        let command = `${this.getMySQLDFilePath()} --defaults-file=${this.getMySQLConfFilePath()} --initialize`;
+        let command = `${this.getMySQLDFilePath(version)} --defaults-file=${this.getMySQLConfFilePath(version)} --initialize`;
         await Command.exec(command, {cwd: mysqlPath});
     }
 
@@ -53,7 +53,7 @@ export default class Database {
         let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
         File.WriteAllText(resetPwdPath, resetCommand);
 
-        let command = `${this.getMySQLDFilePath()} --defaults-file=${this.getMySQLConfFilePath()} --init-file=${resetPwdPath}`;
+        let command = `${this.getMySQLDFilePath(version)} --defaults-file=${this.getMySQLConfFilePath(version)} --init-file=${resetPwdPath}`;
         //mysqld执行此命令会一直前台运行不退出
         child_process.exec(command, {cwd: mysqlPath});
         await sleep(3000);
@@ -63,13 +63,13 @@ export default class Database {
 
     static getMySQLConfFilePath(version) {
         let mysqlPath = GetPath.getMysqlPath(version);
-        let name = OS.isWindows() ? 'mysqld.exe' : 'mysqld';
+        let name = OS.isWindows() ? 'my.ini' : 'my.cnf';
         return path.join(mysqlPath, name);
     }
 
     static getMySQLDFilePath(version) {
         let mysqlPath = GetPath.getMysqlPath(version);
-        let name = OS.isWindows() ? 'my.ini' : 'my.cnf';
+        let name = OS.isWindows() ? 'mysqld.exe' : 'mysqld';
         return path.join(mysqlPath, 'bin', name);
     }
 }
