@@ -19,6 +19,13 @@ export default class App {
         return !app.isPackaged;
     }
 
+    static getProjectPath() {
+        if (OS.isWindows()) {
+            return Path.GetDirectoryName(this.getExePath());
+        }
+        return '';
+    }
+
     /**
      * 返回可执行文件路径，Mac返回路径为 AppName.app/Contents/MacOS/AppName
      * @returns {string}
@@ -67,7 +74,7 @@ export default class App {
             if (App.isDev()) {
                 result = path.join(App.getPlatformPath(), WIN_CORE_PATH_NAME)
             } else {
-                result = path.join(App.getAppPath(), WIN_CORE_PATH_NAME)
+                result = path.join(App.getProjectPath(), WIN_CORE_PATH_NAME)
             }
         } else if (OS.isMacOS()) {
             if (App.isDev()) {
