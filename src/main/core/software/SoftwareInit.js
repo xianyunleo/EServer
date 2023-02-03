@@ -14,13 +14,13 @@ export default class SoftwareInit extends StringExtend{
             return;
         }
         await Promise.all([
-            this.initNginxPath(),
-            this.initAllPHPIni(),
-            this.initAllMySQLIni()
+            this.initNginxConf(),
+            this.initAllPHPConf(),
+            this.initAllMySQLConf()
         ]);
     }
 
-    static async initNginxPath() {
+    static async initNginxConf() {
         try {
             let path = Path.Join(GetPath.getNginxConfPath(), 'nginx.conf');
             let text = File.ReadAllText(path);
@@ -31,13 +31,13 @@ export default class SoftwareInit extends StringExtend{
 
             File.WriteAllText(path, text);
 
-            this.initNginxLocalhostPath();
+            await this.initNginxLocalhostConf();
         } catch (error) {
             throw new Error(`初始化Nginx配置失败！${error.message}`);
         }
     }
 
-    static initNginxLocalhostPath() {
+    static async initNginxLocalhostConf() {
         let path = Path.Join(GetPath.getNginxVhostsPath(), 'localhost.conf');
         if (File.Exists(path)) {
             let text = File.ReadAllText(path);
@@ -49,15 +49,15 @@ export default class SoftwareInit extends StringExtend{
         }
     }
 
-    static async initAllPHPIni() {
+    static async initAllPHPConf() {
         let phpList = SoftwareExtend.getPHPList();
 
         for (const item of phpList) {
-            this.initPHPIni(item.version);
+            await this.initPHPConf(item.version);
         }
     }
 
-    static initPHPIni(version) {
+    static async initPHPConf(version) {
         try {
             let confPath = Path.Join(GetPath.getPhpPath(version), 'php.ini');
             let text = File.ReadAllText(confPath);
@@ -80,15 +80,15 @@ export default class SoftwareInit extends StringExtend{
         }
     }
 
-    static async initAllMySQLIni() {
+    static async initAllMySQLConf() {
         let mysqlList = SoftwareExtend.getMySQLList();
 
         for (const item of mysqlList) {
-            this.initMySQLIni(item.version);
+            await this.initMySQLConf(item.version);
         }
     }
 
-    static initMySQLIni(version) {
+    static async initMySQLConf(version) {
         try {
             let confPath = Path.Join(GetPath.getMysqlPath(version), 'my.ini');
             let text = File.ReadAllText(confPath);
