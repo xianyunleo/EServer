@@ -15,14 +15,14 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
- let window;
+ let mainWindow;
 
 remoteMain.initialize();
 Store.initRenderer();
 
 async function createWindow() {
   // Create the browser window.
-    window = new BrowserWindow({
+    mainWindow = new BrowserWindow({
     width: isDevelopment ? 1280 : 880,
     height: 650,
     minWidth: 880,
@@ -39,16 +39,16 @@ async function createWindow() {
     }
   })
 
-  remoteMain.enable(window.webContents);
+  remoteMain.enable(mainWindow.webContents);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    await window.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    if (!process.env.IS_TEST) window.webContents.openDevTools()
+    await mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+    if (!process.env.IS_TEST) mainWindow.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-      window.loadURL('app://./index.html')
+      mainWindow.loadURL('app://./index.html')
   }
 }
 
@@ -86,8 +86,8 @@ app.on('ready', async () => {
   //   window.hide();
   //   });
 
-  TrayManager.init(window);
-  MainWindow.init(window)
+  TrayManager.init(mainWindow);
+  MainWindow.init(mainWindow)
 })
 
 
