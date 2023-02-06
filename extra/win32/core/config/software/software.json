@@ -90,8 +90,36 @@
         "Desc": "MySQL是一种关系数据库"
     },
     {
+        "Name": "MySQL-8.0",
+        "DirName": "mysql-8.0",
+        "Type": "Server",
+        "ServerProcessPath": "bin/mysqld.exe",
+        "ServerConfPath": "my.ini",
+        "StartServerCommand": "${ServerProcessPath} --defaults-file=${ServerConfPath}",
+        "ExtraFiles": [
+            {
+                "Name": "日志",
+                "Path": "logs/mysql.log"
+            }
+        ],
+        "CanDelete": true,
+        "Icon": "mysql.png",
+        "Desc": "MySQL是一种关系数据库"
+    },
+    {
         "Name": "Redis-3.2",
         "DirName": "redis-3.2",
+        "ServerProcessPath": "redis-server.exe",
+        "ServerConfPath": "redis.windows.conf",
+        "StartServerCommand": "${ServerProcessPath} ${ServerConfPath}",
+        "Type": "Server",
+        "CanDelete": true,
+        "Icon": "redis.png",
+        "Desc": "一款高性能的Key-Value数据库"
+    },
+    {
+        "Name": "Redis-5.0",
+        "DirName": "redis-5.0",
         "ServerProcessPath": "redis-server.exe",
         "ServerConfPath": "redis.windows.conf",
         "StartServerCommand": "${ServerProcessPath} ${ServerConfPath}",
