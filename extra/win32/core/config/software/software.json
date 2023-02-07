@@ -48,7 +48,7 @@
     },
     {
         "Name": "PHP-8.0",
-        "DirName": "PHP-8.0",
+        "DirName": "php-8.0",
         "ConfPath": "php.ini",
         "ServerProcessPath": "php-cgi-spawner.exe",
         "ServerConfPath": "php-cgi-spawner.conf",
@@ -60,7 +60,7 @@
         "Desc": "PHP是世界上最好的编程语言"
     },
     {
-        "Name": "php-8.1",
+        "Name": "PHP-8.1",
         "DirName": "php-8.1",
         "ConfPath": "php.ini",
         "ServerProcessPath": "php-cgi-spawner.exe",
