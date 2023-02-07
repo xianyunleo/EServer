@@ -36,7 +36,8 @@
               <template #icon><PoweroffOutlined/></template>
               停止
             </a-button>
-            <a-button type="primary" @click="restartServerClick(record)" :loading="record.btnLoading">
+            <a-button  type="primary" @click="restartServerClick(record)"
+                       :loading="record.btnLoading" :disabled="!record.isRunning">
               <template #icon><ReloadOutlined /></template>
               重启
             </a-button>
@@ -185,8 +186,7 @@ const restartServerClick = async (item) => {
   try {
     await ServerControl.stop(item);
     if (item.isRunning) {
-      MessageBox.error('服务没有成功停止！', '重启服务出错！');
-      return;
+      throw new Error('服务没有成功停止！');
     }
     await ServerControl.start(item);
     if (item.Name === 'Nginx') {
@@ -206,7 +206,9 @@ const stopServerClick = async (item) => {
     if (item.Name === 'Nginx') {
       ServerControl.killPHPFPM();
     }
-    await refreshServerStatus();
+    if (item.isRunning) {
+      await refreshServerStatus();
+    }
   } catch (error) {
     MessageBox.error(error.message ?? error, '启动服务出错！');
   }
