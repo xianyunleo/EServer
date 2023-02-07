@@ -54,6 +54,7 @@ import Website from "@/main/core/website/Website";
 import MessageBox from "@/renderer/utils/MessageBox";
 import Native from "@/renderer/utils/Native";
 import Hosts from "@/main/core/Hosts";
+import OS from "@/main/core/OS";
 
 
 const columns = [
@@ -148,7 +149,11 @@ const openRewriteConfFile = (item) => {
 }
 
 const openRootPath = (item) => {
-  Native.openPath(item.rootPath);
+  let path = item.rootPath;
+  if (OS.isWindows()) {
+    path = path.replaceAll('/', '\\')
+  }
+  Native.openPath(path);
 }
 
 

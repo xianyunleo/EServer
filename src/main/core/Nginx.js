@@ -5,7 +5,6 @@ import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
 import Path from "@/main/utils/Path";
 import OS from "@/main/core/OS";
-import {replaceSlash} from "@/shared/utils/utils";
 
 export default class Nginx {
     /**
@@ -33,7 +32,6 @@ export default class Nginx {
     static addWebsite(websiteInfo) {
         let serverName = websiteInfo.serverName;
         serverName = websiteInfo.extraServerName ? `${serverName} ${websiteInfo.extraServerName}` : serverName;
-        websiteInfo.rootPath = replaceSlash(websiteInfo.rootPath);
         let confText =
             `server
 {

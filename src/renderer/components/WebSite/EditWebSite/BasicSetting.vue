@@ -15,7 +15,7 @@
     </a-form-item>
 
     <a-form-item label="根目录" name="path" :rules="[{ required: true, message: '请选择根目录!' }]">
-      <input-open-dir-dialog v-model:value="formData.rootPath" ></input-open-dir-dialog>
+      <input-open-dir-dialog v-model:value="formData.rootPath" :showForwardSlash="true" ></input-open-dir-dialog>
     </a-form-item>
 
     <a-form-item label="PHP版本" name="phpVersion" >

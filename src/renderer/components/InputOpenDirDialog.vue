@@ -13,9 +13,10 @@
 import {defineProps, defineEmits, computed, toRef} from "vue";
 import {FolderOpenFilled} from "@ant-design/icons-vue";
 import FileDialog from "@/renderer/utils/FileDialog";
+import {replaceSlash} from "@/shared/utils/utils";
 
 
-const props = defineProps(['value'])
+const props = defineProps(['value','showForwardSlash'])
 const emit = defineEmits(['update:value'])
 
 
@@ -31,6 +32,9 @@ const val = computed({
 let selectPath = () => {
   let path = FileDialog.showOpenDirectory(val.value);
   if (path) {
+    if (props.showForwardSlash) {
+      path = replaceSlash(path);
+    }
     val.value = path;
   }
 }
