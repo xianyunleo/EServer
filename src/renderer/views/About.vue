@@ -1,12 +1,14 @@
 <template>
-  <p style="text-align: center;font-size: 18px;margin-top: 50px">{{ APP_NAME }}集成环境</p>
-  <p style="text-align: center">版本：{{version}} 测试版</p>
-  <p style="text-align: center">
-    官网：<a @click="openUrl('http://www.easysrv.cn')">www.easysrv.cn</a>
-  </p>
-  <p style="text-align: center">
-    Github：<a @click="openUrl('http://github.com/xianyunleo/EasySrv')">github.com/xianyunleo/EasySrv</a>
-  </p>
+  <div class="content-container">
+    <p style="text-align: center;font-size: 18px;margin-top: 50px">{{ APP_NAME }}集成环境</p>
+    <p style="text-align: center">版本：{{version}} 测试版</p>
+    <p style="text-align: center">
+      官网：<a @click="openUrl('http://www.easysrv.cn')">www.easysrv.cn</a>
+    </p>
+    <p style="text-align: center">
+      Github：<a @click="openUrl('http://github.com/xianyunleo/EasySrv')">github.com/xianyunleo/EasySrv</a>
+    </p>
+  </div>
 </template>
 
 <script setup>
