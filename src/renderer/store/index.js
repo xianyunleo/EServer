@@ -7,7 +7,12 @@ export const useMainStore = defineStore('main', {
     state: () => {
         const softwareTypeSelected = '';
         const softwareList = Software.getList();
-        const serverSoftwareList = softwareList.filter(item => item.Type === enumGetName(EnumSoftwareType, EnumSoftwareType.Server));
+
+        let phpTypeName = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP);
+        let serverTypeName = enumGetName(EnumSoftwareType, EnumSoftwareType.Server);
+        let typeArr = [phpTypeName, serverTypeName];
+        const serverSoftwareList = softwareList.filter(item => typeArr.includes(item.Type));
+
         return {softwareList, softwareTypeSelected, serverSoftwareList};
     },
     getters: {},

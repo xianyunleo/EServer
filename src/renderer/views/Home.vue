@@ -4,6 +4,18 @@
       <div class="quick-card-content">
 <!--        <a-button type="primary">一键启动</a-button>-->
 <!--        <a-button type="primary">命令行终端</a-button>-->
+        <a-tooltip>
+          <template #title>在设置中选择服务列表</template>
+          <a-button type="primary" @click="oneClickStart">一键启动</a-button>
+        </a-tooltip>
+
+        <a-tooltip>
+          <template #title>在设置中选择服务列表</template>
+          <a-button type="primary" @click="oneClickStop">一键停止</a-button>
+        </a-tooltip>
+
+
+
         <a-button type="primary" @click="corePathClick">{{APP_NAME}}目录</a-button>
         <a-button type="primary" @click="wwwPathClick">网站目录</a-button>
       </div>
@@ -11,6 +23,11 @@
 
     <a-table :columns="columns" :data-source="serverList" class="content-table" :pagination="false" size="middle">
       <template #bodyCell="{ column, record}">
+        <template v-if="column.dataIndex === 'name'">
+          <div>
+            {{ record.ServerName ? record.ServerName : record.Name }}
+          </div>
+        </template>
         <template v-if="column.dataIndex === 'status'">
           <div style="font-size: 20px;">
             <right-square-filled style="color: red;" v-show="!record.isRunning"/>
@@ -44,8 +61,13 @@
             <a-dropdown :trigger="['click']">
               <template #overlay>
                 <a-menu >
-                  <a-menu-item @click="openInstallPath(record)">打开所在目录</a-menu-item>
-                  <a-menu-item v-if="record.ServerConfPath" @click="openConfFile(record)">打开配置文件</a-menu-item>
+                  <a-menu-item @click="openInstallDir(record)">打开所在目录</a-menu-item>
+                  <a-menu-item v-if="record.ConfPath" @click="openConfFile(record)">
+                    打开{{ Path.GetBaseName(record.ConfPath) }}
+                  </a-menu-item>
+                  <a-menu-item v-if="record.ServerConfPath" @click="openServerConfFile(record)">
+                    打开{{ Path.GetBaseName(record.ServerConfPath) }}
+                  </a-menu-item>
                   <a-menu-item v-for="(item,i) in record.ExtraFiles" :key="i" @click="openExtraFile(record,item)">
                     打开{{item.Name}}
                   </a-menu-item>
@@ -92,6 +114,8 @@ import ProcessExtend from "@/main/core/ProcessExtend";
 import UserPwdModal from "@/renderer/components/UserPwdModal";
 import SettingsExtend from "@/main/core/SettingsExtend";
 import OS from "@/main/core/OS";
+import Settings from "@/main/Settings";
+import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 
 const userPwdModalShow = ref(false);
 if(OS.isMacOS()){
@@ -105,7 +129,7 @@ const columns = [
   {
     title: '服务名',
     width: 180,
-    dataIndex: 'Name',
+    dataIndex: 'name',
   }, {
     title: '状态',
     dataIndex: 'status',
@@ -145,11 +169,15 @@ const wwwPathClick = ()=>{
   Native.openPath(GetPath.getWebsitePath());
 }
 
-const openInstallPath = (item) => {
+const openInstallDir = (item) => {
   Native.openPath(Software.getPath(item));
 }
 
 const openConfFile = (item) => {
+  Native.openTextFile(Software.getConfPath(item));
+}
+
+const openServerConfFile = (item) => {
   Native.openTextFile(Software.getServerConfPath(item));
 }
 
@@ -157,11 +185,46 @@ const openExtraFile = (item, extraFile) => {
   Native.openTextFile(Path.Join(Software.getPath(item), extraFile.Path));
 }
 
+const getNginxRequirePhpList = async () => {
+  const list = await SoftwareExtend.getNginxRequirePhpList();
+  return list.map(item => `PHP-${item}`);
+}
+
+const oneClickStart = async () => {
+  const oneClickServerList = ref(Settings.get('OneClickServerList'));
+  //oneClickServerIncludePhpFpm 基本上默认为true
+  const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM');
+  const requirePhpList = await getNginxRequirePhpList();
+  serverList.forEach(async (item) => {
+    if (oneClickServerList.value.includes(item.Name)) {
+      startServerClick(item);
+    } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && oneClickServerIncludePhpFpm) {
+      startServerClick(item);
+    }
+  })
+}
+
+const oneClickStop = async () => {
+  const oneClickServerList = ref(Settings.get('OneClickServerList'));
+  //oneClickServerIncludePhpFpm 基本上默认为true
+  const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM');
+  const requirePhpList = await getNginxRequirePhpList();
+  serverList.forEach(async (item) => {
+    if (oneClickServerList.value.includes(item.Name)) {
+      stopServerClick(item);
+    } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && oneClickServerIncludePhpFpm) {
+      stopServerClick(item);
+    }
+  })
+}
+
 const startServerClick = async (item) => {
+  if (item.isRunning) {
+    return;
+  }
   item.btnLoading = true;
   try {
     if (item.Name === 'Nginx') {
-      ServerControl.restartPHPFPM();
       await ServerControl.killWebServer();
     } else {
       await ServerControl.stop(item);
@@ -189,10 +252,6 @@ const restartServerClick = async (item) => {
       throw new Error('服务没有成功停止！');
     }
     await ServerControl.start(item);
-    if (item.Name === 'Nginx') {
-      ServerControl.restartPHPFPM();
-    }
-    await refreshServerStatus();
   } catch (error) {
     MessageBox.error(error.message ?? error, '重启服务出错！');
   }
@@ -200,12 +259,12 @@ const restartServerClick = async (item) => {
 }
 
 const stopServerClick = async (item) => {
+  if (!item.isRunning) {
+    return;
+  }
   item.btnLoading = true;
   try {
     await ServerControl.stop(item);
-    if (item.Name === 'Nginx') {
-      ServerControl.killPHPFPM();
-    }
     if (item.isRunning) {
       await refreshServerStatus();
     }
