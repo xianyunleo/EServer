@@ -1,15 +1,9 @@
 import ProcessExtend from "@/main/core/ProcessExtend";
 import Software from "@/main/core/software/Software";
-import {enumGetName, parseTemplateStrings} from "@/shared/utils/utils";
+import { parseTemplateStrings} from "@/shared/utils/utils";
 import child_process from "child_process";
-import GetPath from "@/shared/utils/GetPath";
-import {EnumSoftwareType} from "@/shared/enum";
-import Command from "@/main/core/Command";
-import Directory from "@/main/utils/Directory";
-import File from "@/main/utils/File";
 import App from "@/main/App";
 import Path from "@/main/utils/Path";
-import OS from "@/main/core/OS";
 
 export default class ServerControl {
 
@@ -35,7 +29,9 @@ export default class ServerControl {
             let argObj = {
                 ServerProcessPath: serverProcessPath,
                 WorkPath: workPath,
+                ConfPath: item.ConfPath ? Path.Join(workPath, item.ConfPath) : null,
                 ServerConfPath: item.ServerConfPath ? Path.Join(workPath, item.ServerConfPath) : null,
+                ExtraProcessPath: item.ExtraProcessPath ? Path.Join(workPath, item.ExtraProcessPath) : null,
             };
             commandStr = parseTemplateStrings(tempStr, argObj);
             if (App.isDev()) console.log('ServerControl.start command', commandStr)
@@ -61,77 +57,6 @@ export default class ServerControl {
     static async stop(softItem) {
         let processName = Path.GetBaseName(softItem.ServerProcessPath);
         await ProcessExtend.killByName(processName);
-    }
-
-    static async restartPHPFPM() {
-        await ServerControl.killPHPFPM();
-        await ServerControl.startPHPFPM();
-    }
-
-    static async killPHPFPM() {
-        if (OS.isWindows()) {
-            return await Promise.all([
-                ProcessExtend.killByName(ServerControl.WinPHPFPM_ProcessName),
-                ProcessExtend.killByName(ServerControl.WinPHPCGI_ProcessName),
-            ]);
-        } else {
-            await ProcessExtend.killByName('php-fpm');
-        }
-
-    }
-
-    static async startPHPFPM() {
-        let nginxVhostsPath = GetPath.getNginxVhostsPath();
-        let vhosts =  Directory.GetFiles(nginxVhostsPath, '.conf');
-        if (!vhosts || vhosts.length === 0) {
-            return;
-        }
-        //获取所有网站PHP版本数组，并发读文件并匹配PHP版本
-        let phpVersionList = await Promise.all(vhosts.map(async confPath => {
-            let text = File.ReadAllText(confPath);
-            let matches = text.match(/php-(\S+?)\.conf/);
-            return matches ? matches[1] : null;
-        }));
-
-        phpVersionList = new Set(phpVersionList); //去重
-        phpVersionList = Array.from(phpVersionList).filter(item => item !== null);
-
-        const softwareList = Software.getList();
-        const phpItemMap = new Map();
-        for (const item of softwareList) {
-            if (item.Type !== enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)) {
-                continue;
-            }
-            phpItemMap.set(item.Name, item);
-        }
-
-        try {
-            await Promise.all(phpVersionList.map(async phpVersion => {
-                const phpName = `PHP-${phpVersion}`;
-                const item = phpItemMap.get(phpName);
-
-                let workPath = Software.getPath(item); //服务目录
-                let serverProcessPath = Path.Join(workPath, item.ServerProcessPath);  //服务的进程目录
-
-                let tempStr = item.StartServerCommand.trim();
-                let argObj = {
-                    ServerProcessPath: serverProcessPath,
-                    ConfPath: Path.Join(workPath, item.ConfPath),
-                    ServerConfPath: Path.Join(workPath, item.ServerConfPath),
-                };
-
-                if (item.ExtraProcessPath) {
-                    argObj.ExtraProcessPath = Path.Join(workPath, item.ExtraProcessPath);
-                }
-
-                let commandStr = parseTemplateStrings(tempStr, argObj);
-                const options = {cwd: workPath};
-                await Command.exec(commandStr, options);
-            }));
-            // eslint-disable-next-line no-empty
-        } catch {
-
-        }
     }
 
     /**

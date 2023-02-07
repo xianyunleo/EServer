@@ -49,6 +49,7 @@ export default class Settings {
             PhpVersion: '',
             EnableComposer: false,
             TextEditor: this.getDefaultTextEditorPath(),
+            OneClickServerList: ['Nginx','PHP-FPM']
         };
         return obj;
     }

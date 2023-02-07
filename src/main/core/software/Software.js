@@ -1,6 +1,5 @@
 import App from "@/main/App";
 import path from "path";
-import {enumGetName} from "@/shared/utils/utils";
 import {EnumSoftwareType} from "@/shared/enum";
 import GetPath from "@/shared/utils/GetPath";
 import Directory from "@/main/utils/Directory";
@@ -53,13 +52,25 @@ export default class Software {
     }
 
     /**
+     * 获取软件配置文件所在的目录
+     * @param item {SoftwareItem}
+     * @returns {string}
+     */
+    static getConfPath(item) {
+        if (!item.ConfPath) {
+            return null;
+        }
+        let softPath = Software.getPath(item);
+        return path.join(softPath, item.ConfPath);
+    }
+
+    /**
      * 获取软件服务配置文件所在的目录
      * @param item {SoftwareItem}
      * @returns {string}
      */
     static getServerConfPath(item) {
-        let serverTypeName = enumGetName(EnumSoftwareType,EnumSoftwareType.Server);
-        if (item.Type !== serverTypeName || !item.ServerConfPath) {
+        if (!item.ServerConfPath) {
             return null;
         }
         let softPath = Software.getPath(item);

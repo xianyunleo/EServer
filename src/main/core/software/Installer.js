@@ -127,7 +127,7 @@ export default class Installer {
         this.changeStatus(EnumSoftwareInstallStatus.Configuring);
 
         let dirName = this.item.DirName;
-        if (dirName.match(/mysql-[.\d]+$/)) {
+        if (dirName.match(/^mysql-[.\d]+$/)) {
             let version = SoftwareExtend.getMysqlVersion(dirName);
             if (OS.isWindows()) {
                 await SoftwareInit.initMySQLConf(version);
@@ -135,7 +135,7 @@ export default class Installer {
             if (!Directory.Exists(GetPath.getMysqlDataPath(version))) {
                 await Database.initMySQL(version);
             }
-        } else if (dirName.match(/php-[.\d]+$/)) {
+        } else if (dirName.match(/^php-[.\d]+$/)) {
             let version = SoftwareExtend.getPHPVersion(dirName);
             if (OS.isWindows()) {
                 await SoftwareInit.initPHPConf(version);
