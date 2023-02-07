@@ -27,7 +27,7 @@
                   <a-menu-item @click="browse(record)">浏览器访问</a-menu-item>
                   <a-menu-item @click="openRootPath(record)">打开根目录</a-menu-item>
                   <a-menu-item @click="openConfFile(record)">打开配置文件</a-menu-item>
-                  <a-menu-item @click="openRewriteConfFile(record)">打开rewrite配置文件</a-menu-item>
+                  <a-menu-item @click="openRewriteConfFile(record)">打开URL重写配置文件</a-menu-item>
                   <!--                  <a-menu-item >打开命令行终端</a-menu-item>-->
                 </a-menu>
               </template>
