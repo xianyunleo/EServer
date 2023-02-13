@@ -4,27 +4,40 @@ import OS from "@/main/core/OS";
 export default class ProcessExtend {
     /**
      *
+     * @param pid {number}
+     * @returns {Promise<*>}
+     */
+    static async kill(pid) {
+        try {
+            if (OS.isWindows()) {
+                //taskkill杀不存在的进程会有标准错误，从而引发异常
+                await Command.exec(`taskkill /f /t /pid ${pid}`);
+            } else {
+                //pkill杀不存在的进程会有标准错误，从而引发异常
+                await Command.sudoExec(`kill -9 ${pid}`);
+            }
+            // eslint-disable-next-line no-empty
+        } catch {
+
+        }
+    }
+
+    /**
+     *
      * @param name {string}
      * @returns {Promise<*>}
      */
     static async killByName(name) {
-        if (OS.isWindows()) {
-            try {
+        try {
+            if (OS.isWindows()) {
                 //taskkill杀不存在的进程会有标准错误，从而引发异常
                 await Command.exec(`taskkill /f /t /im ${name}`);
-                // eslint-disable-next-line no-empty
-            } catch {
-
-            }
-
-        } else {
-            try {
+            } else {
                 //pkill杀不存在的进程会有标准错误，从而引发异常
                 await Command.sudoExec(`pkill -9 ${name}`);
-                // eslint-disable-next-line no-empty
-            } catch {
-
             }
+            // eslint-disable-next-line no-empty
+        } catch {
 
         }
     }

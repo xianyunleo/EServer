@@ -57,8 +57,8 @@ export default class Software {
      * @returns {string}
      */
     static getConfPath(item) {
-        if (!item.ConfPath) {
-            return null;
+        if (item.ConfPath == null) {
+            throw new Error(`${item.Name} Conf Path 没有配置！`);
         }
         let softPath = Software.getPath(item);
         return path.join(softPath, item.ConfPath);
@@ -70,8 +70,8 @@ export default class Software {
      * @returns {string}
      */
     static getServerConfPath(item) {
-        if (!item.ServerConfPath) {
-            return null;
+        if (item.ServerConfPath == null) {
+            throw new Error(`${item.Name} Server Conf Path 没有配置！`);
         }
         let softPath = Software.getPath(item);
         return path.join(softPath, item.ServerConfPath);
@@ -83,10 +83,25 @@ export default class Software {
      * @returns {string}
      */
     static getServerProcessPath(item) {
+        if (item.ServerProcessPath == null) {
+            throw new Error(`${item.Name} Server Process Path 没有配置！`);
+        }
         let workPath = Software.getPath(item); //服务目录
         return path.join(workPath, item.ServerProcessPath);  //服务的进程目录
     }
 
+    /**
+     * 获取软件服务pid绝对路径
+     * @param item {SoftwareItem}
+     * @returns {string}
+     */
+    static getServerPidPath(item) {
+        if (item.ServerPidPath == null) {
+            throw new Error(`${item.Name} Server Pid Path 没有配置！`);
+        }
+        let workPath = Software.getPath(item); //服务目录
+        return path.join(workPath, item.ServerPidPath);  //服务的进程目录
+    }
 
     /**
      * 根据软件类型，获取软件的类型目录
