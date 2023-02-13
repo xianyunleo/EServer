@@ -43,7 +43,7 @@ let clickUrl =  () => {
 
 const isWindows = ref(OS.isWindows());
 const isWindowMax = ref(false);
-const mainWindow= BrowserWindow.getFocusedWindow();
+const mainWindow= BrowserWindow.getAllWindows()[0];
 const minimizeIsHover = ref(false);
 const closeIsHover = ref(false);
 
