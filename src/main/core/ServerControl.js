@@ -2,8 +2,8 @@ import ProcessExtend from "@/main/core/ProcessExtend";
 import Software from "@/main/core/software/Software";
 import { parseTemplateStrings} from "@/shared/utils/utils";
 import child_process from "child_process";
-import App from "@/main/App";
 import Path from "@/main/utils/Path";
+import File from "@/main/utils/File";
 
 export default class ServerControl {
 
@@ -22,31 +22,33 @@ export default class ServerControl {
         let serverProcessPath = Path.Join(workPath, item.ServerProcessPath);  //服务的进程目录
         const options = {cwd: workPath};
 
-        let commandStr;
 
-        if (item.StartServerCommand) {
-            let tempStr = item.StartServerCommand.trim();
-            let argObj = {
-                ServerProcessPath: serverProcessPath,
-                WorkPath: workPath,
-                ConfPath: item.ConfPath ? Path.Join(workPath, item.ConfPath) : null,
-                ServerConfPath: item.ServerConfPath ? Path.Join(workPath, item.ServerConfPath) : null,
-                ExtraProcessPath: item.ExtraProcessPath ? Path.Join(workPath, item.ExtraProcessPath) : null,
-            };
-            commandStr = parseTemplateStrings(tempStr, argObj);
-            if (App.isDev()) console.log('ServerControl.start command', commandStr)
-        } else {
-            commandStr = serverProcessPath;
+        let args = [];
+
+        if (item.StartServerArgs) {
+            args = item.StartServerArgs.map(arg => {
+                let argObj = {
+                    ServerProcessPath: serverProcessPath,
+                    WorkPath: workPath,
+                    ConfPath: item.ConfPath ? Path.Join(workPath, item.ConfPath) : null,
+                    ServerConfPath: item.ServerConfPath ? Path.Join(workPath, item.ServerConfPath) : null,
+                    ExtraProcessPath: item.ExtraProcessPath ? Path.Join(workPath, item.ExtraProcessPath) : null,
+                };
+                return parseTemplateStrings(arg, argObj);
+            })
         }
-
         item.isRunning = true;
         item.errMsg = '';
-        child_process.exec(commandStr, options, (error, stdout, stderr) => {
+        let childProcess = child_process.execFile(serverProcessPath, args, options, (error, stdout, stderr) => {
             item.isRunning = false;
             if (stderr) {
                 item.errMsg = stderr;
             }
         });
+        item.pid = childProcess.pid;
+        if (item.ManualWriteServerPid) {
+            File.WriteAllText(Software.getServerPidPath(item), item.pid.toString());
+        }
     }
 
     /**
@@ -55,8 +57,17 @@ export default class ServerControl {
      * @returns {Promise<void>}
      */
     static async stop(softItem) {
-        let processName = Path.GetBaseName(softItem.ServerProcessPath);
-        await ProcessExtend.killByName(processName);
+        let pid = softItem.pid ? softItem.pid : this.getPidByFile(softItem);
+        await ProcessExtend.kill(pid);
+    }
+
+    static getPidByFile(softItem) {
+        let path = Software.getServerPidPath(softItem);
+        let text = File.ReadAllText(path)?.trim();
+        if (!text.match(/\d+/)) {
+            throw new Error(`${softItem.Name} Server Pid 文件内容错误！`);
+        }
+        return text;
     }
 
     /**

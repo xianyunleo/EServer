@@ -226,8 +226,6 @@ const startServerClick = async (item) => {
   try {
     if (item.Name === 'Nginx') {
       await ServerControl.killWebServer();
-    } else {
-      await ServerControl.stop(item);
     }
 
     await ServerControl.start(item);
