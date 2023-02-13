@@ -4,16 +4,11 @@
         "DirName": "nginx",
         "ServerProcessPath": "nginx.exe",
         "ServerConfPath": "conf/nginx.conf",
-        "StartServerCommand": "${ServerProcessPath} -p ${WorkPath}",
+        "StartServerArgs": ["-p","${WorkPath}"],
+        "ServerPidPath": "logs/nginx.pid",
         "ExtraFiles": [
-            {
-                "Name": "访问日志",
-                "Path": "logs/access.log"
-            },
-            {
-                "Name": "错误日志",
-                "Path": "logs/error.log"
-            }
+            {"Name": "access.log", "Path": "logs/access.log"},
+            {"Name": "error.log", "Path": "logs/error.log"}
         ],
         "Type": "Server",
         "CanDelete": false,
@@ -22,12 +17,14 @@
     },
     {
         "Name": "PHP-5.6",
+        "ServerName": "PHP-FPM-5.6",
         "DirName": "php-5.6",
         "ConfPath": "php.ini",
-        "ExtraProcessPath": "php-cgi.exe",
         "ServerProcessPath": "php-cgi-spawner.exe",
-        "ServerConfPath": "php-cgi-spawner.conf",
-        "StartServerCommand": "${ServerProcessPath} \"${ExtraProcessPath} -c ${ConfPath}\" 9005 4",
+        "ExtraProcessPath": "php-cgi.exe",
+        "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9005","4"],
+        "ServerPidPath": "php-cgi-spawner.pid",
+        "ManualWriteServerPid": true,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -35,12 +32,14 @@
     },
     {
         "Name": "PHP-7.4",
+        "ServerName": "PHP-FPM-7.4",
         "DirName": "php-7.4",
         "ConfPath": "php.ini",
         "ServerProcessPath": "php-cgi-spawner.exe",
-        "ServerConfPath": "php-cgi-spawner.conf",
         "ExtraProcessPath": "php-cgi.exe",
-        "StartServerCommand": "${ServerProcessPath} \"${ExtraProcessPath} -c ${ConfPath}\" 9010 4",
+        "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9010","4"],
+        "ServerPidPath": "php-cgi-spawner.pid",
+        "ManualWriteServerPid": true,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -48,12 +47,14 @@
     },
     {
         "Name": "PHP-8.0",
+        "ServerName": "PHP-FPM-8.0",
         "DirName": "php-8.0",
         "ConfPath": "php.ini",
         "ServerProcessPath": "php-cgi-spawner.exe",
-        "ServerConfPath": "php-cgi-spawner.conf",
         "ExtraProcessPath": "php-cgi.exe",
-        "StartServerCommand": "${ServerProcessPath} \"${ExtraProcessPath} -c ${ConfPath}\" 9011 4",
+        "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9011","4"],
+        "ServerPidPath": "php-cgi-spawner.pid",
+        "ManualWriteServerPid": true,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -61,12 +62,14 @@
     },
     {
         "Name": "PHP-8.1",
+        "ServerName": "PHP-FPM-8.1",
         "DirName": "php-8.1",
         "ConfPath": "php.ini",
         "ServerProcessPath": "php-cgi-spawner.exe",
-        "ServerConfPath": "php-cgi-spawner.conf",
         "ExtraProcessPath": "php-cgi.exe",
-        "StartServerCommand": "${ServerProcessPath} \"${ExtraProcessPath} -c ${ConfPath}\" 9012 4",
+        "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9012","4"],
+        "ServerPidPath": "php-cgi-spawner.pid",
+        "ManualWriteServerPid": true,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -78,12 +81,9 @@
         "Type": "Server",
         "ServerProcessPath": "bin/mysqld.exe",
         "ServerConfPath": "my.ini",
-        "StartServerCommand": "${ServerProcessPath} --defaults-file=${ServerConfPath}",
+        "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
         "ExtraFiles": [
-            {
-                "Name": "日志",
-                "Path": "logs/mysql.log"
-            }
+            {"Name": "mysql.log", "Path": "logs/mysql.log"}
         ],
         "CanDelete": true,
         "Icon": "mysql.png",
@@ -95,12 +95,9 @@
         "Type": "Server",
         "ServerProcessPath": "bin/mysqld.exe",
         "ServerConfPath": "my.ini",
-        "StartServerCommand": "${ServerProcessPath} --defaults-file=${ServerConfPath}",
+        "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
         "ExtraFiles": [
-            {
-                "Name": "日志",
-                "Path": "logs/mysql.log"
-            }
+            {"Name": "mysql.log", "Path": "logs/mysql.log"}
         ],
         "CanDelete": true,
         "Icon": "mysql.png",
@@ -111,7 +108,7 @@
         "DirName": "redis-3.2",
         "ServerProcessPath": "redis-server.exe",
         "ServerConfPath": "redis.windows.conf",
-        "StartServerCommand": "${ServerProcessPath} ${ServerConfPath}",
+        "StartServerArgs": ["${ServerConfPath}"],
         "Type": "Server",
         "CanDelete": true,
         "Icon": "redis.png",
@@ -122,7 +119,7 @@
         "DirName": "redis-5.0",
         "ServerProcessPath": "redis-server.exe",
         "ServerConfPath": "redis.windows.conf",
-        "StartServerCommand": "${ServerProcessPath} ${ServerConfPath}",
+        "StartServerArgs": ["${ServerConfPath}"],
         "Type": "Server",
         "CanDelete": true,
         "Icon": "redis.png",
