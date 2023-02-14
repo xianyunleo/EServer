@@ -69,7 +69,6 @@ const reset = async (version, newPwd) => {
   try {
     message.info('重置中，请等待...');
     await sleep(100);
-    //todo MySQL服务检测
     await Database.resetMySQLPassword(version, newPwd);
     message.info('执行重置MySQL密码的命令成功！')
   } catch (error) {

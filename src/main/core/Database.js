@@ -53,11 +53,11 @@ export default class Database {
         let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
         File.WriteAllText(resetPwdPath, resetCommand);
 
-        let command = `${this.getMySQLDFilePath(version)} --defaults-file=${this.getMySQLConfFilePath(version)} --init-file=${resetPwdPath}`;
+        let args = [`--defaults-file=${this.getMySQLConfFilePath(version)}`, `--init-file=${resetPwdPath}`]
         //mysqld执行此命令会一直前台运行不退出
-        child_process.exec(command, {cwd: mysqlPath});
-        await sleep(3000);
-        await ProcessExtend.killByName('mysqld');
+        let childProcess = child_process.execFile(this.getMySQLDFilePath(version), args, {cwd: mysqlPath});
+        await sleep(2000);
+        await ProcessExtend.kill(childProcess.pid);
         File.Delete(resetPwdPath);
     }
 
