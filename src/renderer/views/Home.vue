@@ -89,7 +89,7 @@
 
 <script setup>
 // eslint-disable-next-line no-unused-vars
-import {ref, watch} from 'vue';
+import {inject, ref, watch} from 'vue';
 import {useMainStore} from '@/renderer/store'
 import {DownOutlined, RightSquareFilled,PoweroffOutlined,ReloadOutlined} from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
@@ -117,7 +117,8 @@ if(OS.isMacOS()){
   }
 }
 
-const serverTableLoading = ref(true);
+const serverTableLoading = ref(false);
+const globalSpinning = inject('globalSpinning')
 
 const columns = [
   {
@@ -152,7 +153,9 @@ const refreshServerStatus = async () => {
   serverTableLoading.value = false;
 };
 
-refreshServerStatus();
+if (!globalSpinning.value) {
+  refreshServerStatus();
+}
 
 const serviceChange = ()=>{
   message.info('下个版本开放！！！');

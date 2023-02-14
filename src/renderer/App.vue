@@ -14,12 +14,13 @@
 
 <script setup>
 import App from "@/main/App";
-import {ref} from "vue";
+import {provide, ref} from "vue";
 import SideBar from "@/renderer/components/SideBar";
 import TitleBar from "@/renderer/components/TitleBar";
 import MessageBox from "@/renderer/utils/MessageBox";
 
 const spinning = ref(false);
+provide('globalSpinning',spinning);
 
 (async () => {
   if (!App.initFileExists() || App.isDev()) {
