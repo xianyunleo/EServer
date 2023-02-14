@@ -90,7 +90,7 @@ oneClickServerOptions.value = serverList.map(item => {
   }
   return obj;
 });
-oneClickServerOptions.value.unshift({label: 'PHP-FPM', value: 'PHP-FPM',disabled:true});
+oneClickServerOptions.value.unshift({label: 'PHP-FPM', value: 'PHP-FPM'});
 const oneClickServerChange = (val)=>{
   let originVal = ref(Settings.get('OneClickServerList'));
   try {
