@@ -82,6 +82,8 @@
         "ServerProcessPath": "bin/mysqld.exe",
         "ServerConfPath": "my.ini",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
+        "ServerPidPath": "mysqld.pid",
+        "ManualWriteServerPid": true,
         "ExtraFiles": [
             {"Name": "mysql.log", "Path": "logs/mysql.log"}
         ],
@@ -96,6 +98,8 @@
         "ServerProcessPath": "bin/mysqld.exe",
         "ServerConfPath": "my.ini",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
+        "ServerPidPath": "mysqld.pid",
+        "ManualWriteServerPid": true,
         "ExtraFiles": [
             {"Name": "mysql.log", "Path": "logs/mysql.log"}
         ],
@@ -109,6 +113,8 @@
         "ServerProcessPath": "redis-server.exe",
         "ServerConfPath": "redis.windows.conf",
         "StartServerArgs": ["${ServerConfPath}"],
+        "ServerPidPath": "redis-server.pid",
+        "ManualWriteServerPid": true,
         "Type": "Server",
         "CanDelete": true,
         "Icon": "redis.png",
@@ -120,6 +126,8 @@
         "ServerProcessPath": "redis-server.exe",
         "ServerConfPath": "redis.windows.conf",
         "StartServerArgs": ["${ServerConfPath}"],
+        "ServerPidPath": "redis-server.pid",
+        "ManualWriteServerPid": true,
         "Type": "Server",
         "CanDelete": true,
         "Icon": "redis.png",
