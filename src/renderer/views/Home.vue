@@ -267,7 +267,7 @@ const stopServerClick = async (item) => {
       await refreshServerStatus();
     }
   } catch (error) {
-    MessageBox.error(error.message ?? error, '启动服务出错！');
+    MessageBox.error(error.message ?? error, '停止服务出错！');
   }
   item.btnLoading = false;
 }
