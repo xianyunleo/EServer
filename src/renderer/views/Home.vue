@@ -6,12 +6,12 @@
 <!--        <a-button type="primary">命令行终端</a-button>-->
         <a-tooltip>
           <template #title>在设置中选择服务列表</template>
-          <a-button type="primary" @click="oneClickStart">一键启动</a-button>
+          <a-button type="primary" @click="oneClickStart" :disabled="serverTableLoading">一键启动</a-button>
         </a-tooltip>
 
         <a-tooltip>
           <template #title>在设置中选择服务列表</template>
-          <a-button type="primary" @click="oneClickStop">一键停止</a-button>
+          <a-button type="primary" @click="oneClickStop" :disabled="serverTableLoading">一键停止</a-button>
         </a-tooltip>
 
 
@@ -21,7 +21,8 @@
       </div>
     </a-card>
 
-    <a-table :columns="columns" :data-source="serverList" class="content-table" :pagination="false" size="middle">
+    <a-table :columns="columns" :data-source="serverList" class="content-table" :pagination="false" size="middle"
+    :loading="serverTableLoading">
       <template #bodyCell="{ column, record}">
         <template v-if="column.dataIndex === 'name'">
           <div>
@@ -82,14 +83,6 @@
         </template>
       </template>
     </a-table>
-
-    <a-card title="服务运行日志" class="log-card">
-      下个版本开放！！！
-<!--      <div>-->
-<!--        2022-06-04 15:39:57 [Nginx] 启动成功<br>-->
-<!--        2022-06-04 19:39:57 [Nginx] 关闭成功-->
-<!--      </div>-->
-    </a-card>
   </div>
   <user-pwd-modal v-model:show="userPwdModalShow" :cancel-is-exit="true" />
 </template>
@@ -124,6 +117,7 @@ if(OS.isMacOS()){
   }
 }
 
+const serverTableLoading = ref(true);
 
 const columns = [
   {
@@ -148,12 +142,14 @@ const {serverSoftwareList} = storeToRefs(mainStore);
 let serverList = serverSoftwareList.value.filter(item => Software.IsInstalled(item));
 
 const refreshServerStatus = async () => {
+  serverTableLoading.value = true;
   let processList = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
   let pathList = processList.map(item => item.path);
   for (const item of serverList) {
     let serverProcessPath = Software.getServerProcessPath(item);
     item.isRunning = pathList.includes(serverProcessPath);
   }
+  serverTableLoading.value = false;
 };
 
 refreshServerStatus();
