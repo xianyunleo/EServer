@@ -161,16 +161,12 @@ export default class Installer {
             let url = this.getDownloadUrl();
             let readStream = got.stream(url, {timeout: {response:5000}}); //todo下载超时，response并不管用
 
-            process.on('uncaughtException', error => {
-                return reject(new Error(error.message));
-            });
-
             if (App.isDev()) console.log('downloadUrl',url)
             if (App.isDev()) console.log('filePath',this.filePath)
 
             this.changeStatus(EnumSoftwareInstallStatus.Downloading);
 
-            readStream.on('response', async () => {
+            (async () => {
                 try {
                     await pipeline(
                         readStream,
@@ -188,7 +184,7 @@ export default class Installer {
                         return reject(new Error(error.message));
                     }
                 }
-            })
+            })();
 
             readStream.on('downloadProgress', downloadProgress => {
                 this.setDownloadInfo({
