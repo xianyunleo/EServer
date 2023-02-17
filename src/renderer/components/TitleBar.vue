@@ -1,7 +1,7 @@
 <template>
   <div class="title-bar draggable">
     <div class="notify">
-      通知：<a class="non-draggable" @click="clickUrl">测试中，请等待</a>
+      通知：<a class="non-draggable" @click="clickUrl">暂无</a>
     </div>
     <div class="window-controls-container non-draggable" v-if="isWindows">
       <div class="window-icon codicon codicon-chrome-minimize"
@@ -38,7 +38,7 @@ import OS from "@/main/core/OS";
 import {BrowserWindow} from '@electron/remote';
 
 let clickUrl =  () => {
-   Native.openUrl('http://www.phpenv.cn');
+   Native.openUrl('http://www.easysrv.cn');
 }
 
 const isWindows = ref(OS.isWindows());
