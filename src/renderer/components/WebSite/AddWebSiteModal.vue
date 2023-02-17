@@ -19,10 +19,6 @@
           <a-input v-model:value="formData.serverName" @change="serverNameChange"/>
         </a-form-item>
 
-        <a-form-item label="第二域名" name="extraServerName" >
-          <a-input v-model:value="formData.extraServerName"  placeholder="可以不填"/>
-        </a-form-item>
-
         <a-form-item label="端口" name="port" :rules="[{  required: true, type: 'number', min: 80, max: 65535 }]">
           <a-input-number v-model:value="formData.port" min="80" max="65535"/>
         </a-form-item>
@@ -64,7 +60,6 @@ const formRef = ref();
 
 const formData = reactive({
   serverName: '',
-  extraServerName: '',
   port: 80,
   rootPath: wwwPath,
   phpVersion: '',
@@ -79,6 +74,7 @@ phpVersionList.value = list.map(item => {
 phpVersionList.value.push({value: '', label: STATIC_WEB_NAME});
 
 const serverNameChange = () => {
+  formData.serverName = formData.serverName?.trim();
   formData.rootPath = path.join(wwwPath, formData.serverName);
 }
 
@@ -104,7 +100,7 @@ const addWeb = async (websiteInfo)=>{
 
   if(websiteInfo.allowSyncHosts){
     try {
-      await Hosts.add([websiteInfo.serverName,websiteInfo.extraServerName]);
+      await Hosts.add([websiteInfo.serverName]);
     } catch (error) {
       MessageBox.error(error.message ?? error, '同步Hosts出错！');
     }
