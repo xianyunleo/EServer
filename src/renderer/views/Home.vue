@@ -22,7 +22,7 @@
     </a-card>
 
     <a-table :columns="columns" :data-source="serverList" class="content-table" :pagination="false" size="middle"
-    :loading="serverTableLoading">
+    :loading="serverTableLoading" :scroll="{y: 'calc(100vh - 240px)'}">
       <template #bodyCell="{ column, record}">
         <template v-if="column.dataIndex === 'name'">
           <div>
