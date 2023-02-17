@@ -52,6 +52,10 @@
   border-radius: $container-border-radius;
 }
 
+.ant-modal{
+  user-select: none;
+}
+
 .ant-modal-header{
   padding: 15px 20px;
 }
@@ -89,4 +93,8 @@
 
 .ant-spin-nested-loading > div > .ant-spin{
   max-height: none;
+}
+
+.ant-dropdown{
+  user-select: none;
 }
