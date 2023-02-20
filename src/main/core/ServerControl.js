@@ -4,6 +4,7 @@ import { parseTemplateStrings} from "@/shared/utils/utils";
 import child_process from "child_process";
 import Path from "@/main/utils/Path";
 import File from "@/main/utils/File";
+import App from "@/main/App";
 
 export default class ServerControl {
 
@@ -45,6 +46,9 @@ export default class ServerControl {
                 item.errMsg = stderr;
             }
         });
+
+        if(App.isDev()) console.log('ServerControl start command:',`${serverProcessPath} ${args.join(' ')}`)
+
         item.pid = childProcess.pid;
         if (item.ManualWriteServerPid) {
             File.WriteAllText(Software.getServerPidPath(item), item.pid.toString());
