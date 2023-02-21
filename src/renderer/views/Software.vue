@@ -101,7 +101,10 @@ import Native from "@/renderer/utils/Native";
 
 const mainStore = useMainStore();
 const {softwareList,  softwareTypeSelected} = storeToRefs(mainStore);
-softwareTypeSelected.value = 'Installed';
+
+if(!softwareTypeSelected.value){
+  softwareTypeSelected.value = 'Installed';
+}
 
 for (const item of softwareList.value) {
   item.Installed = Software.IsInstalled(item);
