@@ -23,7 +23,7 @@ export default class ServerControl {
         let serverProcessPath = Path.Join(workPath, item.ServerProcessPath);  //服务的进程目录
         const options = {cwd: workPath};
 
-        if (!serverProcessPath) {
+        if (!File.Exists(serverProcessPath)) {
             throw new Error(`${serverProcessPath} 文件不存在！`);
         }
 
