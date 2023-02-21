@@ -36,12 +36,17 @@ module.exports ={
             to: "./",
           },
           icon: 'build/icons/icon.icns',
+          artifactName: '${productName}-${os}-${version}-${arch}.${ext}',
         },
         win:{
           target: [
             {
               target: "zip",
               arch: ["x64"]
+            },
+            {
+              target: 'nsis',
+              arch: ['x64'],
             },
           ],
           requestedExecutionLevel: "requireAdministrator",
@@ -51,8 +56,14 @@ module.exports ={
           },
           icon: 'build/icons/icon.ico',
         },
-        artifactName:'${productName}-${version}-${arch}.${ext}',
-
+        nsis:{
+          oneClick: false,
+          perMachine:true,
+          allowToChangeInstallationDirectory: true,
+          include: "build/installer.nsh",
+          installerIcon:"build/icons/icon.ico",
+          uninstallerIcon:"build/icons/icon.ico",
+        }
       },
       chainWebpackMainProcess: (config) => {
         config.module
