@@ -6,8 +6,14 @@ import EnvMacOS from "@/main/core/Env/EnvMacOS";
 import EnvWindows from "@/main/core/Env/EnvWindows";
 
 export default class Env {
+    /**
+     * 创建符号链接或者.bat文件的到bin目录
+     * @param targetPath
+     * @param binName
+     */
     static createBinFile(targetPath, binName) {
-        let path = Path.Join(GetPath.getBinPath(), this.getBinFileName(binName));
+        let binDirPath = GetPath.getBinPath();
+        let path = Path.Join(binDirPath, this.getBinFileName(binName));
         if (File.Exists(path)) {
             File.Delete(path);
         }
@@ -20,9 +26,18 @@ export default class Env {
             }
             File.WriteAllText(path, text);
         } else {
+            if (binName === 'php') {
+                this.createSameLevelOtherBinFile(targetPath, 'phpize', 'phpize');
+            }
             File.CreateSymbolicLink(path, targetPath);
         }
+    }
 
+    static createSameLevelOtherBinFile(targetPath, targetOtherFileName, otherBinName) {
+        let binDirPath = GetPath.getBinPath();
+        let path = Path.Join(binDirPath, otherBinName);
+        let targetOtherFilePath = Path.Join(Path.GetDirectoryName(targetPath), targetOtherFileName);
+        File.CreateSymbolicLink(path, targetOtherFilePath);
     }
 
     static deleteBinFile(binName) {
