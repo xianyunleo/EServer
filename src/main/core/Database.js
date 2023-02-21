@@ -6,6 +6,7 @@ import {sleep} from "@/shared/utils/utils";
 import child_process from "child_process";
 import File from "@/main/utils/File";
 import OS from "@/main/core/OS";
+import TcpProcess from "@/main/core/TcpProcess";
 
 export default class Database {
 
@@ -53,10 +54,25 @@ export default class Database {
         let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
         File.WriteAllText(resetPwdPath, resetCommand);
 
-        let args = [`--defaults-file=${this.getMySQLConfFilePath(version)}`, `--init-file=${resetPwdPath}`]
+        let confFilePath = this.getMySQLConfFilePath(version);
+        let portMatch = File.ReadAllText(confFilePath).match(/\[mysqld].*?port\s*=\s*(\d+)/s);
+        let port = portMatch ? portMatch[1] : 3306;
+
+        ProcessExtend.kill(TcpProcess.getPidByPort(port));
+
+        let args = [`--defaults-file=${confFilePath}`, `--init-file=${resetPwdPath}`];
+        let mysqldPath = this.getMySQLDFilePath(version);
         //mysqld执行此命令会一直前台运行不退出
-        let childProcess = child_process.execFile(this.getMySQLDFilePath(version), args, {cwd: mysqlPath});
-        await sleep(2000);
+        let childProcess = child_process.execFile(mysqldPath, args, {cwd: mysqlPath});
+
+        for (let i = 0; i < 10; i++) {
+            await sleep(100);
+            let path = await TcpProcess.getPathByPort(port);
+            if (path === mysqldPath) {
+                break;
+            }
+        }
+        await sleep(200);
         await ProcessExtend.kill(childProcess.pid);
         File.Delete(resetPwdPath);
     }
