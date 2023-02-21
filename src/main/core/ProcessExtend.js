@@ -3,7 +3,7 @@ import OS from "@/main/core/OS";
 
 export default class ProcessExtend {
     /**
-     *
+     *  杀死进程和子进程
      * @param pid {number}
      * @returns {Promise<*>}
      */
@@ -14,7 +14,7 @@ export default class ProcessExtend {
                 await Command.exec(`taskkill /f /t /pid ${pid}`);
             } else {
                 //pkill杀不存在的进程会有标准错误，从而引发异常
-                await Command.sudoExec(`kill -9 ${pid}`);
+                await Command.sudoExec(`kill ${pid}`);
             }
             // eslint-disable-next-line no-empty
         } catch {
@@ -23,7 +23,7 @@ export default class ProcessExtend {
     }
 
     /**
-     *
+     * 杀死进程和子进程
      * @param name {string}
      * @returns {Promise<*>}
      */
@@ -34,7 +34,7 @@ export default class ProcessExtend {
                 await Command.exec(`taskkill /f /t /im ${name}`);
             } else {
                 //pkill杀不存在的进程会有标准错误，从而引发异常
-                await Command.sudoExec(`pkill -9 ${name}`);
+                await Command.sudoExec(`pkill ${name}`);
             }
             // eslint-disable-next-line no-empty
         } catch {
