@@ -58,7 +58,12 @@ export default class Database {
         let portMatch = File.ReadAllText(confFilePath).match(/\[mysqld].*?port\s*=\s*(\d+)/s);
         let port = portMatch ? portMatch[1] : 3306;
 
-        ProcessExtend.kill(TcpProcess.getPidByPort(port));
+        let oldPid = await TcpProcess.getPidByPort(port);
+        if(oldPid){
+            await ProcessExtend.kill(oldPid);
+        }
+
+        await sleep(100);
 
         let args = [`--defaults-file=${confFilePath}`, `--init-file=${resetPwdPath}`];
         let mysqldPath = this.getMySQLDFilePath(version);
@@ -66,13 +71,13 @@ export default class Database {
         let childProcess = child_process.execFile(mysqldPath, args, {cwd: mysqlPath});
 
         for (let i = 0; i < 10; i++) {
-            await sleep(100);
+            await sleep(200);
             let path = await TcpProcess.getPathByPort(port);
             if (path === mysqldPath) {
                 break;
             }
         }
-        await sleep(200);
+        await sleep(100);
         await ProcessExtend.kill(childProcess.pid);
         File.Delete(resetPwdPath);
     }
