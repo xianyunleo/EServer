@@ -23,6 +23,9 @@ export default class ServerControl {
         let serverProcessPath = Path.Join(workPath, item.ServerProcessPath);  //服务的进程目录
         const options = {cwd: workPath};
 
+        if (!serverProcessPath) {
+            throw new Error(`${serverProcessPath} 文件不存在！`);
+        }
 
         let args = [];
 
@@ -50,7 +53,7 @@ export default class ServerControl {
         if(App.isDev()) console.log('ServerControl start command:',`${serverProcessPath} ${args.join(' ')}`)
 
         item.pid = childProcess.pid;
-        if (item.ManualWriteServerPid) {
+        if (item.ManualWriteServerPid && item.pid) {
             File.WriteAllText(Software.getServerPidPath(item), item.pid.toString());
         }
     }
