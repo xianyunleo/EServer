@@ -16,7 +16,7 @@
           <template #icon><tool-two-tone /> </template> 工具箱
         </a-menu-item>
         <a-menu-item key="/software">
-          <template #icon><appstore-two-tone /> </template> 软件管理
+          <template #icon><appstore-two-tone /> </template> 软件商店
         </a-menu-item>
       </div>
       <div style="margin-bottom: 25px;" class="non-draggable">
