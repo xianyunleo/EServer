@@ -11,7 +11,7 @@
            @mouseout="minimizeIsHover=false">
       </div>
 
-      <div class="window-icon codicon codicon-chrome-restore window-icon-hover"
+      <div class="window-icon codicon window-icon-hover"
            :class="{
               'codicon-chrome-restore': isWindowMax,
               'codicon-chrome-maximize': !isWindowMax,
@@ -66,10 +66,12 @@ const closeClick = ()=>{
 }
 
 mainWindow.on('maximize',()=>{
+  console.log('maximize on')
   isWindowMax.value = true;
 })
 
 mainWindow.on('unmaximize',()=>{
+  console.log('unmaximize on')
   isWindowMax.value = false;
 })
 
