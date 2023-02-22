@@ -53,12 +53,12 @@ export default class ServerControl {
         });
 
         childProcess.on('close', (code) => {
-            if (App.isDev()) console.log(`${serverProcessPath},exit code ${code}`);
+            if (App.isDev()) console.log(`${Path.GetBaseName(serverProcessPath)},exit code ${code}`);
             item.isRunning = false;
         });
 
         if (App.isDev()) console.log('ServerControl start command:', `${serverProcessPath} ${args.join(' ')}`);
-        if (App.isDev()) console.log(`${serverProcessPath},pid ${childProcess.pid}`);
+        if (App.isDev()) console.log(`${Path.GetBaseName(serverProcessPath)},pid ${childProcess.pid}`);
 
         item.pid = childProcess.pid;
         if (item.ManualWriteServerPid && item.pid) {
