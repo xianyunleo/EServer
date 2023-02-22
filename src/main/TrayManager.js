@@ -22,7 +22,7 @@ export default class TrayManager {
             },
             {
                 label: '退出', click: () => {
-                    app.exit();
+                    app.quit();
                 }
             },
         ])
@@ -34,10 +34,6 @@ export default class TrayManager {
     }
 
     static mainWindowShow(mainWindow) {
-        mainWindow.setSkipTaskbar(false);
-        if(mainWindow.isMinimized()){
-            mainWindow.restore();
-        }
         mainWindow.show();
     }
 
