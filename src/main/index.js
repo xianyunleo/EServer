@@ -23,7 +23,8 @@ if (!gotTheLock) {
     app.quit()
 } else {
     onReady();
-    onRunning();
+    onRunning()
+    onBeforeQuit();
     remoteMain.initialize();
     Store.initRenderer();
 }
@@ -69,6 +70,11 @@ app.on('window-all-closed', () => {
   }
 })
 
+function onBeforeQuit() {
+    app.on('before-quit', () => {
+        MainWindow.forceQuit = true;
+    })
+}
 
 function onReady(){
     app.on('ready', async () => {
@@ -95,8 +101,9 @@ function onRunning() {
             mainWindow.focus()
         }
     });
+    //activate only macos
     app.on("activate", () => {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow()
+        mainWindow.show();
     });
 }
 
