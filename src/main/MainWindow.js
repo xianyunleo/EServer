@@ -1,6 +1,3 @@
-//import OS from "@/main/core/OS";
-
-
 export default class MainWindow {
 
     static #instance;
@@ -13,9 +10,15 @@ export default class MainWindow {
     static init(mainWindow) {
         MainWindow.#instance = mainWindow;
         mainWindow.on('close', (event) => {
-            if(!this.forceQuit){
+            if (!this.forceQuit) {
                 event.preventDefault();
-                mainWindow.hide();
+                if (mainWindow.isFullScreen()) {
+                    mainWindow.once('leave-full-screen', () => mainWindow.hide())
+
+                    mainWindow.setFullScreen(false)
+                } else {
+                    mainWindow.hide()
+                }
             }
         })
     }
