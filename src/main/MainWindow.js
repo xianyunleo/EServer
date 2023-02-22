@@ -13,7 +13,7 @@ export default class MainWindow {
     static init(mainWindow) {
         MainWindow.#instance = mainWindow;
         mainWindow.on('close', (event) => {
-            if(!this.trueQuit){
+            if(!this.forceQuit){
                 event.preventDefault();
                 mainWindow.hide();
             }
