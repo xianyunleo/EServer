@@ -88,7 +88,7 @@
 
 <script setup>
 // eslint-disable-next-line no-unused-vars
-import {inject, ref, watch} from 'vue';
+import {computed, inject, ref, watch} from 'vue';
 import {useMainStore} from '@/renderer/store'
 import {DownOutlined, RightSquareFilled,PoweroffOutlined,ReloadOutlined} from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
@@ -130,13 +130,14 @@ const columns = [
 const mainStore = useMainStore();
 const {serverSoftwareList} = storeToRefs(mainStore);
 
-let serverList = serverSoftwareList.value.filter(item => Software.IsInstalled(item));
+const serverList = computed(() => serverSoftwareList.value.filter(item => Software.IsInstalled(item)));
+
 
 const refreshServerStatus = async () => {
   serverTableLoading.value = true;
   let processList = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
   let pathList = processList.map(item => item.path);
-  for (const item of serverList) {
+  for (const item of serverList.value) {
     let serverProcessPath = Software.getServerProcessPath(item);
     item.isRunning = pathList.includes(serverProcessPath);
   }
@@ -184,7 +185,7 @@ const oneClickStart = async () => {
   //oneClickServerIncludePhpFpm 基本上默认为true
   const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM');
   const requirePhpList = await getNginxRequirePhpList();
-  serverList.forEach(async (item) => {
+  serverList.value.forEach(async (item) => {
     if (oneClickServerList.value.includes(item.Name)) {
       startServerClick(item);
     } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && oneClickServerIncludePhpFpm) {
@@ -198,7 +199,7 @@ const oneClickStop = async () => {
   //oneClickServerIncludePhpFpm 基本上默认为true
   const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM');
   const requirePhpList = await getNginxRequirePhpList();
-  serverList.forEach(async (item) => {
+  serverList.value.forEach(async (item) => {
     if (oneClickServerList.value.includes(item.Name)) {
       stopServerClick(item);
     } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && oneClickServerIncludePhpFpm) {
