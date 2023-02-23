@@ -84,7 +84,6 @@
       </template>
     </a-table>
   </div>
-  <user-pwd-modal v-model:show="userPwdModalShow" :cancel-is-exit="true" />
 </template>
 
 <script setup>
@@ -104,18 +103,9 @@ import Native from "@/renderer/utils/Native";
 //import {sleep} from "@/shared/utils/utils";
 import Path from "@/main/utils/Path";
 import ProcessExtend from "@/main/core/ProcessExtend";
-import UserPwdModal from "@/renderer/components/UserPwdModal";
-import SettingsExtend from "@/main/core/SettingsExtend";
-import OS from "@/main/core/OS";
 import Settings from "@/main/Settings";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 
-const userPwdModalShow = ref(false);
-if(OS.isMacOS()){
-  if (!SettingsExtend.isUserPwdSet()) {
-    userPwdModalShow.value = true;
-  }
-}
 
 const serverTableLoading = ref(false);
 const globalSpinning = inject('globalSpinning')
