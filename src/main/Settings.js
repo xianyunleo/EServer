@@ -31,6 +31,9 @@ export default class Settings {
     }
 
     static init() {
+        if (Settings.#instance) {
+            return;
+        }
         const options = {
             name: Settings.#fileName,
             fileExtension: Settings.#fileExtension,

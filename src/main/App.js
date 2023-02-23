@@ -120,6 +120,9 @@ export default class App {
         if (!File.Exists(initFile)) {
             return;
         }
+
+        Settings.init();
+
         if (OS.isMacOS() && !App.isDev()) {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
@@ -131,7 +134,7 @@ export default class App {
 
         await SoftwareInit.initAll();
         await App.initMySQL();
-        Settings.init();
+
         File.Delete(initFile);
     }
 
