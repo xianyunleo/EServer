@@ -23,8 +23,11 @@ import {message} from 'ant-design-vue';
 import App from "@/main/App";
 import SystemExtend from "@/main/core/SystemExtend";
 import MessageBox from "@/renderer/utils/MessageBox";
+import {useMainStore} from "@/renderer/store";
+const mainStore = useMainStore();
 
 const globalSpinning = inject('globalSpinning');
+
 const props =  defineProps({
   show:Boolean,
   rightPwd:String,
@@ -69,6 +72,7 @@ const saveUserPwd = async () => {
     try {
       globalSpinning.value = true;
       await App.init();
+      mainStore.$reset();
       globalSpinning.value = false;
     } catch (error) {
       MessageBox.error(error.message ?? error, '软件初始化出错！');
