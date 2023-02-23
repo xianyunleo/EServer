@@ -111,6 +111,10 @@ export default class App {
     }
 
     static async init() {
+        if (this.getPath().includes(' ')) {
+            throw new Error('安装路径不能包含空格！');
+        }
+
         let initFile = App.getInitFilePath();
 
         if (!File.Exists(initFile)) {
