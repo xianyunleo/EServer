@@ -34,6 +34,7 @@ export default class TrayManager {
     }
 
     static mainWindowShow(mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore();
         mainWindow.show();
     }
 

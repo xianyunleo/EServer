@@ -97,8 +97,8 @@ function onRunning() {
     app.on("second-instance", () => {
         // 当运行第二个实例时,将会聚焦到mainWindow这个窗口
         if (mainWindow) {
-            if (mainWindow.isMinimized()) mainWindow.restore()
-            mainWindow.focus()
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.show();
         }
     });
     //activate only macos
