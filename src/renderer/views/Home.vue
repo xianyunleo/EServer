@@ -105,6 +105,7 @@ import Path from "@/main/utils/Path";
 import ProcessExtend from "@/main/core/ProcessExtend";
 import Settings from "@/main/Settings";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
+import {sleep} from "@/shared/utils/utils";
 
 
 const serverTableLoading = ref(false);
@@ -199,13 +200,19 @@ const oneClickStop = async () => {
   //oneClickServerIncludePhpFpm 基本上默认为true
   const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM');
   const requirePhpList = await getNginxRequirePhpList();
-  serverList.value.forEach(async (item) => {
+
+  const promiseStopServer = async (item)=>{
     if (oneClickServerList.value.includes(item.Name)) {
-      stopServerClick(item);
+      stopServerClick(item,false);
     } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && oneClickServerIncludePhpFpm) {
-      stopServerClick(item);
+      stopServerClick(item,false);
     }
-  })
+  }
+
+  const promiseArray = serverList.value.map(item => promiseStopServer(item));
+  await Promise.all(promiseArray);
+  await sleep(1000);
+  await refreshServerStatus();
 }
 
 const startServerClick = async (item) => {
@@ -246,14 +253,14 @@ const restartServerClick = async (item) => {
   item.btnLoading = false;
 }
 
-const stopServerClick = async (item) => {
+const stopServerClick = async (item, refreshServerStatus = true) => {
   if (!item.isRunning) {
     return;
   }
   item.btnLoading = true;
   try {
     await ServerControl.stop(item);
-    if (item.isRunning) {
+    if (item.isRunning && refreshServerStatus) {
       await refreshServerStatus();
     }
   } catch (error) {
