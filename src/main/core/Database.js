@@ -71,7 +71,7 @@ export default class Database {
         let childProcess = child_process.execFile(mysqldPath, args, {cwd: mysqlPath});
 
         for (let i = 0; i < 10; i++) {
-            await sleep(200);
+            await sleep(500);
             let path = await TcpProcess.getPathByPort(port);
             if (path === mysqldPath) {
                 break;
