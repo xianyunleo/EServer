@@ -1,7 +1,7 @@
 {
   "name": "easysrv",
   "productName": "EasySrv",
-  "version": "0.9.11",
+  "version": "0.9.12",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
