@@ -35,11 +35,7 @@
             <right-square-filled style="color: #20a53a;" v-show="record.isRunning"/>
           </div>
         </template>
-        <template v-if="column.dataIndex === 'service'">
-          <div>
-            <a-switch @click="serviceChange" />
-          </div>
-        </template>
+
         <template v-if="column.dataIndex === 'operate'">
           <div class="operate-td">
             <a-button type="primary" @click="startServerClick(record)" v-show="!record.isRunning"
@@ -91,7 +87,6 @@
 import {computed, inject, ref, watch} from 'vue';
 import {useMainStore} from '@/renderer/store'
 import {DownOutlined, RightSquareFilled,PoweroffOutlined,ReloadOutlined} from '@ant-design/icons-vue';
-import { message } from 'ant-design-vue';
 import App from "@/main/App";
 import GetPath from "@/shared/utils/GetPath";
 import Software from "@/main/core/software/Software";
@@ -134,26 +129,28 @@ const {serverSoftwareList} = storeToRefs(mainStore);
 const serverList = computed(() => serverSoftwareList.value.filter(item => Software.IsInstalled(item)));
 
 
-const refreshServerStatus = async () => {
-  let processList = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
-  let pathList = processList.map(item => item.path);
-  for (const item of serverList.value) {
-    let serverProcessPath = Software.getServerProcessPath(item);
-    item.isRunning = pathList.includes(serverProcessPath);
+const initServerListStatus = async () => {
+  const promiseStopServer = async (item) => {
+    try {
+      item.pid = item.pid ? item.pid : ServerControl.getPidByFile(item);
+      item.isRunning = ProcessExtend.pidIsRunning(item.pid);
+    } catch (error) {
+      MessageBox.error(error.message ?? error, '获取服务状态出错！');
+    }
   }
+
+  const promiseArray = serverList.value.map(item => promiseStopServer(item));
+  await Promise.all(promiseArray);
 };
 
 (async () => {
   if (!globalSpinning.value) {
     serverTableLoading.value = true;
-    await refreshServerStatus();
+    await initServerListStatus();
     serverTableLoading.value = false;
   }
 })()
 
-const serviceChange = ()=>{
-  message.info('下个版本开放！！！');
-}
 
 const corePathClick = ()=>{
   Native.openPath(App.getUserCorePath());
@@ -184,7 +181,6 @@ const getNginxRequirePhpList = async () => {
 }
 
 const oneClickStart = async () => {
-  serverTableLoading.value = true;
   const oneClickServerList = ref(Settings.get('OneClickServerList'));
   //oneClickServerIncludePhpFpm 基本上默认为true
   const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM');
@@ -196,35 +192,21 @@ const oneClickStart = async () => {
       startServerClick(item);
     }
   })
-  serverTableLoading.value = false;
 }
 
 const oneClickStop = async () => {
-  serverTableLoading.value = true;
   const oneClickServerList = ref(Settings.get('OneClickServerList'));
   //oneClickServerIncludePhpFpm 基本上默认为true
   const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM');
   const requirePhpList = await getNginxRequirePhpList();
 
-  const promiseStopServer = async (item)=>{
+  serverList.value.forEach(async (item) => {
     if (oneClickServerList.value.includes(item.Name)) {
-      stopServerClick(item,false);
+      stopServerClick(item);
     } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && oneClickServerIncludePhpFpm) {
-      stopServerClick(item,false);
+      stopServerClick(item);
     }
-  }
-
-  const promiseArray = serverList.value.map(item => promiseStopServer(item));
-  await Promise.all(promiseArray);
-  for (let i = 0; i < 10; i++) {
-    await sleep(1000);
-    let filterArr = serverList.value.filter(item => item.isRunning === false);
-    if (filterArr.length === serverList.value.length) {
-      break;
-    }
-  }
-  await refreshServerStatus();
-  serverTableLoading.value = false;
+  })
 }
 
 const startServerClick = async (item) => {
@@ -255,9 +237,19 @@ const restartServerClick = async (item) => {
   item.btnLoading = true;
   try {
     await ServerControl.stop(item);
+
+    for (let i = 0; i < 10; i++) {
+      if (item.isRunning === false) {
+        break;
+      }
+      await sleep(500);
+      item.isRunning = ProcessExtend.pidIsRunning(item.pid);
+    }
+
     if (item.isRunning) {
       throw new Error('服务没有成功停止！');
     }
+
     await ServerControl.start(item);
   } catch (error) {
     MessageBox.error(error.message ?? error, '重启服务出错！');
@@ -265,15 +257,20 @@ const restartServerClick = async (item) => {
   item.btnLoading = false;
 }
 
-const stopServerClick = async (item, autoRefreshServerStatus = true) => {
+const stopServerClick = async (item) => {
   if (!item.isRunning) {
     return;
   }
   item.btnLoading = true;
   try {
     await ServerControl.stop(item);
-    if (item.isRunning && autoRefreshServerStatus) {
-      await refreshServerStatus();
+
+    for (let i = 0; i < 10; i++) {
+      if (item.isRunning === false) {
+        break;
+      }
+      await sleep(500);
+      item.isRunning = ProcessExtend.pidIsRunning(item.pid);
     }
   } catch (error) {
     MessageBox.error(error.message ?? error, '停止服务出错！');
