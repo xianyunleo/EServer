@@ -78,6 +78,9 @@ export default class ServerControl {
 
     static getPidByFile(softItem) {
         let path = Software.getServerPidPath(softItem);
+        if (!File.Exists(path)) {
+            throw new Error(`${path} 文件不存在！`);
+        }
         let text = File.ReadAllText(path)?.trim();
         if (!text.match(/\d+/)) {
             throw new Error(`${softItem.Name} Server Pid 文件内容错误！`);

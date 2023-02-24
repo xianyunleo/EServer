@@ -134,8 +134,8 @@ const initServerListStatus = async () => {
     try {
       item.pid = item.pid ? item.pid : ServerControl.getPidByFile(item);
       item.isRunning = ProcessExtend.pidIsRunning(item.pid);
-    } catch (error) {
-      MessageBox.error(error.message ?? error, '获取服务状态出错！');
+    } catch {
+      item.isRunning = false;
     }
   }
 
