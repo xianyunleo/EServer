@@ -135,19 +135,21 @@ const serverList = computed(() => serverSoftwareList.value.filter(item => Softwa
 
 
 const refreshServerStatus = async () => {
-  serverTableLoading.value = true;
   let processList = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
   let pathList = processList.map(item => item.path);
   for (const item of serverList.value) {
     let serverProcessPath = Software.getServerProcessPath(item);
     item.isRunning = pathList.includes(serverProcessPath);
   }
-  serverTableLoading.value = false;
 };
 
-if (!globalSpinning.value) {
-  refreshServerStatus();
-}
+(async () => {
+  if (!globalSpinning.value) {
+    serverTableLoading.value = true;
+    await refreshServerStatus();
+    serverTableLoading.value = false;
+  }
+})()
 
 const serviceChange = ()=>{
   message.info('下个版本开放！！！');
@@ -182,6 +184,7 @@ const getNginxRequirePhpList = async () => {
 }
 
 const oneClickStart = async () => {
+  serverTableLoading.value = true;
   const oneClickServerList = ref(Settings.get('OneClickServerList'));
   //oneClickServerIncludePhpFpm 基本上默认为true
   const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM');
@@ -193,9 +196,11 @@ const oneClickStart = async () => {
       startServerClick(item);
     }
   })
+  serverTableLoading.value = false;
 }
 
 const oneClickStop = async () => {
+  serverTableLoading.value = true;
   const oneClickServerList = ref(Settings.get('OneClickServerList'));
   //oneClickServerIncludePhpFpm 基本上默认为true
   const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM');
@@ -211,8 +216,15 @@ const oneClickStop = async () => {
 
   const promiseArray = serverList.value.map(item => promiseStopServer(item));
   await Promise.all(promiseArray);
-  await sleep(1000);
+  for (let i = 0; i < 10; i++) {
+    await sleep(1000);
+    let filterArr = serverList.value.filter(item => item.isRunning === false);
+    if (filterArr.length === serverList.value.length) {
+      break;
+    }
+  }
   await refreshServerStatus();
+  serverTableLoading.value = false;
 }
 
 const startServerClick = async (item) => {
@@ -253,14 +265,14 @@ const restartServerClick = async (item) => {
   item.btnLoading = false;
 }
 
-const stopServerClick = async (item, refreshServerStatus = true) => {
+const stopServerClick = async (item, autoRefreshServerStatus = true) => {
   if (!item.isRunning) {
     return;
   }
   item.btnLoading = true;
   try {
     await ServerControl.stop(item);
-    if (item.isRunning && refreshServerStatus) {
+    if (item.isRunning && autoRefreshServerStatus) {
       await refreshServerStatus();
     }
   } catch (error) {
