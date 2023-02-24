@@ -42,6 +42,15 @@ export default class ProcessExtend {
         }
     }
 
+    static pidIsRunning(pid) {
+        try {
+            process.kill(pid, 0);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
     static async getList(searchObj={}) {
         if (OS.isMacOS()) {
             return await ProcessExtend.getListByMacOS(searchObj);
