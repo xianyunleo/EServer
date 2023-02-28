@@ -1,7 +1,13 @@
 /* global __static */
 import path from "path";
 import {app} from '@electron/remote'
-import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
+import {
+    WIN_CORE_PATH_NAME,
+    MAC_CORE_PATH_NAME,
+    MAC_USER_CORE_PATH,
+    INIT_FILE_NAME,
+    InitFiles_DIR_NAME
+} from "@/main/constant";
 import Database from "@/main/core/Database";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Directory from "@/main/utils/Directory";
@@ -12,6 +18,7 @@ import GetPath from "@/shared/utils/GetPath";
 import OS from "@/main/core/OS";
 import Settings from "@/main/Settings";
 import SoftwareInit from "@/main/core/software/SoftwareInit";
+import fs from "fs";
 
 
 export default class App {
@@ -127,9 +134,9 @@ export default class App {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
             }
-            this.moveCoreSubDir(['tmp', 'www', 'software']);
             this.updateCoreSubDir(['Library']);
         }
+        this.moveInitFiles(['tmp', 'www', 'software']);
         this.createCoreSubDir(['downloads', 'database', 'bin']);
 
         await SoftwareInit.initAll();
@@ -194,6 +201,21 @@ export default class App {
             let p = path.join(this.getUserCorePath(), dir);
             if (!Directory.Exists(p)) {
                 Directory.CreateDirectory(p);
+            }
+        }
+    }
+
+    /**
+     * 将initFiles目录下的文件（文件夹）移动到用户操作的核心目录
+     * @param files
+     */
+    static moveInitFiles(files = []) {
+        let initFilesPath = Path.Join(this.getCorePath(),InitFiles_DIR_NAME);
+        for (const file of files) {
+            let source = Path.Join(initFilesPath, file);
+            let target = Path.Join(this.getUserCorePath(), file);
+            if (!fs.existsSync(target)) {
+                fs.renameSync(source, target);
             }
         }
     }
