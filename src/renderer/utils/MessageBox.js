@@ -1,38 +1,83 @@
 import {Modal} from 'ant-design-vue';
 
 export default class MessageBox {
-    static info(message, title) {
+    static async info(message, title) {
         title = title ?? '信息提示';
-        Modal.info({
+        let options = {
             title: title,
             content: message,
-            centered: true,
-        });
+        }
+        let result = true;
+
+        await new Promise((resolve, reject) => {
+            options = Object.assign(options, {
+                centered: true,
+                onOk() {
+                    resolve(true);
+                },
+                onCancel() {
+                    reject(false);
+                },
+            })
+            Modal.info(options);
+        }).catch(() => result = false);
+
+        return result;
     }
 
-    static error(message, title) {
+    static async error(message, title) {
         title = title ?? '错误提示';
-        Modal.error({
+        let options = {
             title: title,
             content: message,
-            centered: true,
-        });
+        }
+        let result = true;
+
+        await new Promise((resolve, reject) => {
+            options = Object.assign(options, {
+                centered: true,
+                onOk() {
+                    resolve(true);
+                },
+                onCancel() {
+                    reject(false);
+                },
+            })
+            Modal.error(options);
+        }).catch(() => result = false);
+
+        return result;
     }
 
-    static Warning(message, title) {
+    static async warning(message, title) {
         title = title ?? '警告提示';
-        Modal.warning({
+        let options = {
             title: title,
             content: message,
-            centered: true,
-        });
+        }
+        let result = true;
+
+        await new Promise((resolve, reject) => {
+            options = Object.assign(options, {
+                centered: true,
+                onOk() {
+                    resolve(true);
+                },
+                onCancel() {
+                    reject(false);
+                },
+            })
+            Modal.warning(options);
+        }).catch(() => result = false);
+
+        return result;
     }
 
     /**
      * @param options
      * @returns {Promise<boolean>}
      */
-    static async Confirm(options={}) {
+    static async confirm(options={}) {
         options.title = options.title ?? '提示';
         let result = true;
 
