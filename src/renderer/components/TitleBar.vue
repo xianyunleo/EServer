@@ -19,11 +19,7 @@
            @click="maximizeClick">
       </div>
 
-      <div class="window-icon window-icon-close codicon codicon-chrome-close"
-           :class="{'window-icon-close-hover': closeIsHover}"
-           @click="closeClick"
-           @mouseover="closeIsHover=true"
-           @mouseout="closeIsHover=false">
+      <div class="window-icon window-icon-close codicon codicon-chrome-close" @click="closeClick" >
       </div>
     </div>
   </div>
@@ -45,7 +41,6 @@ const isWindows = ref(OS.isWindows());
 const isWindowMax = ref(false);
 const mainWindow= BrowserWindow.getAllWindows()[0];
 const minimizeIsHover = ref(false);
-const closeIsHover = ref(false);
 
 const minimizeClick = () => {
   mainWindow.minimize();
@@ -61,17 +56,14 @@ const maximizeClick = () => {
 }
 
 const closeClick = ()=>{
-  mainWindow.close();
-  closeIsHover.value = false;
+  mainWindow.hide();
 }
 
 mainWindow.on('maximize',()=>{
-  console.log('maximize on')
   isWindowMax.value = true;
 })
 
 mainWindow.on('unmaximize',()=>{
-  console.log('unmaximize on')
   isWindowMax.value = false;
 })
 
@@ -79,7 +71,6 @@ mainWindow.on('unmaximize',()=>{
 </script>
 
 <style scoped lang="scss">
-@import "@/renderer/assets/css/var.scss";
 .notify {
   margin-left: 20px;
   font-size: 13px;
@@ -105,8 +96,10 @@ mainWindow.on('unmaximize',()=>{
   }
 }
 
-.window-icon-close-hover{
-  background-color:rgba(232,17,35,.9);
+.window-icon-close{
+  &:hover {
+    background-color:rgba(232,17,35,.9);
+  }
 }
 
 .window-controls-container{

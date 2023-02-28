@@ -1,7 +1,13 @@
 /* global __static */
 import path from "path";
 import {app} from '@electron/remote'
-import {WIN_CORE_PATH_NAME, INIT_FILE_NAME, MAC_CORE_PATH_NAME, MAC_USER_CORE_PATH} from "@/main/constant";
+import {
+    WIN_CORE_PATH_NAME,
+    MAC_CORE_PATH_NAME,
+    MAC_USER_CORE_PATH,
+    INIT_FILE_NAME,
+    InitFiles_DIR_NAME
+} from "@/main/constant";
 import Database from "@/main/core/Database";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Directory from "@/main/utils/Directory";
@@ -12,6 +18,7 @@ import GetPath from "@/shared/utils/GetPath";
 import OS from "@/main/core/OS";
 import Settings from "@/main/Settings";
 import SoftwareInit from "@/main/core/software/SoftwareInit";
+import fs from "fs";
 
 
 export default class App {
@@ -48,10 +55,10 @@ export default class App {
      */
     static getIcnsPath() {
         if (OS.isMacOS()) {
-            if (App.isDev()) {
+            if (this.isDev()) {
                 return Path.Join(__static, `../build/icons/icon.icns`);
             } else {
-                return Path.Join(App.getContentsPath(), 'Resources/icon.icns');
+                return Path.Join(this.getContentsPath(), 'Resources/icon.icns');
             }
         }
         return '';
@@ -68,16 +75,16 @@ export default class App {
     static getCorePath(){
         let result = '';
         if (OS.isWindows()) {
-            if (App.isDev()) {
-                result = path.join(App.getPlatformPath(), WIN_CORE_PATH_NAME)
+            if (this.isDev()) {
+                result = path.join(this.getPlatformPath(), WIN_CORE_PATH_NAME)
             } else {
-                result = path.join(App.getPath(), WIN_CORE_PATH_NAME)
+                result = path.join(this.getPath(), WIN_CORE_PATH_NAME)
             }
         } else if (OS.isMacOS()) {
-            if (App.isDev()) {
-                result = path.join(App.getPlatformPath(), MAC_CORE_PATH_NAME)
+            if (this.isDev()) {
+                result = path.join(this.getPlatformPath(), MAC_CORE_PATH_NAME)
             } else {
-                result = path.join(App.getContentsPath(), MAC_CORE_PATH_NAME);
+                result = path.join(this.getContentsPath(), MAC_CORE_PATH_NAME);
             }
         }
         return result
@@ -88,18 +95,18 @@ export default class App {
      * @returns {string}
      */
     static getUserCorePath() {
-        if (OS.isMacOS() && !App.isDev()) {
+        if (OS.isMacOS() && !this.isDev()) {
             return MAC_USER_CORE_PATH;
         }
-        return App.getCorePath();
+        return this.getCorePath();
     }
 
     static getSettingsPath(){
-        return App.getUserCorePath();
+        return this.getUserCorePath();
     }
 
     static getInitFilePath() {
-        return path.join(App.getCorePath(), INIT_FILE_NAME);
+        return path.join(this.getCorePath(), INIT_FILE_NAME);
     }
 
     static getPlatformPath() {
@@ -107,7 +114,7 @@ export default class App {
     }
 
     static initFileExists() {
-        return File.Exists(App.getInitFilePath());
+        return File.Exists(this.getInitFilePath());
     }
 
     static async init() {
@@ -115,7 +122,7 @@ export default class App {
             throw new Error('安装路径不能包含空格！');
         }
 
-        let initFile = App.getInitFilePath();
+        let initFile = this.getInitFilePath();
 
         if (!File.Exists(initFile)) {
             return;
@@ -123,17 +130,22 @@ export default class App {
 
         Settings.init();
 
-        if (OS.isMacOS() && !App.isDev()) {
+        let softwareDirExists = Directory.Exists(GetPath.getSoftwarePath());
+
+        if (OS.isMacOS() && !this.isDev()) {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
             }
-            App.moveCoreSubDir(['tmp', 'www', 'software']);
-            App.updateCoreSubDir(['Library']);
+            this.updateCoreSubDir(['Library']);
         }
-        App.createCoreSubDir(['downloads', 'database', 'bin']);
+        this.moveInitFiles(['tmp', 'www', 'software']);
+        this.createCoreSubDir(['downloads', 'database', 'bin']);
 
-        await SoftwareInit.initAll();
-        await App.initMySQL();
+        if (!softwareDirExists) { //softwareDirExists是false说明是第一次安装，不是覆盖安装
+            await SoftwareInit.initAll();
+        }
+
+        await this.initMySQL();
 
         File.Delete(initFile);
     }
@@ -158,7 +170,7 @@ export default class App {
      * @param dirs
      */
     static moveCoreSubDir(dirs) {
-        let corePath = App.getCorePath();
+        let corePath = this.getCorePath();
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
             let target = Path.Join(MAC_USER_CORE_PATH, dir);
@@ -173,7 +185,7 @@ export default class App {
       * @param dirs
      */
     static updateCoreSubDir(dirs) {
-        let corePath = App.getCorePath();
+        let corePath = this.getCorePath();
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
             let target = Path.Join(MAC_USER_CORE_PATH, dir);
@@ -194,6 +206,21 @@ export default class App {
             let p = path.join(this.getUserCorePath(), dir);
             if (!Directory.Exists(p)) {
                 Directory.CreateDirectory(p);
+            }
+        }
+    }
+
+    /**
+     * 将initFiles目录下的文件（文件夹）移动到用户操作的核心目录
+     * @param files
+     */
+    static moveInitFiles(files = []) {
+        let initFilesPath = Path.Join(this.getCorePath(),InitFiles_DIR_NAME);
+        for (const file of files) {
+            let source = Path.Join(initFilesPath, file);
+            let target = Path.Join(this.getUserCorePath(), file);
+            if (!fs.existsSync(target)) {
+                fs.renameSync(source, target);
             }
         }
     }
