@@ -8,7 +8,7 @@
       centered
       :maskClosable="false">
     <div class="modal-content">
-      <div style="text-align: center;padding-bottom: 20px">重置密码前，请先停止对应版本的MySQL服务</div>
+      <div style="text-align: center;padding-bottom: 20px">重置密码前，先停止MySQL服务</div>
       <a-form
           :model="formData"
           ref="formRef"
