@@ -9,7 +9,7 @@
         <router-view />
       </a-col>
     </a-row>
-    <user-pwd-modal v-model:show="userPwdModalShow" :cancel-is-exit="true" />
+    <user-pwd-modal v-if="userPwdModalShow" v-model:show="userPwdModalShow" :cancel-is-exit="true" />
   </a-spin>
 </template>
 
@@ -22,6 +22,7 @@ import MessageBox from "@/renderer/utils/MessageBox";
 import UserPwdModal from "@/renderer/components/UserPwdModal.vue";
 import OS from "@/main/core/OS";
 import SettingsExtend from "@/main/core/SettingsExtend";
+import Software from "@/main/core/software/Software";
 
 const userPwdModalShow = ref(false);
 
@@ -29,6 +30,13 @@ const spinning = ref(false);
 provide('globalSpinning',spinning);
 
 (async () => {
+  try{
+    Software.initList();
+  }catch (error){
+    await MessageBox.error(error.message ?? error, '软件出错！');
+    App.exit();
+  }
+
   if (!App.initFileExists() || App.isDev()) {
     return;
   }
