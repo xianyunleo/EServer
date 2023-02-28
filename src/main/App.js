@@ -130,6 +130,8 @@ export default class App {
 
         Settings.init();
 
+        let softwareDirExists = Directory.Exists(GetPath.getSoftwarePath());
+
         if (OS.isMacOS() && !this.isDev()) {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
@@ -139,7 +141,10 @@ export default class App {
         this.moveInitFiles(['tmp', 'www', 'software']);
         this.createCoreSubDir(['downloads', 'database', 'bin']);
 
-        await SoftwareInit.initAll();
+        if (!softwareDirExists) { //softwareDirExists是false说明是第一次安装，不是覆盖安装
+            await SoftwareInit.initAll();
+        }
+
         await this.initMySQL();
 
         File.Delete(initFile);
