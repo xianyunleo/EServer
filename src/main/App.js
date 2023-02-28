@@ -48,10 +48,10 @@ export default class App {
      */
     static getIcnsPath() {
         if (OS.isMacOS()) {
-            if (App.isDev()) {
+            if (this.isDev()) {
                 return Path.Join(__static, `../build/icons/icon.icns`);
             } else {
-                return Path.Join(App.getContentsPath(), 'Resources/icon.icns');
+                return Path.Join(this.getContentsPath(), 'Resources/icon.icns');
             }
         }
         return '';
@@ -68,16 +68,16 @@ export default class App {
     static getCorePath(){
         let result = '';
         if (OS.isWindows()) {
-            if (App.isDev()) {
-                result = path.join(App.getPlatformPath(), WIN_CORE_PATH_NAME)
+            if (this.isDev()) {
+                result = path.join(this.getPlatformPath(), WIN_CORE_PATH_NAME)
             } else {
-                result = path.join(App.getPath(), WIN_CORE_PATH_NAME)
+                result = path.join(this.getPath(), WIN_CORE_PATH_NAME)
             }
         } else if (OS.isMacOS()) {
-            if (App.isDev()) {
-                result = path.join(App.getPlatformPath(), MAC_CORE_PATH_NAME)
+            if (this.isDev()) {
+                result = path.join(this.getPlatformPath(), MAC_CORE_PATH_NAME)
             } else {
-                result = path.join(App.getContentsPath(), MAC_CORE_PATH_NAME);
+                result = path.join(this.getContentsPath(), MAC_CORE_PATH_NAME);
             }
         }
         return result
@@ -88,18 +88,18 @@ export default class App {
      * @returns {string}
      */
     static getUserCorePath() {
-        if (OS.isMacOS() && !App.isDev()) {
+        if (OS.isMacOS() && !this.isDev()) {
             return MAC_USER_CORE_PATH;
         }
-        return App.getCorePath();
+        return this.getCorePath();
     }
 
     static getSettingsPath(){
-        return App.getUserCorePath();
+        return this.getUserCorePath();
     }
 
     static getInitFilePath() {
-        return path.join(App.getCorePath(), INIT_FILE_NAME);
+        return path.join(this.getCorePath(), INIT_FILE_NAME);
     }
 
     static getPlatformPath() {
@@ -107,7 +107,7 @@ export default class App {
     }
 
     static initFileExists() {
-        return File.Exists(App.getInitFilePath());
+        return File.Exists(this.getInitFilePath());
     }
 
     static async init() {
@@ -115,7 +115,7 @@ export default class App {
             throw new Error('安装路径不能包含空格！');
         }
 
-        let initFile = App.getInitFilePath();
+        let initFile = this.getInitFilePath();
 
         if (!File.Exists(initFile)) {
             return;
@@ -123,17 +123,17 @@ export default class App {
 
         Settings.init();
 
-        if (OS.isMacOS() && !App.isDev()) {
+        if (OS.isMacOS() && !this.isDev()) {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
             }
-            App.moveCoreSubDir(['tmp', 'www', 'software']);
-            App.updateCoreSubDir(['Library']);
+            this.moveCoreSubDir(['tmp', 'www', 'software']);
+            this.updateCoreSubDir(['Library']);
         }
-        App.createCoreSubDir(['downloads', 'database', 'bin']);
+        this.createCoreSubDir(['downloads', 'database', 'bin']);
 
         await SoftwareInit.initAll();
-        await App.initMySQL();
+        await this.initMySQL();
 
         File.Delete(initFile);
     }
@@ -158,7 +158,7 @@ export default class App {
      * @param dirs
      */
     static moveCoreSubDir(dirs) {
-        let corePath = App.getCorePath();
+        let corePath = this.getCorePath();
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
             let target = Path.Join(MAC_USER_CORE_PATH, dir);
@@ -173,7 +173,7 @@ export default class App {
       * @param dirs
      */
     static updateCoreSubDir(dirs) {
-        let corePath = App.getCorePath();
+        let corePath = this.getCorePath();
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
             let target = Path.Join(MAC_USER_CORE_PATH, dir);
