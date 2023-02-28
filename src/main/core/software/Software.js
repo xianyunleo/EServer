@@ -14,15 +14,25 @@ export default class Software {
      * @returns {[]}
      */
     static getList() {
-        if(Software.#list){
+        if (Software.#list) {
             return Software.#list;
         }
+        this.initList();
+        return Software.#list;
+    }
+
+    static initList() {
         let corePath = App.getCorePath();
         let softPath = path.join(corePath, '/config/software');
         let softConfigPath = path.join(softPath, 'software.json');
         let softIconPath = 'file://' + path.join(softPath, '/icon');
-        let json = File.ReadAllText(softConfigPath);
-        let list = JSON.parse(json);
+
+        let list;
+        try {
+            list = JSON.parse(File.ReadAllText(softConfigPath));
+        } catch {
+            throw new Error('software.json配置文件错误！');
+        }
 
         for (const item of list) {
             item.Icon = path.join(softIconPath, item.Icon);
