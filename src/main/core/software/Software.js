@@ -31,7 +31,7 @@ export default class Software {
         try {
             list = JSON.parse(File.ReadAllText(softConfigPath));
         } catch {
-            throw new Error('software.json配置文件错误！');
+            throw new Error(`${softConfigPath} 配置文件错误！`);
         }
 
         for (const item of list) {
