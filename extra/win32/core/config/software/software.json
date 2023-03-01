@@ -140,5 +140,14 @@
         "CanDelete": true,
         "Icon": "Composer.png",
         "Desc": "PHP依赖管理工具（需要在设置里启用）"
+    },
+    {
+        "Name": "Notepad3",
+        "DirName": "Notepad3",
+        "Type": "Tool",
+        "IsMacApp": true,
+        "CanDelete": true,
+        "Icon": "Notepad3.ico",
+        "Desc": "文本、代码编辑器"
     }
 ]
