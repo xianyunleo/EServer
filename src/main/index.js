@@ -17,7 +17,7 @@ protocol.registerSchemesAsPrivileged([
 
  let mainWindow;
 
-const gotTheLock = app.requestSingleInstanceLock()
+const gotTheLock = app.isPackaged ? app.requestSingleInstanceLock() : true; //仅生产环境生效
 
 if (!gotTheLock) {
     app.quit()
@@ -96,7 +96,7 @@ function onReady(){
 function onRunning() {
     app.on("second-instance", () => {
         // 当运行第二个实例时,将会聚焦到mainWindow这个窗口
-        if (mainWindow) {
+        if (mainWindow && app.isPackaged) {
             if (mainWindow.isMinimized()) mainWindow.restore();
             mainWindow.show();
         }
