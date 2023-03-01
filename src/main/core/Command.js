@@ -15,7 +15,7 @@ export default class Command {
         if (App.isDev()) console.log('Command.exec command', command);
 
         let formatCommand;
-        if (OS.isWindows()) {
+        if (OS.isWindows() && !options.shell) {
             formatCommand = '@chcp 65001 >nul & cmd /d/s/c ';
             command = formatCommand + command;
         }
@@ -30,7 +30,7 @@ export default class Command {
             const {stdout} = await exec(command, options);
             return stdout;
         } catch (error) {
-            if (OS.isWindows()) {
+            if (OS.isWindows() && !options.shell) {
                 // eslint-disable-next-line no-ex-assign
                 error = new Error(error.message.replace(formatCommand, ''))
             }
