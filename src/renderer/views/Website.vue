@@ -153,7 +153,7 @@ const openRootPath = (item) => {
   if (OS.isWindows()) {
     path = path.replaceAll('/', '\\')
   }
-  Native.openPath(path);
+  Native.openExternal(path);
 }
 
 

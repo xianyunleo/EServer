@@ -44,12 +44,17 @@ export default class Native {
     }
 
     static async openPath(path) {
-        await shell.openPath(path);
+        return await shell.openPath(path);
     }
 
     static async openUrl(url) {
         return await shell.openExternal(url);
     }
+
+    static async openExternal(path) {
+        return await shell.openExternal(path);
+    }
+
 
     static async openHosts() {
         let path = GetPath.getHostsPath();

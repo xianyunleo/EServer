@@ -141,14 +141,14 @@ const initServerListStatus = async () => {
 
 
 const corePathClick = ()=>{
-  Native.openPath(App.getUserCorePath());
+  Native.openExternal(App.getUserCorePath());
 }
 const wwwPathClick = ()=>{
-  Native.openPath(GetPath.getWebsitePath());
+  Native.openExternal(GetPath.getWebsitePath());
 }
 
 const openInstallDir = (item) => {
-  Native.openPath(Software.getPath(item));
+  Native.openExternal(Software.getPath(item));
 }
 
 const openConfFile = (item) => {
