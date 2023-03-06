@@ -5,7 +5,6 @@
         "ServerProcessPath": "sbin/nginx",
         "ServerConfPath": "conf/nginx.conf",
         "StartServerArgs": ["-p","${WorkPath}","-g","daemon off;"],
-        "ServerPidPath": "logs/nginx.pid",
         "ExtraFiles": [
             {
                 "Name": "访问日志",
@@ -29,7 +28,6 @@
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
         "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
-        "ServerPidPath": "var/run/php-fpm.pid",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -43,7 +41,6 @@
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
         "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
-        "ServerPidPath": "var/run/php-fpm.pid",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -57,7 +54,6 @@
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
         "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
-        "ServerPidPath": "var/run/php-fpm.pid",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -71,7 +67,6 @@
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
         "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
-        "ServerPidPath": "var/run/php-fpm.pid",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -85,7 +80,6 @@
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
         "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
-        "ServerPidPath": "var/run/php-fpm.pid",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -98,8 +92,6 @@
         "ServerProcessPath": "bin/mysqld",
         "ServerConfPath": "my.cnf",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
-        "ServerPidPath": "mysqld.pid",
-        "ManualWriteServerPid": true,
         "ExtraFiles": [
             {
                 "Name": "日志",
@@ -117,8 +109,6 @@
         "ServerProcessPath": "bin/mysqld",
         "ServerConfPath": "my.cnf",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
-        "ServerPidPath": "mysqld.pid",
-        "ManualWriteServerPid": true,
         "ExtraFiles": [
             {
                 "Name": "日志",
@@ -135,8 +125,6 @@
         "ServerProcessPath": "bin/redis-server",
         "ServerConfPath": "redis.conf",
         "StartServerArgs": ["${ServerConfPath}"],
-        "ServerPidPath": "redis-server.pid",
-        "ManualWriteServerPid": true,
         "Type": "Server",
         "CanDelete": true,
         "Icon": "redis.png",
