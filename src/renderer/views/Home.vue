@@ -74,7 +74,7 @@
 // eslint-disable-next-line no-unused-vars
 import {computed, inject, ref, watch} from 'vue';
 import {useMainStore} from '@/renderer/store'
-import {DownOutlined, RightSquareFilled,PoweroffOutlined,ReloadOutlined} from '@ant-design/icons-vue';
+import {DownOutlined, PoweroffOutlined, ReloadOutlined, RightSquareFilled} from '@ant-design/icons-vue';
 import App from "@/main/App";
 import GetPath from "@/shared/utils/GetPath";
 import Software from "@/main/core/software/Software";
@@ -117,17 +117,35 @@ const {serverSoftwareList} = storeToRefs(mainStore);
 const serverList = computed(() => serverSoftwareList.value.filter(item => Software.IsInstalled(item)));
 
 
+const getProcessList = async () => {
+  let list = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
+  //过滤掉子进程，剔除子进程
+  let newList = [];
+  for (const item of list) {
+    if (!list.find(item2 => item2.pid === item.ppid)) {
+      newList.push([item.path, item.pid])
+    }
+  }
+  return newList;
+}
+
 const initServerListStatus = async () => {
-  const promiseStopServer = async (item) => {
-    try {
-      item.pid = item.pid ? item.pid : ServerControl.getPidByFile(item);
-      item.isRunning = ProcessExtend.pidIsRunning(item.pid);
-    } catch {
+  const processList = await getProcessList();
+  const processMap = new Map(processList);
+
+  const initServerStatus = async (item) => {
+    const itemProcessPath = Software.getServerProcessPath(item);
+    const pid = processMap.get(itemProcessPath);
+    if (pid) {
+      item.isRunning = true;
+      item.pid = pid;
+    } else {
       item.isRunning = false;
+      item.pid = null;
     }
   }
 
-  const promiseArray = serverList.value.map(item => promiseStopServer(item));
+  const promiseArray = serverList.value.map(item => initServerStatus(item));
   await Promise.all(promiseArray);
 };
 
