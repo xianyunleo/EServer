@@ -101,19 +101,6 @@ export default class Software {
     }
 
     /**
-     * 获取软件服务pid绝对路径
-     * @param item {SoftwareItem}
-     * @returns {string}
-     */
-    static getServerPidPath(item) {
-        if (item.ServerPidPath == null) {
-            throw new Error(`${item.Name} Server Pid Path 没有配置！`);
-        }
-        let workPath = Software.getPath(item); //服务目录
-        return path.join(workPath, item.ServerPidPath);  //服务的进程目录
-    }
-
-    /**
      * 根据软件类型，获取软件的类型目录
      * @param type {SoftwareItem.Type}
      * @returns {string}
