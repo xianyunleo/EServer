@@ -145,6 +145,15 @@
         "IsMacApp": true,
         "CanDelete": true,
         "Icon": "NotepadNext.svg",
-        "Desc": "跨平台文本编辑器"
+        "Desc": "跨平台文本、代码编辑器"
+    },
+    {
+        "Name": "Notepad--",
+        "DirName": "Notepad--.app",
+        "Type": "Tool",
+        "IsMacApp": true,
+        "CanDelete": true,
+        "Icon": "Notepad--.png",
+        "Desc": "国产跨平台文本、代码编辑器"
     }
 ]
