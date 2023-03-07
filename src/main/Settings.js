@@ -60,7 +60,7 @@ export default class Settings {
     static getDefaultTextEditorPath() {
         let toolTypePath =  GetPath.getToolTypePath();
         if (OS.isMacOS()) {
-           return Path.Join(toolTypePath, 'NotepadNext.app');
+           return Path.Join(toolTypePath, 'Notepad--.app');
         } else if (OS.isWindows()) {
             return Path.Join(toolTypePath, 'Notepad3/Notepad3.exe');
         }
