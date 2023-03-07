@@ -5,6 +5,7 @@
         "ServerProcessPath": "nginx.exe",
         "ServerConfPath": "conf/nginx.conf",
         "StartServerArgs": ["-p","${WorkPath}"],
+        "ServerPort": 80,
         "ExtraFiles": [
             {"Name": "access.log", "Path": "logs/access.log"},
             {"Name": "error.log", "Path": "logs/error.log"}
@@ -22,6 +23,7 @@
         "ServerProcessPath": "php-cgi-spawner.exe",
         "ExtraProcessPath": "php-cgi.exe",
         "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9005","4"],
+        "ServerPort": 9005,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -35,6 +37,7 @@
         "ServerProcessPath": "php-cgi-spawner.exe",
         "ExtraProcessPath": "php-cgi.exe",
         "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9010","4"],
+        "ServerPort": 9010,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -48,6 +51,7 @@
         "ServerProcessPath": "php-cgi-spawner.exe",
         "ExtraProcessPath": "php-cgi.exe",
         "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9011","4"],
+        "ServerPort": 9011,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -61,6 +65,7 @@
         "ServerProcessPath": "php-cgi-spawner.exe",
         "ExtraProcessPath": "php-cgi.exe",
         "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9012","4"],
+        "ServerPort": 9012,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -73,6 +78,7 @@
         "ServerProcessPath": "bin/mysqld.exe",
         "ServerConfPath": "my.ini",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
+        "ServerPort": 3306,
         "ExtraFiles": [
             {"Name": "mysql.log", "Path": "logs/mysql.log"}
         ],
@@ -87,6 +93,7 @@
         "ServerProcessPath": "bin/mysqld.exe",
         "ServerConfPath": "my.ini",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
+        "ServerPort": 3306,
         "ExtraFiles": [
             {"Name": "mysql.log", "Path": "logs/mysql.log"}
         ],
@@ -100,6 +107,7 @@
         "ServerProcessPath": "redis-server.exe",
         "ServerConfPath": "redis.windows.conf",
         "StartServerArgs": ["${ServerConfPath}"],
+        "ServerPort": 6379,
         "Type": "Server",
         "CanDelete": true,
         "Icon": "redis.png",
@@ -111,6 +119,7 @@
         "ServerProcessPath": "redis-server.exe",
         "ServerConfPath": "redis.windows.conf",
         "StartServerArgs": ["${ServerConfPath}"],
+        "ServerPort": 6379,
         "Type": "Server",
         "CanDelete": true,
         "Icon": "redis.png",

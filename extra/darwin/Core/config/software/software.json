@@ -5,6 +5,7 @@
         "ServerProcessPath": "sbin/nginx",
         "ServerConfPath": "conf/nginx.conf",
         "StartServerArgs": ["-p","${WorkPath}","-g","daemon off;"],
+        "ServerPort": 80,
         "ExtraFiles": [
             {
                 "Name": "访问日志",
@@ -92,6 +93,7 @@
         "ServerProcessPath": "bin/mysqld",
         "ServerConfPath": "my.cnf",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
+        "ServerPort": 3306,
         "ExtraFiles": [
             {
                 "Name": "日志",
@@ -109,6 +111,7 @@
         "ServerProcessPath": "bin/mysqld",
         "ServerConfPath": "my.cnf",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
+        "ServerPort": 3306,
         "ExtraFiles": [
             {
                 "Name": "日志",
@@ -125,6 +128,7 @@
         "ServerProcessPath": "bin/redis-server",
         "ServerConfPath": "redis.conf",
         "StartServerArgs": ["${ServerConfPath}"],
+        "ServerPort": 6379,
         "Type": "Server",
         "CanDelete": true,
         "Icon": "redis.png",
