@@ -169,7 +169,7 @@ const clickStop = (item) => {
 
 const openInstallPath = async (item) => {
   let path = item.IsMacApp ? Software.getTypePath(item.Type) : Software.getPath(item);
-  Native.openExternal(path);
+  Native.openDirectory(path);
 }
 
 const uninstall = async (item) => {
