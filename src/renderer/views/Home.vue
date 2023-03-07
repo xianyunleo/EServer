@@ -221,8 +221,12 @@ const startServerClick = async (item) => {
   }
   item.btnLoading = true;
   try {
-    if (item.Name === 'Nginx') {
-      await ServerControl.killWebServer();
+    if (item.ServerPort) {
+      if (item.ServerPort == 80) {
+        await ProcessExtend.killWebServer();
+      } else {
+        await ProcessExtend.killByPort(item.ServerPort);
+      }
     }
 
     await ServerControl.start(item);
