@@ -5,7 +5,7 @@
         "ServerProcessPath": "sbin/nginx",
         "ServerConfPath": "conf/nginx.conf",
         "StartServerArgs": ["-p","${WorkPath}","-g","daemon off;"],
-        "ServerPidPath": "logs/nginx.pid",
+        "ServerPort": 80,
         "ExtraFiles": [
             {
                 "Name": "访问日志",
@@ -29,7 +29,6 @@
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
         "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
-        "ServerPidPath": "var/run/php-fpm.pid",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -43,7 +42,6 @@
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
         "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
-        "ServerPidPath": "var/run/php-fpm.pid",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -57,7 +55,6 @@
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
         "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
-        "ServerPidPath": "var/run/php-fpm.pid",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -71,7 +68,6 @@
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
         "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
-        "ServerPidPath": "var/run/php-fpm.pid",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -85,7 +81,6 @@
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
         "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
-        "ServerPidPath": "var/run/php-fpm.pid",
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -98,8 +93,7 @@
         "ServerProcessPath": "bin/mysqld",
         "ServerConfPath": "my.cnf",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
-        "ServerPidPath": "mysqld.pid",
-        "ManualWriteServerPid": true,
+        "ServerPort": 3306,
         "ExtraFiles": [
             {
                 "Name": "日志",
@@ -117,8 +111,7 @@
         "ServerProcessPath": "bin/mysqld",
         "ServerConfPath": "my.cnf",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
-        "ServerPidPath": "mysqld.pid",
-        "ManualWriteServerPid": true,
+        "ServerPort": 3306,
         "ExtraFiles": [
             {
                 "Name": "日志",
@@ -135,8 +128,7 @@
         "ServerProcessPath": "bin/redis-server",
         "ServerConfPath": "redis.conf",
         "StartServerArgs": ["${ServerConfPath}"],
-        "ServerPidPath": "redis-server.pid",
-        "ManualWriteServerPid": true,
+        "ServerPort": 6379,
         "Type": "Server",
         "CanDelete": true,
         "Icon": "redis.png",
@@ -157,6 +149,15 @@
         "IsMacApp": true,
         "CanDelete": true,
         "Icon": "NotepadNext.svg",
-        "Desc": "跨平台文本编辑器"
+        "Desc": "跨平台文本、代码编辑器"
+    },
+    {
+        "Name": "Notepad--",
+        "DirName": "Notepad--.app",
+        "Type": "Tool",
+        "IsMacApp": true,
+        "CanDelete": true,
+        "Icon": "Notepad--.png",
+        "Desc": "国产跨平台文本、代码编辑器"
     }
 ]

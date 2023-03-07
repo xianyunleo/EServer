@@ -9,7 +9,7 @@
         <router-view />
       </a-col>
     </a-row>
-    <user-pwd-modal v-model:show="userPwdModalShow" :cancel-is-exit="true" />
+    <user-pwd-modal v-if="userPwdModalShow" v-model:show="userPwdModalShow" :cancel-is-exit="true" />
   </a-spin>
 </template>
 
@@ -22,6 +22,9 @@ import MessageBox from "@/renderer/utils/MessageBox";
 import UserPwdModal from "@/renderer/components/UserPwdModal.vue";
 import OS from "@/main/core/OS";
 import SettingsExtend from "@/main/core/SettingsExtend";
+import Software from "@/main/core/software/Software";
+import Service from "@/main/core/Service";
+import {message} from "ant-design-vue";
 
 const userPwdModalShow = ref(false);
 
@@ -29,6 +32,17 @@ const spinning = ref(false);
 provide('globalSpinning',spinning);
 
 (async () => {
+  try{
+    Software.initList();
+  }catch (error){
+    await MessageBox.error(error.message ?? error, '软件出错！');
+    App.exit();
+  }
+
+  if (OS.isWindows()) {
+    stopWebService();
+  }
+
   if (!App.initFileExists() || App.isDev()) {
     return;
   }
@@ -47,8 +61,15 @@ provide('globalSpinning',spinning);
     }
   }
 
-
 })()
+
+async function stopWebService() {
+  const IISServiceName = 'W3SVC';
+  if (await Service.isRunning(IISServiceName)) {
+    await Service.stop(IISServiceName);
+    message.info('已自动停止IIS服务');
+  }
+}
 
 </script>
 

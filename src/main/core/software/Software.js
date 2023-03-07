@@ -14,15 +14,25 @@ export default class Software {
      * @returns {[]}
      */
     static getList() {
-        if(Software.#list){
+        if (Software.#list) {
             return Software.#list;
         }
+        this.initList();
+        return Software.#list;
+    }
+
+    static initList() {
         let corePath = App.getCorePath();
         let softPath = path.join(corePath, '/config/software');
         let softConfigPath = path.join(softPath, 'software.json');
         let softIconPath = 'file://' + path.join(softPath, '/icon');
-        let json = File.ReadAllText(softConfigPath);
-        let list = JSON.parse(json);
+
+        let list;
+        try {
+            list = JSON.parse(File.ReadAllText(softConfigPath));
+        } catch {
+            throw new Error(`${softConfigPath} 配置文件错误！`);
+        }
 
         for (const item of list) {
             item.Icon = path.join(softIconPath, item.Icon);
@@ -88,19 +98,6 @@ export default class Software {
         }
         let workPath = Software.getPath(item); //服务目录
         return path.join(workPath, item.ServerProcessPath);  //服务的进程目录
-    }
-
-    /**
-     * 获取软件服务pid绝对路径
-     * @param item {SoftwareItem}
-     * @returns {string}
-     */
-    static getServerPidPath(item) {
-        if (item.ServerPidPath == null) {
-            throw new Error(`${item.Name} Server Pid Path 没有配置！`);
-        }
-        let workPath = Software.getPath(item); //服务目录
-        return path.join(workPath, item.ServerPidPath);  //服务的进程目录
     }
 
     /**

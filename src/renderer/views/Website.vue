@@ -109,7 +109,7 @@ const del = async (item) => {
       okText:'确定',
       cancelText:'取消',
     };
-    if (await MessageBox.Confirm(options)) {
+    if (await MessageBox.confirm(options)) {
       Website.delete(item.serverName);
     }
    } catch (error) {
@@ -153,7 +153,7 @@ const openRootPath = (item) => {
   if (OS.isWindows()) {
     path = path.replaceAll('/', '\\')
   }
-  Native.openPath(path);
+  Native.openDirectory(path);
 }
 
 

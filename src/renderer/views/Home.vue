@@ -2,20 +2,8 @@
   <div class="content-container">
     <a-card title="快捷操作" class="quick-card">
       <div class="quick-card-content">
-<!--        <a-button type="primary">一键启动</a-button>-->
-<!--        <a-button type="primary">命令行终端</a-button>-->
-        <a-tooltip>
-          <template #title>在设置中选择服务列表</template>
-          <a-button type="primary" @click="oneClickStart" :disabled="serverTableLoading">一键启动</a-button>
-        </a-tooltip>
-
-        <a-tooltip>
-          <template #title>在设置中选择服务列表</template>
-          <a-button type="primary" @click="oneClickStop" :disabled="serverTableLoading">一键停止</a-button>
-        </a-tooltip>
-
-
-
+        <a-button type="primary" @click="oneClickStart" :disabled="serverTableLoading">一键启动</a-button>
+        <a-button type="primary" @click="oneClickStop" :disabled="serverTableLoading">一键停止</a-button>
         <a-button type="primary" @click="corePathClick">{{APP_NAME}}目录</a-button>
         <a-button type="primary" @click="wwwPathClick">网站目录</a-button>
       </div>
@@ -86,7 +74,7 @@
 // eslint-disable-next-line no-unused-vars
 import {computed, inject, ref, watch} from 'vue';
 import {useMainStore} from '@/renderer/store'
-import {DownOutlined, RightSquareFilled,PoweroffOutlined,ReloadOutlined} from '@ant-design/icons-vue';
+import {DownOutlined, PoweroffOutlined, ReloadOutlined, RightSquareFilled} from '@ant-design/icons-vue';
 import App from "@/main/App";
 import GetPath from "@/shared/utils/GetPath";
 import Software from "@/main/core/software/Software";
@@ -129,17 +117,35 @@ const {serverSoftwareList} = storeToRefs(mainStore);
 const serverList = computed(() => serverSoftwareList.value.filter(item => Software.IsInstalled(item)));
 
 
+const getProcessList = async () => {
+  let list = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
+  //过滤掉子进程，剔除子进程
+  let newList = [];
+  for (const item of list) {
+    if (!list.find(item2 => item2.pid === item.ppid)) {
+      newList.push([item.path, item.pid])
+    }
+  }
+  return newList;
+}
+
 const initServerListStatus = async () => {
-  const promiseStopServer = async (item) => {
-    try {
-      item.pid = item.pid ? item.pid : ServerControl.getPidByFile(item);
-      item.isRunning = ProcessExtend.pidIsRunning(item.pid);
-    } catch {
+  const processList = await getProcessList();
+  const processMap = new Map(processList);
+
+  const initServerStatus = async (item) => {
+    const itemProcessPath = Software.getServerProcessPath(item);
+    const pid = processMap.get(itemProcessPath);
+    if (pid) {
+      item.isRunning = true;
+      item.pid = pid;
+    } else {
       item.isRunning = false;
+      item.pid = null;
     }
   }
 
-  const promiseArray = serverList.value.map(item => promiseStopServer(item));
+  const promiseArray = serverList.value.map(item => initServerStatus(item));
   await Promise.all(promiseArray);
 };
 
@@ -153,14 +159,14 @@ const initServerListStatus = async () => {
 
 
 const corePathClick = ()=>{
-  Native.openPath(App.getUserCorePath());
+  Native.openDirectory(App.getUserCorePath());
 }
 const wwwPathClick = ()=>{
-  Native.openPath(GetPath.getWebsitePath());
+  Native.openDirectory(GetPath.getWebsitePath());
 }
 
 const openInstallDir = (item) => {
-  Native.openPath(Software.getPath(item));
+  Native.openDirectory(Software.getPath(item));
 }
 
 const openConfFile = (item) => {
@@ -215,8 +221,12 @@ const startServerClick = async (item) => {
   }
   item.btnLoading = true;
   try {
-    if (item.Name === 'Nginx') {
-      await ServerControl.killWebServer();
+    if (item.ServerPort) {
+      if (item.ServerPort == 80) {
+        await ProcessExtend.killWebServer();
+      } else {
+        await ProcessExtend.killByPort(item.ServerPort);
+      }
     }
 
     await ServerControl.start(item);

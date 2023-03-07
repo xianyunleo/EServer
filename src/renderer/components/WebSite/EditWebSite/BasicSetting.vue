@@ -7,7 +7,8 @@
       autocomplete="off">
 
     <a-form-item label="第二域名" name="extraServerName" >
-      <a-input v-model:value="formData.extraServerName" @change="extraServerNameChange"  placeholder="可以不填" />
+      <a-input v-model:value="formData.extraServerName" @change="extraServerNameChange" placeholder="可以不填"
+               spellcheck="false"/>
     </a-form-item>
 
     <a-form-item label="端口" name="port" :rules="[{  required: true, type: 'number', min: 80, max: 65535 }]">

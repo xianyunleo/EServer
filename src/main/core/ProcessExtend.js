@@ -1,5 +1,6 @@
 import Command from "@/main/core/Command";
 import OS from "@/main/core/OS";
+import TcpProcess from "@/main/core/TcpProcess";
 
 export default class ProcessExtend {
     /**
@@ -51,6 +52,29 @@ export default class ProcessExtend {
         }
     }
 
+    static async killByPort(port) {
+        let pid = await TcpProcess.getPidByPort(port);
+        if(pid){
+            await ProcessExtend.kill(pid);
+        }
+    }
+
+    /**
+     *
+     * @returns {Promise<Awaited<*>[]>}
+     */
+    static async killWebServer() {
+        return await Promise.all([
+            ProcessExtend.killByName('httpd'),
+            ProcessExtend.killByName('nginx'),
+        ]);
+    }
+
+    /**
+     *
+     * @param searchObj
+     * @returns {Promise<[]|{path: *, name: *, pid: *, ppid: *}[]>}
+     */
     static async getList(searchObj={}) {
         if (OS.isMacOS()) {
             return await ProcessExtend.getListByMacOS(searchObj);
@@ -61,13 +85,13 @@ export default class ProcessExtend {
     }
 
     static async getListByMacOS(searchObj={}) {
-        let command = 'lsof -w -d txt';
+        let command = 'lsof -w -R -d txt';
         if (searchObj) {
             if(searchObj.directory){
                 command += `|grep ${searchObj.directory}`;  //这里不能使用lsof的+D参数，会有exit code，且性能不好
             }
         }
-        command += "|awk '{print $1,$2,$9}'";
+        command += "|awk '{print $1,$2,$3,$10}'";
         try {
             let str =  await Command.sudoExec(command);
             str = str.trim();
@@ -78,9 +102,9 @@ export default class ProcessExtend {
 
             list = list.map(item => {
                 let arr = item.split(' ');
-                let name, pid, path;
-                [name, pid, path] = arr;
-                return {name, pid, path};
+                let name, pid, ppid, path;
+                [name, pid, ppid, path] = arr;
+                return {name, pid, ppid, path};
             });
 
             return list;
@@ -91,27 +115,29 @@ export default class ProcessExtend {
     }
 
     static async getListByWindows(searchObj={}) {
-        let command = 'wmic process where ';
+        let command = ' Get-WmiObject -Class Win32_Process -Filter ';
         if (searchObj) {
             if(searchObj.directory){
                 let formatDir =searchObj.directory.replaceAll('\\','\\\\');
                 command += `"ExecutablePath like '${formatDir}%'"`;
             }
         }
-        command += " get ProcessID, Name, ExecutablePath";
+        command += " |Select-Object Name,ProcessId,ParentProcessId,ExecutablePath";
 
         try {
-            let str =  await Command.exec(command);
+            let str =  await Command.exec(command,{shell: 'powershell'});
             str = str.trim();
             if(!str){
                 return [];
             }
             let list = str.split('\n');
+            list.shift();
+            list.shift();
             list = list.map(item => {
                 let arr = item.split(/\s+/);
-                let name, pid, path;
-                [path,name, pid] = arr;
-                return {name, pid, path};
+                let name, pid, ppid, path;
+                [name, pid, ppid, path] = arr;
+                return {name, pid, ppid, path};
             });
             return list;
         }catch(e){

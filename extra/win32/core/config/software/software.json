@@ -5,7 +5,7 @@
         "ServerProcessPath": "nginx.exe",
         "ServerConfPath": "conf/nginx.conf",
         "StartServerArgs": ["-p","${WorkPath}"],
-        "ServerPidPath": "logs/nginx.pid",
+        "ServerPort": 80,
         "ExtraFiles": [
             {"Name": "access.log", "Path": "logs/access.log"},
             {"Name": "error.log", "Path": "logs/error.log"}
@@ -23,8 +23,7 @@
         "ServerProcessPath": "php-cgi-spawner.exe",
         "ExtraProcessPath": "php-cgi.exe",
         "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9005","4"],
-        "ServerPidPath": "php-cgi-spawner.pid",
-        "ManualWriteServerPid": true,
+        "ServerPort": 9005,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -38,8 +37,7 @@
         "ServerProcessPath": "php-cgi-spawner.exe",
         "ExtraProcessPath": "php-cgi.exe",
         "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9010","4"],
-        "ServerPidPath": "php-cgi-spawner.pid",
-        "ManualWriteServerPid": true,
+        "ServerPort": 9010,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -53,8 +51,7 @@
         "ServerProcessPath": "php-cgi-spawner.exe",
         "ExtraProcessPath": "php-cgi.exe",
         "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9011","4"],
-        "ServerPidPath": "php-cgi-spawner.pid",
-        "ManualWriteServerPid": true,
+        "ServerPort": 9011,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -68,8 +65,7 @@
         "ServerProcessPath": "php-cgi-spawner.exe",
         "ExtraProcessPath": "php-cgi.exe",
         "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9012","4"],
-        "ServerPidPath": "php-cgi-spawner.pid",
-        "ManualWriteServerPid": true,
+        "ServerPort": 9012,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
@@ -82,8 +78,7 @@
         "ServerProcessPath": "bin/mysqld.exe",
         "ServerConfPath": "my.ini",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
-        "ServerPidPath": "mysqld.pid",
-        "ManualWriteServerPid": true,
+        "ServerPort": 3306,
         "ExtraFiles": [
             {"Name": "mysql.log", "Path": "logs/mysql.log"}
         ],
@@ -98,8 +93,7 @@
         "ServerProcessPath": "bin/mysqld.exe",
         "ServerConfPath": "my.ini",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
-        "ServerPidPath": "mysqld.pid",
-        "ManualWriteServerPid": true,
+        "ServerPort": 3306,
         "ExtraFiles": [
             {"Name": "mysql.log", "Path": "logs/mysql.log"}
         ],
@@ -113,8 +107,7 @@
         "ServerProcessPath": "redis-server.exe",
         "ServerConfPath": "redis.windows.conf",
         "StartServerArgs": ["${ServerConfPath}"],
-        "ServerPidPath": "redis-server.pid",
-        "ManualWriteServerPid": true,
+        "ServerPort": 6379,
         "Type": "Server",
         "CanDelete": true,
         "Icon": "redis.png",
@@ -126,8 +119,7 @@
         "ServerProcessPath": "redis-server.exe",
         "ServerConfPath": "redis.windows.conf",
         "StartServerArgs": ["${ServerConfPath}"],
-        "ServerPidPath": "redis-server.pid",
-        "ManualWriteServerPid": true,
+        "ServerPort": 6379,
         "Type": "Server",
         "CanDelete": true,
         "Icon": "redis.png",
@@ -140,5 +132,14 @@
         "CanDelete": true,
         "Icon": "Composer.png",
         "Desc": "PHP依赖管理工具（需要在设置里启用）"
+    },
+    {
+        "Name": "Notepad3",
+        "DirName": "Notepad3",
+        "Type": "Tool",
+        "IsMacApp": true,
+        "CanDelete": true,
+        "Icon": "Notepad3.ico",
+        "Desc": "文本、代码编辑器"
     }
 ]

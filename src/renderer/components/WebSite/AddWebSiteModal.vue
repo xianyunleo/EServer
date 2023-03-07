@@ -16,7 +16,7 @@
           :wrapper-col="{ span: 18 }"
           autocomplete="off">
         <a-form-item label="域名" name="serverName" :rules="[{ required: true, message: '请输入域名!' }]">
-          <a-input v-model:value="formData.serverName" @change="serverNameChange"/>
+          <a-input v-model:value="formData.serverName" @change="serverNameChange" spellcheck="false" />
         </a-form-item>
 
         <a-form-item label="端口" name="port" :rules="[{  required: true, type: 'number', min: 80, max: 65535 }]">

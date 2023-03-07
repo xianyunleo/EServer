@@ -44,7 +44,18 @@ export default class Native {
     }
 
     static async openPath(path) {
-        await shell.openPath(path);
+        return await shell.openPath(path);
+    }
+
+    static async openExternal(path) {
+        return await shell.openExternal(path);
+    }
+
+    static async openDirectory(path) {
+        if(OS.isWindows()){
+            return await shell.openExternal(path);
+        }
+        return await shell.openPath(path);
     }
 
     static async openUrl(url) {
