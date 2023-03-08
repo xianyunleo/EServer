@@ -89,6 +89,7 @@ import ProcessExtend from "@/main/core/ProcessExtend";
 import Settings from "@/main/Settings";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import {sleep} from "@/shared/utils/utils";
+import TcpProcess from "@/main/core/TcpProcess";
 
 
 const serverTableLoading = ref(false);
@@ -225,7 +226,7 @@ const startServerClick = async (item) => {
       if (item.ServerPort == 80) {
         await ProcessExtend.killWebServer();
       } else {
-        await ProcessExtend.killByPort(item.ServerPort);
+        await TcpProcess.killByPort(item.ServerPort);
       }
     }
 

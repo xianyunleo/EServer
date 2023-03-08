@@ -52,13 +52,6 @@ export default class ProcessExtend {
         }
     }
 
-    static async killByPort(port) {
-        let pid = await TcpProcess.getPidByPort(port);
-        if(pid){
-            await ProcessExtend.kill(pid);
-        }
-    }
-
     /**
      *
      * @returns {Promise<Awaited<*>[]>}
