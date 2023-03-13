@@ -118,7 +118,7 @@ const serverList = computed(() => serverSoftwareList.value.filter(item => Softwa
 
 
 const getProcessList = async () => {
-  let list = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
+  let list = await ProcessExtend.getList({directory: GetPath.getServerTypePath()});
   //过滤掉子进程，剔除子进程
   let newList = [];
   for (const item of list) {
