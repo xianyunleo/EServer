@@ -1,6 +1,5 @@
 import Command from "@/main/core/Command";
 import OS from "@/main/core/OS";
-import TcpProcess from "@/main/core/TcpProcess";
 
 export default class ProcessExtend {
     /**
@@ -52,13 +51,6 @@ export default class ProcessExtend {
         }
     }
 
-    static async killByPort(port) {
-        let pid = await TcpProcess.getPidByPort(port);
-        if(pid){
-            await ProcessExtend.kill(pid);
-        }
-    }
-
     /**
      *
      * @returns {Promise<Awaited<*>[]>}
@@ -91,7 +83,7 @@ export default class ProcessExtend {
                 command += `|grep ${searchObj.directory}`;  //这里不能使用lsof的+D参数，会有exit code，且性能不好
             }
         }
-        command += "|awk '{print $1,$2,$3,$10}'";
+        command += "|grep -v .dylib|awk '{print $1,$2,$3,$10}'";
         try {
             let str =  await Command.sudoExec(command);
             str = str.trim();

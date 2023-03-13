@@ -1,5 +1,6 @@
 import Command from "@/main/core/Command";
 import OS from "@/main/core/OS";
+import ProcessExtend from "@/main/core/ProcessExtend";
 
 export default class TcpProcess {
 
@@ -10,23 +11,20 @@ export default class TcpProcess {
      */
     static async getPidByPort(port) {
         try {
-            let pid, commandStr;
+            let commandStr, resStr, pid;
 
             if (OS.isWindows()) {
                 commandStr = `PowerShell -Command "& {(Get-NetTCPConnection -LocalPort ${port} -State Listen).OwningProcess}"`;
-                pid = await Command.exec(commandStr);
-                if (!pid) {
-                    return null;
-                }
             } else {
                 commandStr = `lsof -t -sTCP:LISTEN -i:${port}`;
-                let str = await Command.exec(commandStr);
-                if (!str) {
-                    return null;
-                }
-                pid = str.trim().split("\n")[0];
             }
-            return parseInt(pid.trim());
+
+            resStr = await Command.exec(commandStr);
+            if (!resStr) {
+                return null;
+            }
+            pid = resStr.trim().split("\n")[0];
+            return parseInt(pid);
         } catch {
             return null;
         }
@@ -38,25 +36,30 @@ export default class TcpProcess {
      */
     static async getPathByPort(port) {
         try {
-            let path, commandStr;
+            let commandStr, resStr, path;
 
             if (OS.isWindows()) {
                 commandStr = `PowerShell -Command "& {(Get-Process -Id (Get-NetTCPConnection -LocalPort ${port} -State Listen).OwningProcess).path}"`;
-                path = await Command.exec(commandStr);
-                if (!path) {
-                    return null;
-                }
             } else {
-                commandStr = `lsof -a -d txt -p ${port}|awk '{print $9}'`;
-                let str = await Command.exec(commandStr);
-                if (!str) {
-                    return null;
-                }
-                path = str.trim().split("\n")[1];
+                commandStr = `lsof -t -sTCP:LISTEN -i:${port}|head -1|xargs lsof -a -w  -d txt -p|grep -v .dylib|awk 'NR!=1{print $9}'`;
             }
+
+            resStr = await Command.exec(commandStr);
+            if (!resStr) {
+                return null;
+            }
+            path = resStr.trim().split("\n")[0];
             return path.trim();
         } catch {
             return null;
+        }
+    }
+
+
+    static async killByPort(port) {
+        let pid = await TcpProcess.getPidByPort(port);
+        if(pid){
+            await ProcessExtend.kill(pid);
         }
     }
 }

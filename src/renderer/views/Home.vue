@@ -89,6 +89,7 @@ import ProcessExtend from "@/main/core/ProcessExtend";
 import Settings from "@/main/Settings";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import {sleep} from "@/shared/utils/utils";
+import TcpProcess from "@/main/core/TcpProcess";
 
 
 const serverTableLoading = ref(false);
@@ -118,7 +119,7 @@ const serverList = computed(() => serverSoftwareList.value.filter(item => Softwa
 
 
 const getProcessList = async () => {
-  let list = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
+  let list = await ProcessExtend.getList({directory: GetPath.getServerTypePath()});
   //过滤掉子进程，剔除子进程
   let newList = [];
   for (const item of list) {
@@ -225,7 +226,7 @@ const startServerClick = async (item) => {
       if (item.ServerPort == 80) {
         await ProcessExtend.killWebServer();
       } else {
-        await ProcessExtend.killByPort(item.ServerPort);
+        await TcpProcess.killByPort(item.ServerPort);
       }
     }
 

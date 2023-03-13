@@ -87,6 +87,32 @@
         "Desc": "PHP是世界上最好的编程语言"
     },
     {
+        "Name": "PHP-8.1",
+        "ServerName": "PHP-FPM-8.1",
+        "DirName": "php-8.1",
+        "ConfPath": "etc/php.ini",
+        "ServerProcessPath": "sbin/php-fpm",
+        "ServerConfPath": "etc/php-fpm.conf",
+        "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
+        "Type": "PHP",
+        "CanDelete": true,
+        "Icon": "php.png",
+        "Desc": "PHP是世界上最好的编程语言"
+    },
+    {
+        "Name": "PHP-8.2",
+        "ServerName": "PHP-FPM-8.2",
+        "DirName": "php-8.2",
+        "ConfPath": "etc/php.ini",
+        "ServerProcessPath": "sbin/php-fpm",
+        "ServerConfPath": "etc/php-fpm.conf",
+        "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
+        "Type": "PHP",
+        "CanDelete": true,
+        "Icon": "php.png",
+        "Desc": "PHP是世界上最好的编程语言"
+    },
+    {
         "Name": "MySQL-5.7",
         "DirName": "mysql-5.7",
         "Type": "Server",
