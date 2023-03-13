@@ -1,5 +1,6 @@
 import Command from "@/main/core/Command";
 import OS from "@/main/core/OS";
+import ProcessExtend from "@/main/core/ProcessExtend";
 
 export default class TcpProcess {
 
@@ -51,6 +52,14 @@ export default class TcpProcess {
             return path.trim();
         } catch {
             return null;
+        }
+    }
+
+
+    static async killByPort(port) {
+        let pid = await TcpProcess.getPidByPort(port);
+        if(pid){
+            await ProcessExtend.kill(pid);
         }
     }
 }

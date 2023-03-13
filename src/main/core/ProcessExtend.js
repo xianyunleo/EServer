@@ -1,5 +1,6 @@
 import Command from "@/main/core/Command";
 import OS from "@/main/core/OS";
+import TcpProcess from "@/main/core/TcpProcess";
 
 export default class ProcessExtend {
     /**
@@ -49,6 +50,17 @@ export default class ProcessExtend {
         } catch (e) {
             return false;
         }
+    }
+
+    /**
+     *
+     * @returns {Promise<Awaited<*>[]>}
+     */
+    static async killWebServer() {
+        return await Promise.all([
+            ProcessExtend.killByName('httpd'),
+            ProcessExtend.killByName('nginx'),
+        ]);
     }
 
     /**

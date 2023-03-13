@@ -89,6 +89,7 @@ import ProcessExtend from "@/main/core/ProcessExtend";
 import Settings from "@/main/Settings";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import {sleep} from "@/shared/utils/utils";
+import TcpProcess from "@/main/core/TcpProcess";
 
 
 const serverTableLoading = ref(false);
@@ -221,8 +222,12 @@ const startServerClick = async (item) => {
   }
   item.btnLoading = true;
   try {
-    if (item.Name === 'Nginx') {
-      await ServerControl.killWebServer();
+    if (item.ServerPort) {
+      if (item.ServerPort == 80) {
+        await ProcessExtend.killWebServer();
+      } else {
+        await TcpProcess.killByPort(item.ServerPort);
+      }
     }
 
     await ServerControl.start(item);

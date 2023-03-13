@@ -72,16 +72,4 @@ export default class ServerControl {
         await ProcessExtend.kill(softItem.pid);
     }
 
-    /**
-     *
-     * @returns {Promise<Awaited<*>[]>}
-     */
-    static async killWebServer() {
-        return await Promise.all([
-            ProcessExtend.killByName('httpd'),
-            ProcessExtend.killByName('nginx'),
-        ]);
-    }
-
-
 }
