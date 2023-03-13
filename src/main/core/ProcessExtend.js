@@ -1,6 +1,5 @@
 import Command from "@/main/core/Command";
 import OS from "@/main/core/OS";
-import TcpProcess from "@/main/core/TcpProcess";
 
 export default class ProcessExtend {
     /**
