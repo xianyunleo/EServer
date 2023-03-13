@@ -14,9 +14,7 @@ export default class Env {
     static createBinFile(targetPath, binName) {
         let binDirPath = GetPath.getBinPath();
         let path = Path.Join(binDirPath, this.getBinFileName(binName));
-        if (File.Exists(path)) {
-            File.Delete(path);
-        }
+        this.deleteBinFile(binName);
         if (OS.isWindows()) {
             let text;
             if (binName === 'composer') {
