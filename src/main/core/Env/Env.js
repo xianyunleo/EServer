@@ -27,13 +27,13 @@ export default class Env {
             File.WriteAllText(path, text);
         } else {
             if (binName === 'php') {
-                this.createSameLevelOtherBinFile(targetPath, 'phpize', 'phpize');
+                this.createOtherBinFile(targetPath, 'phpize', 'phpize');
             }
             File.CreateSymbolicLink(path, targetPath);
         }
     }
 
-    static createSameLevelOtherBinFile(targetPath, targetOtherFileName, otherBinName) {
+    static createOtherBinFile(targetPath, targetOtherFileName, otherBinName) {
         let binDirPath = GetPath.getBinPath();
         let path = Path.Join(binDirPath, otherBinName);
         let targetOtherFilePath = Path.Join(Path.GetDirectoryName(targetPath), targetOtherFileName);
@@ -42,7 +42,18 @@ export default class Env {
 
     static deleteBinFile(binName) {
         let path = Path.Join(GetPath.getBinPath(), this.getBinFileName(binName));
-        console.log(path)
+        if (File.Exists(path)) {
+            File.Delete(path);
+        }
+        if (!OS.isWindows()) {
+            if (binName === 'php') {
+                this.deleteOtherBinFile('phpize');
+            }
+        }
+    }
+
+    static deleteOtherBinFile(otherBinName) {
+        let path = Path.Join(GetPath.getBinPath(), this.getBinFileName(otherBinName));
         if (File.Exists(path)) {
             File.Delete(path);
         }
