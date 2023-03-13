@@ -79,6 +79,7 @@
         "ServerProcessPath": "php-cgi-spawner.exe",
         "ExtraProcessPath": "php-cgi.exe",
         "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9013","4"],
+        "ServerPort": 9013,
         "Type": "PHP",
         "CanDelete": true,
         "Icon": "php.png",
