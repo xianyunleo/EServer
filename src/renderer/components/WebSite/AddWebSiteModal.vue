@@ -52,10 +52,11 @@ import MessageBox from "@/renderer/utils/MessageBox";
 import {STATIC_WEB_NAME} from "@/shared/constant";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Hosts from "@/main/core/Hosts";
+import {replaceSlash} from "@/shared/utils/utils";
 
 const {search, addModalVisible: visible} = inject('website');
 
-const wwwPath = GetPath.getWebsitePath();
+const wwwPath = replaceSlash(GetPath.getWebsitePath());
 const formRef = ref();
 
 const formData = reactive({
@@ -75,7 +76,7 @@ phpVersionList.value.push({value: '', label: STATIC_WEB_NAME});
 
 const serverNameChange = () => {
   formData.serverName = formData.serverName?.trim();
-  formData.rootPath = path.join(wwwPath, formData.serverName);
+  formData.rootPath = replaceSlash(path.join(wwwPath, formData.serverName));
 }
 
 const addWebClick = async () => {

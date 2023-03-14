@@ -7,6 +7,9 @@ export default class FileDialog {
             properties: ['openDirectory']
         }
         if (defaultPath) {
+            if (OS.isWindows()) {
+                defaultPath = defaultPath.replaceAll("/", "\\");
+            }
             options.defaultPath = defaultPath;
         }
         let res = dialog.showOpenDialogSync(options);
