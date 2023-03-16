@@ -3,6 +3,7 @@ import {STATIC_WEB_NAME} from "@/shared/constant";
 import {EOL} from "os";
 import {CONF_INDENT} from "@/main/constant";
 import File from "@/main/utils/File";
+import Path from "@/main/utils/Path";
 
 const N = EOL; //换行符
 const T = CONF_INDENT; //缩进符
@@ -12,17 +13,24 @@ const T = CONF_INDENT; //缩进符
  */
 export default class NginxWebsite {
     serverName;
+    confName;
     confPath;
     confText;
 
-    constructor(serverName) {
-        this.serverName = serverName;
-        this.confPath = Nginx.getWebsiteConfPath(this.serverName);
+    /**
+     *
+     * @param confName 配置文件名，带扩展名
+     */
+    constructor(confName) {
+        this.confName = confName;
+        this.serverName = Path.GetFileNameWithoutExtension(confName).split('_')[0];
+        this.confPath = Nginx.getWebsiteConfPath(confName);
         this.confText = File.ReadAllText(this.confPath);
     }
 
     getBasicInfo() {
         return {
+            confName: this.confName,
             serverName: this.serverName,
             extraServerName: this.getExtraServerName(),
             port: this.getPort(),
@@ -37,8 +45,8 @@ export default class NginxWebsite {
         return matches ? matches[1] : null;
     }
 
-    static getRewrite(serverName) {
-        let rewritePath = Nginx.getWebsiteRewriteConfPath(serverName);
+    static getRewrite(confName) {
+        let rewritePath = Nginx.getWebsiteRewriteConfPath(confName);
         return File.ReadAllText(rewritePath);
     }
 
@@ -89,8 +97,8 @@ export default class NginxWebsite {
         File.WriteAllText(this.confPath, this.confText);
     }
 
-    static saveRewrite(serverName, content) {
-        let rewritePath = Nginx.getWebsiteRewriteConfPath(serverName);
+    static saveRewrite(confName, content) {
+        let rewritePath = Nginx.getWebsiteRewriteConfPath(confName);
         File.WriteAllText(rewritePath, content);
     }
 

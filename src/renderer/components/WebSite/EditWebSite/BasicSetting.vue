@@ -12,7 +12,7 @@
     </a-form-item>
 
     <a-form-item label="端口" name="port" :rules="[{  required: true, type: 'number', min: 80, max: 65535 }]">
-      <a-input-number v-model:value="formData.port" min="80" max="65535"  />
+      <a-input-number v-model:value="formData.port" min="80" max="65535" readonly  />
     </a-form-item>
 
     <a-form-item label="根目录" name="path" :rules="[{ required: true, message: '请选择根目录!' }]">
@@ -46,12 +46,12 @@ import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 //import path from "path";
 import Hosts from "@/main/core/Hosts";
 
-const {serverName,search} = inject('website');
+const {confName,search} = inject('website');
 
 const formData = reactive({});
 const phpVersionList = ref([]);
 
-let websiteInfo = Website.getBasicInfo(serverName.value);
+let websiteInfo = Website.getBasicInfo(confName.value);
 Object.assign(formData, websiteInfo)
 
 let list = SoftwareExtend.getPHPList();
@@ -62,7 +62,7 @@ phpVersionList.value.push({value: '', label: STATIC_WEB_NAME});
 
 const save = async () => {
   try {
-    await Website.saveBasicInfo(serverName.value, formData);
+    await Website.saveBasicInfo(confName.value, formData);
     message.info('保存成功');
     search();
   }catch (error){
@@ -71,14 +71,15 @@ const save = async () => {
 
   if(websiteInfo.allowSyncHosts){
     try {
-      if(formData.extraServerName == websiteInfo.extraServerName){
+      let oldExtraServerName = websiteInfo.extraServerName;
+      if (formData.extraServerName === oldExtraServerName) {
         return;
       }
-      if(websiteInfo.extraServerName){
-        await Hosts.delete([websiteInfo.extraServerName]);
+      if (oldExtraServerName && await Website.getSameDomainAmount(oldExtraServerName) <= 1) {
+        await Hosts.delete(oldExtraServerName);
       }
-      if(formData.extraServerName){
-        await Hosts.add([formData.extraServerName]);
+      if (formData.extraServerName) {
+        await Hosts.add(formData.extraServerName);
       }
     } catch (error) {
       MessageBox.error(error.message ?? error, '同步Hosts出错！');
