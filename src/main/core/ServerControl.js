@@ -5,6 +5,7 @@ import child_process from "child_process";
 import Path from "@/main/utils/Path";
 import File from "@/main/utils/File";
 import App from "@/main/App";
+import OS from "@/main/core/OS";
 
 export default class ServerControl {
 
@@ -23,7 +24,7 @@ export default class ServerControl {
         let serverProcessPath = Path.Join(workPath, item.ServerProcessPath);  //服务的进程目录
         let options = {cwd: workPath, detached: true};
 
-        if (item.Name === 'MySQL-8.0') {
+        if (item.Name === 'MySQL-8.0' && OS.isWindows()) {
             options = {cwd: workPath, shell: true}; //使用shell，childProcess返回的pid是shell的pid
         }
 
