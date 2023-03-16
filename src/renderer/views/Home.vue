@@ -192,13 +192,17 @@ const oneClickStart = async () => {
   //oneClickServerIncludePhpFpm 基本上默认为true
   const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM');
   const requirePhpList = await getNginxRequirePhpList();
-  serverList.value.forEach(async (item) => {
+  const doStartServerClick = async (item) => {
     if (oneClickServerList.value.includes(item.Name)) {
       startServerClick(item);
     } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && oneClickServerIncludePhpFpm) {
       startServerClick(item);
     }
-  })
+  }
+
+  for (const item of serverList.value) {
+    doStartServerClick(item);
+  }
 }
 
 const oneClickStop = async () => {
@@ -206,14 +210,17 @@ const oneClickStop = async () => {
   //oneClickServerIncludePhpFpm 基本上默认为true
   const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM');
   const requirePhpList = await getNginxRequirePhpList();
-
-  serverList.value.forEach(async (item) => {
+  const doStopServerClick = async (item) => {
     if (oneClickServerList.value.includes(item.Name)) {
       stopServerClick(item);
     } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && oneClickServerIncludePhpFpm) {
       stopServerClick(item);
     }
-  })
+  }
+
+  for (const item of serverList.value) {
+    doStopServerClick(item);
+  }
 }
 
 const startServerClick = async (item) => {

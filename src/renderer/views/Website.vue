@@ -63,7 +63,12 @@ const columns = [
     width: 160,
     dataIndex: 'serverName',
     ellipsis: true,
-  }, {
+  },
+  {
+    title: '端口',
+    width: 60,
+    dataIndex: 'port',
+  },{
     title: '根目录',
     dataIndex: 'rootPath',
     ellipsis: true,
@@ -81,6 +86,7 @@ const columns = [
 ];
 
 const list = ref([]);
+const confName = ref('');
 const serverName = ref('');
 const addModalVisible = ref(false);
 const editModalVisible = ref(false);
@@ -94,6 +100,7 @@ const search = async (val) => {
 }
 
 provide('website',{
+  confName,
   serverName,
   search,
   addModalVisible,
@@ -110,7 +117,7 @@ const del = async (item) => {
       cancelText:'取消',
     };
     if (await MessageBox.confirm(options)) {
-      Website.delete(item.serverName);
+      Website.delete(item.confName);
     }
    } catch (error) {
     MessageBox.error(error.message ?? error, '删除出错！');
@@ -119,7 +126,13 @@ const del = async (item) => {
 
   if (item.allowSyncHosts) {
     try {
-      await Hosts.delete([item.serverName, item.extraServerName]);
+      if (await Website.getSameDomainAmount(item.serverName) === 0) {
+        await Hosts.delete(item.serverName);
+      }
+
+      if (item.extraServerName && await Website.getSameDomainAmount(item.extraServerName) === 0) {
+        await Hosts.delete(item.extraServerName);
+      }
     } catch (error) {
       MessageBox.error(error.message ?? error, '同步Hosts出错！');
     }
@@ -134,18 +147,19 @@ const showAdd = () => {
 
 const showEdit = (item) => {
   editModalVisible.value = true;
+  confName.value = item.confName;
   serverName.value = item.serverName;
 }
 
 const browse = (item) => {
-  Native.openUrl(`http://${item.serverName}`);
+  Native.openUrl(`http://${item.serverName}:${item.port}`);
 }
 
 const openConfFile = async (item) => {
-  Native.openTextFile(Website.getConfPath(item.serverName));
+  Native.openTextFile(Website.getConfPath(item.confName));
 }
 const openRewriteConfFile = (item) => {
-  Native.openTextFile(Website.getRewriteConfPath(item.serverName));
+  Native.openTextFile(Website.getRewriteConfPath(item.confName));
 }
 
 const openRootPath = (item) => {

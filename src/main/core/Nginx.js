@@ -18,9 +18,9 @@ export default class Nginx {
             return [];
         }
         let files = Directory.GetFiles(vhostsPath, search);
-        return await Promise.all(files.map(async name => {
-            let serverName = Path.GetFileNameWithoutExtension(name);
-            let webSite = new NginxWebsite(serverName);
+        return await Promise.all(files.map(async path => {
+            let confName = Path.GetBaseName(path);
+            let webSite = new NginxWebsite(confName);
             return webSite.getBasicInfo();
         }));
     }
@@ -31,12 +31,14 @@ export default class Nginx {
      */
     static addWebsite(websiteInfo) {
         let serverName = websiteInfo.serverName;
-        serverName = websiteInfo.extraServerName ? `${serverName} ${websiteInfo.extraServerName}` : serverName;
+        let serverNameStr = websiteInfo.extraServerName ? `${serverName} ${websiteInfo.extraServerName}` : serverName;
+        let confName = this.getWebsiteConfName(websiteInfo.serverName, websiteInfo.port);
+        let confPath = this.getWebsiteConfPath(confName);
         let confText =
             `server
 {
     listen ${websiteInfo.port};
-    server_name ${serverName};
+    server_name ${serverNameStr};
     index index.html index.htm index.php;
     root  ${websiteInfo.rootPath};
 
@@ -55,7 +57,7 @@ export default class Nginx {
     #SSL_END
 
     #REWRITE_START
-    include vhosts/rewrite/${websiteInfo.serverName}.conf;
+    include vhosts/rewrite/${confName};
     #REWRITE_END
     
     #EXTRA_INFO_START
@@ -88,51 +90,56 @@ export default class Nginx {
         access_log off;
     }
 
-    access_log  logs/${websiteInfo.serverName}.access.log;
-    error_log  logs/${websiteInfo.serverName}.error.log;
+    access_log  logs/${Path.GetFileNameWithoutExtension(confName)}.access.log;
+    error_log  logs/${Path.GetFileNameWithoutExtension(confName)}.error.log;
 }`;
 
         if (OS.isWindows()) {
             confText = confText.replaceAll("\n", "\r\n");
         }
 
-        let confPath = Nginx.getWebsiteConfPath(websiteInfo.serverName);
+
         File.WriteAllText(confPath, confText);
 
-        let website = new NginxWebsite(websiteInfo.serverName);
+        let website = new NginxWebsite(confName);
         website.setPHPVersion(websiteInfo.phpVersion);
         website.setExtraInfo({allowSyncHosts: websiteInfo.allowSyncHosts});
         website.save();
 
         //创建URL重写文件
-        let rewritePath = Nginx.getWebsiteRewriteConfPath(websiteInfo.serverName);
+        let rewritePath = Nginx.getWebsiteRewriteConfPath(confName);
         if (!File.Exists(rewritePath)) {
             File.WriteAllText(rewritePath, '');
         }
     }
 
-    static delWebsite(serverName) {
-        let confPath = Nginx.getWebsiteConfPath(serverName);
+    static delWebsite(confName) {
+        let confPath = this.getWebsiteConfPath(confName);
         if (File.Exists(confPath)) {
             File.Delete(confPath);
         }
-        let rewritePath = Nginx.getWebsiteRewriteConfPath(serverName);
+
+        let rewritePath = this.getWebsiteRewriteConfPath(confName);
         if (File.Exists(rewritePath)) {
             File.Delete(rewritePath);
         }
     }
 
-    static websiteExists(serverName) {
-        let vhosts = Directory.GetFiles(GetPath.getNginxVhostsPath(), '.conf');
-        return vhosts.includes(Path.Join(GetPath.getNginxVhostsPath(), `${serverName}.conf`));
+    static websiteExists(serverName, port) {
+        let confPath = this.getWebsiteConfPath(this.getWebsiteConfName(serverName, port));
+        return File.Exists(confPath);
     }
 
-    static getWebsiteConfPath(serverName) {
-        return path.join(GetPath.getNginxVhostsPath(), `${serverName}.conf`);
+    static getWebsiteConfPath(confName) {
+        return path.join(GetPath.getNginxVhostsPath(), confName);
     }
 
-    static getWebsiteRewriteConfPath(serverName) {
-        return path.join(GetPath.getNginxVhostsRewritePath(), `${serverName}.conf`);
+    static getWebsiteConfName(serverName, port) {
+        return `${serverName}_${port}.conf`;
+    }
+
+    static getWebsiteRewriteConfPath(confName) {
+        return path.join(GetPath.getNginxVhostsRewritePath(), confName);
     }
 
     /**
@@ -161,5 +168,26 @@ export default class Nginx {
             return '';
         }
         return File.ReadAllText(rewritePath);
+    }
+
+    /**
+     *
+     * @param domain
+     * @returns {Promise<number>}
+     */
+    static async getSameDomainAmount(domain) {
+        let vhostsPath = GetPath.getNginxVhostsPath();
+        if (!Directory.Exists(vhostsPath)) {
+            return 0;
+        }
+        let files = Directory.GetFiles(vhostsPath);
+        // array.filter不能使用async方法
+        let list = await Promise.all(files.map(async path => {
+            let confText = File.ReadAllText(path);
+            let regExp = new RegExp('server_name.+' + domain.replaceAll('.', '\\.'));
+            return confText.match(regExp);
+        }));
+
+        return list.filter(item => item).length;
     }
 }

@@ -75,7 +75,7 @@ phpVersionList.value = list.map(item => {
 phpVersionList.value.push({value: '', label: STATIC_WEB_NAME});
 
 const serverNameChange = () => {
-  formData.serverName = formData.serverName?.trim();
+  formData.serverName = formData.serverName?.trim().replaceAll(/[^-a-zA-Z0-9.]/g, '');
   formData.rootPath = replaceSlash(path.join(wwwPath, formData.serverName));
 }
 
@@ -101,7 +101,7 @@ const addWeb = async (websiteInfo)=>{
 
   if(websiteInfo.allowSyncHosts){
     try {
-      await Hosts.add([websiteInfo.serverName]);
+      await Hosts.add(websiteInfo.serverName);
     } catch (error) {
       MessageBox.error(error.message ?? error, '同步Hosts出错！');
     }

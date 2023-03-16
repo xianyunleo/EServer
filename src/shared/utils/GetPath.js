@@ -2,6 +2,7 @@ import path from "path";
 import App from "@/main/App";
 import Software from "@/main/core/software/Software";
 import OS from "@/main/core/OS";
+import {TEMP_DIR_NAME} from "@/main/constant";
 
 export default class GetPath {
     static getBinPath(){
@@ -9,7 +10,7 @@ export default class GetPath {
     }
 
     static geTempPath(){
-        return path.join(App.getUserCorePath(), 'temp');
+        return path.join(App.getUserCorePath(), TEMP_DIR_NAME);
     }
 
     static getSoftwarePath(){

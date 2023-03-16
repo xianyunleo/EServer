@@ -31,7 +31,7 @@ import Website from "@/main/core/website/Website";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {message} from "ant-design-vue";
 
-const {serverName} = inject('website');
+const {confName} = inject('website');
 
 const formData = ref({
   rewriteSelected: 0,
@@ -40,7 +40,7 @@ const formData = ref({
 const rewriteList = ref([]);
 
 const getRewrite = () => {
-  return Website.getRewrite(serverName.value);
+  return Website.getRewrite(confName.value);
 }
 
 (() => {
@@ -62,7 +62,7 @@ const rewriteSelectChange = async (val) => {
 
 const save = async () => {
   try {
-    Website.saveRewrite(serverName.value, formData.value.rewriteContent);
+    Website.saveRewrite(confName.value, formData.value.rewriteContent);
     message.info('保存成功');
   }catch (error){
     MessageBox.error(error.message ?? error, '保存出错！');

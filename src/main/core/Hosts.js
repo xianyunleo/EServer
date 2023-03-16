@@ -20,20 +20,23 @@ export default class Hosts {
     }
 
     /**
-     *
-     * @param domains {array}
+     * 添加一条127.0.0.1的host，已有则不添加
+     * @param domain {string}
      */
-    static async add(domains) {
+    static async add(domain) {
         let path = GetPath.getHostsPath();
         let text = File.ReadAllText(path);
+        
+        let domainRegx = this.getDomainRegExp(domain);
+        if (text.match(domainRegx)) {
+            return;
+        }
+        
         let matches = text.match(/\n$/);
         let appendText = matches ? '' : EOL;
 
-        for (const domain of domains) {
-            if (domain) {
-                appendText += `127.0.0.1 ${domain}${EOL}`;
-            }
-        }
+        appendText += `127.0.0.1 ${domain}${EOL}`;
+        
         if (File.Exists(path) && !Hosts.canEditHosts()) {
             await Command.sudoExec(`chmod 666 ${path}`);
         }
@@ -41,10 +44,10 @@ export default class Hosts {
     }
 
     /**
-     *
-     * @param domains {array}
+     * 删除一条127.0.0.1的host
+     * @param domain {string}
      */
-    static async delete(domains) {
+    static async delete(domain) {
         let path = GetPath.getHostsPath();
         if (!File.Exists(path)) {
             return;
@@ -53,12 +56,12 @@ export default class Hosts {
             await Command.sudoExec(`chmod 666 ${path}`);
         }
         let text = File.ReadAllText(path);
-        for (const domain of domains) {
-            if(domain){
-                let regx = new RegExp('.*127\\.0\\.0\\.1.*' + domain.replaceAll('.', '\\.') + '\\s*','g');
-                text = text.replaceAll(regx, '');
-            }
-        }
+        let domainRegx = this.getDomainRegExp(domain);
+        text = text.replaceAll(domainRegx, '');
         File.WriteAllText(path, text);
+    }
+
+    static getDomainRegExp(domain) {
+        return new RegExp('.*127\\.0\\.0\\.1.*' + domain.replaceAll('.', '\\.') + '\\s*', 'g');
     }
 }

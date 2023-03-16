@@ -6,7 +6,8 @@ import {
     MAC_CORE_PATH_NAME,
     MAC_USER_CORE_PATH,
     INIT_FILE_NAME,
-    InitFiles_DIR_NAME
+    InitFiles_DIR_NAME,
+    TEMP_DIR_NAME
 } from "@/main/constant";
 import Database from "@/main/core/Database";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
@@ -138,7 +139,7 @@ export default class App {
             }
             this.updateCoreSubDir(['Library']);
         }
-        this.moveInitFiles(['tmp', 'www', 'software']);
+        this.moveInitFiles([TEMP_DIR_NAME, 'www', 'software']);
         this.createCoreSubDir(['downloads', 'database', 'bin']);
 
         if (!softwareDirExists) { //softwareDirExists是false说明是第一次安装，不是覆盖安装
