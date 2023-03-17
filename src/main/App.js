@@ -156,6 +156,12 @@ export default class App {
     static async update() {
         if (OS.isMacOS() && !this.isDev()) {
             this.updateMacCoreSubDir(['software', TEMP_DIR_NAME]);
+
+            //此段代码需要长期保留，因为Mac覆盖安装不走init方法
+            let initFile = this.getInitFilePath();
+            if (File.Exists(initFile)) {
+                File.Delete(initFile);
+            }
         }
     }
 
