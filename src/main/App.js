@@ -147,14 +147,16 @@ export default class App {
             await SoftwareInit.initAll();
         }
 
-        if (OS.isMacOS()) {
-            this.updateMacCoreSubDir(['software',TEMP_DIR_NAME]);
-        }
-
 
         await this.initMySQL();
 
         File.Delete(initFile);
+    }
+
+    static async update() {
+        if (OS.isMacOS() && !this.isDev()) {
+            this.updateMacCoreSubDir(['software', TEMP_DIR_NAME]);
+        }
     }
 
     /**

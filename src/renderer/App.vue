@@ -61,6 +61,8 @@ provide('globalSpinning',spinning);
     }
   }
 
+  await App.update();
+
 })()
 
 async function stopWebService() {
