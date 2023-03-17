@@ -88,6 +88,7 @@ const columns = [
 const list = ref([]);
 const confName = ref('');
 const serverName = ref('');
+const port = ref('');
 const addModalVisible = ref(false);
 const editModalVisible = ref(false);
 
@@ -102,6 +103,7 @@ const search = async (val) => {
 provide('website',{
   confName,
   serverName,
+  port,
   search,
   addModalVisible,
   editModalVisible,
@@ -149,6 +151,7 @@ const showEdit = (item) => {
   editModalVisible.value = true;
   confName.value = item.confName;
   serverName.value = item.serverName;
+  port.value = item.port;
 }
 
 const browse = (item) => {
