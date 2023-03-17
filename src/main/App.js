@@ -137,14 +137,20 @@ export default class App {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
             }
-            this.updateCoreSubDir(['Library']);
+            this.updateMacCoreSubDir(['Library']);
         }
+
         this.moveInitFiles([TEMP_DIR_NAME, 'www', 'software']);
         this.createCoreSubDir(['downloads', 'database', 'bin']);
 
         if (!softwareDirExists) { //softwareDirExists是false说明是第一次安装，不是覆盖安装
             await SoftwareInit.initAll();
         }
+
+        if (OS.isMacOS()) {
+            this.updateMacCoreSubDir(['software',TEMP_DIR_NAME]);
+        }
+
 
         await this.initMySQL();
 
@@ -170,10 +176,13 @@ export default class App {
      * 将App包内的Core子目录移动到用户Core目录，如果目录不存在的情况下
      * @param dirs
      */
-    static moveCoreSubDir(dirs) {
+    static moveMacCoreSubDir(dirs) {
         let corePath = this.getCorePath();
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
+            if (!Directory.Exists(source)) {
+                continue;
+            }
             let target = Path.Join(MAC_USER_CORE_PATH, dir);
             if (!Directory.Exists(target)) {
                 Directory.Move(source, target);
@@ -185,10 +194,13 @@ export default class App {
      *  覆盖合并目录内容，如果目录不存在，则创建
       * @param dirs
      */
-    static updateCoreSubDir(dirs) {
+    static updateMacCoreSubDir(dirs) {
         let corePath = this.getCorePath();
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
+            if (!Directory.Exists(source)) {
+                continue;
+            }
             let target = Path.Join(MAC_USER_CORE_PATH, dir);
             if (!Directory.Exists(target)) {
                 Directory.CreateDirectory(target);
