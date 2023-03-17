@@ -75,7 +75,7 @@ const save = async () => {
       if (formData.extraServerName === oldExtraServerName) {
         return;
       }
-      if (oldExtraServerName && await Website.getSameDomainAmount(oldExtraServerName) <= 1) {
+      if (oldExtraServerName && await Website.getSameDomainAmount(oldExtraServerName) === 0) {
         await Hosts.delete(oldExtraServerName);
       }
       if (formData.extraServerName) {
