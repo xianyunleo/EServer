@@ -12,7 +12,7 @@
     </a-form-item>
 
     <a-form-item label="端口" name="port" :rules="[{  required: true, type: 'number', min: 80, max: 65535 }]">
-      <a-input-number v-model:value="formData.port" min="80" max="65535" readonly  />
+      <a-input-number v-model:value="formData.port" min="80" max="65535" disabled  />
     </a-form-item>
 
     <a-form-item label="根目录" name="path" :rules="[{ required: true, message: '请选择根目录!' }]">

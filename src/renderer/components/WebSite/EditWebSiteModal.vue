@@ -1,7 +1,7 @@
 <template>
   <a-modal
       width="550px"
-      :title="`修改网站[${serverName}]`"
+      :title="`修改网站[${serverName}:${port}]`"
       ok-text="确定"
       cancel-text="取消"
       v-model:visible="visible"
@@ -28,7 +28,7 @@ import {ref, inject} from "vue";
 import RewriteSetting from "@/renderer/components/WebSite/EditWebSite/RewriteSetting"
 import BasicSetting from "@/renderer/components/WebSite/EditWebSite/BasicSetting";
 
-const {serverName, editModalVisible: visible} = inject('website');
+const {serverName, port, editModalVisible: visible} = inject('website');
 const defaultKey = 'basicSetting';
 const activeKey = ref(defaultKey);
 

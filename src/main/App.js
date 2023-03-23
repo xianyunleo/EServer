@@ -137,8 +137,9 @@ export default class App {
             if (!Directory.Exists(MAC_USER_CORE_PATH)) {
                 Directory.CreateDirectory(MAC_USER_CORE_PATH);
             }
-            this.updateCoreSubDir(['Library']);
+            this.updateMacCoreSubDir(['Library']);
         }
+
         this.moveInitFiles([TEMP_DIR_NAME, 'www', 'software']);
         this.createCoreSubDir(['downloads', 'database', 'bin']);
 
@@ -146,9 +147,22 @@ export default class App {
             await SoftwareInit.initAll();
         }
 
+
         await this.initMySQL();
 
         File.Delete(initFile);
+    }
+
+    static async update() {
+        if (OS.isMacOS() && !this.isDev()) {
+            this.updateMacCoreSubDir(['software', TEMP_DIR_NAME]);
+
+            //此段代码需要长期保留，因为Mac覆盖安装不走init方法
+            let initFile = this.getInitFilePath();
+            if (File.Exists(initFile)) {
+                File.Delete(initFile);
+            }
+        }
     }
 
     /**
@@ -170,10 +184,13 @@ export default class App {
      * 将App包内的Core子目录移动到用户Core目录，如果目录不存在的情况下
      * @param dirs
      */
-    static moveCoreSubDir(dirs) {
+    static moveMacCoreSubDir(dirs) {
         let corePath = this.getCorePath();
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
+            if (!Directory.Exists(source)) {
+                continue;
+            }
             let target = Path.Join(MAC_USER_CORE_PATH, dir);
             if (!Directory.Exists(target)) {
                 Directory.Move(source, target);
@@ -185,10 +202,13 @@ export default class App {
      *  覆盖合并目录内容，如果目录不存在，则创建
       * @param dirs
      */
-    static updateCoreSubDir(dirs) {
+    static updateMacCoreSubDir(dirs) {
         let corePath = this.getCorePath();
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
+            if (!Directory.Exists(source)) {
+                continue;
+            }
             let target = Path.Join(MAC_USER_CORE_PATH, dir);
             if (!Directory.Exists(target)) {
                 Directory.CreateDirectory(target);

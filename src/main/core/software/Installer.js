@@ -83,6 +83,10 @@ export default class Installer {
     async install() {
         this.resetDownloadInfo();
 
+        if (!Directory.Exists(GetPath.getDownloadsPath())) {
+            Directory.CreateDirectory(GetPath.getDownloadsPath());
+        }
+
         if(File.Exists(this.tempFilePath)){
             File.Delete(this.tempFilePath);
         }
@@ -146,13 +150,18 @@ export default class Installer {
 
 
     getDownloadUrl() {
-        let url
-        if (OS.isWindows()) {
-            url = `${DOWNLOAD_URL}/win`;
+        let url = `${DOWNLOAD_URL}/software`
+        if (this.item.IsCommonPlatform) {
+            url = `${url}/common`;
         } else {
-            url = `${DOWNLOAD_URL}/mac`;
+            if (OS.isWindows()) {
+                url = `${url}/win`;
+            } else {
+                url = `${url}/mac`;
+            }
         }
-        return `${url}/software/${this.fileName}`;
+
+        return `${url}/${this.fileName}`;
     }
 
     async download() {

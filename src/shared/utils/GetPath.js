@@ -13,6 +13,10 @@ export default class GetPath {
         return path.join(App.getUserCorePath(), TEMP_DIR_NAME);
     }
 
+    static getDownloadsPath() {
+        return path.join(App.getUserCorePath(), 'downloads');
+    }
+
     static getSoftwarePath(){
         return path.join(App.getUserCorePath(), 'software');
     }
