@@ -150,18 +150,18 @@ export default class Installer {
 
 
     getDownloadUrl() {
-        let url
+        let url = `${DOWNLOAD_URL}/software`
         if (this.item.IsCommonPlatform) {
-            url = `${DOWNLOAD_URL}/common`;
+            url = `${url}/common`;
         } else {
             if (OS.isWindows()) {
-                url = `${DOWNLOAD_URL}/win`;
+                url = `${url}/win`;
             } else {
-                url = `${DOWNLOAD_URL}/mac`;
+                url = `${url}/mac`;
             }
         }
 
-        return `${url}/software/${this.fileName}`;
+        return `${url}/${this.fileName}`;
     }
 
     async download() {
