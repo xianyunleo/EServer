@@ -185,5 +185,14 @@
         "CanDelete": true,
         "Icon": "Notepad--.png",
         "Desc": "国产跨平台文本、代码编辑器"
+    },
+    {
+        "Name": "phpMyAdmin",
+        "DirName": "phpMyAdmin",
+        "Type": "Tool",
+        "IsCommonPlatform": true,
+        "CanDelete": true,
+        "Icon": "phpmyadmin.png",
+        "Desc": "Web端的MySQL管理工具"
     }
 ]
