@@ -50,6 +50,8 @@ provide('globalSpinning',spinning);
   if (OS.isMacOS()) {
     if (!SettingsExtend.isUserPwdSet()) {
       userPwdModalShow.value = true;
+    } else {
+      await update();
     }
   } else {
     try {
@@ -61,9 +63,17 @@ provide('globalSpinning',spinning);
     }
   }
 
-  await App.update();
-
 })()
+
+async function update() {
+  try {
+    spinning.value = true;
+    await App.update();
+    spinning.value = false;
+  } catch (error) {
+    MessageBox.error(error.message ?? error, '软件升级出错！');
+  }
+}
 
 async function stopWebService() {
   const IISServiceName = 'W3SVC';
