@@ -7,14 +7,8 @@
         "StartServerArgs": ["-p","${WorkPath}","-g","daemon off;"],
         "ServerPort": 80,
         "ExtraFiles": [
-            {
-                "Name": "访问日志",
-                "Path": "logs/access.log"
-            },
-            {
-                "Name": "错误日志",
-                "Path": "logs/error.log"
-            }
+            {"Name": "access.log", "Path": "logs/access.log"},
+            {"Name": "error.log", "Path": "logs/error.log"}
         ],
         "Type": "Server",
         "CanDelete": false,
@@ -121,10 +115,7 @@
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
         "ServerPort": 3306,
         "ExtraFiles": [
-            {
-                "Name": "日志",
-                "Path": "logs/mysql.log"
-            }
+            {"Name": "mysql.log", "Path": "logs/mysql.log"}
         ],
         "CanDelete": true,
         "Icon": "mysql.png",
@@ -139,10 +130,7 @@
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
         "ServerPort": 3306,
         "ExtraFiles": [
-            {
-                "Name": "日志",
-                "Path": "logs/mysql.log"
-            }
+            {"Name": "mysql.log", "Path": "logs/mysql.log"}
         ],
         "CanDelete": true,
         "Icon": "mysql.png",
