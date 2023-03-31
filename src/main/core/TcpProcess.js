@@ -29,9 +29,9 @@ export default class TcpProcess {
                     let lineArr = line.split(' ');
                     let name, pid, user, type, ipAndPort;
                     [name, pid, user, type, ipAndPort] = lineArr;
-                    let tempArr = ipAndPort.split(/[:\s]/);
+                    let tempArr = ipAndPort.match(/^(.*):(\d+)$/);
                     let ip, port;
-                    [ip, port] = tempArr;
+                    [,ip, port] = tempArr;
 
                     let path = await ProcessExtend.getPathByPid(pid);
                     return {name, pid, user, type, ip, port, path, status: 'Listen'};
@@ -111,6 +111,7 @@ export default class TcpProcess {
                 commandStr = `(Get-Process -Id (Get-NetTCPConnection -LocalPort ${port} -State Listen).OwningProcess).Path"`;
                 resStr = await Command.exec(commandStr, {shell: 'powershell'});
             } else {
+                //todo path有空格就会有问题
                 commandStr = `lsof -t -sTCP:LISTEN -i:${port}|head -n 1|xargs lsof -a -w -d txt -p|grep -v .dylib|awk 'NR!=1{print $9}'`;
                 resStr = await Command.exec(commandStr);
             }

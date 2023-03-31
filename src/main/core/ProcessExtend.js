@@ -59,6 +59,7 @@ export default class ProcessExtend {
                 commandStr = `(Get-Process -Id ${pid}).Path`;
                 resStr = await Command.exec(commandStr, {shell: 'powershell'});
             } else {
+                //todo path有空格就会有问题
                 commandStr = `echo ${pid}|xargs lsof -a -w -d txt -p|grep -v .dylib|awk 'NR!=1{print $9}'`;
                 resStr = await Command.exec(commandStr);
             }
