@@ -25,7 +25,7 @@ export default class TcpProcess {
             let list = resStr.split('\n');
 
             return await Promise.all(
-                list.map(line => {
+                list.map(async line => {
                     let lineArr = line.split(' ');
                     let name, pid, user, type, ipAndPort;
                     [name, pid, user, type, ipAndPort] = lineArr;
@@ -33,7 +33,7 @@ export default class TcpProcess {
                     let ip, port;
                     [ip, port] = tempArr;
 
-                    let path = ProcessExtend.getPathByPid();
+                    let path = await ProcessExtend.getPathByPid();
                     return {name, pid, user, type, ip, port, path, status: 'Listen'};
                 })
             );
