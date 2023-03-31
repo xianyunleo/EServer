@@ -114,7 +114,7 @@ export default class ProcessExtend {
                 command += `"ExecutablePath like '${formatDir}%'"`;
             }
         }
-        command += " |Select-Object Name,ProcessId,ParentProcessId,ExecutablePath";
+        command += " |Select-Object Name,ProcessId,ParentProcessId,ExecutablePath | Format-List";
 
         try {
             let str =  await Command.exec(command,{shell: 'powershell'});
@@ -122,11 +122,14 @@ export default class ProcessExtend {
             if(!str){
                 return [];
             }
-            let list = str.split('\n');
-            list.shift();
-            list.shift();
+            let list = str.split(/\r?\n\r?\n/);
             list = list.map(item => {
-                let arr = item.split(/\s+/);
+                let lineArr = item.split(/r?\n/);
+
+                let arr = lineArr.map(line =>{
+                    return line.split(' : ')[1].trim();
+                });
+
                 let name, pid, ppid, path;
                 [name, pid, ppid, path] = arr;
                 return {name, pid, ppid, path};
