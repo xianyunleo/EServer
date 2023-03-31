@@ -33,7 +33,7 @@ export default class TcpProcess {
                     let ip, port;
                     [ip, port] = tempArr;
 
-                    let path = await ProcessExtend.getPathByPid();
+                    let path = await ProcessExtend.getPathByPid(pid);
                     return {name, pid, user, type, ip, port, path, status: 'Listen'};
                 })
             );
