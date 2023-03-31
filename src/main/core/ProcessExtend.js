@@ -51,14 +51,32 @@ export default class ProcessExtend {
         }
     }
 
+    static async getPathByPid(pid) {
+        try {
+            let commandStr, resStr, path;
+
+            if (OS.isWindows()) {
+                commandStr = `(Get-Process -Id ${pid}).Path`;
+                resStr = await Command.exec(commandStr, {shell: 'powershell'});
+            } else {
+                commandStr = `echo ${pid}|xargs lsof -a -w -d txt -p|grep -v .dylib|awk 'NR!=1{print $9}'`;
+                resStr = await Command.exec(commandStr);
+            }
+            path = resStr.trim().split("\n")[0];
+            return path.trim();
+        } catch {
+            return null;
+        }
+    }
+
     /**
      *
      * @returns {Promise<Awaited<*>[]>}
      */
     static async killWebServer() {
         return await Promise.all([
-            ProcessExtend.killByName('httpd'),
-            ProcessExtend.killByName('nginx'),
+            this.killByName('httpd'),
+            this.killByName('nginx'),
         ]);
     }
 
@@ -69,9 +87,9 @@ export default class ProcessExtend {
      */
     static async getList(searchObj={}) {
         if (OS.isMacOS()) {
-            return await ProcessExtend.getListByMacOS(searchObj);
+            return await this.getListByMacOS(searchObj);
         }else if(OS.isWindows()){
-            return await ProcessExtend.getListByWindows(searchObj);
+            return await this.getListByWindows(searchObj);
         }
         return [];
     }
@@ -111,10 +129,11 @@ export default class ProcessExtend {
         if (searchObj) {
             if(searchObj.directory){
                 let formatDir =searchObj.directory.replaceAll('\\','\\\\');
+                //这里只能是ExecutablePath不能是Path，因为Path是'ScriptProperty'
                 command += `"ExecutablePath like '${formatDir}%'"`;
             }
         }
-        command += " |Select-Object Name,ProcessId,ParentProcessId,ExecutablePath | Format-List";
+        command += " |Select-Object Name,ProcessId,ParentProcessId,ExecutablePath | Format-List | Out-String -Width 999";
 
         try {
             let str =  await Command.exec(command,{shell: 'powershell'});
