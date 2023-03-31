@@ -6,6 +6,9 @@
       官网：<a @click="openUrl('http://www.easysrv.cn')">www.easysrv.cn</a>
     </p>
     <p style="text-align: center">
+      文档：<a @click="openUrl('http://www.easysrv.cn/doc')">www.easysrv.cn/doc</a>
+    </p>
+    <p style="text-align: center">
       Github：<a @click="openUrl('http://github.com/xianyunleo/EasySrv')">github.com/xianyunleo/EasySrv</a>
     </p>
   </div>
