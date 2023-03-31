@@ -45,6 +45,9 @@ export default class Command {
      * @returns {Promise<string>}
      */
     static async sudoExec(command, options = {}) {
+        if (OS.isWindows()) {
+            throw new Error(`Cannot be executed on Windows!`);
+        }
         if (App.isDev()) console.log('Command.sudoExec command', command);
 
         command = `echo '${SettingsExtend.getUserPwd()}' | sudo -S ${command}`;
