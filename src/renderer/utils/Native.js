@@ -47,6 +47,10 @@ export default class Native {
         return await shell.openPath(path);
     }
 
+    static async showItemInFolder(path) {
+        await shell.showItemInFolder(path);
+    }
+
     static async openExternal(path) {
         return await shell.openExternal(path);
     }
