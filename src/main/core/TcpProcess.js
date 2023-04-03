@@ -56,14 +56,15 @@ export default class TcpProcess {
             let list = resStr.split(/\r?\n\r?\n/);
             list = list.map(item => {
                 let lineArr = item.split(/r?\n/);
-                let arr = lineArr.map(line => {
 
+                let arr = lineArr.map(line => {
                     return line.split(' : ')[1].trim();
                 });
 
-                let name, pid, path, ip, port;
+                let pid, ip, port, name, path;
                 [pid, ip, port, name, path] = arr;
-                return {name, pid, ip, port, path, status: 'Listen'};
+
+                return {pid, ip, port, name, path, status: 'Listen'};
             });
             return list;
         } catch (e) {
