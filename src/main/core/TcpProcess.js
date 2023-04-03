@@ -111,8 +111,7 @@ export default class TcpProcess {
                 commandStr = `(Get-Process -Id (Get-NetTCPConnection -LocalPort ${port} -State Listen).OwningProcess).Path"`;
                 resStr = await Command.exec(commandStr, {shell: 'powershell'});
             } else {
-                //todo path有空格就会有问题
-                commandStr = `lsof -t -sTCP:LISTEN -i:${port}|head -n 1|xargs lsof -a -w -d txt -p|grep -v .dylib|awk 'NR!=1{print $9}'`;
+                commandStr = `lsof -t -sTCP:LISTEN -i:${port}|head -n 1|xargs lsof -a -w -d txt -Fn -p|awk 'NR==3{print}'|sed "s/n//"`;
                 resStr = await Command.exec(commandStr);
             }
 
