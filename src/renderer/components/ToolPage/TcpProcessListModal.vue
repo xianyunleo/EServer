@@ -47,6 +47,7 @@ import {DownOutlined} from '@ant-design/icons-vue';
 import MessageBox from "@/renderer/utils/MessageBox";
 import TcpProcess from "@/main/core/TcpProcess";
 import Native from "@/renderer/utils/Native";
+import OS from "@/main/core/OS";
 
 const props = defineProps(['show']);
 const emit = defineEmits(['update:show']);
@@ -95,6 +96,21 @@ const columns = [
     width: 100,
   }
 ];
+
+if (!OS.isWindows()) {
+  columns.splice(2, 0,
+      {
+        title: 'User',
+        dataIndex: 'user',
+        width: 60,
+      },
+      {
+        title: 'Type',
+        dataIndex: 'type',
+        align: 'center',
+        width: 60,
+      })
+}
 
 const list = ref([]);
 
