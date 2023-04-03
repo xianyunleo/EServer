@@ -68,11 +68,13 @@ const columns = [
     width: 100,
     dataIndex: 'name',
     ellipsis: true,
+    sorter:(a, b) => a.name.length - b.name.length,
   },
   {
     title: 'PID',
     width: 60,
     dataIndex: 'pid',
+    sorter:(a, b) => a.pid - b.pid,
   },{
     title: 'IP',
     width: 120,
@@ -81,6 +83,7 @@ const columns = [
     title: 'Port',
     dataIndex: 'port',
     width: 80,
+    sorter:(a, b) => a.port - b.port,
   }, {
     title: 'Status',
     dataIndex: 'status',
