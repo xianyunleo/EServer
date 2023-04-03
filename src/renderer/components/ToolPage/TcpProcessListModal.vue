@@ -48,6 +48,7 @@ import MessageBox from "@/renderer/utils/MessageBox";
 import TcpProcess from "@/main/core/TcpProcess";
 import Native from "@/renderer/utils/Native";
 import OS from "@/main/core/OS";
+import {message} from "ant-design-vue";
 
 const props = defineProps(['show']);
 const emit = defineEmits(['update:show']);
@@ -84,6 +85,7 @@ const columns = [
     dataIndex: 'port',
     width: 80,
     sorter:(a, b) => a.port - b.port,
+    defaultSortOrder: 'ascend',
   }, {
     title: 'Status',
     dataIndex: 'status',
@@ -130,12 +132,21 @@ const search = async () => {
 search();
 
 const kill = async (item) => {
+  if (OS.isWindows()) {
+    const processArr = ["System", "wininit", "services", "svchost", "Idle", "lsass", "spoolsv"];
+    if (processArr.includes(item.name)) {
+      message.warn(`不能杀死系统进程'${item.name}'！`);
+      return;
+    }
+  }
   await ProcessExtend.kill(item.pid);
   await search();
 }
 
 const openPath = async (item) => {
-  await Native.showItemInFolder(item.path);
+  if (item.path) {
+    await Native.showItemInFolder(item.path);
+  }
 }
 </script>
 
