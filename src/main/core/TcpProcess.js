@@ -1,6 +1,7 @@
 import Command from "@/main/core/Command";
 import OS from "@/main/core/OS";
 import ProcessExtend from "@/main/core/ProcessExtend";
+import {app} from "@electron/remote";
 
 
 export default class TcpProcess {
@@ -54,19 +55,21 @@ export default class TcpProcess {
                 return [];
             }
             let list = resStr.split(/\r?\n\r?\n/);
-            list = list.map(item => {
-                let lineArr = item.split(/r?\n/);
 
-                let arr = lineArr.map(line => {
-                    return line.split(' : ')[1].trim();
-                });
+            return await Promise.all(
+                list.map(async item => {
+                    let lineArr = item.split(/r?\n/);
 
-                let pid, ip, port, name, path;
-                [pid, ip, port, name, path] = arr;
+                    let arr = lineArr.map(line => {
+                        return line.split(' : ')[1].trim();
+                    });
+                    let pid, ip, port, name, path;
+                    [pid, ip, port, name, path] = arr;
 
-                return {pid, ip, port, name, path, status: 'Listen'};
-            });
-            return list;
+                    let icon = path ? (await app.getFileIcon(path))?.toDataURL() : null;
+                    return {pid, ip, port, name, path, status: 'Listen', icon};
+                })
+            );
         } catch (e) {
             return [];
         }

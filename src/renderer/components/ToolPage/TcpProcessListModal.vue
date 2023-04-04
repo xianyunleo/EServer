@@ -19,6 +19,9 @@
                :pagination="false"
                size="middle">
         <template #bodyCell="{ column, record}">
+          <template v-if="column.dataIndex === 'icon'">
+            <img v-if="record.icon" :src="record.icon" alt="icon">
+          </template>
           <template v-if="column.dataIndex === 'operate'">
             <div class="operate">
               <a-dropdown :trigger="['click']">
@@ -66,14 +69,14 @@ const tableLoading = ref(false);
 const columns = [
   {
     title: 'Name',
-    width: 100,
+    width: 120,
     dataIndex: 'name',
     ellipsis: true,
-    sorter:(a, b) => a.name.length - b.name.length,
+    sorter:(a, b) => a.name.localeCompare(b.name),
   },
   {
     title: 'PID',
-    width: 60,
+    width: 80,
     dataIndex: 'pid',
     sorter:(a, b) => a.pid - b.pid,
   },{
@@ -89,7 +92,7 @@ const columns = [
   }, {
     title: 'Status',
     dataIndex: 'status',
-    width: 100,
+    width: 60,
   }, {
     title: 'Path',
     dataIndex: 'path',
@@ -102,7 +105,13 @@ const columns = [
   }
 ];
 
-if (!OS.isWindows()) {
+if (OS.isWindows()) {
+  columns.unshift({
+    title: 'Icon',
+    dataIndex: 'icon',
+    width: 50,
+  },)
+}else{
   columns.splice(2, 0,
       {
         title: 'User',
