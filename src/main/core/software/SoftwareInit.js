@@ -32,18 +32,31 @@ export default class SoftwareInit extends StringExtend{
             File.WriteAllText(path, text);
 
             await this.initNginxLocalhostConf();
+            await this.initNginxPhpmyadminConf();
         } catch (error) {
             throw new Error(`初始化Nginx配置失败！${error.message}`);
         }
     }
 
     static async initNginxLocalhostConf() {
-        let path = Path.Join(GetPath.getNginxVhostsPath(), 'localhost.conf');
+        let path = Path.Join(GetPath.getNginxVhostsPath(), 'localhost_80.conf');
         if (File.Exists(path)) {
             let text = File.ReadAllText(path);
             let pattern = /root\s+\S+\s*;/g;
-            let localhostWWWPath = Path.Join(GetPath.getWebsitePath(), 'localhost').replaceSlash();
-            let replaceStr = `root ${localhostWWWPath};`;
+            let rootPath = Path.Join(GetPath.getWebsitePath(), 'localhost').replaceSlash();
+            let replaceStr = `root ${rootPath};`;
+            text = text.replaceAll(pattern, replaceStr);
+            File.WriteAllText(path, text);
+        }
+    }
+
+    static async initNginxPhpmyadminConf() {
+        let path = Path.Join(GetPath.getNginxVhostsPath(), 'localhost_888.conf');
+        if (File.Exists(path)) {
+            let text = File.ReadAllText(path);
+            let pattern = /root\s+\S+\s*;/g;
+            let rootPath = Path.Join(GetPath.getToolTypePath(), 'phpMyAdmin').replaceSlash();
+            let replaceStr = `root ${rootPath};`;
             text = text.replaceAll(pattern, replaceStr);
             File.WriteAllText(path, text);
         }
