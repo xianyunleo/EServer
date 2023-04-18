@@ -8,14 +8,17 @@
               <template v-if="item.iconType === iconTypes.textFile">
                 <file-text-two-tone />
               </template>
-              <div v-else-if="item.iconType === iconTypes.dir">
+              <template v-else-if="item.iconType === iconTypes.dir">
                 <folder-open-two-tone />
-              </div>
+              </template>
+              <template v-else-if="item.iconType === iconTypes.list">
+                <database-two-tone />
+              </template>
+
             </template>
             <template v-else>
               <img :src="item.icon" alt="icon">
             </template>
-
 
           </div>
           <div class="tool-item-content">
@@ -26,42 +29,32 @@
       </a-col>
     </a-row>
   </div>
-  <mysql-reset-pwd-modal v-model:show="mysqlResetPwdModalShow"></mysql-reset-pwd-modal>
+<!--  v-if防止不显示就执行modal里面的代码-->
+  <mysql-reset-pwd-modal v-if="mysqlResetPwdModalShow" v-model:show="mysqlResetPwdModalShow">
+  </mysql-reset-pwd-modal>
+  <tcp-process-list-modal v-if="tcpProcessListModalShow" v-model:show="tcpProcessListModalShow">
+  </tcp-process-list-modal>
 </template>
 
 <script setup>
 import {ref} from "vue";
 import {message} from 'ant-design-vue';
 
-import {FileTextTwoTone,FolderOpenTwoTone} from "@ant-design/icons-vue";
+import {FileTextTwoTone,FolderOpenTwoTone,DatabaseTwoTone} from "@ant-design/icons-vue";
 import MysqlResetPwdModal from "@/renderer/components/ToolPage/MysqlResetPwdModal"
 import MessageBox from "@/renderer/utils/MessageBox";
 import GetPath from "@/shared/utils/GetPath";
 import {sleep} from "@/shared/utils/utils";
 import Native from "@/renderer/utils/Native";
+import TcpProcessListModal from "@/renderer/components/ToolPage/TcpProcessListModal.vue";
 
 
 const iconTypes = {
   dir: 'dir',
   file: 'file',
+  list: 'list',
   textFile: 'textFile',
   tool: 'tool',
-}
-
-const editHosts = async () => {
-  message.info('打开中，请等待...');
-  await sleep(100);
-  try {
-    await Native.openHosts();
-  } catch (error) {
-    MessageBox.error(error.message ?? error, '打开hosts文件出错！');
-  }
-};
-
-const mysqlResetPwdModalShow = ref(false);
-
-const mysqlResetPwd = () => {
-  mysqlResetPwdModalShow.value = true;
 }
 
 const toolItems = [
@@ -79,7 +72,37 @@ const toolItems = [
     desc: '修改、重置MySQL的root账户的密码',
     func: mysqlResetPwd,
   },
+  {
+    key: 'tcpProcessList',
+    iconType: iconTypes.list,
+    title: 'TCP端口进程列表',
+    desc: '查看端口占用情况',
+    func: tcpProcessList,
+  },
 ];
+
+async function editHosts() {
+  message.info('打开中，请等待...');
+  await sleep(100);
+  try {
+    await Native.openHosts();
+  } catch (error) {
+    MessageBox.error(error.message ?? error, '打开hosts文件出错！');
+  }
+}
+
+
+const mysqlResetPwdModalShow = ref(false);
+
+function mysqlResetPwd() {
+  mysqlResetPwdModalShow.value = true;
+}
+
+const tcpProcessListModalShow = ref(false);
+
+function tcpProcessList() {
+  tcpProcessListModalShow.value = true;
+}
 
 
 </script>

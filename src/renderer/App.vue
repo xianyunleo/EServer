@@ -9,6 +9,7 @@
         <router-view />
       </a-col>
     </a-row>
+    <!--  v-if防止不显示就执行modal里面的代码-->
     <user-pwd-modal v-if="userPwdModalShow" v-model:show="userPwdModalShow" :cancel-is-exit="true" />
   </a-spin>
 </template>
