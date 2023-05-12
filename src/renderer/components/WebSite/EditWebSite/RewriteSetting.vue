@@ -26,12 +26,13 @@
 
 <script setup>
 // eslint-disable-next-line no-unused-vars
-import {ref,inject}  from "vue";
+import {ref, inject, defineEmits} from "vue";
 import Website from "@/main/core/website/Website";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {message} from "ant-design-vue";
 
 const {confName} = inject('website');
+const emits = defineEmits(['editAfter']);
 
 const formData = ref({
   rewriteSelected: 0,
@@ -67,6 +68,8 @@ const save = async () => {
   }catch (error){
     MessageBox.error(error.message ?? error, '保存出错！');
   }
+
+  emits('editAfter');
 }
 </script>
 
