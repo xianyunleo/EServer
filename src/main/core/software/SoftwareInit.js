@@ -4,6 +4,8 @@ import Path from "@/main/utils/Path";
 import OS from "@/main/core/OS";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import StringExtend from "@/main/core/baseClass/StringExtend";
+import Directory from "@/main/utils/Directory";
+import Php from "@/main/core/Php";
 
 export default class SoftwareInit extends StringExtend{
     static {
@@ -76,14 +78,41 @@ export default class SoftwareInit extends StringExtend{
             let text = File.ReadAllText(confPath);
             let phpTempPath = Path.Join(GetPath.geTempPath(), 'php');
 
-            //(?<=\n)upload_tmp_dir\s*=\s*.+
-            let uploadPattern = /(?<=\n)upload_tmp_dir\s*=\s*.+/g;
+            text = text.replace(/(?<=\n);?\s?max_execution_time\s*=\s*.*/, 'max_execution_time = 300');
+            text = text.replace(/(?<=\n);?\s?memory_limit\s*=\s*.*/, 'memory_limit = 512M');
+            text = text.replace(/(?<=\n);?\s?post_max_size\s*=\s*.*/, 'post_max_size = 256M');
+            text = text.replace(/(?<=\n);?\s?upload_max_filesize\s*=\s*.*/, 'upload_max_filesize = 200M');
+            text = text.replace(/(?<=\n);?\s?date.timezone\s*=\s*.*/, 'date.timezone = RPC');
 
+            if (OS.isWindows()) {
+                let i = 0;
+                text = text.replace(/(?<=\n);?\s?extension_dir\s*=\s*.*/, match => {
+                    //仅替换第二个
+                    return ++i === 2 ? 'extension_dir = "ext"' : match;
+                });
+
+                //需要php版本大于等于7.2
+                let extensionArr = ['bz2', 'curl', 'fileinfo', 'gd', 'mbstring', 'exif', 'mysqli', 'odbc',
+                    'openssl', 'pdo_mysql', 'pdo_odbc', 'soap', 'sockets', 'sodium', 'zip'];
+                for (const extension of extensionArr) {
+                    text = Php.getSwitchExtensionConfText(text, extension, true);
+                }
+
+            } else {
+                let phpPath = GetPath.getPhpPath(version);
+                let dirs = Directory.GetDirectories(`${Path.Join(phpPath, 'lib/php/extensions')}`, 'no-debug-non-zts');
+                let extPath = dirs[0];
+                //仅替换第一个
+                text = text.replace(/(?<=\n);?\s?extension_dir\s*=\s*.*/, `extension_dir = "${extPath}"`);
+            }
+
+            //(?<=\n);?\s?upload_tmp_dir\s*=\s*.+
+            let uploadPattern = /(?<=\n);?\s?upload_tmp_dir\s*=\s*.*/g;
             let replaceUploadStr = `upload_tmp_dir = "${phpTempPath.replaceSlash()}"`;
             text = text.replaceAll(uploadPattern, replaceUploadStr);
 
-            //(?<=\n)session.save_path\s*=\s*.+
-            let sessionPattern = /(?<=\n)session.save_path\s*=\s*.+/g;
+            //(?<=\n);?\s?session.save_path\s*=\s*.+
+            let sessionPattern = /(?<=\n);?\s?session.save_path\s*=\s*.*/g;
             let replaceSessionStr = `session.save_path = "${phpTempPath.replaceSlash()}"`;
             text = text.replaceAll(sessionPattern, replaceSessionStr);
 
