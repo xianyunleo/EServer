@@ -141,9 +141,8 @@ export default class Installer {
             }
         } else if (dirName.match(/^php-[.\d]+$/)) {
             let version = SoftwareExtend.getPHPVersion(dirName);
-            if (OS.isWindows()) {
-                await SoftwareInit.initPHPConf(version);
-            }
+           //配置文件某些配置可能是tmp作为目录，需要改成temp
+            await SoftwareInit.initPHPConf(version);
         }
 
     }
