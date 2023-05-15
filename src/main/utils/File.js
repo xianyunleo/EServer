@@ -42,6 +42,17 @@ export default class File {
     }
 
     /**
+     * 将现有文件复制到新文件
+     * @param source {string}
+     * @param dest {string}
+     * @param options {object}
+     * @returns {void}
+     */
+    static Copy(source, dest, options) {
+        return fs.cpSync(source, dest, options);
+    }
+
+    /**
      * 读取文件的全部内容
      * @param path {string}
      * @param encoding {string|null}
