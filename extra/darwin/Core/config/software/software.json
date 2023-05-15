@@ -178,6 +178,7 @@
         "Name": "Composer",
         "DirName": "Composer",
         "Type": "Tool",
+        "IsCommonPlatform": true,
         "CanDelete": true,
         "Icon": "Composer.png",
         "Desc": "PHP依赖管理工具（需要在设置里启用）"
