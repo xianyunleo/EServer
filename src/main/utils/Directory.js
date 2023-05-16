@@ -62,7 +62,7 @@ export default class Directory {
      * @param source {string}
      * @param dest {string}
      * @param options {object}
-     * @returns {undefined}
+     * @returns {void}
      */
     static Copy(source, dest, options) {
         return fs.cpSync(source, dest, options);

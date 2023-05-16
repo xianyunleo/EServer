@@ -58,6 +58,34 @@
         "Desc": "PHP是世界上最好的编程语言"
     },
     {
+        "Name": "PHP-7.2",
+        "ServerName": "PHP-FPM-7.2",
+        "DirName": "php-7.2",
+        "ConfPath": "php.ini",
+        "ServerProcessPath": "php-cgi-spawner.exe",
+        "ExtraProcessPath": "php-cgi.exe",
+        "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9008","4"],
+        "ServerPort": 9008,
+        "Type": "PHP",
+        "CanDelete": true,
+        "Icon": "php.png",
+        "Desc": "PHP是世界上最好的编程语言"
+    },
+    {
+        "Name": "PHP-7.3",
+        "ServerName": "PHP-FPM-7.3",
+        "DirName": "php-7.3",
+        "ConfPath": "php.ini",
+        "ServerProcessPath": "php-cgi-spawner.exe",
+        "ExtraProcessPath": "php-cgi.exe",
+        "StartServerArgs": ["${ExtraProcessPath} -c ${ConfPath}","9009","4"],
+        "ServerPort": 9009,
+        "Type": "PHP",
+        "CanDelete": true,
+        "Icon": "php.png",
+        "Desc": "PHP是世界上最好的编程语言"
+    },
+    {
         "Name": "PHP-7.4",
         "ServerName": "PHP-FPM-7.4",
         "DirName": "php-7.4",
@@ -171,6 +199,7 @@
         "Name": "Composer",
         "DirName": "Composer",
         "Type": "Tool",
+        "IsCommonPlatform": true,
         "CanDelete": true,
         "Icon": "Composer.png",
         "Desc": "PHP依赖管理工具（需要在设置里启用）"

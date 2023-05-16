@@ -53,11 +53,16 @@ import {STATIC_WEB_NAME} from "@/shared/constant";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Hosts from "@/main/core/Hosts";
 import {replaceSlash} from "@/shared/utils/utils";
+import Settings from "@/main/Settings";
 
 const {search, addModalVisible: visible} = inject('website');
 
 const wwwPath = replaceSlash(GetPath.getWebsitePath());
 const formRef = ref();
+
+const nginxServerItem = inject('nginxServerItem');
+const restartServerFunc = inject('restartServerFunc');
+const startPhpFpmFunc = inject('startPhpFpmFunc');
 
 const formData = reactive({
   serverName: '',
@@ -107,6 +112,13 @@ const addWeb = async (websiteInfo)=>{
     }
   }
 
+
+  if (Settings.get('autoRestartWebServer')) {
+      restartServerFunc.value(nginxServerItem.value);
+  }
+  if (Settings.get('autoStartPhpFpm') && websiteInfo.phpVersion) {
+      startPhpFpmFunc.value(websiteInfo.phpVersion);
+  }
 }
 </script>
 

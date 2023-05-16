@@ -32,6 +32,15 @@ const userPwdModalShow = ref(false);
 const spinning = ref(false);
 provide('globalSpinning',spinning);
 
+const nginxServerItem = ref();
+provide('nginxServerItem',nginxServerItem);
+
+const restartServerFunc = ref();
+provide('restartServerFunc', restartServerFunc);
+
+const startPhpFpmFunc = ref();
+provide('startPhpFpmFunc', startPhpFpmFunc);
+
 (async () => {
   try{
     Software.initList();

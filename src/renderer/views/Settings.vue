@@ -29,11 +29,20 @@ const isWindows = OS.isWindows();
   }
 }
 
+.flex-vertical-center {
+  display: flex;
+  align-items: center;
+}
+
 .disabled-text{
   color:#999;
 }
 
 .settings-card-content {
   display: flex;
+}
+
+.settings-switch {
+  margin-right: 10px;
 }
 </style>

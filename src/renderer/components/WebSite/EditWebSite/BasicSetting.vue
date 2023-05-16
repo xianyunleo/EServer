@@ -36,7 +36,7 @@
 
 <script setup>
 // eslint-disable-next-line no-unused-vars
-import {ref, inject, reactive} from "vue";
+import {ref, inject, reactive, defineEmits} from "vue";
 import InputOpenDirDialog from "@/renderer/components/InputOpenDirDialog";
 import Website from "@/main/core/website/Website";
 import {message} from "ant-design-vue";
@@ -50,6 +50,7 @@ const {confName,search} = inject('website');
 
 const formData = reactive({});
 const phpVersionList = ref([]);
+const emits = defineEmits(['editAfter']);
 
 let websiteInfo = Website.getBasicInfo(confName.value);
 Object.assign(formData, websiteInfo)
@@ -88,6 +89,7 @@ const save = async () => {
 
   websiteInfo = JSON.parse(JSON.stringify(formData));
 
+  emits('editAfter', websiteInfo.phpVersion);
 }
 
 const extraServerNameChange = () => {

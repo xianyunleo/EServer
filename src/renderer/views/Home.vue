@@ -117,6 +117,12 @@ const {serverSoftwareList} = storeToRefs(mainStore);
 
 const serverList = computed(() => serverSoftwareList.value.filter(item => Software.IsInstalled(item)));
 
+const nginxServerItem = inject('nginxServerItem');
+//这里不能用 serverList find，因为Mac下，第一次安装打开软件时，Home.vue 的 serverList是空
+if (!nginxServerItem.value) {
+    nginxServerItem.value = serverSoftwareList.value.find(item => item.Name === 'Nginx');
+}
+
 
 const getProcessList = async () => {
   let list = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
@@ -153,7 +159,7 @@ const initServerListStatus = async () => {
 
 (async () => {
   if (!globalSpinning.value) {
-    serverTableLoading.value = true;
+    serverTableLoading.value = {tip:'服务状态刷新中...'};
     await initServerListStatus();
     serverTableLoading.value = false;
   }
@@ -276,6 +282,9 @@ const restartServerClick = async (item) => {
   item.btnLoading = false;
 }
 
+const restartServerFunc = inject('restartServerFunc');
+restartServerFunc.value = restartServerClick;
+
 const stopServerClick = async (item) => {
   if (!item.isRunning) {
     return;
@@ -296,6 +305,16 @@ const stopServerClick = async (item) => {
   }
   item.btnLoading = false;
 }
+
+const startPhpFpm = async (phpVersion) => {
+    let item = serverList.value.find(item => item.Name === `PHP-${phpVersion}`);
+    if (item) {
+        await startServerClick(item);
+    }
+}
+
+const startPhpFpmFunc = inject('startPhpFpmFunc');
+startPhpFpmFunc.value = startPhpFpm;
 
 </script>
 

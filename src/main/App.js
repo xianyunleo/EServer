@@ -9,8 +9,6 @@ import {
     InitFiles_DIR_NAME,
     TEMP_DIR_NAME
 } from "@/main/constant";
-import Database from "@/main/core/Database";
-import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Directory from "@/main/utils/Directory";
 import File from "@/main/utils/File";
 import Path from "@/main/utils/Path";
@@ -147,9 +145,6 @@ export default class App {
             await SoftwareInit.initAll();
         }
 
-
-        await this.initMySQL();
-
         File.Delete(initFile);
     }
 
@@ -165,20 +160,6 @@ export default class App {
         }
     }
 
-    /**
-     * 初始化MySQL data目录和重置密码
-     * @returns {Promise<void>}
-     */
-    static async initMySQL() {
-        let mysqlList = SoftwareExtend.getMySQLList();
-        for (const item of mysqlList) {
-            let version = item.version;
-            if (!Directory.Exists(GetPath.getMysqlDataPath(version))) {
-                //如果mysql data目录不存在，初始化生成data目录，并重置密码
-                await Database.initMySQL(version);
-            }
-        }
-    }
 
     /**
      * 将App包内的Core子目录移动到用户Core目录，如果目录不存在的情况下

@@ -121,3 +121,5 @@ if (isDevelopment) {
     })
   }
 }
+
+app.commandLine.appendSwitch('--no-sandbox');
