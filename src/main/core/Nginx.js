@@ -42,7 +42,7 @@ export default class Nginx {
     index index.html index.htm index.php;
     root  ${websiteInfo.rootPath};
 
-    autoindex on;
+    autoindex off;
     
     #PHP_START
     #PHP_END
