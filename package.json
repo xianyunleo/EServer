@@ -51,6 +51,9 @@
       "electron-builder": "^23.6.0"
     }
   },
+  "resolutions": {
+    "vue-cli-plugin-electron-builder/electron-builder": "^23.6.0"
+  },
   "eslintConfig": {
     "root": true,
     "env": {
