@@ -6,6 +6,7 @@ import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import StringExtend from "@/main/core/baseClass/StringExtend";
 import Directory from "@/main/utils/Directory";
 import Php from "@/main/core/Php";
+import Database from "@/main/core/Database";
 
 export default class SoftwareInit extends StringExtend{
     static {
@@ -20,6 +21,7 @@ export default class SoftwareInit extends StringExtend{
             this.initAllPHPConf(),
             this.initAllMySQLConf()
         ]);
+        await this.initMySQL();
     }
 
     static async initNginxConf() {
@@ -74,19 +76,26 @@ export default class SoftwareInit extends StringExtend{
 
     static async initPHPConf(version) {
         try {
-            let confPath = Path.Join(GetPath.getPhpPath(version), 'php.ini');
-            let text = File.ReadAllText(confPath);
-            let phpTempPath = Path.Join(GetPath.geTempPath(), 'php');
+            let phpDirPath = GetPath.getPhpPath(version);
+            let confPath = Path.Join(phpDirPath, 'php.ini');
 
-            text = text.replace(/(?<=\n);?\s?max_execution_time\s*=\s*.*/, 'max_execution_time = 300');
-            text = text.replace(/(?<=\n);?\s?memory_limit\s*=\s*.*/, 'memory_limit = 512M');
-            text = text.replace(/(?<=\n);?\s?post_max_size\s*=\s*.*/, 'post_max_size = 256M');
-            text = text.replace(/(?<=\n);?\s?upload_max_filesize\s*=\s*.*/, 'upload_max_filesize = 200M');
-            text = text.replace(/(?<=\n);?\s?date.timezone\s*=\s*.*/, 'date.timezone = RPC');
+            if (!File.Exists(confPath)) {
+                File.Copy(Path.Join(phpDirPath, 'php.ini-development'), confPath);
+            }
+
+            let text = File.ReadAllText(confPath);
+
+            text = text.replace(/(?<=\n);?.?max_execution_time\s*=.*/, 'max_execution_time = 300');
+            text = text.replace(/(?<=\n);?.?memory_limit\s*=.*/, 'memory_limit = 512M');
+            text = text.replace(/(?<=\n);?.?post_max_size\s*=.*/, 'post_max_size = 256M');
+            text = text.replace(/(?<=\n);?.?upload_max_filesize\s*=.*/, 'upload_max_filesize = 200M');
+            text = text.replace(/(?<=\n);?.?date.timezone\s*=.*/, 'date.timezone = Asia/Shanghai');
 
             if (OS.isWindows()) {
+                text = text.replace(/(?<=\n);?.?cgi.fix_pathinfo\s*=.*/, 'cgi.fix_pathinfo=1');
+
                 let i = 0;
-                text = text.replace(/(?<=\n);?\s?extension_dir\s*=\s*.*/, match => {
+                text = text.replace(/(?<=\n);?.?extension_dir\s*=.*/g, match => {
                     //仅替换第二个
                     return ++i === 2 ? 'extension_dir = "ext"' : match;
                 });
@@ -97,22 +106,20 @@ export default class SoftwareInit extends StringExtend{
                 for (const extension of extensionArr) {
                     text = Php.getSwitchExtensionConfText(text, extension, true);
                 }
-
             } else {
-                let phpPath = GetPath.getPhpPath(version);
-                let dirs = Directory.GetDirectories(`${Path.Join(phpPath, 'lib/php/extensions')}`, 'no-debug-non-zts');
+                //非Windows系统
+                let dirs = Directory.GetDirectories(`${Path.Join(phpDirPath, 'lib/php/extensions')}`, 'no-debug-non-zts');
                 let extPath = dirs[0];
                 //仅替换第一个
-                text = text.replace(/(?<=\n);?\s?extension_dir\s*=\s*.*/, `extension_dir = "${extPath}"`);
+                text = text.replace(/(?<=\n);?.?extension_dir\s*=.*/, `extension_dir = "${extPath}"`);
             }
 
-            //(?<=\n);?\s?upload_tmp_dir\s*=\s*.+
-            let uploadPattern = /(?<=\n);?\s?upload_tmp_dir\s*=\s*.*/g;
+            let phpTempPath = Path.Join(GetPath.geTempPath(), 'php');
+            let uploadPattern = /(?<=\n);?.?upload_tmp_dir\s*=.*/g;
             let replaceUploadStr = `upload_tmp_dir = "${phpTempPath.replaceSlash()}"`;
             text = text.replaceAll(uploadPattern, replaceUploadStr);
 
-            //(?<=\n);?\s?session.save_path\s*=\s*.+
-            let sessionPattern = /(?<=\n);?\s?session.save_path\s*=\s*.*/g;
+            let sessionPattern = /(?<=\n);?.?session.save_path\s*=.*/g;
             let replaceSessionStr = `session.save_path = "${phpTempPath.replaceSlash()}"`;
             text = text.replaceAll(sessionPattern, replaceSessionStr);
 
@@ -156,6 +163,21 @@ export default class SoftwareInit extends StringExtend{
             File.WriteAllText(confPath, text);
         } catch (error) {
             throw new Error(`初始化MySQL配置失败！${error.message}`);
+        }
+    }
+
+    /**
+     * 初始化MySQL data目录和重置密码
+     * @returns {Promise<void>}
+     */
+    static async initMySQL() {
+        let mysqlList = SoftwareExtend.getMySQLList();
+        for (const item of mysqlList) {
+            let version = item.version;
+            if (!Directory.Exists(GetPath.getMysqlDataPath(version))) {
+                //如果mysql data目录不存在，初始化生成data目录，并重置密码
+                await Database.initMySQL(version);
+            }
         }
     }
 
