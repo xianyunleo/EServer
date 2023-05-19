@@ -13,9 +13,6 @@ export default class SoftwareInit extends StringExtend{
         super.init();
     }
     static async initAll() {
-        if(!OS.isWindows()){
-            return;
-        }
         await Promise.all([
             this.initNginxConf(),
             this.initAllPHPConf(),
@@ -77,10 +74,11 @@ export default class SoftwareInit extends StringExtend{
     static async initPHPConf(version) {
         try {
             let phpDirPath = GetPath.getPhpPath(version);
-            let confPath = Path.Join(phpDirPath, 'php.ini');
+            let confDirPath = OS.isWindows() ? phpDirPath : Path.Join(phpDirPath, 'etc');
+            let confPath = Path.Join(confDirPath, 'php.ini');
 
             if (!File.Exists(confPath)) {
-                File.Copy(Path.Join(phpDirPath, 'php.ini-development'), confPath);
+                File.Copy(Path.Join(confDirPath, 'php.ini-development'), confPath);
             }
 
             let text = File.ReadAllText(confPath);
