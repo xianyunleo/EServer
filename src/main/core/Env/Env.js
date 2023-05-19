@@ -12,7 +12,7 @@ export default class Env {
      * @param binName
      */
     static createBinFile(targetPath, binName) {
-        let binDirPath = GetPath.getBinPath();
+        let binDirPath = GetPath.getBinDir();
         let path = Path.Join(binDirPath, this.getBinFileName(binName));
         this.deleteBinFile(binName);
         if (OS.isWindows()) {
@@ -32,14 +32,14 @@ export default class Env {
     }
 
     static createOtherBinFile(targetPath, targetOtherFileName, otherBinName) {
-        let binDirPath = GetPath.getBinPath();
+        let binDirPath = GetPath.getBinDir();
         let path = Path.Join(binDirPath, otherBinName);
         let targetOtherFilePath = Path.Join(Path.GetDirectoryName(targetPath), targetOtherFileName);
         File.CreateSymbolicLink(path, targetOtherFilePath);
     }
 
     static deleteBinFile(binName) {
-        let path = Path.Join(GetPath.getBinPath(), this.getBinFileName(binName));
+        let path = Path.Join(GetPath.getBinDir(), this.getBinFileName(binName));
         if (File.Exists(path)) {
             File.Delete(path);
         }
@@ -51,7 +51,7 @@ export default class Env {
     }
 
     static deleteOtherBinFile(otherBinName) {
-        let path = Path.Join(GetPath.getBinPath(), this.getBinFileName(otherBinName));
+        let path = Path.Join(GetPath.getBinDir(), this.getBinFileName(otherBinName));
         if (File.Exists(path)) {
             File.Delete(path);
         }

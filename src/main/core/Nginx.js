@@ -13,7 +13,7 @@ export default class Nginx {
      * @returns {Promise<string[]>}
      */
     static async getWebsiteList(search) {
-        let vhostsPath = GetPath.getNginxVhostsPath();
+        let vhostsPath = GetPath.getNginxVhostsDir();
         if (!Directory.Exists(vhostsPath)) {
             return [];
         }
@@ -131,7 +131,7 @@ export default class Nginx {
     }
 
     static getWebsiteConfPath(confName) {
-        return path.join(GetPath.getNginxVhostsPath(), confName);
+        return path.join(GetPath.getNginxVhostsDir(), confName);
     }
 
     static getWebsiteConfName(serverName, port) {
@@ -139,7 +139,7 @@ export default class Nginx {
     }
 
     static getWebsiteRewriteConfPath(confName) {
-        return path.join(GetPath.getNginxVhostsRewritePath(), confName);
+        return path.join(GetPath.getNginxVhostsRewriteDir(), confName);
     }
 
     /**
@@ -147,7 +147,7 @@ export default class Nginx {
      * @returns {Promise<string[]>}
      */
     static getRewriteRuleList() {
-        let rewritePath = GetPath.getNginxRewritePath();
+        let rewritePath = GetPath.getNginxRewriteDir();
         if (!Directory.Exists(rewritePath)) {
             return [];
         }
@@ -163,7 +163,7 @@ export default class Nginx {
      * @returns {string}
      */
     static getRewriteByRule(ruleName) {
-        let rewritePath = path.join(GetPath.getNginxRewritePath(), `${ruleName}.conf`)
+        let rewritePath = path.join(GetPath.getNginxRewriteDir(), `${ruleName}.conf`)
         if (!File.Exists(rewritePath)) {
             return '';
         }
@@ -176,7 +176,7 @@ export default class Nginx {
      * @returns {Promise<number>}
      */
     static async getSameDomainAmount(domain) {
-        let vhostsPath = GetPath.getNginxVhostsPath();
+        let vhostsPath = GetPath.getNginxVhostsDir();
         if (!Directory.Exists(vhostsPath)) {
             return 0;
         }

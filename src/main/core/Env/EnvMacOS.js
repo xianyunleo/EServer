@@ -38,7 +38,7 @@ export default class EnvMacOS {
         }
 
         if (enable) {
-            let binPath  = GetPath.getBinPath();
+            let binPath  = GetPath.getBinDir();
             let appendText = `export PATH="${binPath}:$PATH"`;
 
             if (text.slice(-1) !== "\n") {
@@ -57,7 +57,7 @@ export default class EnvMacOS {
         if (!File.Exists(envFilePath)) {
             return false;
         }
-        let binPath  = GetPath.getBinPath();
+        let binPath  = GetPath.getBinDir();
         let text = File.ReadAllText(envFilePath);
         return text.includes(binPath);
     }

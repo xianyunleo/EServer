@@ -27,7 +27,7 @@ export default class Native {
             let editorPath = Settings.get('TextEditor');
             //mac app是目录，Windows是文件，所以这里用existsSync方法
             if (!fs.existsSync(editorPath)) {
-                throw new Error(`${editorPath} 不存在！`);
+                throw new Error(`${editorPath} 不存在！\n请重新设置文本编辑器`);
             }
             let command;
             if(OS.isMacOS()){

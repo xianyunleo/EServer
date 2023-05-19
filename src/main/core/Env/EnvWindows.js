@@ -3,7 +3,7 @@ import GetPath from "@/shared/utils/GetPath";
 
 export default class EnvWindows {
     static async switch(enable) {
-        let binPath = GetPath.getBinPath();
+        let binPath = GetPath.getBinDir();
         //PATH的值超过1024，setx命令会截断，所以用PowerShell，并且能指定EnvironmentVariableTarget
         let commandStr = `PowerShell -Command "& {[Environment]::GetEnvironmentVariable('PATH','User');}"`;
         let value = (await Command.exec(commandStr)).trim();
@@ -17,7 +17,7 @@ export default class EnvWindows {
     }
 
     static async IsEnabled() {
-        let binPath = GetPath.getBinPath();
+        let binPath = GetPath.getBinDir();
         let commandStr = `PowerShell -Command "& {[Environment]::GetEnvironmentVariable('PATH','User');}"`;
         let value = await Command.exec(commandStr);
         return value.includes(binPath);

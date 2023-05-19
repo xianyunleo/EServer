@@ -86,7 +86,7 @@ export default class TcpProcess {
             let commandStr, resStr, pid;
 
             if (OS.isWindows()) {
-                commandStr = `(Get-NetTCPConnection -LocalPort ${port} -State Listen).OwningProcess"`;
+                commandStr = `(Get-NetTCPConnection -LocalPort ${port} -State Listen).OwningProcess`;
                 resStr = await Command.exec(commandStr, {shell: 'powershell'});
             } else {
                 commandStr = `lsof -t -sTCP:LISTEN -i:${port}`;

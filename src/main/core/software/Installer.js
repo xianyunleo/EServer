@@ -83,8 +83,8 @@ export default class Installer {
     async install() {
         this.resetDownloadInfo();
 
-        if (!Directory.Exists(GetPath.getDownloadsPath())) {
-            Directory.CreateDirectory(GetPath.getDownloadsPath());
+        if (!Directory.Exists(GetPath.getDownloadsDir())) {
+            Directory.CreateDirectory(GetPath.getDownloadsDir());
         }
 
         if(File.Exists(this.tempFilePath)){
@@ -136,7 +136,7 @@ export default class Installer {
             if (OS.isWindows()) {
                 await SoftwareInit.initMySQLConf(version);
             }
-            if (!Directory.Exists(GetPath.getMysqlDataPath(version))) {
+            if (!Directory.Exists(GetPath.getMysqlDataDir(version))) {
                 await Database.initMySQL(version);
             }
         } else if (dirName.match(/^php-[.\d]+$/)) {
@@ -244,12 +244,12 @@ export default class Installer {
     }
 
      getDownloadsPath() {
-        return path.join(App.getUserCorePath(), 'downloads');
+        return path.join(App.getUserCoreDir(), 'downloads');
     }
 
 
     getStdbufPath() {
-        return path.join(App.getCorePath(), 'stdbuf');
+        return path.join(App.getCoreDir(), 'stdbuf');
     }
 
     static uninstall(item) {

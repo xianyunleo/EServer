@@ -57,7 +57,7 @@ import Settings from "@/main/Settings";
 
 const {search, addModalVisible: visible} = inject('website');
 
-const wwwPath = replaceSlash(GetPath.getWebsitePath());
+const wwwPath = replaceSlash(GetPath.getWebsiteDir());
 const formRef = ref();
 
 const nginxServerItem = inject('nginxServerItem');

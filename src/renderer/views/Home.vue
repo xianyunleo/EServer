@@ -125,7 +125,7 @@ if (!nginxServerItem.value) {
 
 
 const getProcessList = async () => {
-  let list = await ProcessExtend.getList({directory: GetPath.getSoftwarePath()});
+  let list = await ProcessExtend.getList({directory: GetPath.getSoftwareDir()});
   console.log('Home getProcessList', list);
   //过滤掉子进程，剔除子进程
   let newList = [];
@@ -167,10 +167,10 @@ const initServerListStatus = async () => {
 
 
 const corePathClick = ()=>{
-  Native.openDirectory(App.getUserCorePath());
+  Native.openDirectory(App.getUserCoreDir());
 }
 const wwwPathClick = ()=>{
-  Native.openDirectory(GetPath.getWebsitePath());
+  Native.openDirectory(GetPath.getWebsiteDir());
 }
 
 const openInstallDir = (item) => {

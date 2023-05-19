@@ -22,7 +22,7 @@ export default class Software {
     }
 
     static initList() {
-        let corePath = App.getCorePath();
+        let corePath = App.getCoreDir();
         let softPath = path.join(corePath, '/config/software');
         let softConfigPath = path.join(softPath, 'software.json');
         let softIconPath = 'file://' + path.join(softPath, '/icon');
@@ -109,18 +109,18 @@ export default class Software {
         type = EnumSoftwareType[type];
         switch (type) {
             case EnumSoftwareType.PHP:
-                return GetPath.getPhpTypePath();
+                return GetPath.getPhpTypeDir();
             case EnumSoftwareType.Server:
-                return GetPath.getServerTypePath();
+                return GetPath.getServerTypeDir();
             case EnumSoftwareType.Tool:
-                return GetPath.getToolTypePath();
+                return GetPath.getToolTypeDir();
             default:
                 return '';
         }
     }
 
     static getIconPath() {
-        let corePath = App.getCorePath();
+        let corePath = App.getCoreDir();
         let softPath = path.join(corePath, '/config/software');
         return path.join(softPath, '/icon');
     }
