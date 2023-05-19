@@ -23,6 +23,7 @@
           <a-input v-model:value="formData.newPwd"/>
         </a-form-item>
       </a-form>
+      <div style="text-align: center;color:red">{{hint}}</div>
     </div>
   </a-modal>
 </template>
@@ -32,7 +33,6 @@ import {ref,computed,defineProps,defineEmits} from "vue";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Database from "@/main/core/Database";
 import MessageBox from "@/renderer/utils/MessageBox";
-import {message} from "ant-design-vue";
 import {sleep} from "@/shared/utils/utils";
 
 const props = defineProps(['show'])
@@ -49,6 +49,7 @@ const visible = computed({
 const formRef = ref();
 const formData = ref({});
 const mysqlVersionList = ref([]);
+const hint = ref('');
 
 let list = SoftwareExtend.getMySQLList();
 mysqlVersionList.value = list.map(item => {
@@ -58,8 +59,6 @@ mysqlVersionList.value = list.map(item => {
 const resetClick = async () => {
   try {
     let values = await formRef.value.validateFields();
-    visible.value = false;
-    formRef.value.resetFields();
     await reset(values.version, values.newPwd);
   } catch (errorInfo) {
     console.log('Validate Failed:', errorInfo);
@@ -67,10 +66,10 @@ const resetClick = async () => {
 };
 const reset = async (version, newPwd) => {
   try {
-    message.info('重置中，请等待...');
+    hint.value = '重置中，请等待...';
     await sleep(100);
     await Database.resetMySQLPassword(version, newPwd);
-    message.info('执行重置MySQL密码的命令成功！')
+    hint.value = '执行重置MySQL密码的命令成功！';
   } catch (error) {
     MessageBox.error(error.message ?? error, '重置MySQL密码出错！');
   }
