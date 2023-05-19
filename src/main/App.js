@@ -223,6 +223,11 @@ export default class App {
             let target = Path.Join(this.getUserCorePath(), file);
             if (!fs.existsSync(target)) {
                 fs.renameSync(source, target);
+            } else {
+                let options = {force: true, recursive: true};
+                fs.rm(source, options, err => {
+                    console.log(`Error moveInitFiles fs.rm ${source}\r${err}`);
+                });
             }
         }
     }
