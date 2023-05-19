@@ -4,7 +4,7 @@ import {app} from '@electron/remote'
 import {
     WIN_CORE_PATH_NAME,
     MAC_CORE_PATH_NAME,
-    MAC_USER_CORE_PATH,
+    MAC_USER_CORE_DIR,
     INIT_FILE_NAME,
     InitFiles_DIR_NAME,
     TEMP_DIR_NAME
@@ -25,7 +25,7 @@ export default class App {
         return !app.isPackaged;
     }
 
-    static getPath() {
+    static getDir() {
         return Path.GetDirectoryName(this.getExePath());
     }
 
@@ -41,9 +41,9 @@ export default class App {
      * 当系统是macOS时，返回App的Contents目录的路径
      * @returns {string}
      */
-    static getContentsPath() {
+    static getContentsDir() {
         if (OS.isMacOS()) {
-            return Path.Join(this.getPath(), '..');
+            return Path.Join(this.getDir(), '..');
         }
         return '';
     }
@@ -57,7 +57,7 @@ export default class App {
             if (this.isDev()) {
                 return Path.Join(__static, `../build/icons/icon.icns`);
             } else {
-                return Path.Join(this.getContentsPath(), 'Resources/icon.icns');
+                return Path.Join(this.getContentsDir(), 'Resources/icon.icns');
             }
         }
         return '';
@@ -71,19 +71,19 @@ export default class App {
      * 获取App核心目录
      * @returns {string}
      */
-    static getCorePath(){
+    static getCoreDir(){
         let result = '';
         if (OS.isWindows()) {
             if (this.isDev()) {
-                result = path.join(this.getPlatformPath(), WIN_CORE_PATH_NAME)
+                result = path.join(this.getPlatformDir(), WIN_CORE_PATH_NAME)
             } else {
-                result = path.join(this.getPath(), WIN_CORE_PATH_NAME)
+                result = path.join(this.getDir(), WIN_CORE_PATH_NAME)
             }
         } else if (OS.isMacOS()) {
             if (this.isDev()) {
-                result = path.join(this.getPlatformPath(), MAC_CORE_PATH_NAME)
+                result = path.join(this.getPlatformDir(), MAC_CORE_PATH_NAME)
             } else {
-                result = path.join(this.getContentsPath(), MAC_CORE_PATH_NAME);
+                result = path.join(this.getContentsDir(), MAC_CORE_PATH_NAME);
             }
         }
         return result
@@ -93,22 +93,22 @@ export default class App {
      * 获取便于用户操作的核心目录
      * @returns {string}
      */
-    static getUserCorePath() {
+    static getUserCoreDir() {
         if (OS.isMacOS() && !this.isDev()) {
-            return MAC_USER_CORE_PATH;
+            return MAC_USER_CORE_DIR;
         }
-        return this.getCorePath();
+        return this.getCoreDir();
     }
 
-    static getSettingsPath(){
-        return this.getUserCorePath();
+    static getSettingsDir(){
+        return this.getUserCoreDir();
     }
 
     static getInitFilePath() {
-        return path.join(this.getCorePath(), INIT_FILE_NAME);
+        return path.join(this.getCoreDir(), INIT_FILE_NAME);
     }
 
-    static getPlatformPath() {
+    static getPlatformDir() {
         return path.join(__static, `../extra/${process.platform}`);
     }
 
@@ -117,7 +117,7 @@ export default class App {
     }
 
     static async init() {
-        if (this.getPath().includes(' ')) {
+        if (this.getDir().includes(' ')) {
             throw new Error('安装路径不能包含空格！');
         }
 
@@ -129,11 +129,11 @@ export default class App {
 
         Settings.init();
 
-        let softwareDirExists = Directory.Exists(GetPath.getSoftwarePath());
+        let softwareDirExists = Directory.Exists(GetPath.getSoftwareDir());
 
         if (OS.isMacOS() && !this.isDev()) {
-            if (!Directory.Exists(MAC_USER_CORE_PATH)) {
-                Directory.CreateDirectory(MAC_USER_CORE_PATH);
+            if (!Directory.Exists(MAC_USER_CORE_DIR)) {
+                Directory.CreateDirectory(MAC_USER_CORE_DIR);
             }
             this.updateMacCoreSubDir(['Library']);
         }
@@ -166,13 +166,13 @@ export default class App {
      * @param dirs
      */
     static moveMacCoreSubDir(dirs) {
-        let corePath = this.getCorePath();
+        let corePath = this.getCoreDir();
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
             if (!Directory.Exists(source)) {
                 continue;
             }
-            let target = Path.Join(MAC_USER_CORE_PATH, dir);
+            let target = Path.Join(MAC_USER_CORE_DIR, dir);
             if (!Directory.Exists(target)) {
                 Directory.Move(source, target);
             }
@@ -184,13 +184,13 @@ export default class App {
       * @param dirs
      */
     static updateMacCoreSubDir(dirs) {
-        let corePath = this.getCorePath();
+        let corePath = this.getCoreDir();
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
             if (!Directory.Exists(source)) {
                 continue;
             }
-            let target = Path.Join(MAC_USER_CORE_PATH, dir);
+            let target = Path.Join(MAC_USER_CORE_DIR, dir);
             if (!Directory.Exists(target)) {
                 Directory.CreateDirectory(target);
             }
@@ -205,7 +205,7 @@ export default class App {
      */
     static createCoreSubDir(dirs) {
         for (const dir of dirs) {
-            let p = path.join(this.getUserCorePath(), dir);
+            let p = path.join(this.getUserCoreDir(), dir);
             if (!Directory.Exists(p)) {
                 Directory.CreateDirectory(p);
             }
@@ -217,10 +217,10 @@ export default class App {
      * @param files
      */
     static moveInitFiles(files = []) {
-        let initFilesPath = Path.Join(this.getCorePath(),InitFiles_DIR_NAME);
+        let initFilesPath = Path.Join(this.getCoreDir(),InitFiles_DIR_NAME);
         for (const file of files) {
             let source = Path.Join(initFilesPath, file);
-            let target = Path.Join(this.getUserCorePath(), file);
+            let target = Path.Join(this.getUserCoreDir(), file);
             if (!fs.existsSync(target)) {
                 fs.renameSync(source, target);
             } else {

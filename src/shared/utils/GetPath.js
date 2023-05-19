@@ -5,83 +5,83 @@ import OS from "@/main/core/OS";
 import {TEMP_DIR_NAME} from "@/main/constant";
 
 export default class GetPath {
-    static getBinPath(){
-        return path.join(App.getUserCorePath(), 'bin');
+    static getBinDir(){
+        return path.join(App.getUserCoreDir(), 'bin');
     }
 
-    static geTempPath(){
-        return path.join(App.getUserCorePath(), TEMP_DIR_NAME);
+    static geTempDir(){
+        return path.join(App.getUserCoreDir(), TEMP_DIR_NAME);
     }
 
-    static getDownloadsPath() {
-        return path.join(App.getUserCorePath(), 'downloads');
+    static getDownloadsDir() {
+        return path.join(App.getUserCoreDir(), 'downloads');
     }
 
-    static getSoftwarePath(){
-        return path.join(App.getUserCorePath(), 'software');
+    static getSoftwareDir(){
+        return path.join(App.getUserCoreDir(), 'software');
     }
 
-    static getPhpTypePath(){
-        return path.join(GetPath.getSoftwarePath(), 'php');
+    static getPhpTypeDir(){
+        return path.join(this.getSoftwareDir(), 'php');
     }
 
-    static getServerTypePath(){
-        return path.join(GetPath.getSoftwarePath(), 'server');
+    static getServerTypeDir(){
+        return path.join(this.getSoftwareDir(), 'server');
     }
 
-    static getToolTypePath(){
-        return path.join(GetPath.getSoftwarePath(), 'tool');
+    static getToolTypeDir(){
+        return path.join(this.getSoftwareDir(), 'tool');
     }
 
-    static getNginxPath(){
-        return path.join(GetPath.getServerTypePath(), 'nginx');
+    static getNginxDir(){
+        return path.join(this.getServerTypeDir(), 'nginx');
     }
 
-    static getNginxConfPath(){
-        return path.join(GetPath.getNginxPath(), 'conf');
+    static getNginxConfDir(){
+        return path.join(this.getNginxDir(), 'conf');
     }
 
-    static getNginxVhostsPath(){
-        return path.join(GetPath.getNginxConfPath(), 'vhosts');
+    static getNginxVhostsDir(){
+        return path.join(this.getNginxConfDir(), 'vhosts');
     }
 
-    static getNginxRewritePath(){
-        return path.join(GetPath.getNginxConfPath(), 'rewrite');
+    static getNginxRewriteDir(){
+        return path.join(this.getNginxConfDir(), 'rewrite');
     }
 
-    static getNginxVhostsRewritePath(){
-        return path.join(GetPath.getNginxVhostsPath(), 'rewrite');
+    static getNginxVhostsRewriteDir(){
+        return path.join(this.getNginxVhostsDir(), 'rewrite');
     }
 
-    static getDatabasePath() {
-        return path.join(App.getUserCorePath(), 'database');
+    static getDatabaseDir() {
+        return path.join(App.getUserCoreDir(), 'database');
     }
 
-    static getPhpPath(version) {
-        return path.join(GetPath.getPhpTypePath(), `php-${version}`);
+    static getPhpDir(version) {
+        return path.join(this.getPhpTypeDir(), `php-${version}`);
     }
 
-    static getPhpBinPath(version) {
+    static getPhpExePath(version) {
         if(OS.isWindows()){
-            return path.join(GetPath.getPhpPath(version), 'php.exe');
+            return path.join(this.getPhpDir(version), 'php.exe');
         }
-        return path.join(GetPath.getPhpPath(version), 'bin/php');
+        return path.join(this.getPhpDir(version), 'bin/php');
     }
 
-    static getComposerBinPath() {
-        return path.join(GetPath.getToolTypePath(), 'Composer/composer.phar');
+    static getComposerExePath() {
+        return path.join(this.getToolTypeDir(), 'Composer/composer.phar');
     }
 
-    static getMysqlPath(version) {
-        return path.join(GetPath.getServerTypePath(), `mysql-${version}`);
+    static getMysqlDir(version) {
+        return path.join(this.getServerTypeDir(), `mysql-${version}`);
     }
 
-    static getMysqlDataPath(version) {
-        return path.join(GetPath.getDatabasePath(), `mysql-${version}-data`);
+    static getMysqlDataDir(version) {
+        return path.join(this.getDatabaseDir(), `mysql-${version}-data`);
     }
 
-    static getWebsitePath(){
-        return path.join(App.getUserCorePath(), 'www');
+    static getWebsiteDir(){
+        return path.join(App.getUserCoreDir(), 'www');
     }
 
 

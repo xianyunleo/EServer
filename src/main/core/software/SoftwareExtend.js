@@ -10,7 +10,7 @@ export default class SoftwareExtend {
      * @returns {Promise<(string|null)[]>}
      */
     static async getNginxRequirePhpList() {
-        let nginxVhostsPath = GetPath.getNginxVhostsPath();
+        let nginxVhostsPath = GetPath.getNginxVhostsDir();
         let vhosts = Directory.GetFiles(nginxVhostsPath, '.conf');
         if (!vhosts || vhosts.length === 0) {
             return;
@@ -33,7 +33,7 @@ export default class SoftwareExtend {
      * @returns {*[]|{name: string, version: string}[]}
      */
     static getPHPList() {
-        let path = GetPath.getPhpTypePath();
+        let path = GetPath.getPhpTypeDir();
         if (!Directory.Exists(path)) {
             return [];
         }
@@ -51,7 +51,7 @@ export default class SoftwareExtend {
      * @returns {*[]|{name: string, version: string}[]}
      */
     static getMySQLList() {
-        let path = GetPath.getServerTypePath();
+        let path = GetPath.getServerTypeDir();
         if (!Directory.Exists(path)) {
             return [];
         }

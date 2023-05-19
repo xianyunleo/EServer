@@ -23,10 +23,10 @@ export default class SoftwareInit extends StringExtend{
 
     static async initNginxConf() {
         try {
-            let path = Path.Join(GetPath.getNginxConfPath(), 'nginx.conf');
+            let path = Path.Join(GetPath.getNginxConfDir(), 'nginx.conf');
             let text = File.ReadAllText(path);
             let pattern = /root\s+\S+\s*;/g;
-            let wwwPath = Path.Join(GetPath.getNginxPath(), 'html').replaceSlash();
+            let wwwPath = Path.Join(GetPath.getNginxDir(), 'html').replaceSlash();
             let replaceStr = `root ${wwwPath};`;
             text = text.replaceAll(pattern, replaceStr);
 
@@ -40,11 +40,11 @@ export default class SoftwareInit extends StringExtend{
     }
 
     static async initNginxLocalhostConf() {
-        let path = Path.Join(GetPath.getNginxVhostsPath(), 'localhost_80.conf');
+        let path = Path.Join(GetPath.getNginxVhostsDir(), 'localhost_80.conf');
         if (File.Exists(path)) {
             let text = File.ReadAllText(path);
             let pattern = /root\s+\S+\s*;/g;
-            let rootPath = Path.Join(GetPath.getWebsitePath(), 'localhost').replaceSlash();
+            let rootPath = Path.Join(GetPath.getWebsiteDir(), 'localhost').replaceSlash();
             let replaceStr = `root ${rootPath};`;
             text = text.replaceAll(pattern, replaceStr);
             File.WriteAllText(path, text);
@@ -52,11 +52,11 @@ export default class SoftwareInit extends StringExtend{
     }
 
     static async initNginxPhpmyadminConf() {
-        let path = Path.Join(GetPath.getNginxVhostsPath(), 'localhost_888.conf');
+        let path = Path.Join(GetPath.getNginxVhostsDir(), 'localhost_888.conf');
         if (File.Exists(path)) {
             let text = File.ReadAllText(path);
             let pattern = /root\s+\S+\s*;/g;
-            let rootPath = Path.Join(GetPath.getToolTypePath(), 'phpMyAdmin').replaceSlash();
+            let rootPath = Path.Join(GetPath.getToolTypeDir(), 'phpMyAdmin').replaceSlash();
             let replaceStr = `root ${rootPath};`;
             text = text.replaceAll(pattern, replaceStr);
             File.WriteAllText(path, text);
@@ -73,7 +73,7 @@ export default class SoftwareInit extends StringExtend{
 
     static async initPHPConf(version) {
         try {
-            let phpDirPath = GetPath.getPhpPath(version);
+            let phpDirPath = GetPath.getPhpDir(version);
             let confDirPath = OS.isWindows() ? phpDirPath : Path.Join(phpDirPath, 'etc');
             let confPath = Path.Join(confDirPath, 'php.ini');
 
@@ -112,7 +112,7 @@ export default class SoftwareInit extends StringExtend{
                 text = text.replace(/(?<=\n);?.?extension_dir\s*=.*/, `extension_dir = "${extPath}"`);
             }
 
-            let phpTempPath = Path.Join(GetPath.geTempPath(), 'php');
+            let phpTempPath = Path.Join(GetPath.geTempDir(), 'php');
             let uploadPattern = /(?<=\n);?.?upload_tmp_dir\s*=.*/g;
             let replaceUploadStr = `upload_tmp_dir = "${phpTempPath.replaceSlash()}"`;
             text = text.replaceAll(uploadPattern, replaceUploadStr);
@@ -137,9 +137,9 @@ export default class SoftwareInit extends StringExtend{
 
     static async initMySQLConf(version) {
         try {
-            let confPath = Path.Join(GetPath.getMysqlPath(version), 'my.ini');
+            let confPath = Path.Join(GetPath.getMysqlDir(version), 'my.ini');
             let text = File.ReadAllText(confPath);
-            let mysqlPath = GetPath.getMysqlPath(version);
+            let mysqlPath = GetPath.getMysqlDir(version);
 
             //(?<=\n)basedir\s*=\s*.+
             let basePattern = /(?<=\n)basedir\s*=\s*.+/g;
@@ -148,7 +148,7 @@ export default class SoftwareInit extends StringExtend{
 
             //(?<=\n)datadir\s*=\s*.+
             let dataPattern = /(?<=\n)datadir\s*=\s*.+/g;
-            let dataPath = GetPath.getMysqlDataPath(version);
+            let dataPath = GetPath.getMysqlDataDir(version);
             let replaceDataStr = `datadir = "${dataPath.replaceSlash()}"`;
             text = text.replaceAll(dataPattern, replaceDataStr);
 
@@ -172,7 +172,7 @@ export default class SoftwareInit extends StringExtend{
         let mysqlList = SoftwareExtend.getMySQLList();
         for (const item of mysqlList) {
             let version = item.version;
-            if (!Directory.Exists(GetPath.getMysqlDataPath(version))) {
+            if (!Directory.Exists(GetPath.getMysqlDataDir(version))) {
                 //如果mysql data目录不存在，初始化生成data目录，并重置密码
                 await Database.initMySQL(version);
             }

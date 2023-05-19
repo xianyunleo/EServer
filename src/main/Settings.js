@@ -37,7 +37,7 @@ export default class Settings {
         const options = {
             name: Settings.#fileName,
             fileExtension: Settings.#fileExtension,
-            cwd: Settings.getFileDirPath(),
+            cwd: Settings.getDir(),
         };
         options.defaults = Settings.getDefault();
         Settings.#instance = new Store(options);
@@ -60,7 +60,7 @@ export default class Settings {
     }
 
     static getDefaultTextEditorPath() {
-        let toolTypePath =  GetPath.getToolTypePath();
+        let toolTypePath =  GetPath.getToolTypeDir();
         if (OS.isMacOS()) {
            return Path.Join(toolTypePath, 'Notepad--.app');
         } else if (OS.isWindows()) {
@@ -68,8 +68,8 @@ export default class Settings {
         }
     }
 
-    static getFileDirPath(){
-        return App.getSettingsPath();
+    static getDir(){
+        return App.getSettingsDir();
     }
 
     /**
@@ -77,6 +77,6 @@ export default class Settings {
      * @returns {string}
      */
     static getFilePath(){
-        return Path.Join(Settings.getFileDirPath(), `${Settings.#fileName}.${Settings.#fileExtension}`);
+        return Path.Join(Settings.getDir(), `${Settings.#fileName}.${Settings.#fileExtension}`);
     }
 }

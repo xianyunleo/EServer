@@ -27,7 +27,7 @@ export default class Database {
      * @returns {Promise<void>}
      */
     static async initMySQLData(version) {
-        let mysqlPath = GetPath.getMysqlPath(version);
+        let mysqlPath = GetPath.getMysqlDir(version);
         let command = `${this.getMySQLDFilePath(version)} --defaults-file=${this.getMySQLConfFilePath(version)} --initialize`;
         await Command.exec(command, {cwd: mysqlPath});
     }
@@ -50,7 +50,7 @@ export default class Database {
                 break;
             default:
         }
-        let mysqlPath = GetPath.getMysqlPath(version);
+        let mysqlPath = GetPath.getMysqlDir(version);
         let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
         File.WriteAllText(resetPwdPath, resetCommand);
 
@@ -83,13 +83,13 @@ export default class Database {
     }
 
     static getMySQLConfFilePath(version) {
-        let mysqlPath = GetPath.getMysqlPath(version);
+        let mysqlPath = GetPath.getMysqlDir(version);
         let name = OS.isWindows() ? 'my.ini' : 'my.cnf';
         return path.join(mysqlPath, name);
     }
 
     static getMySQLDFilePath(version) {
-        let mysqlPath = GetPath.getMysqlPath(version);
+        let mysqlPath = GetPath.getMysqlDir(version);
         let name = OS.isWindows() ? 'mysqld.exe' : 'mysqld';
         return path.join(mysqlPath, 'bin', name);
     }

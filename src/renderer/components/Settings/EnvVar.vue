@@ -60,7 +60,7 @@ const phpCliVersionChange = () => {
   const originVal = Settings.get('PhpVersion');
   try {
     if (val) {
-      let path = GetPath.getPhpBinPath(val);
+      let path = GetPath.getPhpExePath(val);
       Env.createBinFile(path, 'php')
     } else {
       Env.deleteBinFile('php')
@@ -80,7 +80,7 @@ const changeEnableComposer = async () => {
   const originVal = Settings.get('EnableComposer');
   try {
     if (val) {
-      let path = GetPath.getComposerBinPath();
+      let path = GetPath.getComposerExePath();
       Env.createBinFile(path, 'composer')
     } else {
       Env.deleteBinFile('composer')
