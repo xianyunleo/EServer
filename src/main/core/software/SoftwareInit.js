@@ -137,7 +137,8 @@ export default class SoftwareInit extends StringExtend{
 
     static async initMySQLConf(version) {
         try {
-            let confPath = Path.Join(GetPath.getMysqlDir(version), 'my.ini');
+            let mysqlDir = GetPath.getMysqlDir(version);
+            let confPath = OS.isWindows() ? Path.Join(mysqlDir, 'my.ini') : Path.Join(mysqlDir, 'my.cnf');
             let text = File.ReadAllText(confPath);
             let mysqlPath = GetPath.getMysqlDir(version);
 
