@@ -5,7 +5,7 @@
       <input-with-search placeholder="请输入域名" style="width: 200px" @search="search"/>
     </div>
 
-    <a-table :scroll="{y: 'calc(100vh - 170px)'}"
+    <a-table :scroll="{y: 'calc(100vh - 180px)'}"
              :columns="columns"
              :data-source="list"
              class="content-table web-table scroller"
