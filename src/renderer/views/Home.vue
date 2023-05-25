@@ -2,8 +2,8 @@
   <div class="content-container">
     <a-card title="快捷操作" class="quick-card">
       <div class="quick-card-content">
-        <a-button type="primary" @click="oneClickStart" :disabled="serverTableLoading">一键启动</a-button>
-        <a-button type="primary" @click="oneClickStop" :disabled="serverTableLoading">一键停止</a-button>
+        <a-button type="primary" @click="oneClickStart" :disabled="!!serverTableLoading">一键启动</a-button>
+        <a-button type="primary" @click="oneClickStop" :disabled="!!serverTableLoading">一键停止</a-button>
         <a-button type="primary" @click="corePathClick">{{APP_NAME}}目录</a-button>
         <a-button type="primary" @click="wwwPathClick">网站目录</a-button>
       </div>
