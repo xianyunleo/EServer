@@ -15,7 +15,7 @@ export default class Command {
         if (App.isDev()) console.log('Command.exec command', command);
 
         let formatCommand;
-        if (OS.isWindows() && !options.shell) {
+        if (options.chcp && OS.isWindows()) {
             formatCommand = '@chcp 65001 >nul & cmd /d/s/c ';
             command = formatCommand + command;
         }
