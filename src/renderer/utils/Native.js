@@ -21,7 +21,7 @@ export default class Native {
         }
         try {
             if (!File.Exists(filePath)) {
-                throw new Error('文件不存在');
+                throw new Error(`${filePath} 文件不存在`);
             }
 
             let editorPath = Settings.get('TextEditor');
