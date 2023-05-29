@@ -33,7 +33,7 @@ export default class Native {
             if(OS.isMacOS()){
                 command = `open -a "${editorPath}"  "${filePath}"`;
             }else if(OS.isWindows()){
-                command = `${editorPath} "${filePath}"`;
+                command = `"${editorPath}" "${filePath}"`;
             }
             await Command.exec(command);
 
