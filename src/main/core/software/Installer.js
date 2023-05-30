@@ -252,10 +252,16 @@ export default class Installer {
         return path.join(App.getCoreDir(), 'stdbuf');
     }
 
+    /**
+     * 卸载成功返回true，否则false
+     * @param item
+     * @returns {boolean}
+     */
     static uninstall(item) {
         let path = Software.getPath(item);
         if (Directory.Exists(path)) {
             Directory.Delete(path, true);
         }
+        return !Directory.Exists(path);
     }
 }

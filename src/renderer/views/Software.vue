@@ -174,10 +174,13 @@ const openInstallPath = async (item) => {
 
 const uninstall = async (item) => {
   try {
-    Installer.uninstall(item)
-    item.installInfo = null;
-    item.Installed = false;
-    message.info('卸载完成');
+    if (Installer.uninstall(item)) {
+      item.installInfo = null;
+      item.Installed = false;
+      message.info('卸载完成');
+    } else {
+      MessageBox.error('卸载失败，请打开文件管理器，手动删除软件目录！');
+    }
   } catch (error) {
     MessageBox.error(error.message ?? error, '卸载出错！');
   }
