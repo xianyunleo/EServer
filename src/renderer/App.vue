@@ -26,6 +26,8 @@ import SettingsExtend from "@/main/core/SettingsExtend";
 import Software from "@/main/core/software/Software";
 import Service from "@/main/core/Service";
 import {message} from "ant-design-vue";
+import Directory from "@/main/utils/Directory";
+import {MAC_USER_CORE_DIR} from "@/main/constant";
 
 const userPwdModalShow = ref(false);
 
@@ -58,11 +60,21 @@ provide('startPhpFpmFunc', startPhpFpmFunc);
   }
 
   if (OS.isMacOS()) {
+    //判断设置的代码，electron-store会创建USER_CORE_DIR，为了捕捉创建失败的错误，先提前写好创建文件夹的代码。
+    try {
+      if (!Directory.Exists(MAC_USER_CORE_DIR)) {
+        Directory.CreateDirectory(MAC_USER_CORE_DIR);
+      }
+    } catch (error) {
+      MessageBox.error(error.message ?? error, '软件初始化出错！');
+    }
+
     if (!SettingsExtend.isUserPwdSet()) {
       userPwdModalShow.value = true;
     } else {
       await update();
     }
+
   } else {
     try {
       spinning.value = true;
