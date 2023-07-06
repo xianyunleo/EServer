@@ -38,6 +38,9 @@
                   <template #overlay>
                     <a-menu>
                       <a-menu-item @click="openInstallPath(item)">打开所在目录</a-menu-item>
+                      <a-menu-item v-if="isWindows && item.Type === phpTypeValue"
+                                   @click="showPhpExtManager(item)">安装扩展
+                      </a-menu-item>
                     </a-menu>
                   </template>
                   <a-button>管理
@@ -84,10 +87,14 @@
     </div>
   </div>
 
+  <!--  v-if防止不显示就执行modal里面的代码-->
+  <php-ext-manager v-if="phpExtManagerShow" v-model:show="phpExtManagerShow" :phpVersion="phpVersion">
+  </php-ext-manager>
+
 </template>
 
 <script setup>
-import {computed} from 'vue';
+import {computed, ref} from 'vue';
 import {useMainStore} from '@/renderer/store';
 import {storeToRefs} from 'pinia';
 import {message} from "ant-design-vue";
@@ -98,9 +105,16 @@ import Software from "@/main/core/software/Software";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {enumGetName} from "@/shared/utils/utils";
 import Native from "@/renderer/utils/Native";
+import OS from "@/main/core/OS";
+import PhpExtManager from "@/renderer/components/Software/PhpExtManager.vue";
+import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 
 const mainStore = useMainStore();
 const {softwareList,  softwareTypeSelected} = storeToRefs(mainStore);
+const isWindows = OS.isWindows();
+const phpTypeValue = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP);
+const phpExtManagerShow = ref(false);
+const phpVersion = ref('');
 
 if(!softwareTypeSelected.value){
   softwareTypeSelected.value = 'Installed';
@@ -184,6 +198,11 @@ const uninstall = async (item) => {
   } catch (error) {
     MessageBox.error(error.message ?? error, '卸载出错！');
   }
+}
+
+const showPhpExtManager = (item)=>{
+  phpVersion.value = SoftwareExtend.getPHPVersion(item.DirName);
+  phpExtManagerShow.value = true;
 }
 
 </script>

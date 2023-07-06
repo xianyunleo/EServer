@@ -5,7 +5,7 @@ import OS from "@/main/core/OS";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import StringExtend from "@/main/core/baseClass/StringExtend";
 import Directory from "@/main/utils/Directory";
-import Php from "@/main/core/Php";
+import Php from "@/main/core/php/Php";
 import Database from "@/main/core/Database";
 
 export default class SoftwareInit extends StringExtend{
