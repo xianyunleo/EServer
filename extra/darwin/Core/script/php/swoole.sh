@@ -4,7 +4,7 @@ phpDir=$2
 extVersion=$3
 
 cd $dlDir
-curl -C - -O -s http://pecl.php.net/get/swoole-$extVersion.tgz
+curl -C - -O http://pecl.php.net/get/swoole-$extVersion.tgz
 if [ -d "swoole-$extVersion" ]; then
  rm -rf "swoole-$extVersion"
 fi

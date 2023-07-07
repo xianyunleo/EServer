@@ -4,7 +4,7 @@ phpDir=$2
 extVersion=$3
 
 cd $dlDir
-curl -C - -O -s http://pecl.php.net/get/redis-$extVersion.tgz
+curl -C - -O http://pecl.php.net/get/redis-$extVersion.tgz
 if [ -d "redis-$extVersion" ]; then
  rm -rf "redis-$extVersion"
 fi
