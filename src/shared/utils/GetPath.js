@@ -85,7 +85,7 @@ export default class GetPath {
     }
 
     static getScriptDir() {
-        return path.join(App.getCoreDir(), 'scripts');
+        return path.join(App.getCoreDir(), 'script');
     }
 
     static getMysqlIconPath() {

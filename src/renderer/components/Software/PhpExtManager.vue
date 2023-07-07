@@ -7,30 +7,6 @@
       :maskClosable="false">
     <div class="modal-content">
       <a-table
-               :columns="columns"
-               :data-source="list"
-               class="content-table"
-               :pagination="false"
-               size="middle">
-        <template #bodyCell="{ column,record}">
-          <template v-if="column.dataIndex === 'operate'">
-            <div class="operate">
-              <a-button  type="primary" @click="execScript(record)">执行安装脚本</a-button>
-            </div>
-          </template>
-        </template>
-      </a-table>
-    </div>
-  </a-modal>
-
-  <a-modal
-      :title="`安装PHP-${props.phpVersion} 扩展任务`"
-      v-model:visible="taskVisible"
-      centered
-      :footer="null"
-      :maskClosable="false">
-    <div class="modal-content">
-      <a-table
           :columns="columns"
           :data-source="list"
           class="content-table"
@@ -39,20 +15,33 @@
         <template #bodyCell="{ column,record}">
           <template v-if="column.dataIndex === 'operate'">
             <div class="operate">
-              <a-button  type="primary" @click="execScript(record)">执行安装脚本</a-button>
+              <a-button type="primary" @click="install(record)">安装</a-button>
             </div>
           </template>
         </template>
       </a-table>
     </div>
   </a-modal>
+
+  <a-modal
+      :title="`安装PHP-${props.phpVersion} 扩展任务，请确保已安装了brew`"
+      v-model:visible="taskVisible" @cancel="cancel()"
+      :bodyStyle="{height:'calc(100vh - 120px)'}"
+      width="800px"
+      centered :footer="null" :maskClosable="false">
+    <div class="modal-content" >
+      <pre class="command-out">
+        {{msg}}
+      </pre>
+    </div>
+  </a-modal>
 </template>
 
 <script setup>
 import {computed, defineEmits, defineProps, ref} from "vue";
-import Command from "@/main/core/Command";
-import Path from "@/main/utils/Path";
-import GetPath from "@/shared/utils/GetPath";
+
+import Installer from "@/main/core/php/extension/Installer";
+import {EventEmitter} from "events";
 
 const props = defineProps(['show','phpVersion']);
 
@@ -68,7 +57,7 @@ const visible = computed({
 });
 
 const taskVisible = ref(false);
-
+const msg = ref('');
 
 const columns = [
   {
@@ -85,20 +74,46 @@ const columns = [
 const list = [
   {
     name: 'redis',
-    scriptName: 'redis.sh',
+    extFileName :'swoole.so'
   }, {
     name: 'swoole',
-    scriptName: 'swoole.sh',
+    extFileName :'swoole.so'
   }
 ];
 
-// eslint-disable-next-line no-unused-vars
 
+let installer;
+let eventEmitter;
+const install = (item) => {
+  taskVisible.value =true;
+  // eslint-disable-next-line no-unreachable
+  eventEmitter = new EventEmitter();
+  installer = new Installer(item.name, props.phpVersion,eventEmitter);
+  installer.install();
+  eventEmitter.on('phpExt:stdout',(data)=>{
+    msg.value += `${data}\n`;
+  })
 
-const execScript = (item) => {
-  // let appPath = '/System/Applications/Utilities/Terminal.app';
-  // let filePath = Path.Join(GetPath.getScriptDir(), 'phpext', item.scriptName);
-  // let command = `open -a "${appPath}" "${filePath}"`;
-  // Command.sudoExec(command);
+  // eslint-disable-next-line no-unreachable
+  eventEmitter.on('phpExt:stderr',(data)=>{
+    msg.value += data;
+  })
+}
+
+const cancel = ()=>{
+  installer?.stop();
+  msg.value = '';
 }
 </script>
+<style scoped lang="scss">
+  .command-out{
+    display:flex;
+    flex-direction:column-reverse;
+    background:#333;
+    color:#fff;
+    white-space:pre-wrap;
+    word-break:break-all;
+    overflow:auto;
+    height:calc(100vh - 180px);
+  }
+</style>
