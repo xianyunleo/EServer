@@ -3,6 +3,7 @@ import GetPath from "@/shared/utils/GetPath";
 import child_process from "child_process";
 import fs from "fs";
 import Directory from "@/main/utils/Directory";
+import fixPath from "fix-path";
 
 export default class Installer {
     extName; //扩展名
@@ -16,6 +17,7 @@ export default class Installer {
         this.eventEmitter = eventEmitter;
     }
     install() {
+        fixPath();
         let extVersion = this.getExtVersion();
         let options = {detached: true, shell: true};
         let shFilePath = Path.Join(GetPath.getScriptDir(), `php/${this.extName}.sh`);
