@@ -73,14 +73,15 @@ const save = async () => {
   if(websiteInfo.allowSyncHosts){
     try {
       let oldExtraServerName = websiteInfo.extraServerName;
-      if (formData.extraServerName === oldExtraServerName) {
-        return;
-      }
-      if (oldExtraServerName && await Website.getSameDomainAmount(oldExtraServerName) === 0) {
-        await Hosts.delete(oldExtraServerName);
-      }
-      if (formData.extraServerName) {
-        await Hosts.add(formData.extraServerName);
+      if (formData.extraServerName !== oldExtraServerName) {
+
+        if (oldExtraServerName && await Website.getSameDomainAmount(oldExtraServerName) === 0) {
+          await Hosts.delete(oldExtraServerName);
+        }
+        if (formData.extraServerName) {
+          await Hosts.add(formData.extraServerName);
+        }
+
       }
     } catch (error) {
       MessageBox.error(error.message ?? error, '同步Hosts出错！');

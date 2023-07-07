@@ -11,11 +11,11 @@
       :maskClosable="false">
     <div class="modal-content">
       <a-tabs tabPosition="left" v-model:activeKey="activeKey" class="tabs">
-        <a-tab-pane key="basicSetting" tab="基本配置" @editAfter="editAfter">
-          <basic-setting/>
+        <a-tab-pane key="basicSetting" tab="基本配置" >
+          <basic-setting @editAfter="editAfter" />
         </a-tab-pane>
-        <a-tab-pane key="rewriteSetting" tab="URL重写" @editAfter="editAfter">
-          <rewrite-setting/>
+        <a-tab-pane key="rewriteSetting" tab="URL重写" >
+          <rewrite-setting @editAfter="editAfter" />
         </a-tab-pane>
       </a-tabs>
     </div>

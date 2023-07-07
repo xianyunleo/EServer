@@ -7,13 +7,13 @@ import File from "@/main/utils/File";
 export default class SoftwareExtend {
     /**
      * 获取Nginx网站配置的PHP版本号列表，如['7.4','8.0']
-     * @returns {Promise<(string|null)[]>}
+     * @returns {Promise<string[]|*[]>}
      */
     static async getNginxRequirePhpList() {
         let nginxVhostsPath = GetPath.getNginxVhostsDir();
         let vhosts = Directory.GetFiles(nginxVhostsPath, '.conf');
         if (!vhosts || vhosts.length === 0) {
-            return;
+            return [];
         }
         //获取所有网站PHP版本数组，并发读文件并匹配PHP版本
         let phpVersionList = await Promise.all(vhosts.map(async confPath => {

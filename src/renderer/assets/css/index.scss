@@ -109,6 +109,7 @@ img,a{
   height: 0;
   position:relative;
   animation:bottom-to-top-frame 0.2s;
+  overflow:auto;
 }
 
 .content-table{

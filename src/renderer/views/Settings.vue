@@ -25,7 +25,11 @@ const isWindows = OS.isWindows();
     margin-top: 20px;
   }
   .settings-card-row:first-child{
-    margin-top: 00px;
+    margin-top: 0;
+  }
+
+  &:last-child{
+    margin-bottom: 20px;
   }
 }
 
