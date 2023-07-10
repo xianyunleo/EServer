@@ -28,6 +28,9 @@ export default class Installer {
     install() {
         fixPath();
         let extVersion = this.getExtVersion();
+        if(!extVersion){
+            return ;
+        }
         let options = {shell: true};
 
         let scriptFilePath;
