@@ -2,11 +2,8 @@
   <a-modal
       title="TCP端口进程列表"
       v-model:visible="visible"
-      :bodyStyle="{height:'calc(100vh - 120px)'}"
-      width="'calc(100vw - 100px)'"
-      centered
-      :footer="null"
-      :maskClosable="false">
+      :bodyStyle="{height:'calc(100vh - 120px)'}" width="100vw"
+      centered :footer="null" :maskClosable="false">
     <div class="modal-content">
       <div style="text-align:right">
         <a-button @click="search" :disabled="tableLoading">刷新</a-button>
