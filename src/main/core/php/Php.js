@@ -1,3 +1,8 @@
+import Directory from "@/main/utils/Directory";
+import Path from "@/main/utils/Path";
+import GetPath from "@/shared/utils/GetPath";
+import OS from "@/main/core/OS";
+
 export default class Php {
 
     // static switchExtension(version, extension, open) {
@@ -28,5 +33,20 @@ export default class Php {
             }
             return replaceText;
         });
+    }
+
+    /**
+     * 获取php扩展目录
+     * @param phpVersion
+     * @returns {string}
+     */
+    static getExtensionDir(phpVersion) {
+        if (OS.isWindows()) {
+            return 'ext';
+        } else {
+            let phpDir = GetPath.getPhpDir(phpVersion);
+            let dirs = Directory.GetDirectories(`${Path.Join(phpDir, 'lib/php/extensions')}`, 'no-debug-non-zts');
+            return dirs[0];
+        }
     }
 }

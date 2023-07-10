@@ -106,10 +106,9 @@ export default class SoftwareInit extends StringExtend{
                 }
             } else {
                 //非Windows系统
-                let dirs = Directory.GetDirectories(`${Path.Join(phpDirPath, 'lib/php/extensions')}`, 'no-debug-non-zts');
-                let extPath = dirs[0];
+                let extDir = Php.getExtensionDir(version)
                 //仅替换第一个
-                text = text.replace(/(?<=\n);?.?extension_dir\s*=.*/, `extension_dir = "${extPath}"`);
+                text = text.replace(/(?<=\n);?.?extension_dir\s*=.*/, `extension_dir = "${extDir}"`);
             }
 
             let phpTempPath = Path.Join(GetPath.geTempDir(), 'php');
