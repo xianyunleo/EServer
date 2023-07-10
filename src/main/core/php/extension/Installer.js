@@ -5,6 +5,9 @@ import fs from "fs";
 import Directory from "@/main/utils/Directory";
 import fixPath from "fix-path";
 import App from "@/main/App";
+import Extension from "./Extension";
+import OS from "@/main/core/OS";
+import Php from "@/main/core/php/Php";
 
 export default class Installer {
     extName; //扩展名
@@ -26,15 +29,29 @@ export default class Installer {
         fixPath();
         let extVersion = this.getExtVersion();
         let options = {shell: true};
-        let shFilePath = Path.Join(GetPath.getScriptDir(), `php/${this.extName}.sh`);
-        fs.chmodSync(shFilePath,'0755');
+
+        let scriptFilePath;
+        let args;
         let phpExtDlDir = Path.Join(GetPath.getDownloadsDir(), 'phpExt');
         if(!Directory.Exists(phpExtDlDir)){
             Directory.CreateDirectory(phpExtDlDir);
         }
         let phpDir = GetPath.getPhpDir(this.phpVersion);
-        let args = [phpExtDlDir, phpDir, extVersion];
-        let childProcess = child_process.spawn(shFilePath, args, options);
+
+
+        if(OS.isWindows()){
+            scriptFilePath = Path.Join(GetPath.getScriptDir(), `php/common.bat`);
+            let extFileName = Extension.getFileName(this.extName);
+            let phpExtDir = Php.getExtensionDir(this.phpVersion)
+            args = [phpExtDlDir, phpDir, extVersion, this.extName, extFileName ,phpExtDir];
+        }else {
+            scriptFilePath = Path.Join(GetPath.getScriptDir(), `php/${this.extName}.sh`);
+            fs.chmodSync(scriptFilePath,'0755');
+            args = [phpExtDlDir, phpDir, extVersion];
+        }
+
+
+        let childProcess = child_process.spawn(scriptFilePath, args, options);
 
         childProcess.stderr.on('data', (data) => {
             if (App.isDev()) console.log('phpExt:stderr',data.toString())
@@ -54,7 +71,7 @@ export default class Installer {
             childProcess.kill();
         })
 
-        let command = `${shFilePath} ${args.join(' ')}`;
+        let command = `${scriptFilePath} ${args.join(' ')}`;
         return command;
     }
 
@@ -83,6 +100,28 @@ export default class Installer {
                     return '1.7.5';
                 } else {
                     return '1.15.3';
+                }
+        }
+        return null;
+    }
+
+    getExtVersionByWindows() {
+        switch (this.extName) {
+            case 'redis':
+                if (this.phpVersion <= 5.6) {
+                    return '2.2.7';
+                } else if (this.phpVersion <= 7.3) {
+                    return '4.2.0';
+                } else if (this.phpVersion <= 8.1) {
+                    return '5.3.7';
+                }
+            case 'mongodb':
+                if (this.phpVersion <= 7.2) {
+                    return '1.4.4';
+                } else if (this.phpVersion <= 7.3) {
+                    return '1.10.0';
+                } else if (this.phpVersion <= 8.1) {
+                    return '1.13.0';
                 }
         }
         return null;

@@ -79,6 +79,8 @@ const columns = [
 
 const list = ref([]);
 
+const isWindows = OS.isWindows();
+
 const updateList = async () => {
   list.value = [];
   list.value = await Extension.getList(props.phpVersion);
@@ -99,7 +101,9 @@ const install = (item) => {
   eventEmitter = new EventEmitter();
   installer = new Installer(item.name, props.phpVersion,eventEmitter);
   let command = installer.install();
-  msg.value += `执行安装扩展的命令\n${command}\n如果安装失败, 可尝试复制命令自行安装\n\n`;
+  if(!isWindows){
+    msg.value += `执行安装扩展的命令\n${command}\n如果安装失败, 可尝试复制命令自行安装\n\n`;
+  }
 
   eventEmitter.on('phpExt:stdout',(data)=>{
     if(taskVisible.value){

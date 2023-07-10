@@ -38,7 +38,7 @@
                   <template #overlay>
                     <a-menu>
                       <a-menu-item @click="openInstallPath(item)">打开所在目录</a-menu-item>
-                      <a-menu-item v-if="!isWindows && item.Type === phpTypeValue"
+                      <a-menu-item v-if="item.Type === phpTypeValue"
                                    @click="showPhpExtManager(item)">安装扩展
                       </a-menu-item>
                     </a-menu>

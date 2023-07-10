@@ -4,17 +4,7 @@ import File from "@/main/utils/File";
 
 export default class Extension {
      static async getList(phpVersion) {
-        let list = [{
-            name: 'redis',
-            extFileName: 'redis.so'
-        }, {
-            name: 'swoole',
-            extFileName: 'swoole.so'
-        }, {
-            name: 'mongodb',
-            extFileName: 'mongodb.so'
-        },
-        ];
+        let list = this._getList();
 
         let extDir = Php.getExtensionDir(phpVersion);
 
@@ -26,5 +16,25 @@ export default class Extension {
         );
 
         return newList;
+    }
+
+    static _getList(){
+        return [{
+            name: 'redis',
+            extFileName: 'redis.so'
+        }, {
+            name: 'swoole',
+            extFileName: 'swoole.so',
+            notSupportWindows: true,
+        }, {
+            name: 'mongodb',
+            extFileName: 'mongodb.so'
+        },
+        ];
+    }
+
+    static getFileName(extName) {
+        let list = this._getList();
+        return list.find(v => v.name == extName)?.extFileName;
     }
 }

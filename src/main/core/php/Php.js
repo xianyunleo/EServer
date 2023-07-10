@@ -42,7 +42,8 @@ export default class Php {
      */
     static getExtensionDir(phpVersion) {
         if (OS.isWindows()) {
-            return 'ext';
+            let phpDir = GetPath.getPhpDir(phpVersion);
+            return `${Path.Join(phpDir, 'ext')}`;
         } else {
             let phpDir = GetPath.getPhpDir(phpVersion);
             let dirs = Directory.GetDirectories(`${Path.Join(phpDir, 'lib/php/extensions')}`, 'no-debug-non-zts');
