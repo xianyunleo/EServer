@@ -15,7 +15,7 @@ else
   exit 1
 fi
 
-arch -x86_64 brew install pkg-config autoconf automake libtool
+brew install pkg-config autoconf automake libtool
 cd "redis-$extVersion"
 $phpDir/bin/phpize
 ./configure --with-php-config=$phpDir/bin/php-config
