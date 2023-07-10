@@ -4,6 +4,7 @@ import child_process from "child_process";
 import fs from "fs";
 import Directory from "@/main/utils/Directory";
 import fixPath from "fix-path";
+import App from "@/main/App";
 
 export default class Installer {
     extName; //扩展名
@@ -16,10 +17,15 @@ export default class Installer {
         this.phpVersion = Number(phpVersion);
         this.eventEmitter = eventEmitter;
     }
+
+    /**
+     *
+     * @returns {string} command
+     */
     install() {
         fixPath();
         let extVersion = this.getExtVersion();
-        let options = {detached: true, shell: true};
+        let options = {shell: true};
         let shFilePath = Path.Join(GetPath.getScriptDir(), `php/${this.extName}.sh`);
         fs.chmodSync(shFilePath,'0755');
         let phpExtDlDir = Path.Join(GetPath.getDownloadsDir(), 'phpExt');
@@ -31,29 +37,28 @@ export default class Installer {
         let childProcess = child_process.spawn(shFilePath, args, options);
 
         childProcess.stderr.on('data', (data) => {
-            console.log('phpExt:stderr',data.toString())
+            if (App.isDev()) console.log('phpExt:stderr',data.toString())
             this.eventEmitter.emit('phpExt:stderr',data.toString())
         });
 
         childProcess.stdout.on('data', (data) => {
-            console.log('phpExt:stdout',data.toString())
+            if(App.isDev()) console.log('phpExt:stdout',data.toString())
             this.eventEmitter.emit('phpExt:stdout',data.toString())
         });
 
-        // eslint-disable-next-line no-unused-vars
-        childProcess.on('exit', (code) => {
-
+        childProcess.on('exit', (code,signal) => {
+            this.eventEmitter.emit('phpExt:exit',code,signal)
         });
 
         this.eventEmitter.on('phpExt:stop', () => {
-            console.log('phpExt:stop----',)
-            childProcess.kill(9);
-            console.log('childProcess',childProcess.pid)
+            childProcess.kill();
         })
+
+        let command = `${shFilePath} ${args.join(' ')}`;
+        return command;
     }
 
     stop(){
-        console.log('Install stop')
         this.eventEmitter.emit('phpExt:stop');
     }
 
@@ -72,6 +77,12 @@ export default class Installer {
                     return '4.8.11';
                 } else {
                     return '5.0.0';
+                }
+            case 'mongodb':
+                if (this.phpVersion <= 7.1) {
+                    return '1.7.5';
+                } else {
+                    return '1.15.3';
                 }
         }
         return null;

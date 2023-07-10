@@ -2,7 +2,7 @@ import path from "path";
 import App from "@/main/App";
 import Software from "@/main/core/software/Software";
 import OS from "@/main/core/OS";
-import {TEMP_DIR_NAME} from "@/main/constant";
+import {MAC_USER_CORE_DIR, TEMP_DIR_NAME} from "@/main/constant";
 
 export default class GetPath {
     static getBinDir(){
@@ -58,6 +58,9 @@ export default class GetPath {
     }
 
     static getPhpDir(version) {
+        if(OS.isMacOS() && App.isDev()){
+            return path.join(MAC_USER_CORE_DIR,`software/php/php-${version}`);
+        }
         return path.join(this.getPhpTypeDir(), `php-${version}`);
     }
 
