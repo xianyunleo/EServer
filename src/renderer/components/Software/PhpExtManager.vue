@@ -45,6 +45,7 @@ import Installer from "@/main/core/php/extension/Installer";
 import Extension from "@/main/core/php/extension/Extension";
 import Native from "@/renderer/utils/Native";
 import Php from "@/main/core/php/Php";
+import OS from "@/main/core/OS";
 
 const props = defineProps(['show','phpVersion']);
 

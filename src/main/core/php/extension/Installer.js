@@ -17,7 +17,7 @@ export default class Installer {
     eventEmitter;
     constructor(extName,phpVersion,eventEmitter) {
         this.extName = extName;
-        this.phpVersion = Number(phpVersion);
+        this.phpVersion = phpVersion;
         this.eventEmitter = eventEmitter;
     }
 
@@ -26,8 +26,11 @@ export default class Installer {
      * @returns {string} command
      */
     install() {
-        fixPath();
-        let extVersion = this.getExtVersion();
+        if (OS.isMacOS()) {
+            fixPath();
+        }
+
+        let extVersion = Extension.getVersion(this.extName,this.phpVersion);
         if(!extVersion){
             return ;
         }
@@ -45,8 +48,9 @@ export default class Installer {
         if(OS.isWindows()){
             scriptFilePath = Path.Join(GetPath.getScriptDir(), `php/common.bat`);
             let extFileName = Extension.getFileName(this.extName);
-            let phpExtDir = Php.getExtensionDir(this.phpVersion)
-            args = [phpExtDlDir, phpDir, extVersion, this.extName, extFileName ,phpExtDir];
+            let phpExtDir = Php.getExtensionDir(this.phpVersion);
+            let dlFileName = this.getDownloadFileName(extVersion);
+            args = [phpExtDlDir, phpDir, extVersion, this.extName, extFileName, phpExtDir, dlFileName];
         }else {
             scriptFilePath = Path.Join(GetPath.getScriptDir(), `php/${this.extName}.sh`);
             fs.chmodSync(scriptFilePath,'0755');
@@ -75,6 +79,7 @@ export default class Installer {
         })
 
         let command = `${scriptFilePath} ${args.join(' ')}`;
+        if (App.isDev()) console.log("install command:\n", command);
         return command;
     }
 
@@ -82,52 +87,28 @@ export default class Installer {
         this.eventEmitter.emit('phpExt:stop');
     }
 
-    getExtVersion() {
-        switch (this.extName) {
-            case 'redis':
-                return this.phpVersion < 7.0 ? '4.3.0' : '5.3.7';
-            case 'swoole':
-                if (this.phpVersion < 5.5) {
-                    return '1.10.5';
-                } else if (this.phpVersion < 7.0) {
-                    return '2.2.0';
-                } else if (this.phpVersion < 7.2) {
-                    return '4.5.11';
-                } else if (this.phpVersion < 8.0) {
-                    return '4.8.11';
-                } else {
-                    return '5.0.0';
-                }
-            case 'mongodb':
-                if (this.phpVersion <= 7.1) {
-                    return '1.7.5';
-                } else {
-                    return '1.15.3';
-                }
-        }
-        return null;
+    getDownloadFileName(extVersion) {
+        let vcVersion = this.getVcStringVersion();
+        let name = `php_${this.extName}-${extVersion}-${this.phpVersion}-nts-${vcVersion}-x64.zip`;
+        return name;
     }
 
-    getExtVersionByWindows() {
-        switch (this.extName) {
-            case 'redis':
-                if (this.phpVersion <= 5.6) {
-                    return '2.2.7';
-                } else if (this.phpVersion <= 7.3) {
-                    return '4.2.0';
-                } else if (this.phpVersion <= 8.1) {
-                    return '5.3.7';
-                }
-            case 'mongodb':
-                if (this.phpVersion <= 7.2) {
-                    return '1.4.4';
-                } else if (this.phpVersion <= 7.3) {
-                    return '1.10.0';
-                } else if (this.phpVersion <= 8.1) {
-                    return '1.13.0';
-                }
+    getVcStringVersion() {
+        switch (this.phpVersion) {
+            case '8.2':
+            case '8.1':
+            case '8.0':
+                return 'vs16';
+            case '7.4':
+            case '7.3':
+            case '7.2':
+                return 'vc15';
+            case '7.1':
+            case '7.0':
+                return 'vc14';
+            case '5.6':
+                return 'vc11';
         }
-        return null;
     }
 
 }

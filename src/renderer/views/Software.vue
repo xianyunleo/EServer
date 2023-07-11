@@ -105,13 +105,11 @@ import Software from "@/main/core/software/Software";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {enumGetName} from "@/shared/utils/utils";
 import Native from "@/renderer/utils/Native";
-import OS from "@/main/core/OS";
 import PhpExtManager from "@/renderer/components/Software/PhpExtManager.vue";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 
 const mainStore = useMainStore();
 const {softwareList,  softwareTypeSelected} = storeToRefs(mainStore);
-const isWindows = OS.isWindows();
 const phpTypeValue = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP);
 const phpExtManagerShow = ref(false);
 const phpVersion = ref('');

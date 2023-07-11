@@ -6,15 +6,14 @@ set extVersion=%3
 set extName=%4
 set extFileName=%5
 set phpExtDir=%6
+set dlFileName=%7
 
 set "downloader=bitsadmin /transfer myDownloadJob /download /priority normal"
-set fileName=php_%extName%-%extVersion%-%phpVersion%-nts-vs16-x64
-set filePath=dlDir\php_%extName%-%extVersion%-%phpVersion%-nts-vs16-x64
-%downloader% "https://windows.php.net/downloads/pecl/releases/redis/5.1.1/php_redis-5.1.1-7.4-nts-vc15-x64.zip"
 
-Call :UnZipFile %dlDir% filePath
+set dlFilePath=%dlDir%\%dlFileName%
+%downloader% "https://windows.php.net/downloads/pecl/releases/%extName%/%extVersion%/%dlFileName%" %dlFilePath%
 
-copy %filePath% %phpExtDir%
+Call :UnZipFile %dlDir% %dlFilePath%
 
 
 :UnZipFile <ExtractTo> <newzipfile>
