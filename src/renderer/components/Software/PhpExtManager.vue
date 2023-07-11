@@ -27,7 +27,7 @@
   </a-modal>
 
   <a-modal
-      :title="`安装PHP-${props.phpVersion} 扩展任务，请确保已安装了brew`"
+      :title="`安装PHP-${props.phpVersion} 扩展`"
       v-model:visible="taskVisible" @cancel="closeTaskDialog()"
       :bodyStyle="{height:'calc(100vh - 120px)'}" width="100vw"
       centered :footer="null" :maskClosable="false">
@@ -46,6 +46,7 @@ import Extension from "@/main/core/php/extension/Extension";
 import Native from "@/renderer/utils/Native";
 import Php from "@/main/core/php/Php";
 import OS from "@/main/core/OS";
+import MessageBox from "@/renderer/utils/MessageBox";
 
 const props = defineProps(['show','phpVersion']);
 
@@ -98,12 +99,19 @@ const openExtDir = ()=>{
 let installer;
 let eventEmitter;
 const install = (item) => {
-  taskVisible.value =true;
+  let extVersion = Extension.getVersion(item.name,props.phpVersion);
+  if (!extVersion) {
+    MessageBox.error(`没有找到php-${props.phpVersion}可用的${item.name}扩展版本！`, '安装出错！');
+    return;
+  }
+
+  taskVisible.value = true;
   eventEmitter = new EventEmitter();
-  installer = new Installer(item.name, props.phpVersion,eventEmitter);
-  let command = installer.install();
+  installer = new Installer(item.name, extVersion, props.phpVersion, eventEmitter);
+  let commandStr = installer.install();
+
   if(!isWindows){
-    msg.value += `执行安装扩展的命令\n${command}\n如果安装失败, 可尝试复制命令自行安装\n\n`;
+    msg.value += `执行安装扩展的命令\n${commandStr}\n如果安装失败, 可尝试复制命令自行安装\n\n`;
   }
 
   eventEmitter.on('phpExt:stdout',(data)=>{
@@ -121,7 +129,7 @@ const install = (item) => {
   eventEmitter.on('phpExt:exit', (code) => {
     if(taskVisible.value){
       resultCode.value = code;
-      result.value = code == 0 ? '安装完成' : '安装失败';
+      result.value = code == 0 ? '安装完成，请修改 php.ini 后，重启服务生效！' : '安装失败';
     }
   })
 }

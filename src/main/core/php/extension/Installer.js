@@ -11,12 +11,14 @@ import Php from "@/main/core/php/Php";
 
 export default class Installer {
     extName; //扩展名
+    extVersion
     phpVersion; //php版本。如8.0
     msg;
     errMsg;
     eventEmitter;
-    constructor(extName,phpVersion,eventEmitter) {
+    constructor(extName,extVersion,phpVersion,eventEmitter) {
         this.extName = extName;
+        this.extVersion = extVersion;
         this.phpVersion = phpVersion;
         this.eventEmitter = eventEmitter;
     }
@@ -30,35 +32,27 @@ export default class Installer {
             fixPath();
         }
 
-        let extVersion = Extension.getVersion(this.extName,this.phpVersion);
-        if(!extVersion){
-            return ;
-        }
-        let options = {shell: true};
-
-        let scriptFilePath;
-        let args;
+        let commandStr;
         let phpExtDlDir = Path.Join(GetPath.getDownloadsDir(), 'phpExt');
         if(!Directory.Exists(phpExtDlDir)){
             Directory.CreateDirectory(phpExtDlDir);
         }
         let phpDir = GetPath.getPhpDir(this.phpVersion);
 
-
-        if(OS.isWindows()){
-            scriptFilePath = Path.Join(GetPath.getScriptDir(), `php/common.bat`);
+        if (OS.isWindows()) {
+            let scriptFilePath = Path.Join(GetPath.getScriptDir(), `php/common.ps1`);
             let extFileName = Extension.getFileName(this.extName);
             let phpExtDir = Php.getExtensionDir(this.phpVersion);
-            let dlFileName = this.getDownloadFileName(extVersion);
-            args = [phpExtDlDir, phpDir, extVersion, this.extName, extFileName, phpExtDir, dlFileName];
-        }else {
-            scriptFilePath = Path.Join(GetPath.getScriptDir(), `php/${this.extName}.sh`);
-            fs.chmodSync(scriptFilePath,'0755');
-            args = [phpExtDlDir, phpDir, extVersion];
+            let dlFileName = this.getDownloadFileName();
+            commandStr = ` powershell.exe -ExecutionPolicy Bypass -File "${scriptFilePath}"`;
+            commandStr += ` ${phpExtDlDir} ${phpDir} ${this.extVersion} ${this.extName} ${extFileName} ${phpExtDir} ${dlFileName}`;
+        } else {
+            let scriptFilePath = Path.Join(GetPath.getScriptDir(), `php/${this.extName}.sh`);
+            fs.chmodSync(scriptFilePath, '0755');
+            commandStr = `${scriptFilePath} ${phpExtDlDir} ${phpDir} ${this.extVersion}`;
         }
 
-
-        let childProcess = child_process.spawn(scriptFilePath, args, options);
+        let childProcess = child_process.exec(commandStr);
 
         childProcess.stderr.on('data', (data) => {
             if (App.isDev()) console.log('phpExt:stderr',data.toString())
@@ -78,18 +72,17 @@ export default class Installer {
             childProcess.kill();
         })
 
-        let command = `${scriptFilePath} ${args.join(' ')}`;
-        if (App.isDev()) console.log("install command:\n", command);
-        return command;
+        if (App.isDev()) console.log("install command:\n", commandStr);
+        return commandStr;
     }
 
     stop(){
         this.eventEmitter.emit('phpExt:stop');
     }
 
-    getDownloadFileName(extVersion) {
+    getDownloadFileName() {
         let vcVersion = this.getVcStringVersion();
-        let name = `php_${this.extName}-${extVersion}-${this.phpVersion}-nts-${vcVersion}-x64.zip`;
+        let name = `php_${this.extName}-${this.extVersion}-${this.phpVersion}-nts-${vcVersion}-x64.zip`;
         return name;
     }
 
