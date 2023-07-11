@@ -26,6 +26,9 @@ export default class Extension {
 
         return [
             {
+                name: 'memcache',
+                extFileName: 'memcache.so'
+            }, {
                 name: 'redis',
                 extFileName: 'redis.so'
             }, {
@@ -42,6 +45,9 @@ export default class Extension {
     static getSimpleListForWindows(){
         return [
             {
+                name: 'memcache',
+                extFileName: 'php_memcache.dll'
+            },{
                 name: 'redis',
                 extFileName: 'php_redis.dll'
             }, {
@@ -63,6 +69,14 @@ export default class Extension {
 
         phpVersion = Number(phpVersion);
         switch (extName) {
+            case 'memcache':
+                if (phpVersion <= 5.6) {
+                    return '3.0.8';
+                } else if (phpVersion <= 7.4) {
+                    return '4.0.5.2';
+                } else {
+                    return '8.2';
+                }
             case 'redis':
                 return phpVersion < 7.0 ? '4.3.0' : '5.3.7';
             case 'swoole':
@@ -90,6 +104,14 @@ export default class Extension {
     static getVersionForWindows(extName, phpVersion) {
         phpVersion = Number(phpVersion);
         switch (extName) {
+            case 'memcache':
+                if (phpVersion <= 5.6) {
+                    return '3.0.8';
+                } else if (phpVersion >= 7.2 && phpVersion <= 7.4) {
+                    return '4.0.5.2';
+                } else {
+                    return null;
+                }
             case 'redis':
                 if (phpVersion <= 5.6) {
                     return '2.2.7';
