@@ -87,14 +87,14 @@ export default class ProcessExtend {
      */
     static async getList(searchObj={}) {
         if (OS.isMacOS()) {
-            return await this.getListByMacOS(searchObj);
+            return await this.getListForMacOS(searchObj);
         }else if(OS.isWindows()){
-            return await this.getListByWindows(searchObj);
+            return await this.getListForWindows(searchObj);
         }
         return [];
     }
 
-    static async getListByMacOS(searchObj={}) {
+    static async getListForMacOS(searchObj={}) {
         let command = 'lsof -w -R -d txt';
         if (searchObj) {
             if(searchObj.directory){
@@ -124,7 +124,7 @@ export default class ProcessExtend {
 
     }
 
-    static async getListByWindows(searchObj={}) {
+    static async getListForWindows(searchObj={}) {
         let command = ' Get-WmiObject -Class Win32_Process -Filter ';
         if (searchObj) {
             if(searchObj.directory){
