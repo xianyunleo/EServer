@@ -107,7 +107,11 @@ export default class Extension {
                     return '1.15.3';
                 }
             case 'imagick':
-                return '1.7.5';
+                if (phpVersion <= 5.6) {
+                    return '3.4.4';
+                }  else {
+                    return '3.7.0';
+                }
             case 'xdebug':
                 if (phpVersion <= 5.6) {
                     return '2.5.5';
