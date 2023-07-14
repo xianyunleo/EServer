@@ -32,30 +32,32 @@
             </div>
             <div class="soft-item-title">{{ item.Name }}</div>
             <div class="soft-item-desc">{{ item.Desc }}</div>
-            <div class="soft-item-operate">
-              <template v-if="item.Installed">
-                <a-dropdown :trigger="['click']">
-                  <template #overlay>
-                    <a-menu>
-                      <a-menu-item @click="openInstallPath(item)">打开所在目录</a-menu-item>
-                      <a-menu-item v-if="item.Type === phpTypeValue"
-                                   @click="showPhpExtManager(item)">安装扩展
-                      </a-menu-item>
-                    </a-menu>
-                  </template>
-                  <a-button>管理
-                    <DownOutlined/>
+            <div class="soft-item-operate-body">
+              <div class="soft-item-operate-body-element">
+                <template v-if="item.Installed">
+                  <a-button :disabled="item.CanDelete===false" type="primary" @click="uninstall(item)">卸载</a-button>
+                  <a-dropdown :trigger="['click']">
+                    <template #overlay>
+                      <a-menu>
+                        <a-menu-item @click="openInstallPath(item)">打开所在目录</a-menu-item>
+                        <a-menu-item v-if="item.Type === phpTypeValue"
+                                     @click="showPhpExtManager(item)">安装扩展
+                        </a-menu-item>
+                      </a-menu>
+                    </template>
+                    <a-button>管理
+                      <DownOutlined/>
+                    </a-button>
+                  </a-dropdown>
+                </template>
+                <template v-else>
+                  <a-button v-if="item.installInfo == null || item.showStatusErrorText"
+                            type="primary" @click="clickInstall(item)">安装
                   </a-button>
-                </a-dropdown>
-                <a-button :disabled="item.CanDelete===false" type="primary" @click="uninstall(item)">卸载</a-button>
-              </template>
-              <template v-else>
-                <a-button v-if="item.installInfo == null || item.showStatusErrorText"
-                          type="primary" @click="clickInstall(item)">安装
-                </a-button>
 
-                <a-button v-else type="primary" @click="clickStop(item)">停止</a-button>
-              </template>
+                  <a-button v-else type="primary" @click="clickStop(item)">停止</a-button>
+                </template>
+              </div>
             </div>
           </div>
           <div class="soft-item-progress" v-show="item.installInfo">
@@ -322,5 +324,17 @@ const showPhpExtManager = (item)=>{
   display: flex;
   align-items: center;
   justify-content:space-around;
+}
+.soft-item-operate-body{
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+.soft-item-operate-body-element{
+  width:150px;
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
 }
 </style>
