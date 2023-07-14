@@ -38,6 +38,12 @@ export default class Extension {
             }, {
                 name: 'mongodb',
                 extFileName: 'mongodb.so'
+            },{
+                name: 'xdebug',
+                extFileName: 'xdebug.so'
+            },{
+                name: 'imagick',
+                extFileName: 'imagick.so'
             },
         ];
     }
@@ -53,6 +59,9 @@ export default class Extension {
             }, {
                 name: 'mongodb',
                 extFileName: 'php_mongodb.dll'
+            },{
+                name: 'xdebug',
+                extFileName: 'php_xdebug.dll'
             },
         ];
     }
@@ -97,6 +106,16 @@ export default class Extension {
                 } else {
                     return '1.15.3';
                 }
+            case 'imagick':
+                return '1.7.5';
+            case 'xdebug':
+                if (phpVersion <= 5.6) {
+                    return '2.5.5';
+                } else if (phpVersion <= 7.4) {
+                    return '2.9.8';
+                }  else {
+                    return '3.2.1';
+                }
         }
         return null;
     }
@@ -132,6 +151,17 @@ export default class Extension {
                 } else {
                     return null;
                 }
+            case 'xdebug':
+                if (phpVersion <= 5.6) {
+                    return '2.5.5';
+                } else if (phpVersion <= 7.4) {
+                    return '2.9.8';
+                } else if (phpVersion <= 8.1) {
+                    return '3.1.3';
+                } else {
+                    return null;
+                }
+
         }
         return null;
     }

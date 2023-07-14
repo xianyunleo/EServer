@@ -6,6 +6,7 @@ extVersion=$3
 cd $dlDir
 echo 'Downloading...'
 curl -C - -O -s http://pecl.php.net/get/redis-$extVersion.tgz
+echo 'Downloaded'
 if [ -d "redis-$extVersion" ]; then
  rm -rf "redis-$extVersion"
 fi
@@ -15,6 +16,7 @@ else
   exit 1
 fi
 
+export HOMEBREW_NO_AUTO_UPDATE=1
 brew install pkg-config autoconf automake libtool
 cd "redis-$extVersion"
 $phpDir/bin/phpize
