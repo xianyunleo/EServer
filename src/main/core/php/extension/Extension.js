@@ -34,7 +34,6 @@ export default class Extension {
             }, {
                 name: 'swoole',
                 extFileName: 'swoole.so',
-                notSupportWindows: true,
             }, {
                 name: 'mongodb',
                 extFileName: 'mongodb.so'
@@ -43,9 +42,18 @@ export default class Extension {
                 extFileName: 'xdebug.so'
             },{
                 name: 'imagick',
-                extFileName: 'imagick.so'
+                extFileName: 'imagick.so',
+                needX64Brew: true,
             },
         ];
+    }
+
+    static isNeedX64Brew(extName) {
+        return this.getSimpleList().find(item => item.nam == extName)?.needX64Brew;
+    }
+
+    static isInstalledX64Brew() {
+        return File.Exists('/usr/local/homebrew/bin/brew');
     }
 
     static getSimpleListForWindows(){

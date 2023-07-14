@@ -47,6 +47,9 @@ import Native from "@/renderer/utils/Native";
 import Php from "@/main/core/php/Php";
 import OS from "@/main/core/OS";
 import MessageBox from "@/renderer/utils/MessageBox";
+import Path from "@/main/utils/Path";
+import GetPath from "@/shared/utils/GetPath";
+import fs from "fs";
 
 const props = defineProps(['show','phpVersion']);
 
@@ -102,6 +105,13 @@ const install = (item) => {
   let extVersion = Extension.getVersion(item.name,props.phpVersion);
   if (!extVersion) {
     MessageBox.error(`没有找到php-${props.phpVersion}可用的${item.name}扩展版本！`, '安装出错！');
+    return;
+  }
+
+  if (OS.isMacOS() && Extension.isNeedX64Brew(item.name) && !Extension.isInstalledX64Brew()) {
+    let scriptFilePath = Path.Join(GetPath.getScriptDir(), `x86_64-brew-install.sh`);
+    fs.chmodSync(scriptFilePath, '0755');
+    MessageBox.error(`安装${item.name}扩展需要先安装 -x86_64 的 Homebrew！\n请复制命令安装\n${scriptFilePath}`, '安装出错！');
     return;
   }
 
