@@ -34,6 +34,7 @@ export default class Nginx {
         let serverNameStr = websiteInfo.extraServerName ? `${serverName} ${websiteInfo.extraServerName}` : serverName;
         let confName = this.getWebsiteConfName(websiteInfo.serverName, websiteInfo.port);
         let confPath = this.getWebsiteConfPath(confName);
+        let errorLogOffValue = this.getErrorLogOffValue();
         let confText =
             `server
 {
@@ -74,14 +75,14 @@ export default class Nginx {
     location ~ .+\\.(gif|jpg|jpeg|png|bmp|swf)$
     {
         expires      1d;
-        error_log off;
+        error_log ${errorLogOffValue};
         access_log off;
     }
 
     location ~ .+\\.(js|css)$
     {
         expires      1h;
-        error_log off;
+        error_log ${errorLogOffValue};
         access_log off;
     }
 
@@ -189,5 +190,9 @@ export default class Nginx {
         }));
 
         return list.filter(item => item).length;
+    }
+
+    static getErrorLogOffValue(){
+        return OS.isWindows() ? 'nul' : '/dev/null';
     }
 }

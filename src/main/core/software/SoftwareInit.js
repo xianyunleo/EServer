@@ -5,7 +5,7 @@ import OS from "@/main/core/OS";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import StringExtend from "@/main/core/baseClass/StringExtend";
 import Directory from "@/main/utils/Directory";
-import Php from "@/main/core/Php";
+import Php from "@/main/core/php/Php";
 import Database from "@/main/core/Database";
 
 export default class SoftwareInit extends StringExtend{
@@ -106,10 +106,9 @@ export default class SoftwareInit extends StringExtend{
                 }
             } else {
                 //非Windows系统
-                let dirs = Directory.GetDirectories(`${Path.Join(phpDirPath, 'lib/php/extensions')}`, 'no-debug-non-zts');
-                let extPath = dirs[0];
+                let extDir = Php.getExtensionDir(version)
                 //仅替换第一个
-                text = text.replace(/(?<=\n);?.?extension_dir\s*=.*/, `extension_dir = "${extPath}"`);
+                text = text.replace(/(?<=\n);?.?extension_dir\s*=.*/, `extension_dir = "${extDir}"`);
             }
 
             let phpTempPath = Path.Join(GetPath.geTempDir(), 'php');

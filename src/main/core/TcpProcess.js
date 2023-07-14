@@ -8,14 +8,14 @@ export default class TcpProcess {
 
     static async getList() {
         if (OS.isMacOS()) {
-            return await this.getListByMacOS();
+            return await this.getListForMacOS();
         } else if (OS.isWindows()) {
-            return await this.getListByWindows();
+            return await this.getListForWindows();
         }
         return [];
     }
 
-    static async getListByMacOS() {
+    static async getListForMacOS() {
         let commandStr = `lsof -iTCP -sTCP:LISTEN -P -n|awk 'NR!=1{print $1,$2,$3,$5,$9}'`;
         try {
             let resStr = await Command.sudoExec(commandStr);
@@ -43,7 +43,7 @@ export default class TcpProcess {
         }
     }
 
-    static async getListByWindows() {
+    static async getListForWindows() {
         let commandStr = ` Get-NetTCPConnection -State Listen|select-Object OwningProcess,LocalAddress,LocalPort`;
         commandStr += ', @{n="Name" ;e= {(Get-Process -Id $_.OwningProcess).Name } }  , @{n="Path" ;e= {(Get-Process -Id $_.OwningProcess).Path } }';
         commandStr += ' | fl | Out-String -Width 999';

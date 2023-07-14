@@ -32,27 +32,32 @@
             </div>
             <div class="soft-item-title">{{ item.Name }}</div>
             <div class="soft-item-desc">{{ item.Desc }}</div>
-            <div class="soft-item-operate">
-              <template v-if="item.Installed">
-                <a-dropdown :trigger="['click']">
-                  <template #overlay>
-                    <a-menu>
-                      <a-menu-item @click="openInstallPath(item)">打开所在目录</a-menu-item>
-                    </a-menu>
-                  </template>
-                  <a-button>管理
-                    <DownOutlined/>
+            <div class="soft-item-operate-body">
+              <div class="soft-item-operate-body-element">
+                <template v-if="item.Installed">
+                  <a-button :disabled="item.CanDelete===false" type="primary" @click="uninstall(item)">卸载</a-button>
+                  <a-dropdown :trigger="['click']">
+                    <template #overlay>
+                      <a-menu>
+                        <a-menu-item @click="openInstallPath(item)">打开所在目录</a-menu-item>
+                        <a-menu-item v-if="item.Type === phpTypeValue"
+                                     @click="showPhpExtManager(item)">安装扩展
+                        </a-menu-item>
+                      </a-menu>
+                    </template>
+                    <a-button>管理
+                      <DownOutlined/>
+                    </a-button>
+                  </a-dropdown>
+                </template>
+                <template v-else>
+                  <a-button v-if="item.installInfo == null || item.showStatusErrorText"
+                            type="primary" @click="clickInstall(item)">安装
                   </a-button>
-                </a-dropdown>
-                <a-button :disabled="item.CanDelete===false" type="primary" @click="uninstall(item)">卸载</a-button>
-              </template>
-              <template v-else>
-                <a-button v-if="item.installInfo == null || item.showStatusErrorText"
-                          type="primary" @click="clickInstall(item)">安装
-                </a-button>
 
-                <a-button v-else type="primary" @click="clickStop(item)">停止</a-button>
-              </template>
+                  <a-button v-else type="primary" @click="clickStop(item)">停止</a-button>
+                </template>
+              </div>
             </div>
           </div>
           <div class="soft-item-progress" v-show="item.installInfo">
@@ -84,10 +89,14 @@
     </div>
   </div>
 
+  <!--  v-if防止不显示就执行modal里面的代码-->
+  <php-ext-manager v-if="phpExtManagerShow" v-model:show="phpExtManagerShow" :phpVersion="phpVersion">
+  </php-ext-manager>
+
 </template>
 
 <script setup>
-import {computed} from 'vue';
+import {computed, ref} from 'vue';
 import {useMainStore} from '@/renderer/store';
 import {storeToRefs} from 'pinia';
 import {message} from "ant-design-vue";
@@ -98,9 +107,14 @@ import Software from "@/main/core/software/Software";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {enumGetName} from "@/shared/utils/utils";
 import Native from "@/renderer/utils/Native";
+import PhpExtManager from "@/renderer/components/Software/PhpExtManager.vue";
+import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 
 const mainStore = useMainStore();
 const {softwareList,  softwareTypeSelected} = storeToRefs(mainStore);
+const phpTypeValue = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP);
+const phpExtManagerShow = ref(false);
+const phpVersion = ref('');
 
 if(!softwareTypeSelected.value){
   softwareTypeSelected.value = 'Installed';
@@ -184,6 +198,11 @@ const uninstall = async (item) => {
   } catch (error) {
     MessageBox.error(error.message ?? error, '卸载出错！');
   }
+}
+
+const showPhpExtManager = (item)=>{
+  phpVersion.value = SoftwareExtend.getPHPVersion(item.DirName);
+  phpExtManagerShow.value = true;
 }
 
 </script>
@@ -305,5 +324,17 @@ const uninstall = async (item) => {
   display: flex;
   align-items: center;
   justify-content:space-around;
+}
+.soft-item-operate-body{
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+.soft-item-operate-body-element{
+  width:150px;
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
 }
 </style>
