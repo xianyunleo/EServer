@@ -4,8 +4,20 @@ import is from "electron-is";
 export default class OS {
     static _isMacOSLowVersion = null;
 
-    static getReleaseVersion() {
-        return os.release();
+    /**
+     * 获取系统版本号字符串，Windows如10.0.19045
+     * @returns {string}
+     */
+    static getVersion() {
+        return os.release()
+    }
+
+    /**
+     * 获取系统主要版本号，Windows如10
+     * @returns {number}
+     */
+    static getMajorVersion() {
+        return Number(this.getVersion().split('.')[0]);
     }
 
     static getUserName() {
@@ -26,7 +38,7 @@ export default class OS {
         }
 
         if (OS.isMacOS()) {
-            let mainVersion = OS.getReleaseVersion().split('.')[0];
+            let mainVersion = OS.getVersion().split('.')[0];
             //https://en.wikipedia.org/wiki/Darwin_(operating_system)
             //<=macOS 10.13 High Sierra
             if (Number(mainVersion) <= 17) {
