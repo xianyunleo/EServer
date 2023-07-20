@@ -47,6 +47,7 @@ import GetPath from "@/shared/utils/GetPath";
 import {sleep} from "@/shared/utils/utils";
 import Native from "@/renderer/utils/Native";
 import TcpProcessListModal from "@/renderer/components/ToolPage/TcpProcessListModal.vue";
+import OS from "@/main/core/OS";
 
 
 const iconTypes = {
@@ -101,6 +102,10 @@ function mysqlResetPwd() {
 const tcpProcessListModalShow = ref(false);
 
 function tcpProcessList() {
+  if (OS.isWindows() && OS.getMajorVersion() <= 6.1) {
+    MessageBox.error('你的系统版本过低，此功能不可用！', '此功能不可用！');
+    return;
+  }
   tcpProcessListModalShow.value = true;
 }
 
