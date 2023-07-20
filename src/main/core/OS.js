@@ -2,7 +2,7 @@ import * as os from "os";
 import is from "electron-is";
 
 export default class OS {
-    static _isMacOSLowVersion = null;
+    static #_isMacOSLowVersion = null;
 
     /**
      * 获取系统版本号字符串，Windows如10.0.19045
@@ -33,8 +33,8 @@ export default class OS {
     }
 
     static isMacOSLowVersion() {
-        if (OS._isMacOSLowVersion != null) {
-            return OS._isMacOSLowVersion;
+        if (OS.#_isMacOSLowVersion != null) {
+            return OS.#_isMacOSLowVersion;
         }
 
         if (OS.isMacOS()) {
@@ -42,11 +42,11 @@ export default class OS {
             //https://en.wikipedia.org/wiki/Darwin_(operating_system)
             //<=macOS 10.13 High Sierra
             if (Number(mainVersion) <= 17) {
-                OS._isMacOSLowVersion = true;
+                OS.#_isMacOSLowVersion = true;
                 return true;
             }
         }
-        OS._isMacOSLowVersion = false;
+        OS.#_isMacOSLowVersion = false;
         return false;
     }
 }
