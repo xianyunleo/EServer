@@ -129,7 +129,7 @@ export default class ProcessExtend {
         if (searchObj) {
             if(searchObj.directory){
                 let formatDir =searchObj.directory.replaceAll('\\','\\\\');
-                //这里只能是ExecutablePath不能是Path，因为Path是'ScriptProperty'
+                //这里只能是ExecutablePath不能是Path，因为Path是PowerShell的'ScriptProperty'
                 command += `"ExecutablePath like '${formatDir}%'"`;
             }
         }
@@ -143,7 +143,7 @@ export default class ProcessExtend {
             }
             let list = str.split(/\r?\n\r?\n/);
             list = list.map(item => {
-                let lineArr = item.split(/r?\n/);
+                let lineArr = item.split(/\r?\n/);
 
                 let arr = lineArr.map(line =>{
                     return line.split(' : ')[1].trim();
