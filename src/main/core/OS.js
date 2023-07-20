@@ -3,7 +3,7 @@ import is from "electron-is";
 
 export default class OS {
     static #_isMacOSLowVersion = null;
-
+    static #_majorVersion = null;
     /**
      * 获取系统版本号字符串，Windows如10.0.19045
      * @returns {string}
@@ -17,7 +17,8 @@ export default class OS {
      * @returns {number}
      */
     static getMajorVersion() {
-        return Number(this.getVersion().split('.')[0]);
+        this.#_majorVersion = this.#_majorVersion ? this.#_majorVersion : Number(this.getVersion().split('.')[0]);
+        return this.#_majorVersion;
     }
 
     static getUserName() {
