@@ -3,6 +3,7 @@ import App from "@/main/App";
 import Software from "@/main/core/software/Software";
 import OS from "@/main/core/OS";
 import {MAC_USER_CORE_DIR, TEMP_DIR_NAME} from "@/main/constant";
+import Settings from "@/main/Settings";
 
 export default class GetPath {
     static getBinDir(){
@@ -84,7 +85,11 @@ export default class GetPath {
     }
 
     static getWebsiteDir(){
-        return path.join(App.getUserCoreDir(), 'www');
+        const wwwDir = Settings.get('wwwDir')
+        if (wwwDir !== ''){
+            return wwwDir
+        }
+        return path.join(App.getUserCoreDir(), 'www')
     }
 
     static getScriptDir() {

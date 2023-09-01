@@ -2,6 +2,13 @@
   <a-card title="其它" class="settings-card">
     <a-row type="flex" align="middle" class="settings-card-row">
       <a-col :span="24" class="flex-vertical-center">
+        <span>网站目录：</span>
+        <a-input v-model:value="wwwDir" @blur="changeWwwDir" style="width: 500px"></a-input>
+      </a-col>
+    </a-row>
+
+    <a-row type="flex" align="middle" class="settings-card-row">
+      <a-col :span="24" class="flex-vertical-center">
         <span>文本编辑器：</span>
         <a-input v-model:value="textEditor" readonly style="flex: 1"></a-input>
         <a-button @click="clickTextEditor" style="margin-left: 5px">...</a-button>
@@ -25,8 +32,20 @@ import FileDialog from "@/renderer/utils/FileDialog";
 import Settings from "@/main/Settings";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {ref} from "vue";
+import path from "path";
+import App from "@/main/App";
 
 const textEditor = ref(Settings.get('TextEditor'));
+const wwwDir = ref(Settings.get('wwwDir'));
+
+const changeWwwDir = async () => {
+  try {
+    Settings.set('wwwDir', wwwDir.value);
+  } catch (error) {
+    MessageBox.error(error.message ?? error, '设置出错！');
+    wwwDir.value = path.join(App.getUserCoreDir(), 'www');
+  }
+}
 
 const clickTextEditor = async () => {
   const originVal = Settings.get('TextEditor');
