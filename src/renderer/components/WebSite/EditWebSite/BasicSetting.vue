@@ -1,5 +1,6 @@
 <template>
   <a-form
+      ref="formRef"
       :model="formData"
       name="basic"
       :label-col="{ span: 5}"
@@ -15,7 +16,7 @@
       <a-input-number v-model:value="formData.port" min="80" max="65535" disabled  />
     </a-form-item>
 
-    <a-form-item label="根目录" name="path" :rules="[{ required: true, message: '请选择根目录!' }]">
+    <a-form-item label="根目录" name="rootPath" :rules="rootPathRules">
       <input-open-dir-dialog v-model:value="formData.rootPath" :showForwardSlash="true" ></input-open-dir-dialog>
     </a-form-item>
 
@@ -48,6 +49,7 @@ import Hosts from "@/main/core/Hosts";
 
 const {confName,search} = inject('website');
 
+const formRef = ref();
 const formData = reactive({});
 const phpVersionList = ref([]);
 const emits = defineEmits(['editAfter']);
@@ -62,6 +64,12 @@ phpVersionList.value = list.map(item => {
 phpVersionList.value.push({value: '', label: STATIC_WEB_NAME});
 
 const save = async () => {
+  try {
+    await formRef.value.validateFields();
+  } catch (errorInfo) {
+    console.log('Validate Failed:', errorInfo);
+    return;
+  }
   try {
     await Website.saveBasicInfo(confName.value, formData);
     message.info('保存成功');
@@ -96,6 +104,18 @@ const save = async () => {
 const extraServerNameChange = () => {
   formData.extraServerName = formData.extraServerName?.trim();
 }
+
+const rootPathRules = [
+  {
+    required: true,
+    validator: async (_rule, value) => {
+      if (value.includes(' ')) {
+        return Promise.reject('目录不能有空格');
+      }
+      return Promise.resolve();
+    }
+  }
+]
 </script>
 
 <style scoped>

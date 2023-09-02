@@ -23,7 +23,7 @@
           <a-input-number v-model:value="formData.port" min="80" max="65535"/>
         </a-form-item>
 
-        <a-form-item label="根目录" name="rootPath" :rules="[{ required: true, message: '请选择根目录!' }]">
+        <a-form-item label="根目录" name="rootPath" :rules="rootPathRules">
           <input-open-dir-dialog v-model:value="formData.rootPath" :showForwardSlash="true" ></input-open-dir-dialog>
         </a-form-item>
 
@@ -120,6 +120,18 @@ const addWeb = async (websiteInfo)=>{
       startPhpFpmFunc.value(websiteInfo.phpVersion);
   }
 }
+
+const rootPathRules = [
+  {
+    required: true,
+    validator: async (_rule, value) => {
+      if (value.includes(' ')) {
+        return Promise.reject('目录不能有空格');
+      }
+      return Promise.resolve();
+    }
+  }
+]
 </script>
 
 <style scoped>
