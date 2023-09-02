@@ -3,10 +3,10 @@
     <p style="text-align: center;font-size: 18px;margin-top: 50px">{{ APP_NAME }}集成服务环境</p>
     <p style="text-align: center">版本：{{version}}</p>
     <p style="text-align: center">
-      官网：<a @click="openUrl('http://www.easysrv.cn')">www.easysrv.cn</a>
+      官网：<a @click="openUrl('http://www.phpenv.cn/easysrv')">www.phpenv.cn/easysrv</a>
     </p>
     <p style="text-align: center">
-      文档：<a @click="openUrl('http://www.easysrv.cn/doc')">www.easysrv.cn/doc</a>
+      文档：<a @click="openUrl('http://www.phpenv.cn/easysrv/doc')">www.phpenv.cn/easysrv/doc</a>
     </p>
     <p style="text-align: center">
       Github：<a @click="openUrl('http://github.com/xianyunleo/EasySrv')">github.com/xianyunleo/EasySrv</a>
