@@ -1,8 +1,8 @@
 <template>
   <div class="content-container">
     <one-click-server />
-    <other />
     <env-var />
+    <other />
     <user-pwd v-if="!isWindows"/>
   </div>
 </template>

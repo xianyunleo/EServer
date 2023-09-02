@@ -17,6 +17,11 @@
         <a-switch v-model:checked="autoStartPhpFpm" @change="changeAutoStartPhpFpm" class="settings-switch"  />
       <span>新增、修改网站后启动对应的PHP-FPM</span>
     </div>
+
+    <div class="settings-card-row flex-vertical-center">
+      <a-button @click="Init" type="primary" >初始化</a-button>
+    </div>
+
   </a-card>
 </template>
 
@@ -25,6 +30,8 @@ import FileDialog from "@/renderer/utils/FileDialog";
 import Settings from "@/main/Settings";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {ref} from "vue";
+import SoftwareInit from "@/main/core/software/SoftwareInit";
+import {message} from "ant-design-vue";
 
 const textEditor = ref(Settings.get('TextEditor'));
 
@@ -64,6 +71,22 @@ const changeAutoStartPhpFpm = async () => {
         MessageBox.error(error.message ?? error, '设置出错！');
         autoStartPhpFpm.value = originVal;
     }
+}
+
+const Init = async () => {
+  try {
+    const options = {
+      content: '初始化，会自动设置PHP和服务等软件的配置\n确定吗?',
+      okText: '确定',
+      cancelText: '取消',
+    };
+    if (await MessageBox.confirm(options)) {
+      await SoftwareInit.initAll();
+      message.success('初始化成功');
+    }
+  } catch (error) {
+    MessageBox.error(error.message ?? error, '初始化失败！');
+  }
 }
 
 </script>
