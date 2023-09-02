@@ -3,6 +3,7 @@ import App from "@/main/App";
 import Software from "@/main/core/software/Software";
 import OS from "@/main/core/OS";
 import {MAC_USER_CORE_DIR, TEMP_DIR_NAME} from "@/main/constant";
+import Settings from "@/main/Settings";
 
 export default class GetPath {
     static getBinDir(){
@@ -83,7 +84,11 @@ export default class GetPath {
         return path.join(this.getDatabaseDir(), `mysql-${version}-data`);
     }
 
-    static getWebsiteDir(){
+    static getWebsiteDir() {
+        const websiteDir = Settings.get('WebsiteDir');
+        if (websiteDir) {
+            return websiteDir;
+        }
         return path.join(App.getUserCoreDir(), 'www');
     }
 

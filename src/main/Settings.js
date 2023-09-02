@@ -52,9 +52,10 @@ export default class Settings {
             PhpVersion: '',
             EnableComposer: false,
             TextEditor: this.getDefaultTextEditorPath(),
+            WebsiteDir: Path.Join(App.getUserCoreDir(), 'www'),
             OneClickServerList: ['Nginx','PHP-FPM','MySQL-5.7'],
-            autoRestartWebServer: true,
-            autoStartPhpFpm: true,
+            AutoRestartWebServer: true,
+            AutoStartPhpFpm: true,
         };
         return obj;
     }

@@ -4,7 +4,15 @@
       <a-col :span="24" class="flex-vertical-center">
         <span>文本编辑器：</span>
         <a-input v-model:value="textEditor" readonly style="flex: 1"></a-input>
-        <a-button @click="clickTextEditor" style="margin-left: 5px">...</a-button>
+        <a-button @click="changeTextEditor" style="margin-left: 5px">...</a-button>
+      </a-col>
+    </a-row>
+
+    <a-row type="flex" align="middle" class="settings-card-row">
+      <a-col :span="24" class="flex-vertical-center">
+        <span>网站目录：</span>
+        <a-input v-model:value="websiteDir" readonly style="flex: 1"></a-input>
+        <a-button @click="changeWebsiteDir" style="margin-left: 5px">...</a-button>
       </a-col>
     </a-row>
 
@@ -34,8 +42,9 @@ import SoftwareInit from "@/main/core/software/SoftwareInit";
 import {message} from "ant-design-vue";
 
 const textEditor = ref(Settings.get('TextEditor'));
+const websiteDir = ref(Settings.get('WebsiteDir'));
 
-const clickTextEditor = async () => {
+const changeTextEditor = async () => {
   const originVal = Settings.get('TextEditor');
   try {
     let path = FileDialog.showOpenApp();
@@ -49,24 +58,41 @@ const clickTextEditor = async () => {
   }
 }
 
-const autoRestartWebServer = ref(Settings.get('autoRestartWebServer'));
+const changeWebsiteDir = async () => {
+  const originVal = Settings.get('WebsiteDir');
+  try {
+    let path = FileDialog.showOpenDirectory(originVal);
+    if (path) {
+      if (path.includes(' ')) {
+        throw  new Error('网站目录不能有空格');
+      }
+      websiteDir.value = path;
+      Settings.set('WebsiteDir', path);
+    }
+  } catch (error) {
+    MessageBox.error(error.message ?? error, '设置出错！');
+    websiteDir.value = originVal;
+  }
+}
+
+const autoRestartWebServer = ref(Settings.get('AutoRestartWebServer'));
 
 const changeAutoRestartWebServer = async () => {
-    const originVal = Settings.get('autoRestartWebServer');
+    const originVal = Settings.get('AutoRestartWebServer');
     try {
-        Settings.set('autoRestartWebServer', autoRestartWebServer.value);
+        Settings.set('AutoRestartWebServer', autoRestartWebServer.value);
     } catch (error) {
         MessageBox.error(error.message ?? error, '设置出错！');
         autoRestartWebServer.value = originVal;
     }
 }
 
-const autoStartPhpFpm = ref(Settings.get('autoStartPhpFpm'));
+const autoStartPhpFpm = ref(Settings.get('AutoStartPhpFpm'));
 
 const changeAutoStartPhpFpm = async () => {
-    const originVal = Settings.get('autoStartPhpFpm');
+    const originVal = Settings.get('AutoStartPhpFpm');
     try {
-        Settings.set('autoStartPhpFpm', autoStartPhpFpm.value);
+        Settings.set('AutoStartPhpFpm', autoStartPhpFpm.value);
     } catch (error) {
         MessageBox.error(error.message ?? error, '设置出错！');
         autoStartPhpFpm.value = originVal;
