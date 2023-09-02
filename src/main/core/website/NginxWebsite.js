@@ -52,7 +52,7 @@ export default class NginxWebsite {
 
     getPort() {
         let matches = this.confText.match(/(?<=listen\s+)\d+(?=\s*;)/);
-        return matches ? matches[0] : null;
+        return matches ? parseInt(matches[0]) : null;
     }
 
     getRootPath() {
