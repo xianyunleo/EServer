@@ -1,0 +1,122 @@
+<template>
+  <a-form
+    :model='formData' ref="formRef" name='basic' autocomplete='off'
+    :label-col='{ span: labelColSpan}' :wrapper-col='{ span: wrapperColSpan}'
+  >
+    <a-form-item :label="mt('Second','ws','DomainName')" name='extraServerName'>
+      <a-input v-model:value='formData.extraServerName' @change='extraServerNameChange'
+               :placeholder='t("defaultIsEmpty")' spellcheck='false' />
+    </a-form-item>
+
+    <a-form-item :label="t('Port')" name='port'
+                 :rules="[{  required: true, type: 'number', min: 80, max: 65535 }]">
+      <a-input-number v-model:value='formData.port' min='80' max='65535' disabled />
+    </a-form-item>
+
+    <a-form-item :label="t('RootPath')" name='rootPath' :rules='rootPathRules'>
+      <input-open-dir-dialog v-model:value='formData.rootPath' :toForwardSlash='true'></input-open-dir-dialog>
+    </a-form-item>
+
+    <a-form-item :label="'PHP'+mt('ws','Version')" name='phpVersion'>
+      <a-select style='width: 120px' v-model:value='formData.phpVersion' :options='phpVersionList'>
+      </a-select>
+    </a-form-item>
+
+    <a-form-item :label="mt('Sync','ws')+'hosts'" name='syncHosts'>
+      <a-switch v-model:checked='formData.syncHosts' :disabled='true' />
+    </a-form-item>
+  </a-form>
+
+  <div style='text-align: center'>
+    <a-button type='primary' @click='save'>{{t('Save')}}</a-button>
+  </div>
+</template>
+
+<script setup>
+import { ref, inject, reactive } from 'vue'
+import InputOpenDirDialog from '@/renderer/components/Input/InputOpenDirDialog.vue'
+import Website from '@/main/core/website/Website'
+import { message } from 'ant-design-vue'
+import MessageBox from '@/renderer/utils/MessageBox'
+import SoftwareExtend from '@/main/core/software/SoftwareExtend'
+import Hosts from '@/main/utils/Hosts'
+import { mt, t } from '@/shared/utils/i18n'
+const { settingsReactive } = inject('GlobalProvide')
+
+const { confName, search } = inject('WebsiteProvide')
+
+const formRef = ref();
+const formData = reactive({})
+const phpVersionList = ref([])
+const emits = defineEmits(['editAfter'])
+
+const labelColSpan = settingsReactive.Language === 'zh' ? 6 : 10;
+const wrapperColSpan = settingsReactive.Language === 'zh' ? 18 : 14;
+
+let websiteInfo = Website.getBasicInfo(confName.value)
+Object.assign(formData, websiteInfo)
+
+let list = SoftwareExtend.getPHPList()
+phpVersionList.value = list.map(item => {
+  return { value: item.version, label: item.name }
+})
+phpVersionList.value.push({ value: '', label: t('Static') })
+
+const save = async () => {
+  try {
+    await formRef.value.validateFields()
+  } catch (errorInfo) {
+    console.log('Validate Failed:', errorInfo)
+    return
+  }
+  try {
+    await Website.saveBasicInfo(confName.value, formData)
+    message.info('保存成功')
+    search()
+  } catch (error) {
+    MessageBox.error(error.message ?? error, '保存出错！')
+  }
+
+  if (websiteInfo.syncHosts) {
+    try {
+      let oldExtraServerName = websiteInfo.extraServerName
+      if (formData.extraServerName !== oldExtraServerName) {
+
+        if (oldExtraServerName && await Website.getSameDomainAmount(oldExtraServerName) === 0) {
+          await Hosts.delete(oldExtraServerName)
+        }
+        if (formData.extraServerName) {
+          await Hosts.add(formData.extraServerName)
+        }
+
+      }
+    } catch (error) {
+      MessageBox.error(error.message ?? error, '同步Hosts出错！')
+    }
+  }
+
+  websiteInfo = JSON.parse(JSON.stringify(formData))
+
+  emits('editAfter', websiteInfo.phpVersion)
+}
+
+const extraServerNameChange = () => {
+  formData.extraServerName = formData.extraServerName?.trim()
+}
+
+const rootPathRules = [
+  {
+    required: true,
+    validator: async (_rule, value) => {
+      if (value.includes(' ')) {
+        return Promise.reject(t('directoryCannotContainSpaces'))
+      }
+      return Promise.resolve()
+    }
+  }
+]
+</script>
+
+<style scoped>
+
+</style>

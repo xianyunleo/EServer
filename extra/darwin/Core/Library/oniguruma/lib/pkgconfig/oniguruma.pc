@@ -1,0 +1,13 @@
+prefix=/Applications/EServer/Library/oniguruma
+exec_prefix=/Applications/EServer/Library/oniguruma
+libdir=/Applications/EServer/Library/oniguruma/lib
+includedir=/Applications/EServer/Library/oniguruma/include
+datarootdir=/Applications/EServer/Library/oniguruma/share
+datadir=/Applications/EServer/Library/oniguruma/share
+
+Name: oniguruma
+Description: Regular expression library
+Version: 6.9.8
+Requires:
+Libs: -L${libdir} -lonig
+Cflags: -I${includedir}

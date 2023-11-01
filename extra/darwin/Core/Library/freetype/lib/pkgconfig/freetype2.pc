@@ -1,0 +1,14 @@
+prefix=/Applications/EServer/Library/freetype
+exec_prefix=/Applications/EServer/Library/freetype
+libdir=/Applications/EServer/Library/freetype/lib
+includedir=/Applications/EServer/Library/freetype/include
+
+Name: FreeType 2
+URL: https://freetype.org
+Description: A free, high-quality, and portable font engine.
+Version: 26.1.20
+Requires: 
+Requires.private: zlib, libpng
+Libs: -L/Applications/EServer/Library/freetype/lib -lfreetype
+Libs.private: -L/Applications/EServer/Library/bzip2/lib -lbz2
+Cflags: -I${includedir}/freetype2

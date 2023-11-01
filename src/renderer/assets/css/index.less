@@ -1,0 +1,124 @@
+@import "var";
+@import "common";
+@import "antd";
+@import "keyframes";
+@import "scrollbar";
+
+#app {
+  user-select: none;
+  height: 100%;
+  overflow: hidden;
+}
+
+img, a {
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.draggable {
+  -webkit-app-region: drag;
+}
+
+.non-draggable {
+  -webkit-app-region: no-drag;
+}
+
+.title-bar {
+  height: @title-bar-height;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid @colorBorder;
+}
+
+
+.sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid @colorBorder;
+
+  .draggable {
+    height: @title-bar-height;
+  }
+
+  .logo-container {
+    height: 100px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .logo-container img {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(to bottom, @colorPrimaryHover, @colorPrimary, @colorPrimaryActive);
+    border-radius: @borderRadius;
+  }
+
+  .ant-menu {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border: 0 !important;
+    background: @colorBgLayout;
+  }
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 0;
+  position: relative;
+  //animation: bottom-to-top-frame 0.2s;
+  overflow: auto;
+  padding: 10px;
+}
+
+.content-table {
+  flex: 1;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  .ant-btn {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+.tabs-modal {
+  .ant-modal-body {
+    padding-top: 0;
+  }
+}
+
+.left-tabs-modal {
+  .ant-modal-body {
+    padding: 0;
+  }
+
+  .ant-tabs-content-holder {
+    padding: 15px 10px;
+  }
+
+  .ant-tabs-tabpane {
+    padding: 0 !important;
+  }
+}
+
+.ant-input-affix-wrapper.with-btn {
+  padding-right: 5px;
+
+  .icon-wrapper {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    cursor: pointer;
+    padding: 0 8px;
+
+    &:hover {
+      background: @colorBgTextHover;
+      border-radius: @borderRadius;
+    }
+  }
+}

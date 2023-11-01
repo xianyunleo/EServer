@@ -1,0 +1,21 @@
+{
+	"Language": "en",
+	"ThemeMode": "auto",
+	"ThemeColor": "#1890FF",
+	"EnableEnv": true,
+	"PhpCliVersion": "",
+	"EnableComposer": false,
+	"TextEditor": "C:\\Program Files\\Notepad3\\Notepad3.exe",
+	"WebsiteDir": "E:\\work\\ymp\\vendor\\bin",
+	"OneClickServerList": [
+		"Nginx",
+		"PHP-FPM",
+		"MySQL-5.7"
+	],
+	"AutoRestartWebServer": true,
+	"AutoStartPhpFpm": true,
+	"phpCliVersion": "",
+	"PhpVersion": "",
+	"autoRestartWebServer": true,
+	"autoStartPhpFpm": true
+}

@@ -1,0 +1,57 @@
+/*
+antd 组件样式修改
+*/
+
+@import "var";
+
+.ant-modal, .ant-dropdown {
+  user-select: none;
+}
+
+.ant-menu-item-selected {
+  color: @colorText !important;
+  background: @colorBgTextActive !important;
+
+  &:before {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 3px;
+    bottom: 0;
+    width: 3px;
+    margin: 12px 0 12px 1px;
+    background: @colorPrimary;
+    border-radius: 10px;
+    content: '';
+  }
+}
+
+.ant-menu-item-active {
+  background: @colorBgTextHover !important;
+}
+
+.ant-table-wrapper {
+  border-radius: @borderRadius;
+  background: @colorBgContainer;
+  box-shadow: @container-box-shadow;
+}
+
+.ant-card {
+  box-shadow: @container-box-shadow;
+}
+
+.ant-card-head-title {
+  font-size: 14px;
+}
+
+.ant-modal {
+  box-shadow: @container-box-shadow;
+}
+
+.ant-modal-title {
+  font-size: 14px !important;
+}
+
+.ant-spin-nested-loading > div > .ant-spin {
+  max-height: none;
+}

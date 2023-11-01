@@ -1,0 +1,55 @@
+appId: net.XianYun.EServer
+productName: EServer
+files:
+  - '!**/.vscode/*'
+  - '!src/*'
+  - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
+  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+  - '!extra/*'
+mac:
+  target:
+    - target: dmg
+      arch:
+        - x64
+  extraFiles:
+    - from: ./extra/darwin/Core/Library/
+      to: ./Core/Library/
+    - from: ./extra/darwin/Core/config/
+      to: ./Core/config/
+    - from: ./extra/darwin/Core/initFiles/
+      to: ./Core/initFiles/
+    - from: ./extra/darwin/Core/script/
+      to: ./Core/script/
+    - from: ./extra/darwin/Core/init.txt
+      to: ./Core/init.txt
+  icon: build/icons/icon.icns
+  artifactName: '${productName}-${os}-${version}-${arch}.${ext}'
+win:
+  target:
+    - target: zip
+      arch:
+        - x64
+    - target: nsis
+      arch:
+        - x64
+  requestedExecutionLevel: requireAdministrator
+  extraFiles:
+    - from: ./extra/win32/core/config/
+      to: ./core/config/
+    - from: ./extra/win32/core/initFiles/
+      to: ./core/initFiles/
+    - from: ./extra/win32/core/script/
+      to: ./core/script/
+    - from: ./extra/win32/core/init.txt
+      to: ./core/init.txt
+  icon: build/icons/icon.ico
+nsis:
+  artifactName: ${productName}-${version}-setup.${ext}
+  oneClick: false
+  perMachine: true
+  allowToChangeInstallationDirectory: true
+  include: build/installer.nsh
+  installerIcon: build/icons/icon.ico
+  uninstallerIcon: build/icons/icon.ico

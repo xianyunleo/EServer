@@ -1,0 +1,13 @@
+prefix=/Applications/EServer/Library/libxml2
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+modules=1
+
+Name: libXML
+Version: 2.11.5
+Description: libXML library version2.
+Requires:
+Libs: -L${libdir} -lxml2
+Libs.private: -L/Applications/EServer/Library/zlib/lib -lz   -L/Applications/EServer/Library/libiconv/lib -liconv    
+Cflags: -I${includedir}/libxml2 -I/Applications/EServer/Library/libiconv/include 
