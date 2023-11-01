@@ -40,6 +40,7 @@ import { useI18n } from 'vue-i18n'
 import SetLanguage from "@/renderer/components/SetLanguage.vue";
 import {useMainStore} from "@/renderer/store";
 const mainStore = useMainStore();
+import { t } from "@/shared/utils/i18n";
 
 const { locale } = useI18n()
 
