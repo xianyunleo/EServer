@@ -101,7 +101,7 @@ export default {
     set: '设置',
     initializing: '初始化中',
     download: '下载',
-    unzip: '解压',
+    uncompress: '解压',
     update: '更新',
     configure: '配置',
     operation: '操作',

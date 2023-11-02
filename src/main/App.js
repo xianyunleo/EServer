@@ -16,6 +16,8 @@ import child_process from 'child_process'
 import SoftwareInit from '@/main/core/software/SoftwareInit'
 import fs from 'fs'
 import Software from "@/main/core/software/Software";
+import GetPath from "@/shared/utils/GetPath";
+import OfflineInstall from "@/main/core/software/OfflineInstall";
 
 const app = electronRequire('app');
 
@@ -135,11 +137,12 @@ export default class App {
             this.updateMacCoreSubDir(['Library']);
         }
 
-        this.moveInitFiles([TEMP_DIR_NAME, 'www', 'software']);
-        this.createCoreSubDir(['downloads', 'database', 'bin']);
+        this.moveInitFiles(["downloads", "www"]);
+        this.createCoreSubDir(["software", "database", "bin",`${TEMP_DIR_NAME}/php`]);
 
         if (!softwareDirExists) { //目录不存在说明是第一次安装，不是覆盖安装
-            await SoftwareInit.initAll();
+            const files = Directory.GetFiles(GetPath.getDownloadsDir(), '.7z');
+            await OfflineInstall.installMultiple(files)
         }
 
         File.Delete(initFile);
@@ -217,6 +220,9 @@ export default class App {
         let initFilesPath = Path.Join(this.getCoreDir(),InitFiles_DIR_NAME);
         for (const file of files) {
             let source = Path.Join(initFilesPath, file);
+            if(!fs.existsSync(source)){
+                continue;
+            }
             let target = Path.Join(this.getUserCoreDir(), file);
             if (!fs.existsSync(target)) {
                 fs.renameSync(source, target);

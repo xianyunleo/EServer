@@ -7,6 +7,7 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { builtinModules } from 'module'
 
 const externals = ['fix-path', 'electron-store', '@electron/remote', 'extract-zip', 'got', 'hmc-win32',
+        '7zip-min-win-asar-support',
   ...builtinModules, ...builtinModules.map((m) => `node:${m}`)]
 
 export default defineConfig({

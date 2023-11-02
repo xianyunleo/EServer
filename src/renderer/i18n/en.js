@@ -100,7 +100,7 @@ export default {
     set: 'set',
     initializing: 'initialize',
     download: 'download',
-    unzip: 'unzip',
+    uncompress: 'uncompress',
     update: 'update',
     configure: 'configure',
     operation: 'operation',

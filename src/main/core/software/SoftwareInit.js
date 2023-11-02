@@ -35,18 +35,8 @@ export default class SoftwareInit extends StringExtend{
 
             await this.initNginxLocalhostConf();
             await this.initNginxPhpmyadminConf();
-            if (!isWindows) {
-                await this.createNginxSubDir()
-            }
         } catch (error) {
             throw new Error(`初始化Nginx配置失败！${error.message}`);
-        }
-    }
-
-    static async createNginxSubDir(){
-        const logPath = Path.Join(GetPath.getNginxDir(),'logs');
-        if(!Directory.Exists(logPath)){
-            Directory.CreateDirectory(logPath)
         }
     }
 
@@ -81,22 +71,10 @@ export default class SoftwareInit extends StringExtend{
             await this.initPHPConf(item.version)
             if (!isWindows) {
                 await this.createPHPFpmConf(item.version)
-                await this.createPHPSubDir(item.version)
             }
         }
     }
 
-    static async createPHPSubDir(version){
-        const phpDirPath = GetPath.getPhpDir(version);
-        const logPath = Path.Join(phpDirPath,'var/log');
-        if(!Directory.Exists(logPath)){
-            Directory.CreateDirectory(logPath)
-        }
-        const runPath = Path.Join(phpDirPath,'var/run');
-        if(!Directory.Exists(runPath)){
-            Directory.CreateDirectory(runPath)
-        }
-    }
 
     static async createPHPFpmConf(version) {
         let phpDirPath = GetPath.getPhpDir(version);

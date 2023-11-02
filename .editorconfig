@@ -14,5 +14,5 @@ indent_size = 4
 [*.config.js]
 indent_size = 2
 
-[*software.json]
+[extra/**]
 indent_size = 4

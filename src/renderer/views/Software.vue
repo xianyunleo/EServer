@@ -11,6 +11,8 @@
           {{ t('Tool') }}
         </a-radio-button>
       </a-radio-group>
+
+      <a-button v-if="isDev" @click="offlineInstall">离线安装</a-button>
     </div>
 
     <div class='soft-list piece'>
@@ -110,7 +112,8 @@
 </template>
 
 <script setup>
-import {computed, defineAsyncComponent, ref} from 'vue'
+var timestamp = new Date().getTime();
+import { computed, defineAsyncComponent, onMounted, ref } from "vue";
 import {useMainStore} from '@/renderer/store'
 import {storeToRefs} from 'pinia'
 import {message} from 'ant-design-vue'
@@ -125,8 +128,14 @@ import PhpExtManager from '@/renderer/components/Software/PhpExtManager.vue'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import Path from '@/main/utils/Path'
 import {mt, t} from '@/shared/utils/i18n'
-import {isMacOS, isWindows} from "@/main/utils/utils";
+import {isMacOS, isWindows,isDev} from "@/main/utils/utils";
+import FileDialog from "@/main/utils/FileDialog";
+import OfflineInstall from "@/main/core/software/OfflineInstall";
 
+onMounted(() => {
+  var timestamp2 = new Date().getTime();
+  console.log('software onMounted',timestamp2-timestamp)
+})
 const AButton = defineAsyncComponent(() => {
     return new Promise((resolve) => {
         import('ant-design-vue').then((modules) => {
@@ -274,6 +283,18 @@ const uninstall = async (item) => {
     MessageBox.error(error.message ?? error, '卸载出错！')
   }
 }
+
+const offlineInstall = async () => {
+    let path = FileDialog.showOpenFile();
+    try {
+      //todo，不支持Nginx安装
+       await OfflineInstall.install(path)
+    } catch (error) {
+        MessageBox.error(error.message ?? error, 'error')
+    }
+
+};
+
 
 const showPhpExtManager = (item) => {
   phpVersion.value = SoftwareExtend.getPHPVersion(item.DirName)

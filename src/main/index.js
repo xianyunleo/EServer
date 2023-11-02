@@ -4,6 +4,7 @@ import { is } from '@electron-toolkit/utils'
 import remoteMain from '@electron/remote/main'
 import Store from 'electron-store'
 import MainWindow from '@/main/MainWindow'
+import { ipcListen } from "@/main/ipc";
 
 let mainWindow
 const gotTheLock = app.isPackaged ? app.requestSingleInstanceLock() : true //仅生产环境生效
@@ -30,10 +31,12 @@ function createMainWindow() {
         frame: !(process.platform === 'win32'),
         vibrancy: 'window',
         webPreferences: {
+            preload: join(__dirname, '../preload/index.js'),
             sandbox: false,
             nodeIntegration: true,
             contextIsolation: false,
-            webSecurity: false
+            webSecurity: false,
+            nodeIntegrationInWorker: true
         }
     })
 
@@ -93,3 +96,4 @@ app.on('window-all-closed', () => {
 })
 
 app.commandLine.appendSwitch('--no-sandbox')
+ipcListen();

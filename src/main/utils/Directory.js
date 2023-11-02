@@ -1,8 +1,11 @@
-import fs from "fs";
-import nodePath from "path";
+import fs from 'fs'
+import nodePath from 'path'
 
+const FileTypeEnum = {
+    File: 0,
+    Directory: 1
+}
 export default class Directory {
-
     /**
      * 创建目录和子目录
      * @param path {string}
@@ -11,8 +14,8 @@ export default class Directory {
     static CreateDirectory(path) {
         const options = {
             recursive: true
-        };
-        return fs.mkdirSync(path, options);
+        }
+        return fs.mkdirSync(path, options)
     }
 
     /**
@@ -22,7 +25,7 @@ export default class Directory {
      * @returns {undefined}
      */
     static CreateSymbolicLink(path, pathToTarget) {
-        return fs.symlinkSync(pathToTarget, path);
+        return fs.symlinkSync(pathToTarget, path)
     }
 
     /**
@@ -34,8 +37,8 @@ export default class Directory {
     static Delete(path, recursive = true) {
         const options = {
             recursive: recursive
-        };
-        return fs.rmdirSync(path, options);
+        }
+        return fs.rmdirSync(path, options)
     }
 
     /**
@@ -44,7 +47,7 @@ export default class Directory {
      * @returns {boolean}
      */
     static Exists(path) {
-        return fs.existsSync(path) && fs.lstatSync(path).isDirectory();
+        return fs.existsSync(path) && fs.lstatSync(path).isDirectory()
     }
 
     /**
@@ -54,7 +57,7 @@ export default class Directory {
      * @returns {undefined}
      */
     static Move(source, dest) {
-        return fs.renameSync(source, dest);
+        return fs.renameSync(source, dest)
     }
 
     /**
@@ -65,48 +68,55 @@ export default class Directory {
      * @returns {void}
      */
     static Copy(source, dest, options) {
-        return fs.cpSync(source, dest, options);
+        return fs.cpSync(source, dest, options)
     }
 
     /**
      * 获取指定目录中的所有目录名（包含其路径）
      * @param path {string}
-     * @param searchString {string}
+     * @param search {string|RegExp}
      * @returns {string[]}
      */
-    static GetDirectories(path, searchString) {
-        let dirents = fs.readdirSync(path, {withFileTypes: true});
-        let list = [];
-        for (const dirent of dirents) {
-            if (!dirent.isDirectory()) {
-                continue;
-            }
-            if (searchString && !dirent.name.includes(searchString)) {
-                continue;
-            }
-            list.push(nodePath.join(path, dirent.name));
-        }
-        return list;
+    static GetDirectories(path, search = null) {
+        return this.GetAll(path, FileTypeEnum.Directory, search)
     }
 
     /**
      * 获取指定目录中的所有文件名（包含其路径）
      * @param path {string}
-     * @param searchString {string}
+     * @param search {string|RegExp}
      * @returns {string[]}
      */
-    static GetFiles(path, searchString) {
-        let dirents = fs.readdirSync(path, {withFileTypes: true});
-        let list = [];
+    static GetFiles(path, search = null) {
+        return this.GetAll(path, FileTypeEnum.File, search)
+    }
+
+    /**
+     * 获取指定目录中的所有文件名（包含其路径）
+     * @param path {string}
+     * @param fileType {FileTypeEnum}
+     * @param search {string|RegExp}
+     * @returns {string[]}
+     */
+    static GetAll(path, fileType = '', search = null) {
+        let dirents = fs.readdirSync(path, { withFileTypes: true })
+        let list = []
         for (const dirent of dirents) {
-            if (!dirent.isFile()) {
-                continue;
+            if (fileType === FileTypeEnum.File && !dirent.isFile()) {
+                continue
+            } else if (fileType === FileTypeEnum.Directory && !dirent.isDirectory()) {
+                continue
             }
-            if (searchString && !dirent.name.includes(searchString)) {
-                continue;
+
+            if (search) {
+                if (search instanceof RegExp) {
+                    if (dirent.name.search(search) === -1) continue
+                } else {
+                    if (!dirent.name.includes(search)) continue
+                }
             }
-            list.push(nodePath.join(path, dirent.name));
+            list.push(nodePath.join(path, dirent.name))
         }
-        return list;
+        return list
     }
 }

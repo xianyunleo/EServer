@@ -4,19 +4,18 @@ import path from 'path'
 import { EnumSoftwareInstallStatus } from '@/shared/utils/enum'
 import extract from 'extract-zip'
 import Software from '@/main/core/software/Software'
-import Database from '@/main/core/Database'
 import { DOWNLOAD_URL } from '@/shared/utils/constant'
 import Directory from '@/main/utils/Directory'
-import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import got from 'got'
 import { pipeline } from 'stream/promises'
 import fs from 'fs'
 import Path from '@/main/utils/Path'
 import File from '@/main/utils/File'
 import GetPath from '@/shared/utils/GetPath'
-import SoftwareInit from '@/main/core/software/SoftwareInit'
 import { EventEmitter } from 'events'
 import { mt, t } from '@/shared/utils/i18n'
+import CommonInstall from "@/main/core/software/CommonInstall";
+import Extract from "@/main/utils/Extract";
 
 export default class Installer extends EventEmitter {
     softItem;
@@ -32,7 +31,7 @@ export default class Installer extends EventEmitter {
     constructor(softItem) {
         super();
         this.softItem = softItem;
-        this.fileName = `${softItem.DirName}.zip`;
+        this.fileName = `${softItem.DirName}.7z`;
         this.filePath = Path.Join(this.getDownloadsPath(), this.fileName);
         this.tempFilePath = `${this.filePath}.dl`;
         this.dlAbortController = new AbortController();
@@ -62,12 +61,12 @@ export default class Installer extends EventEmitter {
         }
 
         try {
-            await this.zipExtract();
+            await this.extract();
             this.changeStatus(EnumSoftwareInstallStatus.Extracted);
         } catch (error) {
             this.changeStatus(EnumSoftwareInstallStatus.ExtractError);
             let errMsg = error.message ?? '未知错误';
-            throw new Error(`${t('anErrorOccurredDuring', [t('unzip')])}，${errMsg}`);
+            throw new Error(`${t('anErrorOccurredDuring', [t('uncompress')])}，${errMsg}`);
         }
 
         try {
@@ -82,23 +81,7 @@ export default class Installer extends EventEmitter {
 
     async configure() {
         this.changeStatus(EnumSoftwareInstallStatus.Configuring);
-
-        let dirName = this.softItem.DirName;
-        if (dirName.match(/^mysql-[.\d]+$/)) {
-            let version = SoftwareExtend.getMysqlVersion(dirName);
-            await SoftwareInit.initMySQLConf(version);
-            if (!Directory.Exists(GetPath.getMysqlDataDir(version))) {
-                await Database.initMySQL(version);
-            }
-        } else if (dirName.match(/^php-[.\d]+$/)) {
-            let version = SoftwareExtend.getPHPVersion(dirName);
-           //配置文件某些配置可能是tmp作为目录，需要改成temp
-            await SoftwareInit.initPHPConf(version);
-            if (!isWindows) {
-                await SoftwareInit.createPHPFpmConf(version)
-            }
-        }
-
+        await CommonInstall.configure(this.softItem.DirName);
     }
 
     async download() {
@@ -127,12 +110,11 @@ export default class Installer extends EventEmitter {
         this.emit('installStatus', status);
     }
 
-    async zipExtract() {
-        let filePath = path.join(this.getDownloadsPath(), this.fileName);
-        let typePath = Software.getTypePath(this.softItem.Type)
-
+    async extract() {
         this.changeStatus(EnumSoftwareInstallStatus.Extracting);
-        return await extract(filePath, {dir: typePath});
+        const filePath = path.join(this.getDownloadsPath(), this.fileName);
+        const dest = Software.getTypePath(this.softItem.Type);
+        return await Extract.extract7z(filePath, dest);
     }
 
     /**
