@@ -2,8 +2,8 @@ import { ipcMain } from "electron";
 import { callStatic } from "@/main/common/callStatic";
 
 export function ipcListen() {
-    ipcMain.handle("callStatic", async (event, className, methodName, args) => {
-        await callStatic(className, methodName, args);
+    ipcMain.handle("callStatic", async (event, className, methodName, ...args) => {
+        await callStatic(className, methodName, ...args);
     });
 
     // ipcMain.handle('workerCallStatic', async (event, data) => {

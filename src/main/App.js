@@ -13,7 +13,6 @@ import Directory from '@/main/utils/Directory'
 import File from '@/main/utils/File'
 import Path from '@/main/utils/Path'
 import child_process from 'child_process'
-import SoftwareInit from '@/main/core/software/SoftwareInit'
 import fs from 'fs'
 import Software from "@/main/core/software/Software";
 import GetPath from "@/shared/utils/GetPath";

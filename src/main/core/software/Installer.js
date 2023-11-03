@@ -2,7 +2,6 @@ import { devConsoleLog, isWindows } from '@/main/utils/utils'
 import App from '@/main/App'
 import path from 'path'
 import { EnumSoftwareInstallStatus } from '@/shared/utils/enum'
-import extract from 'extract-zip'
 import Software from '@/main/core/software/Software'
 import { DOWNLOAD_URL } from '@/shared/utils/constant'
 import Directory from '@/main/utils/Directory'
@@ -15,7 +14,7 @@ import GetPath from '@/shared/utils/GetPath'
 import { EventEmitter } from 'events'
 import { mt, t } from '@/shared/utils/i18n'
 import CommonInstall from "@/main/core/software/CommonInstall";
-import Extract from "@/main/utils/Extract";
+import { extract7z } from "@/main/utils/Extract";
 
 export default class Installer extends EventEmitter {
     softItem;
@@ -114,7 +113,7 @@ export default class Installer extends EventEmitter {
         this.changeStatus(EnumSoftwareInstallStatus.Extracting);
         const filePath = path.join(this.getDownloadsPath(), this.fileName);
         const dest = Software.getTypePath(this.softItem.Type);
-        return await Extract.extract7z(filePath, dest);
+        return await extract7z(filePath, dest);
     }
 
     /**

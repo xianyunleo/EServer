@@ -10,14 +10,15 @@ import { isWindows } from "@/main/utils/utils";
 import { Modal } from "ant-design-vue";
 import CommonInstall from "@/main/core/software/CommonInstall";
 import File from "@/main/utils/File";
-import Extract from "@/main/utils/Extract";
+import { extract7z } from "@/main/utils/extract";
 
 
 export default class OfflineInstall {
     static async install(filePath) {
         const dirName = Path.GetFileNameWithoutExtension(filePath);
         const dest = this.getDestPath(dirName);
-        await Extract.extract7z(filePath,dest);
+        await extract7z(filePath,dest);
+        File.Delete(filePath);
         await CommonInstall.configure(dirName);
     }
 

@@ -3,11 +3,11 @@ import { electronAPI } from "@electron-toolkit/preload";
 
 // Custom APIs for renderer
 const api = {
-    callStatic: async (className, methodName, args) => {
-        return await ipcRenderer.invoke("callStatic", className, methodName, args);
+    callStatic: async (className, methodName, ...args) => {
+        return await ipcRenderer.invoke("callStatic", className, methodName, ...args);
     },
-    workerCallStatic: async (className, methodName, args) => {
-        return await ipcRenderer.invoke("workerCallStatic", className, methodName, args);
+    workerCallStatic: async (className, methodName, ...args) => {
+        return await ipcRenderer.invoke("workerCallStatic", className, methodName, ...args);
     }
 };
 // Use `contextBridge` APIs to expose Electron APIs to
