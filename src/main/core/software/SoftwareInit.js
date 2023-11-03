@@ -68,13 +68,16 @@ export default class SoftwareInit extends StringExtend{
         let phpList = SoftwareExtend.getPHPList()
 
         for (const item of phpList) {
-            await this.initPHPConf(item.version)
-            if (!isWindows) {
-                await this.createPHPFpmConf(item.version)
-            }
+            await this.initPHP(item.version);
         }
     }
 
+    static async initPHP(version) {
+        await this.initPHPConf(version);
+        if (!isWindows) {
+            await this.createPHPFpmConf(version);
+        }
+    }
 
     static async createPHPFpmConf(version) {
         let phpDirPath = GetPath.getPhpDir(version);
@@ -178,7 +181,7 @@ export default class SoftwareInit extends StringExtend{
     }
 
     /**
-     * 初始化MySQL data目录和重置密码
+     * 初始化MySQL data目录和重置密码,todo:和initMySQLConf合一个方法
      * @returns {Promise<void>}
      */
     static async initMySQL() {

@@ -3,7 +3,6 @@ import SoftwareInit from "@/main/core/software/SoftwareInit";
 import Directory from "@/main/utils/Directory";
 import GetPath from "@/shared/utils/GetPath";
 import Database from "@/main/core/Database";
-import { isWindows } from "@/main/utils/utils";
 
 export default class CommonInstall {
     static async configure(dirName) {
@@ -15,11 +14,9 @@ export default class CommonInstall {
             }
         } else if (dirName.match(/^php-[.\d]+$/)) {
             let version = SoftwareExtend.getPHPVersion(dirName);
-            //配置文件某些配置可能是tmp作为目录，需要改成temp
-            await SoftwareInit.initPHPConf(version);
-            if (!isWindows) {
-                await SoftwareInit.createPHPFpmConf(version);
-            }
+            await SoftwareInit.initPHP(version);
+        } else if (dirName.match(/^nginx$/)) {
+            await SoftwareInit.initNginx();
         }
     }
 }

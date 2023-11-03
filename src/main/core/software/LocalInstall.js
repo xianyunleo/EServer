@@ -13,8 +13,16 @@ import File from "@/main/utils/File";
 import { extract7z } from "@/main/utils/extract";
 
 
-export default class OfflineInstall {
+export default class LocalInstall {
     static async install(filePath) {
+        const dirName = Path.GetFileNameWithoutExtension(filePath);
+        const dest = this.getDestPath(dirName);
+        await extract7z(filePath,dest);
+        File.Delete(filePath);
+        await CommonInstall.configure(dirName);
+    }
+
+    static async extract(filePath) {
         const dirName = Path.GetFileNameWithoutExtension(filePath);
         const dest = this.getDestPath(dirName);
         await extract7z(filePath,dest);
@@ -24,7 +32,7 @@ export default class OfflineInstall {
 
     static async installMultiple(files) {
         await Promise.all(files.map(async install => {
-            await OfflineInstall.install(install);
+            await LocalInstall.install(install);
         }));
     }
 

@@ -12,7 +12,7 @@
         </a-radio-button>
       </a-radio-group>
 
-      <a-button v-if="isDev" @click="offlineInstall">离线安装</a-button>
+      <a-button v-if="isDev" @click="localInstall">离线安装</a-button>
     </div>
 
     <div class='soft-list piece'>
@@ -130,7 +130,7 @@ import Path from '@/main/utils/Path'
 import {mt, t} from '@/shared/utils/i18n'
 import {isMacOS, isWindows,isDev} from "@/main/utils/utils";
 import FileDialog from "@/main/utils/FileDialog";
-import OfflineInstall from "@/main/core/software/OfflineInstall";
+import LocalInstall from "@/main/core/software/LocalInstall";
 
 onMounted(() => {
   var timestamp2 = new Date().getTime();
@@ -284,11 +284,11 @@ const uninstall = async (item) => {
   }
 }
 
-const offlineInstall = async () => {
+const localInstall = async () => {
     let path = FileDialog.showOpenFile();
     try {
       //todo，不支持Nginx安装
-       await OfflineInstall.install(path)
+       await LocalInstall.install(path)
     } catch (error) {
         MessageBox.error(error.message ?? error, 'error')
     }

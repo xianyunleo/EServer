@@ -16,7 +16,7 @@ import child_process from 'child_process'
 import fs from 'fs'
 import Software from "@/main/core/software/Software";
 import GetPath from "@/shared/utils/GetPath";
-import OfflineInstall from "@/main/core/software/OfflineInstall";
+import LocalInstall from "@/main/core/software/LocalInstall";
 
 const app = electronRequire('app');
 
@@ -141,7 +141,7 @@ export default class App {
 
         if (!softwareDirExists) { //目录不存在说明是第一次安装，不是覆盖安装
             const files = Directory.GetFiles(GetPath.getDownloadsDir(), '.7z');
-            await OfflineInstall.installMultiple(files)
+            await LocalInstall.installMultiple(files)
         }
 
         File.Delete(initFile);
