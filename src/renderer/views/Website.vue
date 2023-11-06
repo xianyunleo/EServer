@@ -167,7 +167,7 @@ const del = async (item) => {
         await Hosts.delete(item.extraServerName);
       }
     } catch (error) {
-      MessageBox.error(error.message ?? error, t('anErrorOccurredDuring', [mt('sync', 'ws') + 'hosts']))
+      MessageBox.error(error.message ?? error, t('errorOccurredDuring', [mt('sync', 'ws') + 'hosts']))
     }
   }
 

@@ -54,8 +54,8 @@ export default class Installer extends EventEmitter {
             } else {
                 this.changeStatus(EnumSoftwareInstallStatus.DownloadError)
                 let errMsg = error.message ?? '未知错误'
-                console.log(t('anErrorOccurredDuring', [t('download')]), errMsg)
-                throw new Error(`${t('anErrorOccurredDuring', [t('download')])}，${mt('Network', 'ws', 'Error')}`)
+                console.log(t('errorOccurredDuring', [t('download')]), errMsg)
+                throw new Error(`${t('errorOccurredDuring', [t('download')])}，${mt('Network', 'ws', 'Error')}`)
             }
         }
 
@@ -65,14 +65,14 @@ export default class Installer extends EventEmitter {
         } catch (error) {
             this.changeStatus(EnumSoftwareInstallStatus.ExtractError);
             let errMsg = error.message ?? '未知错误';
-            throw new Error(`${t('anErrorOccurredDuring', [t('uncompress')])}，${errMsg}`);
+            throw new Error(`${t('errorOccurredDuring', [t('uncompress')])}，${errMsg}`);
         }
 
         try {
             await this.configure();
         } catch (error) {
             let errMsg = error.message ?? '未知错误';
-            throw new Error(`${t('anErrorOccurredDuring', [t('configure')])}，${errMsg}`);
+            throw new Error(`${t('errorOccurredDuring', [t('configure')])}，${errMsg}`);
         }
 
         this.changeStatus(EnumSoftwareInstallStatus.Finish);

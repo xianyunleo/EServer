@@ -114,7 +114,7 @@ export default {
     oneClickStartAndStop: 'One click to start and stop',
     successfulOperation: 'Successful operation',
     failedOperation: 'Failed operation',
-    anErrorOccurredDuring: 'An error occurred during {0}',
+    errorOccurredDuring: 'Error occurred during {0}',
     needRestartTerminal: 'Need to restart terminal',
     autoStartAndRestartServer:'Automatically start and restart server',
     initConfirmText: 'This operation will reset the PHP and Server configuration files, confirm?',

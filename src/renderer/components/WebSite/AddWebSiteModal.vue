@@ -105,7 +105,7 @@ const addWeb = async (websiteInfo) => {
     try {
       await Hosts.add(websiteInfo.serverName)
     } catch (error) {
-      MessageBox.error(error.message ?? error,  t('anErrorOccurredDuring', [mt('sync', 'ws') + 'hosts']))
+      MessageBox.error(error.message ?? error,  t('errorOccurredDuring', [mt('sync', 'ws') + 'hosts']))
     }
   }
 

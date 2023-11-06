@@ -55,7 +55,7 @@ const languageChange = () => {
     locale.value = settingsReactive.Language
     TrayManage.refresh()
   } catch (error) {
-    MessageBox.error(error.message ?? error, t('anErrorOccurredDuring', [t('set')]))
+    MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('set')]))
   }
 
 }

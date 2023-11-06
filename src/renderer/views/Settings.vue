@@ -44,7 +44,7 @@ const setFun = async (key, callback = null) => {
     }
   } catch (error) {
     settingsReactive[key] = originVal
-    MessageBox.error(error.message ?? error, t('anErrorOccurredDuring', [t('set')]))
+    MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('set')]))
   }
 }
 

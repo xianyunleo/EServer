@@ -63,7 +63,7 @@ provide('GlobalProvide', {
   try{
     Software.initList();
   }catch (error){
-    await MessageBox.error(error.message ?? error, t('anErrorOccurredDuring', [t('initializing')]));
+    await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]));
     App.exit();
   }
 
@@ -105,7 +105,7 @@ async function winInit() {
     mainStore.$reset();
     globalReactive.loading = false;
   } catch (error) {
-    await MessageBox.error(error.message ?? error, t('anErrorOccurredDuring', [t('initializing')]));
+    await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]));
     App.exit();
   }
 }
@@ -116,7 +116,7 @@ async function macCreateUserCoreDir() {
       Directory.CreateDirectory(MAC_USER_CORE_DIR);
     }
   } catch (error) {
-    await MessageBox.error(error.message ?? error, t('anErrorOccurredDuring', [t('initializing')]));
+    await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]));
     App.exit();
   }
 }
@@ -128,7 +128,7 @@ async function update() {
     App.deleteInitFile();
     globalReactive.loading = false;
   } catch (error) {
-    await MessageBox.error(error.message ?? error, t('anErrorOccurredDuring', [t('update')]));
+    await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('update')]));
     App.exit();
   }
 }

@@ -15,7 +15,7 @@
           :label-col="{ span: 8}"
           :wrapper-col="{ span: 16 }"
           autocomplete="off">
-        <a-form-item :label="`Mysql ${mt('Version')}`" name="version"
+        <a-form-item :label="`MySQL ${mt('Version')}`" name="version"
                      :rules="[{ required: true, message: mt('Please','ws','Select')}]">
           <a-select style="width: 150px" v-model:value="formData.version" :options="mysqlVersionList">
           </a-select>
@@ -74,7 +74,7 @@ const reset = async (version, newPwd) => {
     await Database.resetMySQLPassword(version, newPwd)
     hint.value = t('successfulOperation')
   } catch (error) {
-    MessageBox.error(error.message ?? error, t('anErrorOccurredDuring', [t('operation')]))
+    MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('operation')]))
   }
 };
 

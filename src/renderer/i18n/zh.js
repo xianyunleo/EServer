@@ -115,10 +115,10 @@ export default {
     oneClickStartAndStop: '一键启动和停止',
     successfulOperation: '操作成功',
     failedOperation: '操作失败',
-    anErrorOccurredDuring: '{0}过程中发生错误',
+    errorOccurredDuring: '{0}过程中发生错误',
     needRestartTerminal: '需要重启终端',
     autoStartAndRestartServer:'自动启动和重启服务',
-    initConfirmText: '这个操作会重新设置PHP和服务的配置文件，确认吗？',
+    initConfirmText: '这个操作会重新设置PHP和Server的配置文件，确认吗？',
     theUserPwdForThisComputer: '这台电脑的用户密码',
     thisPwdIsUsedForSudoCommands: '这个密码用于 sudo 命令',
     directoryCannotContainSpaces: 'Directory cannot contain spaces'
