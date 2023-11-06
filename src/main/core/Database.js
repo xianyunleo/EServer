@@ -4,7 +4,7 @@ import Command from "@/main/utils/Command";
 import ProcessExtend from "@/main/utils/ProcessExtend";
 import {sleep} from "@/shared/utils/utils";
 import child_process from "child_process";
-import File from "@/main/utils/File";
+import FileUtil from "@/main/utils/FileUtil";
 import TcpProcess from "@/main/utils/TcpProcess";
 import { isWindows } from '@/main/utils/utils'
 
@@ -52,10 +52,10 @@ export default class Database {
         }
         let mysqlPath = GetPath.getMysqlDir(version);
         let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
-        File.WriteAllText(resetPwdPath, resetCommand);
+        FileUtil.WriteAllText(resetPwdPath, resetCommand);
 
         let confFilePath = this.getMySQLConfFilePath(version);
-        let portMatch = File.ReadAllText(confFilePath).match(/\[mysqld].*?port\s*=\s*(\d+)/s);
+        let portMatch = FileUtil.ReadAllText(confFilePath).match(/\[mysqld].*?port\s*=\s*(\d+)/s);
         let port = portMatch ? portMatch[1] : 3306;
 
         let oldPid = await TcpProcess.getPidByPort(port);
@@ -79,7 +79,7 @@ export default class Database {
         }
         await sleep(100);
         await ProcessExtend.kill(childProcess.pid);
-        File.Delete(resetPwdPath);
+        FileUtil.Delete(resetPwdPath);
     }
 
     static getMySQLConfFilePath(version) {

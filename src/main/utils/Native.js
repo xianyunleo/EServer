@@ -4,7 +4,7 @@ import MessageBox from "@/renderer/utils/MessageBox";
 import fixPath from "fix-path";
 import Hosts from "@/main/utils/Hosts";
 import GetPath from "@/shared/utils/GetPath";
-import File from "@/main/utils/File";
+import FileUtil from "@/main/utils/FileUtil";
 import Settings from "@/main/Settings";
 import fs from "fs";
 import { isMacOS, isWindows } from '@/main/utils/utils'
@@ -36,7 +36,7 @@ export default class Native {
             fixPath()  //mac下修复环境变量不识别的问题
         }
         try {
-            if (!File.Exists(filePath)) {
+            if (!FileUtil.Exists(filePath)) {
                 throw new Error(`${filePath} 文件不存在`)
             }
 

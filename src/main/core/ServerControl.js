@@ -4,7 +4,7 @@ import Software from "@/main/core/software/Software";
 import { parseTemplateStrings} from "@/shared/utils/utils";
 import child_process from "child_process";
 import Path from "@/main/utils/Path";
-import File from "@/main/utils/File";
+import FileUtil from "@/main/utils/FileUtil";
 
 export default class ServerControl {
 
@@ -27,7 +27,7 @@ export default class ServerControl {
             options = { cwd: workPath, shell: true } //使用shell，childProcess返回的pid是shell的pid
         }
 
-        if (!File.Exists(serverProcessPath)) {
+        if (!FileUtil.Exists(serverProcessPath)) {
             throw new Error(`${serverProcessPath} 文件不存在！`);
         }
 

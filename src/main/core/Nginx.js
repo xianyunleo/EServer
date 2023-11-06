@@ -2,7 +2,7 @@ import path from "path";
 import GetPath from "@/shared/utils/GetPath";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
 import Directory from "@/main/utils/Directory";
-import File from "@/main/utils/File";
+import FileUtil from "@/main/utils/FileUtil";
 import Path from "@/main/utils/Path";
 import { isWindows } from '@/main/utils/utils'
 
@@ -100,7 +100,7 @@ export default class Nginx {
         }
 
 
-        File.WriteAllText(confPath, confText);
+        FileUtil.WriteAllText(confPath, confText);
 
         let website = new NginxWebsite(confName);
         website.setPHPVersion(websiteInfo.phpVersion);
@@ -109,26 +109,26 @@ export default class Nginx {
 
         //创建URL重写文件
         let rewritePath = Nginx.getWebsiteRewriteConfPath(confName);
-        if (!File.Exists(rewritePath)) {
-            File.WriteAllText(rewritePath, '');
+        if (!FileUtil.Exists(rewritePath)) {
+            FileUtil.WriteAllText(rewritePath, '');
         }
     }
 
     static delWebsite(confName) {
         let confPath = this.getWebsiteConfPath(confName);
-        if (File.Exists(confPath)) {
-            File.Delete(confPath);
+        if (FileUtil.Exists(confPath)) {
+            FileUtil.Delete(confPath);
         }
 
         let rewritePath = this.getWebsiteRewriteConfPath(confName);
-        if (File.Exists(rewritePath)) {
-            File.Delete(rewritePath);
+        if (FileUtil.Exists(rewritePath)) {
+            FileUtil.Delete(rewritePath);
         }
     }
 
     static websiteExists(serverName, port) {
         let confPath = this.getWebsiteConfPath(this.getWebsiteConfName(serverName, port));
-        return File.Exists(confPath);
+        return FileUtil.Exists(confPath);
     }
 
     static getWebsiteConfPath(confName) {
@@ -165,10 +165,10 @@ export default class Nginx {
      */
     static getRewriteByRule(ruleName) {
         let rewritePath = path.join(GetPath.getNginxRewriteDir(), `${ruleName}.conf`)
-        if (!File.Exists(rewritePath)) {
+        if (!FileUtil.Exists(rewritePath)) {
             return '';
         }
-        return File.ReadAllText(rewritePath);
+        return FileUtil.ReadAllText(rewritePath);
     }
 
     /**
@@ -184,7 +184,7 @@ export default class Nginx {
         let files = Directory.GetFiles(vhostsPath);
         // array.filter不能使用async方法
         let list = await Promise.all(files.map(async path => {
-            let confText = File.ReadAllText(path);
+            let confText = FileUtil.ReadAllText(path);
             let regExp = new RegExp('server_name.+' + domain.replaceAll('.', '\\.'));
             return confText.match(regExp);
         }));

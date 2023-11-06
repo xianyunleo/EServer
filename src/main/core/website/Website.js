@@ -1,6 +1,6 @@
 import Nginx from "@/main/core/Nginx";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
-import File from "@/main/utils/File";
+import FileUtil from "@/main/utils/FileUtil";
 import Directory from "@/main/utils/Directory";
 
 export default class Website {
@@ -12,7 +12,7 @@ export default class Website {
         if (Nginx.websiteExists(websiteInfo.serverName, websiteInfo.port)) {
             throw new Error('网站已经存在！');
         }
-        if (!File.Exists(websiteInfo.rootPath)) {
+        if (!FileUtil.Exists(websiteInfo.rootPath)) {
             try {
                 Directory.CreateDirectory(websiteInfo.rootPath)
             } catch {

@@ -9,7 +9,7 @@ import got from 'got'
 import { pipeline } from 'stream/promises'
 import fs from 'fs'
 import Path from '@/main/utils/Path'
-import File from '@/main/utils/File'
+import FileUtil from '@/main/utils/FileUtil'
 import GetPath from '@/shared/utils/GetPath'
 import { EventEmitter } from 'events'
 import { mt, t } from '@/shared/utils/i18n'
@@ -41,8 +41,8 @@ export default class Installer extends EventEmitter {
             Directory.CreateDirectory(GetPath.getDownloadsDir());
         }
 
-        if(File.Exists(this.tempFilePath)){
-            File.Delete(this.tempFilePath);
+        if(FileUtil.Exists(this.tempFilePath)){
+            FileUtil.Delete(this.tempFilePath);
         }
 
         try {
@@ -96,7 +96,7 @@ export default class Installer extends EventEmitter {
         });
 
         await pipeline(responseStream, writeStream,{signal: this.dlAbortController.signal});
-        File.Move(this.tempFilePath, this.filePath);
+        FileUtil.Move(this.tempFilePath, this.filePath);
         this.changeStatus(EnumSoftwareInstallStatus.Downloaded);
     }
 

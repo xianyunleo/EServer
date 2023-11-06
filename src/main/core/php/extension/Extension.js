@@ -1,6 +1,6 @@
 import Path from "@/main/utils/Path";
 import Php from "@/main/core/php/Php";
-import File from "@/main/utils/File";
+import FileUtil from "@/main/utils/FileUtil";
 import { isWindows } from '@/main/utils/utils'
 
 export default class Extension {
@@ -11,7 +11,7 @@ export default class Extension {
 
         let newList = await Promise.all(
             list.map(async item => {
-                let isInstalled = File.Exists(Path.Join(extDir,item.extFileName));
+                let isInstalled = FileUtil.Exists(Path.Join(extDir,item.extFileName));
                 return Object.assign({isInstalled},item);
             })
         );
@@ -53,7 +53,7 @@ export default class Extension {
     }
 
     static isInstalledX64Brew() {
-        return File.Exists('/usr/local/homebrew/bin/brew');
+        return FileUtil.Exists('/usr/local/homebrew/bin/brew');
     }
 
     static getSimpleListForWindows(){

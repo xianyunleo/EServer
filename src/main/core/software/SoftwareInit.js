@@ -1,5 +1,5 @@
 import GetPath from "@/shared/utils/GetPath";
-import File from "@/main/utils/File";
+import FileUtil from "@/main/utils/FileUtil";
 import Path from "@/main/utils/Path";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import StringExtend from "@/main/core/baseClass/StringExtend";
@@ -25,13 +25,13 @@ export default class SoftwareInit extends StringExtend{
     static async initNginx() {
         try {
             let path = Path.Join(GetPath.getNginxConfDir(), 'nginx.conf');
-            let text = File.ReadAllText(path);
+            let text = FileUtil.ReadAllText(path);
             let pattern = /root\s+\S+\s*;/g;
             let wwwPath = Path.Join(GetPath.getNginxDir(), 'html').replaceSlash();
             let replaceStr = `root ${wwwPath};`;
             text = text.replaceAll(pattern, replaceStr);
 
-            File.WriteAllText(path, text);
+            FileUtil.WriteAllText(path, text);
 
             await this.initNginxLocalhostConf();
             await this.initNginxPhpmyadminConf();
@@ -42,25 +42,25 @@ export default class SoftwareInit extends StringExtend{
 
     static async initNginxLocalhostConf() {
         let path = Path.Join(GetPath.getNginxVhostsDir(), 'localhost_80.conf');
-        if (File.Exists(path)) {
-            let text = File.ReadAllText(path);
+        if (FileUtil.Exists(path)) {
+            let text = FileUtil.ReadAllText(path);
             let pattern = /root\s+\S+\s*;/g;
             let rootPath = Path.Join(GetPath.getWebsiteDir(), 'localhost').replaceSlash();
             let replaceStr = `root ${rootPath};`;
             text = text.replaceAll(pattern, replaceStr);
-            File.WriteAllText(path, text);
+            FileUtil.WriteAllText(path, text);
         }
     }
 
     static async initNginxPhpmyadminConf() {
         let path = Path.Join(GetPath.getNginxVhostsDir(), 'localhost_888.conf');
-        if (File.Exists(path)) {
-            let text = File.ReadAllText(path);
+        if (FileUtil.Exists(path)) {
+            let text = FileUtil.ReadAllText(path);
             let pattern = /root\s+\S+\s*;/g;
             let rootPath = Path.Join(GetPath.getToolTypeDir(), 'phpMyAdmin').replaceSlash();
             let replaceStr = `root ${rootPath};`;
             text = text.replaceAll(pattern, replaceStr);
-            File.WriteAllText(path, text);
+            FileUtil.WriteAllText(path, text);
         }
     }
 
@@ -82,8 +82,8 @@ export default class SoftwareInit extends StringExtend{
     static async createPHPFpmConf(version) {
         let phpDirPath = GetPath.getPhpDir(version);
         let confPath = Path.Join(phpDirPath, 'etc/php-fpm.conf')
-        if (!File.Exists(confPath)) {
-            File.WriteAllText(confPath, Php.getFpmConfText(version))
+        if (!FileUtil.Exists(confPath)) {
+            FileUtil.WriteAllText(confPath, Php.getFpmConfText(version))
         }
     }
 
@@ -93,11 +93,11 @@ export default class SoftwareInit extends StringExtend{
             let confDirPath = isWindows ? phpDirPath : Path.Join(phpDirPath, 'etc');
             let confPath = Path.Join(confDirPath, 'php.ini');
 
-            if (!File.Exists(confPath)) {
-                File.Copy(Path.Join(confDirPath, 'php.ini-development'), confPath);
+            if (!FileUtil.Exists(confPath)) {
+                FileUtil.Copy(Path.Join(confDirPath, 'php.ini-development'), confPath);
             }
 
-            let text = File.ReadAllText(confPath);
+            let text = FileUtil.ReadAllText(confPath);
 
             text = text.replace(/(?<=\n);?.?max_execution_time\s*=.*/, 'max_execution_time = 300');
             text = text.replace(/(?<=\n);?.?memory_limit\s*=.*/, 'memory_limit = 512M');
@@ -136,7 +136,7 @@ export default class SoftwareInit extends StringExtend{
             let replaceSessionStr = `session.save_path = "${phpTempPath.replaceSlash()}"`;
             text = text.replaceAll(sessionPattern, replaceSessionStr);
 
-            File.WriteAllText(confPath, text);
+            FileUtil.WriteAllText(confPath, text);
         } catch (error) {
             throw new Error(`初始化PHP配置失败！${error.message}`);
         }
@@ -154,7 +154,7 @@ export default class SoftwareInit extends StringExtend{
         try {
             let mysqlDir = GetPath.getMysqlDir(version);
             let confPath = isWindows ? Path.Join(mysqlDir, 'my.ini') : Path.Join(mysqlDir, 'my.cnf');
-            let text = File.ReadAllText(confPath);
+            let text = FileUtil.ReadAllText(confPath);
             let mysqlPath = GetPath.getMysqlDir(version);
 
             //(?<=\n)basedir\s*=\s*.+
@@ -174,7 +174,7 @@ export default class SoftwareInit extends StringExtend{
             let replaceLogStr = `log-error = "${logPath.replaceSlash()}"`;
             text = text.replaceAll(logPattern, replaceLogStr);
 
-            File.WriteAllText(confPath, text);
+            FileUtil.WriteAllText(confPath, text);
         } catch (error) {
             throw new Error(`初始化MySQL配置失败！${error.message}`);
         }

@@ -1,33 +1,38 @@
 import Path from "@/main/utils/Path";
 import Software from "@/main/core/software/Software";
-import { EnumSoftwareInstallStatus } from "@/shared/utils/enum";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import SoftwareInit from "@/main/core/software/SoftwareInit";
 import Directory from "@/main/utils/Directory";
 import GetPath from "@/shared/utils/GetPath";
 import Database from "@/main/core/Database";
-import { isWindows } from "@/main/utils/utils";
-import { Modal } from "ant-design-vue";
+import {isWindows} from "@/main/utils/utils";
+import {extract7z, extractTar} from "@/main/utils/extract";
+import FileUtil from "@/main/utils/FileUtil";
 import CommonInstall from "@/main/core/software/CommonInstall";
-import File from "@/main/utils/File";
-import { extract7z } from "@/main/utils/extract";
 
 
 export default class LocalInstall {
     static async install(filePath) {
         const dirName = Path.GetFileNameWithoutExtension(filePath);
         const dest = this.getDestPath(dirName);
-        await extract7z(filePath,dest);
-        File.Delete(filePath);
+        await this.extract(filePath, dest, dirName);
+        FileUtil.Delete(filePath);
         await CommonInstall.configure(dirName);
     }
 
-    static async extract(filePath) {
-        const dirName = Path.GetFileNameWithoutExtension(filePath);
-        const dest = this.getDestPath(dirName);
-        await extract7z(filePath,dest);
-        File.Delete(filePath);
-        await CommonInstall.configure(dirName);
+    static async extract(filePath, dest, dirName) {
+        if (!Directory.Exists(dest)) {
+            Directory.CreateDirectory(dest);
+        }
+        if (isWindows) {
+            await extract7z(filePath, dest);
+        } else {
+            const downloadsDir = GetPath.getDownloadsDir();
+            await extract7z(filePath, downloadsDir);
+            const tarPath = Path.Join(downloadsDir, `${dirName}.tar`);
+            await extractTar(tarPath, dest)
+            FileUtil.Delete(tarPath);
+        }
     }
 
     static async installMultiple(files) {

@@ -10,7 +10,7 @@ import {
     TEMP_DIR_NAME
 } from '@/main/utils/constant'
 import Directory from '@/main/utils/Directory'
-import File from '@/main/utils/File'
+import FileUtil from '@/main/utils/FileUtil'
 import Path from '@/main/utils/Path'
 import child_process from 'child_process'
 import fs from 'fs'
@@ -113,7 +113,7 @@ export default class App {
     }
 
     static initFileExists() {
-        return File.Exists(this.getInitFilePath());
+        return FileUtil.Exists(this.getInitFilePath());
     }
 
     static async init() {
@@ -123,7 +123,7 @@ export default class App {
 
         let initFile = this.getInitFilePath();
 
-        if (!File.Exists(initFile)) {
+        if (!FileUtil.Exists(initFile)) {
             return;
         }
 
@@ -144,13 +144,13 @@ export default class App {
             await LocalInstall.installMultiple(files)
         }
 
-        File.Delete(initFile);
+        FileUtil.Delete(initFile);
     }
 
     static deleteInitFile(){
         let initFile = this.getInitFilePath();
-        if (File.Exists(initFile)) {
-            File.Delete(initFile);
+        if (FileUtil.Exists(initFile)) {
+            FileUtil.Delete(initFile);
         }
     }
 

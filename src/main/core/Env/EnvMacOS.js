@@ -1,5 +1,5 @@
 import {electronRequire} from '@/main/utils/electron';
-import File from "@/main/utils/File";
+import FileUtil from "@/main/utils/FileUtil";
 import Path from "@/main/utils/Path";
 import OS from "@/main/utils/OS";
 import fs from "fs";
@@ -30,11 +30,11 @@ export default class EnvMacOS {
         let envFilePath = this.getEnvFilePath();
         let userName = OS.getUserName();
         let text;
-        if (File.Exists(envFilePath)) {
+        if (FileUtil.Exists(envFilePath)) {
             if (!this.#canEditEnvFile()) {
                 await Command.sudoExec(`chown ${userName}:staff ${envFilePath}`);
             }
-            text = File.ReadAllText(envFilePath);
+            text = FileUtil.ReadAllText(envFilePath);
         } else {
             text = '';
         }
@@ -46,21 +46,21 @@ export default class EnvMacOS {
             if (text.slice(-1) !== "\n") {
                 appendText = "\n" + appendText;
             }
-            File.AppendAllText(envFilePath, appendText);
+            FileUtil.AppendAllText(envFilePath, appendText);
         } else {
             let regx = new RegExp(`export\\s+PATH.+${APP_NAME}.+`, 'g');
             text = text.replaceAll(regx, '');
-            File.WriteAllText(envFilePath, text);
+            FileUtil.WriteAllText(envFilePath, text);
         }
     }
 
     static async IsEnabled() {
         let envFilePath = this.getEnvFilePath();
-        if (!File.Exists(envFilePath)) {
+        if (!FileUtil.Exists(envFilePath)) {
             return false;
         }
         let binPath  = GetPath.getBinDir();
-        let text = File.ReadAllText(envFilePath);
+        let text = FileUtil.ReadAllText(envFilePath);
         return text.includes(binPath);
     }
 

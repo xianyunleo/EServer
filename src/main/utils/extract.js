@@ -2,12 +2,20 @@ import {spawn } from 'child_process';
 
 let path7za = require('7zip-bin').path7za;
 path7za = path7za.replace('app.asar', 'app.asar.unpacked')
-export async function extract7z(path, dest) {
 
-    return new Promise(function(resolve, reject) {
-        unpack(path, dest, function(err) {
+export async function extract7z(path, dest) {
+    return new Promise((resolve, reject) => {
+        unpack(path, dest, (err) => {
             err ? reject(err) : resolve(true);
         });
+    });
+}
+
+export async function extractTar(path, dest) {
+    return new Promise((resolve, reject) => {
+        require('tar').extract({file: path, cwd: dest}, null, (err) => {
+            err ? reject(err) : resolve(true);
+        })
     });
 }
 

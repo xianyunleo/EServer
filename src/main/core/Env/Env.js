@@ -1,4 +1,4 @@
-import File from "@/main/utils/File";
+import FileUtil from "@/main/utils/FileUtil";
 import Path from "@/main/utils/Path";
 import GetPath from "@/shared/utils/GetPath";
 import EnvMacOS from "@/main/core/Env/EnvMacOS";
@@ -22,12 +22,12 @@ export default class Env {
             } else {
                 text = `@echo off\r\n"${targetPath}" %*`
             }
-            File.WriteAllText(path, text);
+            FileUtil.WriteAllText(path, text);
         } else {
             if (binName === 'php') {
                 this.createOtherBinFile(targetPath, 'phpize', 'phpize');
             }
-            File.CreateSymbolicLink(path, targetPath);
+            FileUtil.CreateSymbolicLink(path, targetPath);
         }
     }
 
@@ -35,13 +35,13 @@ export default class Env {
         let binDirPath = GetPath.getBinDir();
         let path = Path.Join(binDirPath, otherBinName);
         let targetOtherFilePath = Path.Join(Path.GetDirectoryName(targetPath), targetOtherFileName);
-        File.CreateSymbolicLink(path, targetOtherFilePath);
+        FileUtil.CreateSymbolicLink(path, targetOtherFilePath);
     }
 
     static deleteBinFile(binName) {
         let path = Path.Join(GetPath.getBinDir(), this.getBinFileName(binName));
-        if (File.Exists(path)) {
-            File.Delete(path);
+        if (FileUtil.Exists(path)) {
+            FileUtil.Delete(path);
         }
         if (!isWindows) {
             if (binName === 'php') {
@@ -52,8 +52,8 @@ export default class Env {
 
     static deleteOtherBinFile(otherBinName) {
         let path = Path.Join(GetPath.getBinDir(), this.getBinFileName(otherBinName));
-        if (File.Exists(path)) {
-            File.Delete(path);
+        if (FileUtil.Exists(path)) {
+            FileUtil.Delete(path);
         }
     }
 

@@ -1,7 +1,7 @@
 import Nginx from "@/main/core/Nginx";
 import {EOL} from "os";
 import {CONF_INDENT} from "@/main/utils/constant";
-import File from "@/main/utils/File";
+import FileUtil from "@/main/utils/FileUtil";
 import Path from "@/main/utils/Path";
 
 const N = EOL; //换行符
@@ -24,7 +24,7 @@ export default class NginxWebsite {
         this.confName = confName;
         this.serverName = Path.GetFileNameWithoutExtension(confName).split('_')[0];
         this.confPath = Nginx.getWebsiteConfPath(confName);
-        this.confText = File.ReadAllText(this.confPath);
+        this.confText = FileUtil.ReadAllText(this.confPath);
     }
 
     getBasicInfo() {
@@ -46,7 +46,7 @@ export default class NginxWebsite {
 
     static getRewrite(confName) {
         let rewritePath = Nginx.getWebsiteRewriteConfPath(confName);
-        return File.ReadAllText(rewritePath);
+        return FileUtil.ReadAllText(rewritePath);
     }
 
     getPort() {
@@ -93,12 +93,12 @@ export default class NginxWebsite {
         this.confText = text;
         this.setPHPVersion(websiteInfo.phpVersion);
         this.setExtraInfo({syncHosts: websiteInfo.syncHosts});
-        File.WriteAllText(this.confPath, this.confText);
+        FileUtil.WriteAllText(this.confPath, this.confText);
     }
 
     static saveRewrite(confName, content) {
         let rewritePath = Nginx.getWebsiteRewriteConfPath(confName);
-        File.WriteAllText(rewritePath, content);
+        FileUtil.WriteAllText(rewritePath, content);
     }
 
     /**
@@ -124,6 +124,6 @@ export default class NginxWebsite {
     }
 
     save() {
-        File.WriteAllText(this.confPath, this.confText);
+        FileUtil.WriteAllText(this.confPath, this.confText);
     }
 }

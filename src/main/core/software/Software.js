@@ -3,7 +3,7 @@ import path from "path";
 import {EnumSoftwareType} from "@/shared/utils/enum";
 import GetPath from "@/shared/utils/GetPath";
 import Directory from "@/main/utils/Directory";
-import File from "@/main/utils/File";
+import FileUtil from "@/main/utils/FileUtil";
 
 export default class Software {
 
@@ -33,7 +33,7 @@ export default class Software {
 
         let list;
         try {
-            list = JSON.parse(File.ReadAllText(softConfigPath));
+            list = JSON.parse(FileUtil.ReadAllText(softConfigPath));
         } catch {
             throw new Error(`${softConfigPath} 配置文件错误！`);
         }

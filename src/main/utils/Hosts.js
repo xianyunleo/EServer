@@ -2,7 +2,7 @@ import GetPath from "@/shared/utils/GetPath";
 import fs from "fs";
 import {EOL} from "os";
 import Command from "@/main/utils/Command";
-import File from "@/main/utils/File";
+import FileUtil from "@/main/utils/FileUtil";
 
 export default class Hosts {
     /**
@@ -25,7 +25,7 @@ export default class Hosts {
      */
     static async add(domain) {
         let path = GetPath.getHostsPath();
-        let text = File.ReadAllText(path);
+        let text = FileUtil.ReadAllText(path);
 
         let domainRegx = this.getDomainRegExp(domain);
         if (text.match(domainRegx)) {
@@ -37,10 +37,10 @@ export default class Hosts {
 
         appendText += `127.0.0.1 ${domain}${EOL}`;
 
-        if (File.Exists(path) && !Hosts.canEditHosts()) {
+        if (FileUtil.Exists(path) && !Hosts.canEditHosts()) {
             await Command.sudoExec(`chmod 666 ${path}`);
         }
-        File.AppendAllText(path, appendText);
+        FileUtil.AppendAllText(path, appendText);
     }
 
     /**
@@ -49,16 +49,16 @@ export default class Hosts {
      */
     static async delete(domain) {
         let path = GetPath.getHostsPath();
-        if (!File.Exists(path)) {
+        if (!FileUtil.Exists(path)) {
             return;
         }
         if (!Hosts.canEditHosts()) {
             await Command.sudoExec(`chmod 666 ${path}`);
         }
-        let text = File.ReadAllText(path);
+        let text = FileUtil.ReadAllText(path);
         let domainRegx = this.getDomainRegExp(domain);
         text = text.replaceAll(domainRegx, '');
-        File.WriteAllText(path, text);
+        FileUtil.WriteAllText(path, text);
     }
 
     static getDomainRegExp(domain) {
