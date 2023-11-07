@@ -1,7 +1,9 @@
 import {spawn } from 'child_process';
+import path from "path";
+import Command from "@/main/utils/Command";
 
-let path7za = require('7zip-bin').path7za;
-path7za = path7za.replace('app.asar', 'app.asar.unpacked')
+let path7za = require("7zip-bin").path7za;
+path7za = path7za.replace(`app.asar${path.sep}`, `app.asar.unpacked${path.sep}`);
 
 export async function extract7z(path, dest) {
     return new Promise((resolve, reject) => {
@@ -12,11 +14,11 @@ export async function extract7z(path, dest) {
 }
 
 export async function extractTar(path, dest) {
-    return new Promise((resolve, reject) => {
-        require('tar').extract({file: path, cwd: dest}, null, (err) => {
-            err ? reject(err) : resolve(true);
-        })
-    });
+    let commandStr;
+    if (path.endsWith('.tar.xz')) {
+        commandStr = `tar -Jxf ${path} -C ${dest}`;
+    }
+    await Command.exec(commandStr);
 }
 
 function unpack(pathToPack, destPathOrCb, cb) {

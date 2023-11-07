@@ -3,8 +3,20 @@ import SoftwareInit from "@/main/core/software/SoftwareInit";
 import Directory from "@/main/utils/Directory";
 import GetPath from "@/shared/utils/GetPath";
 import Database from "@/main/core/Database";
+import { extract7z, extractTar } from "@/main/utils/extract";
 
 export default class CommonInstall {
+    static async extract(filePath, dest) {
+        if (!Directory.Exists(dest)) {
+            Directory.CreateDirectory(dest);
+        }
+        if (filePath.endsWith('.7z')) {
+            await extract7z(filePath, dest);
+        } else if (filePath.endsWith('.tar.xz')) {
+            await extractTar(filePath, dest);
+        }
+    }
+
     static async configure(dirName) {
         if (dirName.match(/^mysql-[.\d]+$/)) {
             let version = SoftwareExtend.getMysqlVersion(dirName);

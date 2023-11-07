@@ -30,7 +30,11 @@ export default class Installer extends EventEmitter {
     constructor(softItem) {
         super();
         this.softItem = softItem;
-        this.fileName = `${softItem.DirName}.7z`;
+        if (isWindows || this.softItem.IsCommonPlatform) {
+            this.fileName = `${softItem.DirName}.7z`;
+        } else {
+            this.fileName = `${softItem.DirName}.tar.xz`;
+        }
         this.filePath = Path.Join(this.getDownloadsPath(), this.fileName);
         this.tempFilePath = `${this.filePath}.dl`;
         this.dlAbortController = new AbortController();
@@ -113,7 +117,7 @@ export default class Installer extends EventEmitter {
         this.changeStatus(EnumSoftwareInstallStatus.Extracting);
         const filePath = path.join(this.getDownloadsPath(), this.fileName);
         const dest = Software.getTypePath(this.softItem.Type);
-        return await extract7z(filePath, dest);
+        await CommonInstall.extract(filePath, dest);
     }
 
     /**
