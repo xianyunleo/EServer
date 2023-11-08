@@ -18,11 +18,11 @@
 import App from "@/main/App";
 import {APP_NAME} from "@/shared/utils/constant";
 import Native from "@/main/utils/Native";
-import { mt, t } from '@/shared/utils/i18n'
+import { t } from '@/shared/utils/i18n'
 
 const version = App.getVersion();
 
-let openUrl = (url) => {
+const openUrl = (url) => {
   Native.openUrl(url);
 }
 </script>
