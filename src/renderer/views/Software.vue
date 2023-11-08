@@ -2,17 +2,12 @@
   <div class='content-container'>
     <div class='category'>
       <a-radio-group v-model:value='softwareTypeSelected' button-style='solid' @change='radioGroupChange'>
-        <a-radio-button value='Installed'>{{ t('Installed') }}</a-radio-button>
-        <a-radio-button :value='enumGetName(EnumSoftwareType,EnumSoftwareType.Server)'>
-          {{ t('Server') }}
+        <a-radio-button :value='InstalledType'>{{ t('Installed') }}</a-radio-button>
+        <a-radio-button :value='enumGetName(EnumSoftwareType, EnumSoftwareType.Server)'>{{ t('Server') }}
         </a-radio-button>
-        <a-radio-button :value='enumGetName(EnumSoftwareType,EnumSoftwareType.PHP)'>PHP</a-radio-button>
-        <a-radio-button :value='enumGetName(EnumSoftwareType,EnumSoftwareType.Tool)'>
-          {{ t('Tool') }}
-        </a-radio-button>
+        <a-radio-button :value='enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)'>PHP</a-radio-button>
+        <a-radio-button :value='enumGetName(EnumSoftwareType, EnumSoftwareType.Tool)'>{{ t('Tool') }}</a-radio-button>
       </a-radio-group>
-
-      <a-button v-if="isDev" @click="localInstall">离线安装</a-button>
     </div>
 
     <div class='soft-list piece'>
@@ -22,7 +17,7 @@
             <div class='soft-item-avatar'>
               <span></span>
             </div>
-            <div class='soft-item-title'> {{ t('Name') }}</div>
+            <div class='soft-item-title'>{{ t('Name') }}</div>
             <div class='soft-item-desc'>{{ t('Desc') }}</div>
             <div class='soft-item-operate'>{{ t('Operation') }}</div>
           </div>
@@ -31,20 +26,18 @@
 
       <div class='soft-body'>
         <template v-for='item in softwareList' :key='item.Name'>
-          <div class='soft-item' v-if='item.show'>
+          <div v-if='item.show' class='soft-item'>
             <div class='soft-item-content'>
               <div class='soft-item-avatar'>
-                <img :src='item.Icon'>
+                <img :src='item.Icon' />
               </div>
               <div class='soft-item-title'>{{ item.Name }}</div>
               <div class='soft-item-desc'>{{ item.Desc }}</div>
               <div class='soft-item-operate'>
-
                 <template v-if='item.Installed'>
-                  <a-button type='primary' danger style="margin-right:5px"
-                            :disabled='item.CanDelete===false' @click='uninstall(item)'>
-                    {{ t('Uninstall') }}
-                  </a-button>
+                  <a-button type='primary' danger style='margin-right: 5px'
+                    :disabled='item.CanDelete === false' @click='uninstall(item)'
+                  >{{ t('Uninstall') }}</a-button>
 
                   <a-dropdown :trigger="['click']">
                     <template #overlay>
@@ -60,42 +53,38 @@
                         </a-menu-item>
                       </a-menu>
                     </template>
-                    <a-button>{{ t('Manage') }}
-                      <DownOutlined/>
-                    </a-button>
+                    <a-button>{{ t('Manage') }}<DownOutlined /></a-button>
                   </a-dropdown>
                 </template>
                 <template v-else>
-                  <a-button v-if='item.installInfo == null || item.showStatusErrorText'
-                            type='primary' @click='clickInstall(item)'>{{ t('Install') }}
-                  </a-button>
+                  <a-button  v-if='item.installInfo == null || item.showStatusErrorText'
+                             type='primary' @click='clickInstall(item)'>{{ t('Install') }}</a-button>
 
                   <a-button v-else type='primary' @click='clickStop(item)'>{{ t('Stop') }}</a-button>
                 </template>
-
               </div>
             </div>
-            <div class='soft-item-progress' v-if='item.installInfo'>
-              <a-progress :percent='item.installInfo?.dlInfo?.percent' :show-info='false' status='active'/>
+            <div v-if='item.installInfo' class='soft-item-progress'>
+              <a-progress :percent='item.installInfo?.dlInfo?.percent' :show-info='false' status='active' />
               <div class='progress-info'>
                 <div class='progress-info-left'>
-                <span v-if='item.installInfo?.status === EnumSoftwareInstallStatus.Downloading'>
-                  {{ item.installInfo?.dlInfo?.completedSizeText }}/{{ item.installInfo?.dlInfo?.totalSizeText }}
-                </span>
+                  <span v-if='item.installInfo?.status === EnumSoftwareInstallStatus.Downloading'>
+                    {{ item.installInfo?.dlInfo?.completedSizeText }}/{{ item.installInfo?.dlInfo?.totalSizeText }}
+                  </span>
                 </div>
-                <div class='status-text-error' v-if='item.showStatusErrorText'>
+                <div v-if='item.showStatusErrorText' class='status-text-error'>
                   <a-tooltip>
                     <template #title>{{ item.statusErrorText }}</template>
                     {{ item.statusErrorText }}
                   </a-tooltip>
                 </div>
                 <div class='progress-info-right'>
-                <span v-if='item.installInfo?.status === EnumSoftwareInstallStatus.Downloading'>
-                  ↓{{ item.installInfo?.dlInfo?.perSecondText }}/S
-                </span>
+                  <span v-if='item.installInfo?.status === EnumSoftwareInstallStatus.Downloading'>
+                    ↓{{ item.installInfo?.dlInfo?.perSecondText }}/S
+                  </span>
                   <span v-else>
-                  {{ item.statusText }}
-                </span>
+                    {{ item.statusText }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -103,6 +92,19 @@
         </template>
       </div>
     </div>
+
+    <a-card size='small'>
+      <div style='display: flex; justify-content: space-between'>
+        <a-button type='primary' :icon='h(AppstoreAddOutlined)' @click='localInstall'>
+          {{ mt('Local', 'ws', 'Install') }}
+        </a-button>
+        <div style='display: flex; align-items: center'>
+          {{ t('installPackageDownloadUrl') }}:
+          <a style='margin: 0 10px' @click="openUrl('http://github.com/xianyunleo/EServerAppStore')">Github</a>
+          <a @click="openUrl('https://gitee.com/xianyunleo/EServerAppStore')">Gitee</a>
+        </div>
+      </div>
+    </a-card>
   </div>
 
   <!--  v-if防止不显示就执行modal里面的代码-->
@@ -112,53 +114,55 @@
 </template>
 
 <script setup>
-var timestamp = new Date().getTime();
-import { computed, defineAsyncComponent, onMounted, ref } from "vue";
-import {useMainStore} from '@/renderer/store'
-import {storeToRefs} from 'pinia'
-import {message} from 'ant-design-vue'
-import {EnumSoftwareInstallStatus, EnumSoftwareType} from '@/shared/utils/enum'
+var timestamp = new Date().getTime()
+import { computed, defineAsyncComponent, h, inject, onMounted, ref } from 'vue'
+import { useMainStore } from '@/renderer/store'
+import { storeToRefs } from 'pinia'
+import { message } from 'ant-design-vue'
+import { EnumSoftwareInstallStatus, EnumSoftwareType } from '@/shared/utils/enum'
 import Installer from '@/main/core/software/Installer'
-import {DownOutlined} from '@ant-design/icons-vue'
+import { AppstoreAddOutlined, DownOutlined } from '@ant-design/icons-vue'
 import Software from '@/main/core/software/Software'
 import MessageBox from '@/renderer/utils/MessageBox'
-import {enumGetName, getFileSizeText} from '@/shared/utils/utils'
+import { enumGetName, getFileSizeText } from '@/shared/utils/utils'
 import Native from '@/main/utils/Native'
 import PhpExtManager from '@/renderer/components/Software/PhpExtManager.vue'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import Path from '@/main/utils/Path'
-import {mt, t} from '@/shared/utils/i18n'
-import {isMacOS, isWindows,isDev} from "@/main/utils/utils";
-import FileDialog from "@/main/utils/FileDialog";
-import LocalInstall from "@/main/core/software/LocalInstall";
+import { mt, t } from '@/shared/utils/i18n'
+import { isMacOS, isWindows } from '@/main/utils/utils'
+import FileDialog from '@/main/utils/FileDialog'
+import LocalInstall from '@/main/core/software/LocalInstall'
 
+const { globalReactive } = inject('GlobalProvide')
+const InstalledType = 'InstalledType'
 onMounted(() => {
-  var timestamp2 = new Date().getTime();
-  console.log('software onMounted',timestamp2-timestamp)
+  var timestamp2 = new Date().getTime()
+  console.log('software onMounted', timestamp2 - timestamp)
 })
 const AButton = defineAsyncComponent(() => {
-    return new Promise((resolve) => {
-        import('ant-design-vue').then((modules) => {
-            resolve(modules.Button)
-        })
+  return new Promise((resolve) => {
+    import('ant-design-vue').then((modules) => {
+      resolve(modules.Button)
     })
+  })
 })
 const ADropdown = defineAsyncComponent(() => {
-    return new Promise((resolve) => {
-        import('ant-design-vue').then((modules) => {
-            resolve(modules.Dropdown)
-        })
+  return new Promise((resolve) => {
+    import('ant-design-vue').then((modules) => {
+      resolve(modules.Dropdown)
     })
+  })
 })
 
 const mainStore = useMainStore()
-const {softwareList, softwareTypeSelected} = storeToRefs(mainStore)
+const { softwareList, softwareTypeSelected } = storeToRefs(mainStore)
 const phpTypeValue = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)
 const phpExtManagerShow = ref(false)
 const phpVersion = ref('')
 
 if (!softwareTypeSelected.value) {
-  softwareTypeSelected.value = 'Installed'
+  softwareTypeSelected.value = InstalledType
 }
 
 for (const item of softwareList.value) {
@@ -166,8 +170,9 @@ for (const item of softwareList.value) {
 }
 
 const setShowList = (type) => {
+  console.log('type', type)
   for (const item of softwareList.value) {
-    if (type === 'Installed') {
+    if (type === InstalledType) {
       item.show = item.Installed === true
     } else {
       item.show = type === item.Type
@@ -182,7 +187,7 @@ const radioGroupChange = () => {
 }
 
 const clickInstall = async (item) => {
-  item.installInfo = {status: '', downloadProgress: {}, dlInfo: {}, dlIntervalId: 0}
+  item.installInfo = { status: '', downloadProgress: {}, dlInfo: {}, dlIntervalId: 0 }
   item.showStatusErrorText = false
 
   item.statusText = computed(() => {
@@ -204,10 +209,10 @@ const clickInstall = async (item) => {
   })
 
   try {
-    let installer = new Installer({...item})   //将item由Proxy对象转成普通对象
+    let installer = new Installer({ ...item }) //将item由Proxy对象转成普通对象
     item.installer = installer
 
-    installer.on('downloadProgress', progress => {
+    installer.on('downloadProgress', (progress) => {
       item.installInfo.downloadProgress = progress
     })
 
@@ -224,10 +229,10 @@ const clickInstall = async (item) => {
       beforeCompletedSize = progress.transferred
     }, 1000)
 
-    installer.on('installStatus', status => {
+    installer.on('installStatus', (status) => {
       item.installInfo.status = status
       if (status === EnumSoftwareInstallStatus.Downloaded) {
-        setItemDownloadInfo(item, {percent: 100})
+        setItemDownloadInfo(item, { percent: 100 })
         clearInterval(item.installInfo?.dlIntervalId)
       }
       if (status === EnumSoftwareInstallStatus.Finish) {
@@ -246,7 +251,7 @@ const clickInstall = async (item) => {
 }
 
 const setItemDownloadInfo = (item, dlInfo) => {
-  item.installInfo.dlInfo = {...item.installInfo.dlInfo, ...dlInfo}
+  item.installInfo.dlInfo = { ...item.installInfo.dlInfo, ...dlInfo }
 }
 
 const clickStop = (item) => {
@@ -254,9 +259,8 @@ const clickStop = (item) => {
   clearInterval(item.installInfo.dlIntervalId)
 }
 
-
 const openApp = (item) => {
-  let appPath = '';
+  let appPath = ''
   if (isWindows) {
     appPath = Path.Join(Software.getPath(item), item.WinExePath)
   } else if (isMacOS) {
@@ -275,9 +279,9 @@ const uninstall = async (item) => {
     if (Installer.uninstall(item)) {
       item.installInfo = null
       item.Installed = false
-      message.info('卸载完成')
+      message.info(t('successfulOperation'))
     } else {
-      MessageBox.error('卸载失败，请打开文件管理器，手动删除软件目录！')
+      MessageBox.error(t('failedOperation') + '\n' + t('softwareUninstallErrorTip', [item.DirName]))
     }
   } catch (error) {
     MessageBox.error(error.message ?? error, '卸载出错！')
@@ -285,26 +289,46 @@ const uninstall = async (item) => {
 }
 
 const localInstall = async () => {
-    let path = FileDialog.showOpenFile();
-    try {
-      //todo，不支持Nginx安装
-       await LocalInstall.install(path)
-    } catch (error) {
-        MessageBox.error(error.message ?? error, 'error')
+  try {
+    const extensions = isWindows ? ['7z'] : ['7z', 'tar.xz']
+    const path = FileDialog.showOpenFile(null, [{ name: 'package', extensions }])
+    if (!path) return
+    const dirName = LocalInstall.getDirName(path)
+
+    if (dirName === 'nginx') {
+      MessageBox.warning(mt('Not', 'ws', 'Support', 'ws') + 'nginx')
+      return
     }
-
-};
-
+    const item = softwareList.value.find((item) => item.DirName === dirName)
+    if (!item) {
+      MessageBox.error(mt('Not', 'ws', 'Match'))
+      return
+    }
+    if (item.Installed) {
+      MessageBox.info(dirName + mt('ws', 'Installed'))
+      return
+    }
+    globalReactive.loading = true;
+    await LocalInstall.install(path)
+    globalReactive.loading = false;
+    item.Installed = true
+  } catch (error) {
+    MessageBox.error(error.message ?? error)
+  }
+}
 
 const showPhpExtManager = (item) => {
   phpVersion.value = SoftwareExtend.getPHPVersion(item.DirName)
   phpExtManagerShow.value = true
 }
 
+const openUrl = (url) => {
+  Native.openUrl(url)
+}
 </script>
 
 <style scoped lang='less'>
-@import "@/renderer/assets/css/var";
+@import '@/renderer/assets/css/var';
 
 .category {
   text-align: center;
@@ -342,13 +366,14 @@ const showPhpExtManager = (item) => {
   }
 }
 
-
 .soft-body {
   flex: 1;
   overflow: auto;
+
   .soft-item-content {
     height: calc(@controlHeight * 1px);
   }
+
   .soft-item {
     &:hover {
       background: @colorBgTextHover;
@@ -394,7 +419,6 @@ const showPhpExtManager = (item) => {
 
     .progress-info-right {
       margin-left: 20px;
-
     }
 
     .status-text {
