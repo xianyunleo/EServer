@@ -14,13 +14,13 @@ import { electronRequire } from '@/main/utils/electron'
 
 const nativeTheme = electronRequire('nativeTheme')
 import { setTwoToneColor } from '@ant-design/icons-vue'
-import { sleep } from '@/shared/utils/utils'
-const { themeReactive ,settingsReactive,globalReactive} = inject('GlobalProvide')
+
+const { themeReactive ,settingsReactive} = inject('GlobalProvide')
 themeReactive.changeThemeFn = changeTheme
 const customTheme = ref()
 
 async function changeTheme(modeStr, primaryColor) {
-  const isDark = modeStr === 'dark' || (modeStr === 'auto' && SystemTheme.isDarkModel())
+  const isDark = modeStr === 'dark' || (modeStr === 'system' && SystemTheme.isDarkModel())
   let customToken = {
     colorBgLayout: '#F5F7FA',
     colorPrimary: primaryColor,
@@ -49,7 +49,7 @@ async function changeTheme(modeStr, primaryColor) {
 changeTheme(settingsReactive.ThemeMode, settingsReactive.ThemeColor)
 
 nativeTheme.on('updated', () => {
-  if (settingsReactive.ThemeMode === 'auto') {
+  if (settingsReactive.ThemeMode === 'system') {
     changeTheme(settingsReactive.ThemeMode, settingsReactive.ThemeColor)
   }
 })
