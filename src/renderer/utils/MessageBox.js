@@ -1,5 +1,6 @@
 import {Modal} from 'ant-design-vue';
 import {createVNode} from "vue";
+import { t } from '@/shared/utils/i18n'
 
 export default class MessageBox {
     /**
@@ -9,7 +10,7 @@ export default class MessageBox {
      * @returns {Promise<boolean>}
      */
     static async info(message, title) {
-        title = title ?? '信息提示';
+        title = title ?? t('Info');
         let options = {
             title: title,
             content: createVNode('div', {innerHTML: message.replaceAll("\n", "<br/>")})
@@ -39,7 +40,7 @@ export default class MessageBox {
      * @returns {Promise<boolean>}
      */
     static async error(message, title) {
-        title = title ?? '错误提示';
+        title = title ?? t('Error');
         let options = {
             title: title,
             content: createVNode('div', {innerHTML: message.replaceAll("\n", "<br/>")})
@@ -69,7 +70,7 @@ export default class MessageBox {
      * @returns {Promise<boolean>}
      */
     static async warning(message, title) {
-        title = title ?? '警告提示';
+        title = title ?? t('Warning');
         let options = {
             title: title,
             content: createVNode('div', {innerHTML: message.replaceAll("\n", "<br/>")})
@@ -97,7 +98,7 @@ export default class MessageBox {
      * @returns {Promise<boolean>}
      */
     static async confirm(options={}) {
-        options.title = options.title ?? '提示';
+        options.title = options.title ??  t('Confirm');
         if (typeof options.content === 'string') {
             options.content = createVNode('div', {innerHTML: options.content?.replaceAll("\n", "<br/>")})
         }
