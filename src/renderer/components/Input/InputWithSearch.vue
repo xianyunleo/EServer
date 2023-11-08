@@ -10,7 +10,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { FolderOpenFilled, SearchOutlined } from '@ant-design/icons-vue'
+import { SearchOutlined } from '@ant-design/icons-vue'
 
 let val = ref('')
 const emits = defineEmits(['search'])
