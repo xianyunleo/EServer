@@ -56,7 +56,7 @@ const changeEnableEnv = async () => {
 const phpVersionList = SoftwareExtend.getPHPList().map(item => {
   return { value: item.version, label: item.name }
 })
-phpVersionList.push({ value: '', label: t('NotSet') })
+phpVersionList.push({ value: '', label: mt('Not','ws','Set') })
 
 const phpCliVersionChange = () => {``
   setFn('PhpCliVersion', async originVal => {

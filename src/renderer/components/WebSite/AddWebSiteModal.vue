@@ -122,7 +122,7 @@ const rootPathRules = [
     required: true,
     validator: async (_rule, value) => {
       if (value.includes(' ')) {
-        return Promise.reject(t('directoryCannotContainSpaces'))
+        return Promise.reject(t('pathCannotContainSpaces'))
       }
       return Promise.resolve()
     }
