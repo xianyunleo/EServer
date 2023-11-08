@@ -1,6 +1,6 @@
 <template>
   <div class="content-container">
-    <a-card>
+    <a-card size="small">
       <div class='web-header' >
         <a-button type="primary" @click="showAdd">{{t("Add")}}</a-button>
         <input-with-search :placeholder="mt('Input','ws','DomainName')"

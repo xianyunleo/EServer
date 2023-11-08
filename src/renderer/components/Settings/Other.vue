@@ -1,5 +1,5 @@
 <template>
-  <a-card :title="t('Other')" class='settings-card'>
+  <a-card size="small" :title="t('Other')" class='settings-card'>
     <div class='settings-card-row flex-vertical-center'>
         <span>{{ mt('Text', 'ws', 'Editor') }}：</span>
         <a-input v-model:value='settingsReactive.TextEditor' readonly style='flex: 1'></a-input>
@@ -20,7 +20,7 @@
 
     <a-row type='flex' align='middle' class='settings-card-row'>
       <a-col :span='6' class='flex-vertical-center'>
-        <a-button @click='exitApp' type='primary'>{{ mt('Exit') }} {{APP_NAME}}</a-button>
+        <a-button @click='exitApp' type='primary'>{{ t('Exit') }} {{APP_NAME}}</a-button>
       </a-col>
       <a-col :span='6' class='flex-vertical-center'>
         <a-button @click='init' type='primary'>{{ t('Initialize') }}</a-button>

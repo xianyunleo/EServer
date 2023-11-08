@@ -1,5 +1,5 @@
 <template>
-  <a-card :title="t('theUserPwdForThisComputer')" class="settings-card">
+  <a-card size="small" :title="t('theUserPwdForThisComputer')" class="settings-card">
     <a-row type="flex" align="middle" class="settings-card-row">
       <a-col :span="12">
         <a-input-password v-model:value="userPwd" readonly/>
@@ -16,7 +16,7 @@
 import UserPwdModal from "@/renderer/components/UserPwdModal.vue";
 import {defineAsyncComponent, ref} from "vue";
 import Settings from "@/main/Settings";
-import {mt,t}  from '@/shared/utils/i18n'
+import {t}  from '@/shared/utils/i18n'
 
 const userPwd = ref(Settings.get('userPwd'));
 const userPwdModalShow = ref(false);

@@ -1,5 +1,5 @@
 <template>
-  <a-card :title='t("Application")' class='settings-card'>
+  <a-card size="small" :title='t("Application")' class='settings-card'>
     <a-row type='flex' align='middle' class='settings-card-row'>
       <a-col :span='24' class='flex-vertical-center'>
         <span> {{ t('Language') }}：</span>

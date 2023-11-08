@@ -1,5 +1,5 @@
 <template>
-  <a-card :title="t('EnvironmentVariables')" class="settings-card">
+  <a-card size="small" :title="t('EnvironmentVariables')" class="settings-card">
     <a-row type="flex" align="middle" class="settings-card-row">
       <a-col :span="24" class="flex-vertical-center">
         <a-switch v-model:checked="settingsReactive.EnableEnv" @change="changeEnableEnv" class="settings-switch" />

@@ -1,5 +1,5 @@
 <template>
-  <a-card :title="t('oneClickStartAndStop')" class="settings-card">
+  <a-card size="small" :title="t('oneClickStartAndStop')" class="settings-card">
     <a-row type="flex" align="middle" class="settings-card-row">
       <a-col :span="24" class='flex-vertical-center'>
         <span>{{mt('Server','ws','List')}}：</span>

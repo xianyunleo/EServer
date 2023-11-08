@@ -1,6 +1,6 @@
 <template>
   <div class='content-container'>
-    <a-card :title='t("ShortcutActions")'>
+    <a-card :title='t("ShortcutActions")' size="small">
       <div class='quick-card-content'>
         <a-button type='primary' @click='oneClickStart' :disabled='!!serverTableLoading'>
           {{ mt('OneClick', 'ws', 'Start') }}
