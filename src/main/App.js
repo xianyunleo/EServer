@@ -140,7 +140,7 @@ export default class App {
         this.createCoreSubDir(["software", "database", "bin",`${TEMP_DIR_NAME}/php`]);
 
         if (!softwareDirExists) { //目录不存在说明是第一次安装，不是覆盖安装
-            const files = Directory.GetFiles(GetPath.getDownloadsDir(), '.7z');
+            const files = Directory.GetFiles(GetPath.getDownloadsDir());
             await LocalInstall.installMultiple(files)
         }
 
