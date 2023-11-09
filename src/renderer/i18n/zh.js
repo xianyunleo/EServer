@@ -13,6 +13,7 @@ export default {
     Manager: 'Manager',
     Input: '输入',
     Initializing: '初始化中',
+    Installing: '安装中',
     Directory: '目录',
     Home: '首页',
     Website: '网站',

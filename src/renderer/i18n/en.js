@@ -13,6 +13,7 @@ export default {
     Manager: 'Manager',
     Input: 'Input',
     Initializing: 'Initializing',
+    Installing: 'Installing',
     Directory: 'Directory',
     Home: 'Home',
     Website: 'Website',

@@ -309,11 +309,13 @@ const localInstall = async () => {
       return
     }
     globalReactive.loading = true;
+    globalReactive.loadingTip = t('Installing')
     await LocalInstall.install(path)
-    globalReactive.loading = false;
     item.Installed = true
   } catch (error) {
     MessageBox.error(error.message ?? error)
+  } finally {
+    globalReactive.loading = false;
   }
 }
 

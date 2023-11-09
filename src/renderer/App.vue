@@ -1,6 +1,6 @@
 <template>
   <ConfigProvider>
-    <a-spin :spinning='globalReactive.loading' :tip="$t('Initializing')+'...'"
+    <a-spin :spinning='globalReactive.loading' :tip="globalReactive.loadingTip+' ...'"
             size='large' style='height: 100vh;'>
       <a-layout>
         <a-row>
@@ -47,7 +47,7 @@ const { locale } = useI18n()
 const userPwdModalShow = ref(false);
 const setLanguageShow = ref(false);
 
-const globalReactive = reactive({ loading: false})
+const globalReactive = reactive({ loading: false, loadingTip: t('Initializing') })
 const themeReactive = reactive({ changeThemeFn: undefined })
 const serverReactive = reactive({ nginxItem: undefined, restartFn: undefined, startPhpFpmFn: undefined })
 const settingsReactive = reactive(Settings.getAll())
