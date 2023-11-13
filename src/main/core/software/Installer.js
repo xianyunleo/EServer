@@ -139,7 +139,7 @@ export default class Installer extends EventEmitter {
                 ext = isWindows ? '.7z' : '.tar.xz'
             }
         }
-        return `${softItem.DirName}${ext}`
+        return `${this.softItem.DirName}${ext}`
     }
 
     getDownloadUrl() {
