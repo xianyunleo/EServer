@@ -1,6 +1,11 @@
 import {spawn } from 'child_process';
 import path from "path";
 import Command from "@/main/utils/Command";
+import extract from 'extract-zip'
+
+export async function extractZip(path, dest) {
+    return await extract(path, {dir: dest});
+}
 
 let path7za = require("7zip-bin").path7za;
 path7za = path7za.replace(`app.asar${path.sep}`, `app.asar.unpacked${path.sep}`);

@@ -6,7 +6,7 @@ import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { builtinModules } from 'module'
 
-const externals = ['fix-path', 'electron-store', '@electron/remote', 'got','hmc-win32',
+const externals = ['fix-path', 'electron-store', '@electron/remote', 'extract-zip', 'got', 'hmc-win32',
   ...builtinModules, ...builtinModules.map((m) => `node:${m}`)]
 
 export default defineConfig({

@@ -197,6 +197,7 @@
         "DirName": "phpMyAdmin",
         "Type": "Tool",
         "IsCommonPlatform": true,
+        "RemoteFileExtension": ".7z",
         "CanDelete": true,
         "Icon": "phpmyadmin.png",
         "Desc": "Web端的MySQL管理工具"

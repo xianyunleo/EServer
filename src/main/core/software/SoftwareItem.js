@@ -9,6 +9,7 @@ export default class SoftwareItem {
     Type;
     IsMacApp;
     IsCommonPlatform;
+    RemoteFileExtension;
     ShellServerProcess;
     CanDelete;
     Icon;

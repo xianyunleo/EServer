@@ -290,7 +290,7 @@ const uninstall = async (item) => {
 
 const localInstall = async () => {
   try {
-    const extensions = isWindows ? ['7z'] : ['7z', 'tar.xz']
+    const extensions = isWindows ? ['zip', '7z'] : ['zip', '7z', 'tar.xz']
     const path = FileDialog.showOpenFile(null, [{ name: 'package', extensions }])
     if (!path) return
     const dirName = LocalInstall.getDirName(path)

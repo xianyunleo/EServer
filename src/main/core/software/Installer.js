@@ -14,7 +14,6 @@ import GetPath from '@/shared/utils/GetPath'
 import { EventEmitter } from 'events'
 import { mt, t } from '@/shared/utils/i18n'
 import CommonInstall from "@/main/core/software/CommonInstall";
-import { extract7z } from "@/main/utils/Extract";
 
 export default class Installer extends EventEmitter {
     softItem;
@@ -30,11 +29,7 @@ export default class Installer extends EventEmitter {
     constructor(softItem) {
         super();
         this.softItem = softItem;
-        if (isWindows || this.softItem.IsCommonPlatform) {
-            this.fileName = `${softItem.DirName}.7z`;
-        } else {
-            this.fileName = `${softItem.DirName}.tar.xz`;
-        }
+        this.fileName = this.getFileName();
         this.filePath = Path.Join(this.getDownloadsPath(), this.fileName);
         this.tempFilePath = `${this.filePath}.dl`;
         this.dlAbortController = new AbortController();
@@ -131,6 +126,20 @@ export default class Installer extends EventEmitter {
             Directory.Delete(path, true);
         }
         return !Directory.Exists(path);
+    }
+
+    getFileName() {
+        let ext
+        if (this.softItem.RemoteFileExtension) {
+            ext = this.softItem.RemoteFileExtension
+        } else {
+            if (this.softItem.IsCommonPlatform) {
+                ext = '.zip'
+            } else {
+                ext = isWindows ? '.7z' : '.tar.xz'
+            }
+        }
+        return `${softItem.DirName}${ext}`
     }
 
     getDownloadUrl() {
