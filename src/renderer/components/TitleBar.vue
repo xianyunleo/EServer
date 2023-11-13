@@ -1,7 +1,7 @@
 <template>
   <div class='title-bar draggable'>
     <div class='notify color-text'>
-      {{ t('notice') }}：<a class='non-draggable color-text' @click='clickUrl'>{{ t('none') }}</a>
+      {{APP_NAME}} {{ t('notice') }}：<a class='non-draggable color-text' @click='clickUrl'>🎉{{ t('none') }}</a>
     </div>
     <div class='window-controls-container non-draggable color-text' v-if='isWindows'>
       <div class='window-icon codicon codicon-chrome-minimize '
@@ -32,6 +32,7 @@ import Native from '@/main/utils/Native'
 import { t } from '@/shared/utils/i18n'
 import { electronRequire } from '@/main/utils/electron'
 import {isWindows} from "@/main/utils/utils";
+import { APP_NAME } from '../../shared/utils/constant'
 
 const BrowserWindow = electronRequire('BrowserWindow')
 
@@ -71,10 +72,12 @@ mainWindow.on('unmaximize', () => {
 
 <style scoped lang='less'>
 .notify {
-  margin-left: 20px;
-  font-size: 13px;
+  margin-left: 10px;
+  font-size: 14px;
   flex: 1;
-
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   a {
     &:hover {
       color: #1890ff;
