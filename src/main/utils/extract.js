@@ -21,7 +21,7 @@ export async function extract7z(path, dest) {
 export async function extractTar(path, dest) {
     let commandStr;
     if (path.endsWith('.tar.xz')) {
-        commandStr = `tar -Jxf ${path} -C ${dest}`;
+        commandStr = `tar -xf ${path} -C ${dest}`;
     }
     await Command.exec(commandStr);
 }
