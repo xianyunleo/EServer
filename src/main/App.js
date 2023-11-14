@@ -154,32 +154,15 @@ export default class App {
         }
     }
 
+    //覆盖安装，执行update
     static async update() {
         if (isMacOS && !isDev) {
-            //todo
+            this.updateMacCoreSubDir(['Library'])
         }
     }
 
     /**
-     * 将App包内的Core子目录移动到用户Core目录，如果目录不存在的情况下
-     * @param dirs
-     */
-    static moveMacCoreSubDir(dirs) {
-        let corePath = this.getCoreDir();
-        for (const dir of dirs) {
-            let source = Path.Join(corePath, dir);
-            if (!Directory.Exists(source)) {
-                continue;
-            }
-            let target = Path.Join(MAC_USER_CORE_DIR, dir);
-            if (!Directory.Exists(target)) {
-                Directory.Move(source, target);
-            }
-        }
-    }
-
-    /**
-     *  覆盖合并目录内容，如果目录不存在，则创建
+     *  Mac更新User Core目录下的文件
       * @param dirs
      */
     static updateMacCoreSubDir(dirs) {
