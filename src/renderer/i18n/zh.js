@@ -10,7 +10,7 @@ export default {
     File: '文件',
     Name: '名称',
     Manage: '管理',
-    Manager: 'Manager',
+    Manager: '管理器',
     Input: '输入',
     Initializing: '初始化中',
     Installing: '安装中',
