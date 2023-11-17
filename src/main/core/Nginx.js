@@ -65,12 +65,11 @@ export default class Nginx {
     #
     #EXTRA_INFO_END
 
-    #DENY_FILES_START
-    location ~ ^/(\\.user.ini|\\.htaccess|\\.git|\\.svn|\\.project|LICENSE|README.md)
+    #禁止访问的文件或目录
+    location ~ ^/(\\.user.ini|\\.htaccess|\\.git|\\.env|\\.svn|\\.project|LICENSE|README.md)
     {
-        return 403;
+        return 404;
     }
-    #DENY_FILES_END
 
     location ~ .+\\.(gif|jpg|jpeg|png|bmp|swf)$
     {
