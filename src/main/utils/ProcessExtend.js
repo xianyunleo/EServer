@@ -147,7 +147,7 @@ export default class ProcessExtend {
                 let lineArr = item.split(/\r?\n/);
 
                 let arr = lineArr.map(line =>{
-                    return line.split(' : ').at(1)?.trim();
+                    return line.split(' : ')[1]?.trim()
                 });
 
                 let name, pid, ppid, path;

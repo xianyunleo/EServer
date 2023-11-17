@@ -62,7 +62,7 @@ export default class TcpProcess {
                     let lineArr = item.split(/r?\n/);
 
                     let arr = lineArr.map(line => {
-                        return line.split(' : ').at(1)?.trim();
+                        return line.split(' : ')[1]?.trim()
                     });
                     let pid, ip, port, name, path;
                     [pid, ip, port, name, path] = arr;
