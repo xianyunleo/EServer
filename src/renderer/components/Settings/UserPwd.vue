@@ -14,22 +14,17 @@
 
 <script setup>
 import UserPwdModal from "@/renderer/components/UserPwdModal.vue";
-import {defineAsyncComponent, ref} from "vue";
+import { ref } from 'vue'
 import Settings from "@/main/Settings";
 import {t}  from '@/shared/utils/i18n'
+import { createAsyncComponent } from '@/renderer/utils/utils'
 
+const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const userPwd = ref(Settings.get('userPwd'));
 const userPwdModalShow = ref(false);
 const resetUserPwd = () => {
   userPwdModalShow.value = true;
 }
-const ACard = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.Card)
-    })
-  })
-})
 </script>
 
 <style scoped>

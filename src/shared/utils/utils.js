@@ -27,9 +27,10 @@ export function replaceSlash(str) {
     return str.replaceAll("\\", "/")
 }
 
-export function getFileSizeText(byte) {
+export function getFileSizeText(byte, defaultVal = 0) {
+    byte = byte ? byte : defaultVal
     if (byte > 1024 * 1024) {
-        return parseInt(byte / (1024 * 1024)) + 'MB';
+        return parseInt(byte / (1024 * 1024)) + 'MB'
     }
-    return parseInt(byte / 1024) + 'KB';
+    return parseInt(byte / 1024) + 'KB'
 }

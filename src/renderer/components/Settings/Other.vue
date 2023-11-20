@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import {defineAsyncComponent, inject} from 'vue'
+import {inject} from 'vue'
 import FileDialog from '@/main/utils/FileDialog'
 import MessageBox from '@/renderer/utils/MessageBox'
 import SoftwareInit from '@/main/core/software/SoftwareInit'
@@ -39,20 +39,15 @@ import { message } from 'ant-design-vue'
 import { mt, t } from '@/shared/utils/i18n'
 import {APP_NAME} from "@/shared/utils/constant";
 import App from "@/main/App";
+import { createAsyncComponent } from '@/renderer/utils/utils'
 
+const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const props = defineProps({
   setFn: Function
 })
 
 const { settingsReactive } = inject('GlobalProvide')
 const setFn = (key, callback = null) => props.setFn(key, callback)
-const ACard = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.Card)
-    })
-  })
-})
 
 const changeTextEditor = () => {
   setFn('TextEditor', async originVal => {

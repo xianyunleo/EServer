@@ -114,8 +114,7 @@
 </template>
 
 <script setup>
-var timestamp = new Date().getTime()
-import { computed, defineAsyncComponent, h, inject, onMounted, ref } from 'vue'
+import { computed, h, inject, ref } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import { storeToRefs } from 'pinia'
 import { message } from 'ant-design-vue'
@@ -133,27 +132,13 @@ import { mt, t } from '@/shared/utils/i18n'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import FileDialog from '@/main/utils/FileDialog'
 import LocalInstall from '@/main/core/software/LocalInstall'
+import { createAsyncComponent } from '@/renderer/utils/utils'
 
 const { globalReactive } = inject('GlobalProvide')
 const InstalledType = 'InstalledType'
-onMounted(() => {
-  var timestamp2 = new Date().getTime()
-  console.log('software onMounted', timestamp2 - timestamp)
-})
-const AButton = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.Button)
-    })
-  })
-})
-const ADropdown = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.Dropdown)
-    })
-  })
-})
+
+const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
+const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
 
 const mainStore = useMainStore()
 const { softwareList, softwareTypeSelected } = storeToRefs(mainStore)
@@ -170,7 +155,6 @@ for (const item of softwareList.value) {
 }
 
 const setShowList = (type) => {
-  console.log('type', type)
   for (const item of softwareList.value) {
     if (type === InstalledType) {
       item.show = item.Installed === true
@@ -351,10 +335,6 @@ const openUrl = (url) => {
   margin-bottom: 10px;
   overflow: hidden;
   flex: 1;
-
-  :deep(.ant-btn) {
-    height: 32px;
-  }
 }
 
 .soft-item {

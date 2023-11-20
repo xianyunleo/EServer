@@ -50,8 +50,7 @@
 </template>
 
 <script setup>
-import {ref, provide, defineAsyncComponent} from "vue";
-import {DownOutlined} from '@ant-design/icons-vue';
+import {ref, provide} from "vue";
 import InputWithSearch from "@/renderer/components/Input/InputWithSearch.vue";
 import AddWebSiteModal from "@/renderer/components/WebSite/AddWebSiteModal.vue";
 import EditWebSiteModal from "@/renderer/components/WebSite/EditWebSiteModal.vue";
@@ -61,28 +60,11 @@ import Native from "@/main/utils/Native";
 import Hosts from "@/main/utils/Hosts";
 import { mt, t } from '@/shared/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
+import { createAsyncComponent } from '@/renderer/utils/utils'
 
-const ADropdown = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.Dropdown)
-    })
-  })
-})
-const AMenu = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.Menu)
-    })
-  })
-})
-const AMenuItem = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.MenuItem)
-    })
-  })
-})
+const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
+const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
+const DownOutlined = createAsyncComponent(import('@ant-design/icons-vue'), 'DownOutlined')
 
 const columns = [
   {
@@ -211,5 +193,7 @@ const openRootPath = (item) => {
   justify-content: space-between;
   //padding: 15px 15px;
 }
-
+:deep(td) {
+  height: 57px;
+}
 </style>

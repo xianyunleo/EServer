@@ -57,7 +57,9 @@ import GetPath from "@/shared/utils/GetPath";
 import fs from "fs";
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import { mt, t } from '@/shared/utils/i18n'
+import { createAsyncComponent } from '@/renderer/utils/utils'
 
+const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const props = defineProps(['show', 'phpVersion']);
 
 const emit = defineEmits(['update:show']);

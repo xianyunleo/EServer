@@ -15,25 +15,20 @@
 </template>
 
 <script setup>
-import {defineAsyncComponent, inject, reactive} from 'vue'
+import {inject} from 'vue'
 import {useMainStore} from "@/renderer/store";
 import {storeToRefs} from "pinia";
 import Software from "@/main/core/software/Software";
 import { mt, t } from '@/shared/utils/i18n'
+import { createAsyncComponent } from '@/renderer/utils/utils'
 
+const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const props = defineProps({
   setFn: Function,
 })
 
 const { settingsReactive } = inject('GlobalProvide')
 const setFn = (key, callback = null) => props.setFn(key, callback)
-const ACard = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.Card)
-    })
-  })
-})
 
 const mainStore = useMainStore();
 const {serverSoftwareList} = storeToRefs(mainStore);

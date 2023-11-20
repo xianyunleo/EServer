@@ -18,7 +18,7 @@
     </a-card>
 
     <a-table :columns='columns' :data-source='serverList' class='content-table' :pagination='false' size='middle'
-             :loading='serverTableLoading' :scroll="{y: 'calc(100vh - 240px)'}">
+             :loading='serverTableLoading' :scroll="{y: 'calc(100vh - 220px)'}">
       <template #bodyCell='{ column, record}'>
         <template v-if="column.dataIndex === 'name'">
           <div>
@@ -83,7 +83,7 @@
 
 <script setup>
 var timestamp = new Date().getTime();
-import {computed, defineAsyncComponent, inject, onMounted, ref, watch} from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import App from '@/main/App'
 import GetPath from '@/shared/utils/GetPath'
@@ -99,70 +99,21 @@ import ProcessExtend from '@/main/utils/ProcessExtend'
 import Settings from '@/main/Settings'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import TcpProcess from '@/main/utils/TcpProcess'
+import { createAsyncComponent } from '@/renderer/utils/utils'
 import { mt, t } from '@/shared/utils/i18n'
 
 const serverTableLoading = ref(false)
-let { globalReactive, serverReactive } = inject('GlobalProvide')
+const { serverReactive } = inject('GlobalProvide')
 serverReactive.restartFn = restartServerClick
 serverReactive.startPhpFpmFn = startPhpFpm
 
-const DownOutlined = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('@ant-design/icons-vue').then((modules) => {
-      resolve(modules.DownOutlined)
-    })
-  })
-})
-const PoweroffOutlined = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('@ant-design/icons-vue').then((modules) => {
-      resolve(modules.PoweroffOutlined)
-    })
-  })
-})
-const ReloadOutlined = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('@ant-design/icons-vue').then((modules) => {
-      resolve(modules.ReloadOutlined)
-    })
-  })
-})
-const RightSquareFilled = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('@ant-design/icons-vue').then((modules) => {
-      resolve(modules.RightSquareFilled)
-    })
-  })
-})
+const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
+const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
+const DownOutlined = createAsyncComponent(import('@ant-design/icons-vue'), 'DownOutlined')
+const PoweroffOutlined = createAsyncComponent(import('@ant-design/icons-vue'), 'PoweroffOutlined')
+const ReloadOutlined = createAsyncComponent(import('@ant-design/icons-vue'), 'ReloadOutlined')
+const RightSquareFilled = createAsyncComponent(import('@ant-design/icons-vue'), 'RightSquareFilled')
 
-const AButton = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.Button)
-    })
-  })
-})
-const ADropdown = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.Dropdown)
-    })
-  })
-})
-const AMenu = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.Menu)
-    })
-  })
-})
-const AMenuItem = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.MenuItem)
-    })
-  })
-})
 onMounted(() => {
   var timestamp2 = new Date().getTime();
   console.log('home onMounted',timestamp2-timestamp)
@@ -192,7 +143,6 @@ const serverList = computed(() => serverSoftwareList.value.filter(item => Softwa
 if (!serverReactive.nginxItem) {
   serverReactive.nginxItem = serverSoftwareList.value.find(item => item.Name === 'Nginx')
 }
-
 
 const getProcessList = async () => {
   let list = await ProcessExtend.getList({ directory: GetPath.getSoftwareDir() })
@@ -384,6 +334,9 @@ async function startPhpFpm(phpVersion) {
 <style scoped lang='less'>
 @import "@/renderer/assets/css/var";
 
+:deep(td) {
+  height: 57px;
+}
 
 .status-start {
   color: @colorSuccessActive;
@@ -398,15 +351,6 @@ async function startPhpFpm(phpVersion) {
   height: calc(@controlHeight * 1px);
   display: flex;
   justify-content: space-around
-}
-
-.log-card {
-  margin-bottom: 10px;
-
-  :deep(.ant-card-body) {
-    height: 150px;
-    padding: 12px 24px;
-  }
 }
 
 .operate-td {

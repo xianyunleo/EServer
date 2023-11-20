@@ -27,26 +27,22 @@
 </template>
 
 <script setup>
-import {defineAsyncComponent, inject} from 'vue'
+import {inject} from 'vue'
 import Env from "@/main/core/Env/Env";
 import {message} from "ant-design-vue";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import GetPath from "@/shared/utils/GetPath";
 import {mt,t}  from '@/shared/utils/i18n'
+import { createAsyncComponent } from '@/renderer/utils/utils'
 
+const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const props = defineProps({
   setFn: Function,
 })
 
 const { settingsReactive } = inject('GlobalProvide')
 const setFn = (key, callback = null) => props.setFn(key, callback)
-const ACard = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.Card)
-    })
-  })
-})
+
 const changeEnableEnv = async () => {
   setFn('EnableEnv', async originVal => {
     await Env.switch(settingsReactive.EnableEnv)

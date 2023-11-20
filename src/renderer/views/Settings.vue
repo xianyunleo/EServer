@@ -1,10 +1,10 @@
 <template>
   <div class='content-container' style="overflow:scroll">
-    <app :setFn='setFun' />
-    <one-click-server :setFn='setFun' />
-    <env-var :setFn='setFun' />
-    <other :setFn='setFun' />
-    <user-pwd v-if='!isWindows' />
+    <App :setFn='setFun' />
+    <OneClickServer :setFn='setFun' />
+    <EnvVar :setFn='setFun' />
+    <Other :setFn='setFun' />
+    <UserPwd v-if='!isWindows' />
   </div>
 </template>
 

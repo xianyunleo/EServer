@@ -32,24 +32,20 @@
 </template>
 
 <script setup>
-import {computed, defineAsyncComponent, inject} from 'vue'
+import {computed, inject} from 'vue'
 import { useI18n } from 'vue-i18n'
 import {mt,t}  from '@/shared/utils/i18n'
 import TrayManage from '@/main/TrayManage'
+import { createAsyncComponent } from '@/renderer/utils/utils'
 
+const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const { themeReactive, settingsReactive } = inject('GlobalProvide')
 const { locale } = useI18n()
 const props = defineProps({
   setFn: Function
 })
 const setFn = (key, callback = null) => props.setFn(key, callback)
-const ACard = defineAsyncComponent(() => {
-  return new Promise((resolve) => {
-    import('ant-design-vue').then((modules) => {
-      resolve(modules.Card)
-    })
-  })
-})
+
 const languageOptions= [
   { label: '中文', value: 'zh' },
   { label: 'English', value: 'en' },
