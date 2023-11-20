@@ -64,8 +64,9 @@ const colorOptions = computed(() => {
     { label: t('blue'), value: '#1890FF' },
     { label: t('green'), value: '#00b96b' },
     { label: t('red'), value: '#DC4437' },
-    { label: t('pink'), value: '#fb7299' },
     { label: t('cyan'), value: '#02BCAA' },
+    { label: t('pink'), value: '#fb7299' },
+    { label: t('purple'), value: '#673BB7' },
   ]
 })
 

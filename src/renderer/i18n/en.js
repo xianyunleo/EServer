@@ -96,6 +96,7 @@ export default {
     red: 'red',
     pink: 'pink',
     cyan: 'cyan',
+    purple: 'purple',
     notice: 'notice',
     tool: 'tool',
     root: 'root',

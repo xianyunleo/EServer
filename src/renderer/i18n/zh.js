@@ -97,6 +97,7 @@ export default {
     red: '红色',
     pink: '粉色',
     cyan: '青色',
+    purple: '紫色',
     notice: '通知',
     tool: '工具',
     root: '根',
