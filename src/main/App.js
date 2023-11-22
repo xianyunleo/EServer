@@ -133,7 +133,7 @@ export default class App {
             if (!Directory.Exists(MAC_USER_CORE_DIR)) {
                 Directory.CreateDirectory(MAC_USER_CORE_DIR);
             }
-            this.updateMacCoreSubDir(['Library']);
+            await this.updateMacCoreSubDir(['Library']);
         }
 
         this.moveInitFiles(["downloads", "www"]);
@@ -157,15 +157,15 @@ export default class App {
     //覆盖安装，执行update
     static async update() {
         if (isMacOS && !isDev) {
-            this.updateMacCoreSubDir(['Library'])
+            await this.updateMacCoreSubDir(['Library'])
         }
     }
 
     /**
      *  Mac更新User Core目录下的文件
-      * @param dirs
+     * @param dirs
      */
-    static updateMacCoreSubDir(dirs) {
+    static async updateMacCoreSubDir(dirs) {
         let corePath = this.getCoreDir();
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
@@ -177,7 +177,7 @@ export default class App {
                 Directory.CreateDirectory(target);
             }
             child_process.execSync(`rsync -a ${source}/* ${target}`);
-            Directory.Delete(source, true);
+            await Directory.Delete(source);
         }
     }
 

@@ -118,13 +118,11 @@ export default class Installer extends EventEmitter {
     /**
      * 卸载成功返回true，否则false
      * @param item
-     * @returns {boolean}
+     * @returns {Promise<boolean>}
      */
-    static uninstall(item) {
+    static async uninstall(item) {
         let path = Software.getPath(item);
-        if (Directory.Exists(path)) {
-            Directory.Delete(path, true);
-        }
+        await Directory.Delete(path);
         return !Directory.Exists(path);
     }
 

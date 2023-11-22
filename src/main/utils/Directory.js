@@ -1,4 +1,5 @@
 import fs from 'fs'
+import fsPromises from 'fs/promises'
 import nodePath from 'path'
 
 const FileTypeEnum = {
@@ -31,14 +32,11 @@ export default class Directory {
     /**
      * 删除目录
      * @param path {string}
-     * @param recursive {boolean} 递归删除子目录和文件
-     * @returns {undefined}
+     * @param options {object}
+     * @returns {Promise<undefined>}
      */
-    static Delete(path, recursive = true) {
-        const options = {
-            recursive: recursive
-        }
-        return fs.rmdirSync(path, options)
+    static async Delete(path, options = { recursive: true, force: true }) {
+        return await fsPromises.rm(path, options)
     }
 
     /**

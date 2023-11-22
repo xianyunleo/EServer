@@ -260,7 +260,7 @@ const openInstallPath = async (item) => {
 
 const uninstall = async (item) => {
   try {
-    if (Installer.uninstall(item)) {
+    if (await Installer.uninstall(item)) {
       item.installInfo = null
       item.Installed = false
       message.info(t('successfulOperation'))
