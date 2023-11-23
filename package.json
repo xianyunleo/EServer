@@ -1,7 +1,7 @@
 {
   "name": "eserver",
   "productName": "EServer",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "description": "An Electron application with Vue",
   "main": "./out/main/index.js",
   "author": "example.com",
