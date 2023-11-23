@@ -1,6 +1,5 @@
-import Command from "@/main/utils/Command";
+import Command from '@/main/utils/Command'
 import { isMacOS, isWindows } from '@/main/utils/utils'
-
 
 export default class ProcessExtend {
     /**
@@ -83,23 +82,23 @@ export default class ProcessExtend {
 
     /**
      *
-     * @param searchObj
+     * @param options {object}
      * @returns {Promise<[]|{path: *, name: *, pid: *, ppid: *}[]>}
      */
-    static async getList(searchObj={}) {
+    static async getList(options={}) {
         if (isMacOS) {
-            return await this.getListForMacOS(searchObj);
-        }else if(isWindows){
-            return await this.getListForWindowsByLib(searchObj);
+            return await this.getListForMacOS(options);
+        } else if (isWindows) {
+            return await this.getListForWindows(options);
         }
         return [];
     }
 
-    static async getListForMacOS(searchObj={}) {
+    static async getListForMacOS(options={}) {
         let command = 'lsof -w -R -d txt';
-        if (searchObj) {
-            if(searchObj.directory){
-                command += `|grep ${searchObj.directory}`;  //这里不能使用lsof的+D参数，会有exit code，且性能不好
+        if (options) {
+            if(options.directory){
+                command += `|grep ${options.directory}`;  //这里不能使用lsof的+D参数，会有exit code，且性能不好
             }
         }
         command += "|grep -v .dylib|awk '{print $1,$2,$3,$10}'";
@@ -119,17 +118,17 @@ export default class ProcessExtend {
             });
 
             return list;
-        }catch(e){
-            return  [];
+        } catch (e) {
+            return []
         }
 
     }
 
-    static async getListForWindows(searchObj={}) {
+    static async getListForWindows(options={}) {
         let command = ' Get-WmiObject -Class Win32_Process -Filter ';
-        if (searchObj) {
-            if(searchObj.directory){
-                let formatDir =searchObj.directory.replaceAll('\\','\\\\');
+        if (options) {
+            if(options.directory){
+                let formatDir = options.directory.replaceAll('\\', '\\\\')
                 //这里只能是ExecutablePath不能是Path，因为Path是PowerShell的'ScriptProperty'
                 command += `"ExecutablePath like '${formatDir}%'"`;
             }
@@ -155,27 +154,8 @@ export default class ProcessExtend {
                 return {name, pid, ppid, path};
             });
             return list;
-        }catch(e){
-            return  [];
-        }
-    }
-
-    static async getListForWindowsByLib(searchObj = {}) {
-        try {
-            const HMC = require('hmc-win32')
-            let list = HMC.getDetailsProcessList();
-            if (searchObj) {
-                if (searchObj.directory) {
-                    list = list.filter(item => item.path.includes(searchObj.directory))
-                }
-            }
-            return await Promise.all(
-                list.map(async (item) => {
-                    const ppid = HMC.getProcessParentProcessID(item.pid);
-                    return {...item,ppid}
-                }));
         } catch (e) {
-            return [];
+            return []
         }
     }
 }

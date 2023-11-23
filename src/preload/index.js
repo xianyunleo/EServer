@@ -6,9 +6,6 @@ const api = {
     callStatic: async (className, methodName, ...args) => {
         return await ipcRenderer.invoke("callStatic", className, methodName, ...args);
     },
-    workerCallStatic: async (className, methodName, ...args) => {
-        return await ipcRenderer.invoke("workerCallStatic", className, methodName, ...args);
-    }
 };
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

@@ -99,6 +99,7 @@ import ProcessExtend from '@/main/utils/ProcessExtend'
 import Settings from '@/main/Settings'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import TcpProcess from '@/main/utils/TcpProcess'
+import { isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { mt, t } from '@/shared/utils/i18n'
 
@@ -145,7 +146,13 @@ if (!serverReactive.nginxItem) {
 }
 
 const getProcessList = async () => {
-  let list = await ProcessExtend.getList({ directory: GetPath.getSoftwareDir() })
+  let list;
+  const options = { directory: GetPath.getSoftwareDir() }
+  if (isWindows) {
+    list = await window.api.callStatic('ProcessLibrary', 'getList', options)
+  } else {
+    list = await ProcessExtend.getList(options)
+  }
   //过滤掉子进程，剔除子进程
   let newList = []
   for (const item of list) {
