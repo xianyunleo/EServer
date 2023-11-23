@@ -86,6 +86,7 @@ export default {
     Error: 'Error',
     Warning: 'Warning',
     Match:'Match',
+    Script:'Script',
     //Lowercase
     none: 'none',
     auto: 'auto',

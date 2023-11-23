@@ -87,6 +87,7 @@ export default {
     Error: '错误',
     Warning: '警告',
     Match:'匹配',
+    Script:'脚本',
     //Lowercase
     none: '无',
     auto: '自动',

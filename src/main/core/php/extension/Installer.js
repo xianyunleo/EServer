@@ -38,17 +38,16 @@ export default class Installer {
         }
         let phpDir = GetPath.getPhpDir(this.phpVersion);
 
+        const scriptPath = Extension.getInstallScriptPath(this.extName);
         if (isWindows) {
-            let scriptFilePath = Path.Join(GetPath.getScriptDir(), `php/common.ps1`);
             let extFileName = Extension.getFileName(this.extName);
             let phpExtDir = Php.getExtensionDir(this.phpVersion);
             let dlFileName = this.getDownloadFileName();
-            commandStr = ` powershell.exe -ExecutionPolicy Bypass -File "${scriptFilePath}"`;
+            commandStr = ` powershell.exe -ExecutionPolicy Bypass -File "${scriptPath}"`;
             commandStr += ` ${phpExtDlDir} ${phpDir} ${this.extVersion} ${this.extName} ${extFileName} ${phpExtDir} ${dlFileName}`;
         } else {
-            let scriptFilePath = Path.Join(GetPath.getScriptDir(), `php/${this.extName}.sh`);
-            fs.chmodSync(scriptFilePath, '0755');
-            commandStr = `${scriptFilePath} ${phpExtDlDir} ${phpDir} ${this.extVersion}`;
+            fs.chmodSync(scriptPath, '0755');
+            commandStr = `${scriptPath} ${phpExtDlDir} ${phpDir} ${this.extVersion}`;
         }
 
         let childProcess = child_process.exec(commandStr);

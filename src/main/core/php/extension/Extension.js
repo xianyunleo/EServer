@@ -2,6 +2,7 @@ import Path from "@/main/utils/Path";
 import Php from "@/main/core/php/Php";
 import FileUtil from "@/main/utils/FileUtil";
 import { isWindows } from '@/main/utils/utils'
+import GetPath from '@/shared/utils/GetPath'
 
 export default class Extension {
      static async getList(phpVersion) {
@@ -104,9 +105,9 @@ export default class Extension {
                 } else if (phpVersion < 7.2) {
                     return '4.5.11';
                 } else if (phpVersion < 8.0) {
-                    return '4.8.11';
+                    return '4.8.13';
                 } else {
-                    return '5.0.0';
+                    return '5.1.0';
                 }
             case 'mongodb':
                 if (phpVersion <= 7.1) {
@@ -176,5 +177,18 @@ export default class Extension {
 
         }
         return null;
+    }
+
+    /**
+     *
+     * @param extName  {string}
+     * @returns {string}
+     */
+    static getInstallScriptPath(extName) {
+        if (isWindows) {
+            return Path.Join(GetPath.getScriptDir(), `php/common.ps1`)
+        } else {
+            return Path.Join(GetPath.getScriptDir(), `php/${extName}.sh`)
+        }
     }
 }

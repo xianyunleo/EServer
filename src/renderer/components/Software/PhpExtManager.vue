@@ -19,6 +19,9 @@
               <a-button type="primary" disabled v-if="record.isInstalled">
                 {{t('Installed')}}
               </a-button>
+              <a-button type="primary" style='margin-left: 10px' @click="editScript(record)">
+                {{mt('Edit','ws','Script')}}
+              </a-button>
             </div>
           </template>
         </template>
@@ -106,7 +109,6 @@ const openExtDir = () => {
   Native.openDirectory(Php.getExtensionDir(props.phpVersion));
 }
 
-
 let installer;
 let eventEmitter;
 const install = (item) => {
@@ -150,6 +152,10 @@ const install = (item) => {
       result.value = code == 0 ? '安装完成，请修改 php.ini 后，重启服务生效！' : '安装失败';
     }
   })
+}
+
+const editScript = (item) => {
+  Native.openTextFile(Extension.getInstallScriptPath(item.name))
 }
 
 const closeTaskDialog = () => {
