@@ -1,5 +1,5 @@
 <template>
-  <div class='content-container' style="overflow:scroll">
+  <div class='content-container'>
     <App :setFn='setFun' />
     <OneClickServer :setFn='setFun' />
     <EnvVar :setFn='setFun' />
