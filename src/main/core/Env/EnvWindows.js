@@ -1,26 +1,50 @@
 import Command from "@/main/utils/Command";
 import GetPath from "@/shared/utils/GetPath";
+import { PowerShell } from '@/main/utils/constant'
+import { trimEnd } from '@/shared/utils/utils'
 
 export default class EnvWindows {
+    static _pathVarName = 'PATH'
     static async switch(enable) {
-        let binPath = GetPath.getBinDir();
-        //PATH的值超过1024，setx命令会截断，所以用PowerShell，并且能指定EnvironmentVariableTarget
-        let commandStr = `PowerShell -Command "& {[Environment]::GetEnvironmentVariable('PATH','User');}"`;
-        let value = (await Command.exec(commandStr)).trim();
+        //PATH的值超过1024，CDM setx命令会截断，所以用PowerShell，并且能指定范围Target
+        const binPath = GetPath.getBinDir()
+        const varVal = await this.getVarStr(this._pathVarName)
         if (enable) {
-            commandStr = `PowerShell -Command "& {[Environment]::SetEnvironmentVariable('PATH','${value};${binPath}','User');}"`;
+            if (!varVal.includes(binPath)) {
+                const newVal = `${trimEnd(varVal,';')};${binPath}`
+                await this.setVarStr(this._pathVarName, newVal)
+            }
         } else {
-            value = value.replaceAll(`;${binPath}`, '');
-            commandStr = `PowerShell -Command "& {[Environment]::SetEnvironmentVariable('PATH','${value}','User');}"`;
+            //disable remove。假设varVal只有${binPath}一个，那是没有;的，所以要执行第二次replace
+            const newVal = varVal.replace(`;${binPath}`, '').replace(binPath, '')
+            await this.setVarStr(this._pathVarName, newVal)
         }
-        await Command.exec(commandStr);
     }
 
     static async IsEnabled() {
-        let binPath = GetPath.getBinDir();
-        let commandStr = `PowerShell -Command "& {[Environment]::GetEnvironmentVariable('PATH','User');}"`;
-        let value = await Command.exec(commandStr);
-        return value.includes(binPath);
+        const binPath = GetPath.getBinDir()
+        const varVal = this.getPathStr('PATH')
+        return varVal.includes(binPath)
     }
 
+    /**
+     * 获取用户环境变量的值
+     * @param varName {string}
+     * @returns {Promise<string>}
+     */
+    static async getVarStr(varName) {
+        const commandStr = `[Environment]::GetEnvironmentVariable('${varName}','User')`
+        return (await Command.exec(commandStr, { shell: PowerShell })).trim()
+    }
+
+    /**
+     * 设置用户环境变量的值
+     * @param varName {string}
+     * @param varVal {string}
+     * @returns {Promise<void>}
+     */
+    static async setVarStr(varName, varVal) {
+        const commandStr = `[Environment]::SetEnvironmentVariable('${varName}','${varVal}','User')`
+        await Command.exec(commandStr, { shell: PowerShell })
+    }
 }

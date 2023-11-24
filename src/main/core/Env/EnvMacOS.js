@@ -43,8 +43,8 @@ export default class EnvMacOS {
             let binPath  = GetPath.getBinDir();
             let appendText = `export PATH="${binPath}:$PATH"`;
 
-            if (text.slice(-1) !== "\n") {
-                appendText = "\n" + appendText;
+            if (text.slice(-1) !== '\n') {
+                appendText = `\n${appendText}`
             }
             FileUtil.AppendAllText(envFilePath, appendText);
         } else {

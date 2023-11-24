@@ -7,3 +7,5 @@ export const INIT_FILE_NAME = 'init.txt'
 export const InitFiles_DIR_NAME = 'initFiles'
 export const SETTINGS_FILE_NAME = 'settings'
 export const CONF_INDENT = '    '
+
+export const PowerShell = 'powershell'
