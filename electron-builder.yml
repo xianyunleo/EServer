@@ -53,5 +53,3 @@ nsis:
   include: build/installer.nsh
   installerIcon: build/icons/icon.ico
   uninstallerIcon: build/icons/icon.ico
-asarUnpack:
-- node_modules/7zip-bin
