@@ -40,9 +40,8 @@ import {
   SettingTwoTone,
   ToolTwoTone
 } from "@ant-design/icons-vue";
-import {defineAsyncComponent, inject, ref} from 'vue'
+import {defineAsyncComponent, ref} from 'vue'
 import {useRouter} from "vue-router";
-const { globalReactive } = inject('GlobalProvide')
 const router = useRouter();
 const selectedKeys = ref(['/']);
 

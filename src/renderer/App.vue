@@ -1,6 +1,6 @@
 <template>
   <ConfigProvider>
-    <a-spin :spinning='globalReactive.loading' :tip="globalReactive.loadingTip+' ...'"
+    <a-spin :spinning='store.loading' :tip="store.loadingTip+' ...'"
             size='large' style='height: 100vh;'>
       <a-layout>
         <a-row>
@@ -25,7 +25,7 @@ import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import TitleBar from "./components/TitleBar.vue";
 import SideBar from "./components/SideBar.vue";
 import App from "@/main/App";
-import {provide, reactive, ref, watch} from 'vue'
+import { provide, reactive, ref, watch } from 'vue'
 import MessageBox from "@/renderer/utils/MessageBox";
 import UserPwdModal from "@/renderer/components/UserPwdModal.vue";
 import Software from "@/main/core/software/Software";
@@ -34,45 +34,41 @@ import {message} from "ant-design-vue";
 import Directory from "@/main/utils/Directory";
 import {MAC_USER_CORE_DIR} from "@/main/utils/constant";
 import ConfigProvider from "@/renderer/components/Theme/ConfigProvider.vue";
-import Settings from '@/main/Settings'
 import TrayManage from '@/main/TrayManage'
 import { useI18n } from 'vue-i18n'
 import SetLanguage from "@/renderer/components/SetLanguage.vue";
-import {useMainStore} from "@/renderer/store";
-const mainStore = useMainStore();
+import { useMainStore } from '@/renderer/store'
+
 import { t } from "@/shared/utils/i18n";
 
+const store = useMainStore();
 const { locale } = useI18n()
-
 const userPwdModalShow = ref(false);
 const setLanguageShow = ref(false);
 
-const globalReactive = reactive({ loading: false, loadingTip: t('Initializing') })
-const themeReactive = reactive({ changeThemeFn: undefined })
-const serverReactive = reactive({ nginxItem: undefined, restartFn: undefined, startPhpFpmFn: undefined })
-const settingsReactive = reactive(Settings.getAll())
+const serverReactive = reactive({ restartFn: undefined, startPhpFpmFn: undefined })
 
-provide('GlobalProvide', {
-  globalReactive, themeReactive, serverReactive,settingsReactive
-});
+provide('GlobalProvide', { serverReactive });
 
 (async () => {
-  locale.value = settingsReactive.Language
-  TrayManage.set();
-  TrayManage.refresh();
-  try{
-    Software.initList();
-  }catch (error){
-    await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]));
-    App.exit();
+  try {
+    await Software.initList()
+    await store.init()
+  } catch (error) {
+    await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]))
+    App.exit()
   }
+  store.loadingTip = t('Initializing')
+  locale.value = store.settings.Language
+  TrayManage.set()
+  TrayManage.refresh()
 
   if (isWindows) {
-    stopWebService();
+    stopWebService()
   }
 
   if (!App.initFileExists() || isDev) {
-    return;
+    return
   }
   //存在initFile文件的情况下，判断是第一次安装，还是覆盖安装
   if (!Software.DirExists()) { //目录不存在说明是第一次安装
@@ -100,10 +96,10 @@ provide('GlobalProvide', {
 
 async function winInit() {
   try {
-    globalReactive.loading = true;
+    store.loading = true;
     await App.init();
-    mainStore.$reset();
-    globalReactive.loading = false;
+    store.refreshSoftwareList();
+    store.loading = false;
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]));
     App.exit();
@@ -123,10 +119,10 @@ async function macCreateUserCoreDir() {
 
 async function update() {
   try {
-    globalReactive.loading = true;
+    store.loading = true;
     await App.update();
     App.deleteInitFile();
-    globalReactive.loading = false;
+    store.loading = false;
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('update')]));
     App.exit();

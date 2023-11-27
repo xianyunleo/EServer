@@ -41,17 +41,17 @@ import MessageBox from '@/renderer/utils/MessageBox'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import Hosts from '@/main/utils/Hosts'
 import { mt, t } from '@/shared/utils/i18n'
-const { settingsReactive } = inject('GlobalProvide')
+import { useMainStore } from '@/renderer/store'
 
 const { confName, search } = inject('WebsiteProvide')
-
+const store = useMainStore()
 const formRef = ref();
 const formData = reactive({})
 const phpVersionList = ref([])
 const emits = defineEmits(['editAfter'])
 
-const labelColSpan = settingsReactive.Language === 'zh' ? 6 : 10;
-const wrapperColSpan = settingsReactive.Language === 'zh' ? 18 : 14;
+const labelColSpan = store.settings.Language === 'zh' ? 6 : 10;
+const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 14;
 
 let websiteInfo = Website.getBasicInfo(confName.value)
 Object.assign(formData, websiteInfo)

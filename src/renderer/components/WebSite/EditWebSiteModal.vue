@@ -26,15 +26,17 @@ import RewriteSetting from '@/renderer/components/WebSite/EditWebSite/RewriteSet
 import BasicSetting from '@/renderer/components/WebSite/EditWebSite/BasicSetting.vue'
 import Settings from '@/main/Settings'
 import { mt, t } from '@/shared/utils/i18n'
+import { useMainStore } from '@/renderer/store'
 
 const { serverName, port, editModalVisible: visible } = inject('WebsiteProvide')
 const defaultKey = 'basicSetting'
 const activeKey = ref(defaultKey)
 const { serverReactive } = inject('GlobalProvide')
+const store = useMainStore()
 
 const editAfter = (phpVersion = '') => {
-  if (serverReactive.nginxItem.isRunning && Settings.get('AutoStartAndRestartServer')) {
-    serverReactive.restartFn(serverReactive.nginxItem)
+  if (store.nginxServer.isRunning && Settings.get('AutoStartAndRestartServer')) {
+    serverReactive.restartFn(store.nginxServer)
     if (phpVersion) {
       serverReactive.startPhpFpmFn(phpVersion)
     }

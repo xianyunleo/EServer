@@ -14,4 +14,5 @@ export default class SoftwareItem {
     CanDelete;
     Icon;
     Desc;
+    Installed;
 }

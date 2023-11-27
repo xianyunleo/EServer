@@ -2,18 +2,18 @@
   <a-card size="small" :title="t('Other')" class='settings-card'>
     <div class='settings-card-row flex-vertical-center'>
         <span>{{ mt('Text', 'ws', 'Editor') }}：</span>
-        <a-input v-model:value='settingsReactive.TextEditor' readonly style='flex: 1'></a-input>
+        <a-input v-model:value='store.settings.TextEditor' readonly style='flex: 1'></a-input>
         <a-button @click='changeTextEditor' style='margin-left: 5px'>...</a-button>
     </div>
 
     <div class='settings-card-row flex-vertical-center'>
         <span>{{ mt('Website', 'ws', 'Directory') }}：</span>
-        <a-input v-model:value='settingsReactive.WebsiteDir' readonly style='flex: 1'></a-input>
+        <a-input v-model:value='store.settings.WebsiteDir' readonly style='flex: 1'></a-input>
         <a-button @click='changeWebsiteDir' style='margin-left: 5px'>...</a-button>
     </div>
 
     <div class='settings-card-row flex-vertical-center'>
-      <a-switch v-model:checked='settingsReactive.AutoStartAndRestartServer' @change='changeAutoStartAndRestartServer'
+      <a-switch v-model:checked='store.settings.AutoStartAndRestartServer' @change='changeAutoStartAndRestartServer'
                 class='settings-switch' />
       <span>{{ t('autoStartAndRestartServer') }}</span>
     </div>
@@ -31,7 +31,6 @@
 </template>
 
 <script setup>
-import {inject} from 'vue'
 import FileDialog from '@/main/utils/FileDialog'
 import MessageBox from '@/renderer/utils/MessageBox'
 import SoftwareInit from '@/main/core/software/SoftwareInit'
@@ -40,17 +39,13 @@ import { mt, t } from '@/shared/utils/i18n'
 import {APP_NAME} from "@/shared/utils/constant";
 import App from "@/main/App";
 import { createAsyncComponent } from '@/renderer/utils/utils'
+import { useMainStore } from '@/renderer/store'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
-const props = defineProps({
-  setFn: Function
-})
-
-const { settingsReactive } = inject('GlobalProvide')
-const setFn = (key, callback = null) => props.setFn(key, callback)
+const store = useMainStore()
 
 const changeTextEditor = () => {
-  setFn('TextEditor', async originVal => {
+  store.setSettings('TextEditor', async originVal => {
     let path = FileDialog.showOpenApp(originVal)
     if (!path) {
       return false
@@ -60,7 +55,7 @@ const changeTextEditor = () => {
 }
 
 const changeWebsiteDir = () => {
-  setFn('WebsiteDir', async originVal => {
+  store.setSettings('WebsiteDir', async originVal => {
     let path = FileDialog.showOpenDirectory(originVal)
     if (!path) {
       return false
@@ -73,7 +68,7 @@ const changeWebsiteDir = () => {
 }
 
 const changeAutoStartAndRestartServer = () => {
-  setFn('AutoStartAndRestartServer')
+  store.setSettings('AutoStartAndRestartServer')
 }
 
 const exitApp = ()=>{

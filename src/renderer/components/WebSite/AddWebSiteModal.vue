@@ -51,12 +51,13 @@ import Hosts from '@/main/utils/Hosts'
 import { replaceSlash } from '@/shared/utils/utils'
 import Settings from '@/main/Settings'
 import { mt, t } from '@/shared/utils/i18n'
-const { settingsReactive } = inject('GlobalProvide')
+import { useMainStore } from '@/renderer/store'
 const { search, addModalVisible: visible } = inject('WebsiteProvide')
 
 const wwwPath = replaceSlash(GetPath.getWebsiteDir())
 const formRef = ref()
 const { serverReactive } = inject('GlobalProvide')
+const store = useMainStore()
 
 const formData = reactive({
   serverName: '',
@@ -66,8 +67,8 @@ const formData = reactive({
   syncHosts: true
 })
 
-const labelColSpan = settingsReactive.Language === 'zh' ? 6 : 8;
-const wrapperColSpan = settingsReactive.Language === 'zh' ? 18 : 16;
+const labelColSpan = store.settings.Language === 'zh' ? 6 : 8;
+const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 16;
 
 const phpVersionList = ref([])
 let list = SoftwareExtend.getPHPList()
@@ -109,8 +110,8 @@ const addWeb = async (websiteInfo) => {
     }
   }
 
-  if (serverReactive.nginxItem.isRunning && Settings.get('AutoStartAndRestartServer')) {
-    serverReactive.restartFn(serverReactive.nginxItem)
+  if (store.nginxServer.isRunning && Settings.get('AutoStartAndRestartServer')) {
+    serverReactive.restartFn(store.nginxServer)
     if (websiteInfo.phpVersion) {
       serverReactive.startPhpFpmFn(websiteInfo.phpVersion)
     }

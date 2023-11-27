@@ -7,7 +7,7 @@ import CommonInstall from "@/main/core/software/CommonInstall";
 export default class LocalInstall {
     static async install(filePath) {
         const dirName = this.getDirName(filePath);
-        const dest = this.getDestPath(dirName);
+        const dest = await this.getDestPath(dirName);
         if (!dest) return;
         await CommonInstall.extract(filePath, dest);
         FileUtil.Delete(filePath);
@@ -21,8 +21,8 @@ export default class LocalInstall {
         }));
     }
 
-    static getDestPath(dirName) {
-        const softList = Software.getList();
+    static async getDestPath(dirName) {
+        const softList = await Software.getList();
         const item = softList.find(item => item.DirName === dirName);
         return item ? Software.getTypePath(item.Type) : null;
     };
