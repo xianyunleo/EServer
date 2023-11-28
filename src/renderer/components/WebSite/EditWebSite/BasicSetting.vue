@@ -81,14 +81,14 @@ const save = async () => {
     try {
       let oldExtraServerName = websiteInfo.extraServerName
       if (formData.extraServerName !== oldExtraServerName) {
-
-        if (oldExtraServerName && await Website.getSameDomainAmount(oldExtraServerName) === 0) {
+        //删除旧的第二域名对应的hosts文件配置
+        if (oldExtraServerName) {
           await Hosts.delete(oldExtraServerName)
         }
+        //增加新的第二域名对应的hosts文件配置
         if (formData.extraServerName) {
           await Hosts.add(formData.extraServerName)
         }
-
       }
     } catch (error) {
       MessageBox.error(error.message ?? error, '同步Hosts出错！')

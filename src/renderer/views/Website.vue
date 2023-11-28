@@ -141,11 +141,9 @@ const del = async (item) => {
 
   if (item.syncHosts) {
     try {
-      if (await Website.getSameDomainAmount(item.serverName) === 0) {
-        await Hosts.delete(item.serverName);
-      }
-
-      if (item.extraServerName && await Website.getSameDomainAmount(item.extraServerName) === 0) {
+      await Hosts.delete(item.serverName);
+      //删除第二域名时，删除对应的hosts文件配置
+      if (item.extraServerName) {
         await Hosts.delete(item.extraServerName);
       }
     } catch (error) {

@@ -125,9 +125,15 @@ export default class Nginx {
         }
     }
 
-    static websiteExists(serverName, port) {
-        let confPath = this.getWebsiteConfPath(this.getWebsiteConfName(serverName, port));
-        return FileUtil.Exists(confPath);
+    static async websiteExists(serverName, port) {
+        const vhostsPath = GetPath.getNginxVhostsDir()
+        const files = Directory.GetFiles(vhostsPath)
+        const filterArr = await files.filterAsync(async (path) => {
+            let confText = FileUtil.ReadAllText(path)
+            let regExp = new RegExp('server_name.+' + serverName.replaceAll('.', '\\.'))
+            return regExp.test(confText) && this.getPortByConfPath(path) === port
+        })
+        return filterArr.length > 0
     }
 
     static getWebsiteConfPath(confName) {
@@ -171,24 +177,12 @@ export default class Nginx {
     }
 
     /**
-     *
-     * @param domain
-     * @returns {Promise<number>}
+     * 获取端口号，根据配置文件路径名
+     * @param path
+     * @returns {number}
      */
-    static async getSameDomainAmount(domain) {
-        let vhostsPath = GetPath.getNginxVhostsDir();
-        if (!Directory.Exists(vhostsPath)) {
-            return 0;
-        }
-        let files = Directory.GetFiles(vhostsPath);
-        // array.filter不能使用async方法
-        let list = await Promise.all(files.map(async path => {
-            let confText = FileUtil.ReadAllText(path);
-            let regExp = new RegExp('server_name.+' + domain.replaceAll('.', '\\.'));
-            return confText.match(regExp);
-        }));
-
-        return list.filter(item => !!item).length;
+    static getPortByConfPath(path){
+        return Number(Path.GetFileNameWithoutExtension(path).split('_')[1])
     }
 
     static getErrorLogOffValue(){

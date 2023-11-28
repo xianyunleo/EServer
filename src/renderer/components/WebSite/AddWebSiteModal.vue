@@ -84,8 +84,6 @@ const serverNameChange = () => {
 const addWebClick = async () => {
   try {
     let values = await formRef.value.validateFields()
-    visible.value = false
-    formRef.value.resetFields()
     await addWeb(values)
     search()
   } catch (errorInfo) {
@@ -95,12 +93,13 @@ const addWebClick = async () => {
 
 const addWeb = async (websiteInfo) => {
   try {
-    Website.add(websiteInfo)
+    await Website.add(websiteInfo)
   } catch (error) {
     MessageBox.error(error.message ?? error, '添加网站出错！')
     return
   }
-
+  visible.value = false
+  formRef.value.resetFields()
   if (websiteInfo.syncHosts) {
     try {
       await Hosts.add(websiteInfo.serverName)
