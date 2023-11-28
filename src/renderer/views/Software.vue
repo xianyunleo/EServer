@@ -294,6 +294,9 @@ const localInstall = async () => {
     store.loadingTip = t('Installing')
     await LocalInstall.install(path)
     item.Installed = true
+    if (softwareTypeSelected.value === InstalledType) {
+      setShowList(InstalledType)
+    }
   } catch (error) {
     MessageBox.error(error.message ?? error)
   } finally {
