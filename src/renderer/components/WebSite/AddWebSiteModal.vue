@@ -48,13 +48,12 @@ import GetPath from '@/shared/utils/GetPath'
 import MessageBox from '@/renderer/utils/MessageBox'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import Hosts from '@/main/utils/Hosts'
-import { replaceSlash } from '@/shared/utils/utils'
 import Settings from '@/main/Settings'
 import { mt, t } from '@/shared/utils/i18n'
 import { useMainStore } from '@/renderer/store'
 const { search, addModalVisible: visible } = inject('WebsiteProvide')
 
-const wwwPath = replaceSlash(GetPath.getWebsiteDir())
+const wwwPath = GetPath.getWebsiteDir().replaceSlash()
 const formRef = ref()
 const { serverReactive } = inject('GlobalProvide')
 const store = useMainStore()
@@ -79,7 +78,7 @@ phpVersionList.value.push({ value: '', label: t('Static') })
 
 const serverNameChange = () => {
   formData.serverName = formData.serverName?.trim().replaceAll(/[^-a-zA-Z0-9.]/g, '')
-  formData.rootPath = replaceSlash(path.join(wwwPath, formData.serverName))
+  formData.rootPath = path.join(wwwPath, formData.serverName).replaceSlash()
 }
 
 const addWebClick = async () => {

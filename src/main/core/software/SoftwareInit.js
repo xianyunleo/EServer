@@ -2,17 +2,12 @@ import GetPath from "@/shared/utils/GetPath";
 import FileUtil from "@/main/utils/FileUtil";
 import Path from "@/main/utils/Path";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
-import StringExtend from "@/main/core/baseClass/StringExtend";
 import Directory from "@/main/utils/Directory";
 import Php from "@/main/core/php/Php";
  import Database from "@/main/core/Database";
 import {isWindows } from '@/main/utils/utils'
 
-export default class SoftwareInit extends StringExtend{
-    static {
-        super.init();
-    }
-
+export default class SoftwareInit{
     static async initAll() {
         await Promise.all([
             this.initNginx(),

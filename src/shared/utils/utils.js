@@ -1,23 +1,49 @@
 //通用且与项目无关的方法
 
-export function trim(str, char, type) {
-    if (char) {
-        if (type === 'left') {
-            return str.replace(new RegExp('^\\' + char + '+', 'g'), '')
-        } else if (type === 'right') {
-            return str.replace(new RegExp('\\' + char + '+$', 'g'), '')
-        }
-        return str.replace(new RegExp('^\\' + char + '+|\\' + char + '+$', 'g'), '')
+export function extendPrototype() {
+    /**
+     * 将反斜杠替换成正斜杠
+     * @returns {string}
+     */
+    String.prototype.replaceSlash = function () {
+        return this.replaceAll('\\', '/')
     }
-    return str.replace(/^\s+|\s+$/g, '')
-}
+    /**
+     * 去除字符串首位的空白或指定字符
+     * @param char
+     * @param type
+     * @returns {string}
+     */
+    String.prototype.trim = function (char = '', type = '') {
+        if (char) {
+            if (type === 'left') {
+                return this.replace(new RegExp('^\\' + char + '+', 'g'), '')
+            } else if (type === 'right') {
+                return this.replace(new RegExp('\\' + char + '+$', 'g'), '')
+            }
+            return this.replace(new RegExp('^\\' + char + '+|\\' + char + '+$', 'g'), '')
+        }
+        return this.replace(/^\s+|\s+$/g, '')
+    }
+    String.prototype.trimStart = function (char) {
+        return this.trim(char, 'left')
+    }
+    String.prototype.trimEnd = function (char) {
+        return this.trim(char, 'right')
+    }
 
-export function trimStart(str, char) {
-    return trim(str, char, 'left')
-}
-
-export function trimEnd(str, char) {
-    return trim(str, char, 'right')
+    /**
+     * 筛选数组，根据 async callback
+     * @param asyncFunc
+     * @returns {Promise<*[]>}
+     */
+    Array.prototype.filterAsync = async function (asyncFunc) {
+        const results = await Promise.all(this.map(async (item) => {
+            const include = await asyncFunc(item)
+            return { item, include }
+        }))
+        return results.filter((v) => v.include).map((v) => v.item)
+    }
 }
 
 export function enumGetName(enumObj, val) {

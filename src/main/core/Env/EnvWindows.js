@@ -1,7 +1,6 @@
 import Command from "@/main/utils/Command";
 import GetPath from "@/shared/utils/GetPath";
 import { PowerShell } from '@/main/utils/constant'
-import { trimEnd } from '@/shared/utils/utils'
 
 export default class EnvWindows {
     static _pathVarName = 'PATH'
@@ -11,8 +10,8 @@ export default class EnvWindows {
         const varVal = await this.getVarStr(this._pathVarName)
         if (enable) {
             if (!varVal.includes(binPath)) {
-                const newVal = `${trimEnd(varVal,';')};${binPath}`
-                await this.setVarStr(this._pathVarName, newVal)
+               const newVal = `${varVal.trimEnd(';')};${binPath}`
+               await this.setVarStr(this._pathVarName, newVal)
             }
         } else {
             //disable remove。假设varVal只有${binPath}一个，那是没有;的，所以要执行第二次replace
