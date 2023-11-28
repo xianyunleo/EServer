@@ -68,13 +68,4 @@ export default class Env {
             await EnvWindows.switch(enable);
         }
     }
-
-    static async IsEnabled() {
-        if (isMacOS) {
-            return await EnvMacOS.IsEnabled();
-        } else if (isWindows) {
-            return await EnvWindows.IsEnabled();
-        }
-        return false;
-    }
 }
