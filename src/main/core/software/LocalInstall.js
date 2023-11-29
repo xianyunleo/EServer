@@ -5,19 +5,24 @@ import CommonInstall from "@/main/core/software/CommonInstall";
 
 
 export default class LocalInstall {
-    static async install(filePath) {
-        const dirName = this.getDirName(filePath);
-        const dest = await this.getDestPath(dirName);
-        if (!dest) return;
-        await CommonInstall.extract(filePath, dest);
-        FileUtil.Delete(filePath);
-        await CommonInstall.configure(dirName);
+    /**
+     * 执行本地安装
+     * @param filePath 压缩包文件路径
+     * @param deleteSrc 安装后是否删除源压缩包文件
+     * @returns {Promise<void>}
+     */
+    static async install(filePath, deleteSrc = false) {
+        const dirName = this.getDirName(filePath)
+        const dest = await this.getDestPath(dirName)
+        if (!dest) return
+        await CommonInstall.extract(filePath, dest)
+        if (deleteSrc) FileUtil.Delete(filePath)
+        await CommonInstall.configure(dirName)
     }
-
 
     static async installMultiple(files) {
         await Promise.all(files.map(async install => {
-            await LocalInstall.install(install);
+            await LocalInstall.install(install,true);
         }));
     }
 
