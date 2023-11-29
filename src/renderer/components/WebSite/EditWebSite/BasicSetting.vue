@@ -25,6 +25,11 @@
     <a-form-item :label="mt('Sync','ws')+'hosts'" name='syncHosts'>
       <a-switch v-model:checked='formData.syncHosts' :disabled='true' />
     </a-form-item>
+
+    <a-form-item :label="mt('Note')" name='note'>
+      <a-input v-model:value='formData.note' :maxlength='20'
+               :placeholder='t("defaultIsEmpty")' spellcheck='false' />
+    </a-form-item>
   </a-form>
 
   <div style='text-align: center'>

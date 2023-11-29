@@ -7,6 +7,7 @@ export default {
     Modify: 'Modify',
     Basic: 'Basic',
     Conf: 'Conf',
+    Column:'Column',
     File: 'File',
     Name: 'Name',
     Manage: 'Manage',
@@ -42,6 +43,7 @@ export default {
     Open: 'Open',
     Exit: 'Exit',
     Save: 'Save',
+    Show: 'Show',
     Install: 'Install',
     Extension: 'Extension',
     Uninstall: 'Uninstall',
@@ -87,6 +89,7 @@ export default {
     Warning: 'Warning',
     Match:'Match',
     Script:'Script',
+    Note:'Note',
     //Lowercase
     none: 'none',
     auto: 'auto',

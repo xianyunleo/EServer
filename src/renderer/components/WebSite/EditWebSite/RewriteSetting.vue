@@ -15,7 +15,7 @@
       </a-select>
     </a-form-item>
     <a-form-item label="">
-      <a-textarea v-model:value="formData.rewriteContent" :auto-size="{ minRows: 8, maxRows: 8}" />
+      <a-textarea v-model:value="formData.rewriteContent" :auto-size="{ minRows: 10, maxRows:10}" />
     </a-form-item>
   </a-form>
 

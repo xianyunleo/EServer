@@ -28,6 +28,7 @@ export default class NginxWebsite {
     }
 
     getBasicInfo() {
+        const extraInfo = this.getExtraInfo()
         return {
             confName: this.confName,
             serverName: this.serverName,
@@ -35,7 +36,8 @@ export default class NginxWebsite {
             port: this.getPort(),
             rootPath: this.getRootPath(),
             phpVersion: this.getPHPVersion() ?? '',
-            syncHosts: this.getExtraInfo('syncHosts') ?? false,
+            syncHosts: extraInfo?.syncHosts ?? false,
+            note: extraInfo?.note ?? '',
         }
     }
 
@@ -92,7 +94,7 @@ export default class NginxWebsite {
         text = text.replace(/(?<=root\s+)\S+(?=\s*;)/, websiteInfo.rootPath);
         this.confText = text;
         this.setPHPVersion(websiteInfo.phpVersion);
-        this.setExtraInfo({syncHosts: websiteInfo.syncHosts});
+        this.setExtraInfo({syncHosts: websiteInfo.syncHosts, note:websiteInfo.note});
         FileUtil.WriteAllText(this.confPath, this.confText);
     }
 

@@ -47,7 +47,7 @@ const editAfter = (phpVersion = '') => {
 
 <style scoped lang='less'>
 .modal-content {
-  height: 350px;
+  height: 380px;
 
   .tabs {
     height: 100%;

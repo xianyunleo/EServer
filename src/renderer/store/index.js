@@ -18,7 +18,8 @@ export const useMainStore = defineStore('main', {
             loading: false,
             loadingTip: 'Loading',
             settings: {},
-            customTheme: {}
+            customTheme: {},
+            websiteList: { showSecondDomainName: false, showNote: false },
         }
     },
     getters: {

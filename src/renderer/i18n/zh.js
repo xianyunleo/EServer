@@ -7,6 +7,7 @@ export default {
     Modify: '修改',
     Basic: '基本',
     Conf: '配置',
+    Column:'列',
     File: '文件',
     Name: '名称',
     Manage: '管理',
@@ -42,6 +43,7 @@ export default {
     Open: '打开',
     Exit: '退出',
     Save: '保存',
+    Show: '显示',
     Install: '安装',
     Extension: '扩展',
     Uninstall: '卸载',
@@ -88,6 +90,7 @@ export default {
     Warning: '警告',
     Match:'匹配',
     Script:'脚本',
+    Note:'备注',
     //Lowercase
     none: '无',
     auto: '自动',
