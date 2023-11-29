@@ -2,7 +2,7 @@
   "name": "eserver",
   "productName": "EServer",
   "version": "2.2.6",
-  "description": "An Electron application with Vue",
+  "description": "EServer",
   "main": "./out/main/index.js",
   "author": "example.com",
   "homepage": "https://github.com/xianyunleo/EServer",
