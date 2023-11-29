@@ -14,7 +14,7 @@ export function extendPrototype() {
      * @param type
      * @returns {string}
      */
-    String.prototype.trim = function (char = '', type = '') {
+    String.prototype.trimChar = function (char = '', type = '') {
         if (char) {
             if (type === 'left') {
                 return this.replace(new RegExp('^\\' + char + '+', 'g'), '')
@@ -25,10 +25,10 @@ export function extendPrototype() {
         }
         return this.replace(/^\s+|\s+$/g, '')
     }
-    String.prototype.trimStart = function (char) {
+    String.prototype.trimCharStart = function (char) {
         return this.trim(char, 'left')
     }
-    String.prototype.trimEnd = function (char) {
+    String.prototype.trimCharEnd = function (char) {
         return this.trim(char, 'right')
     }
 
