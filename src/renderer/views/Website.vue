@@ -8,7 +8,7 @@
       </div>
     </a-card>
 
-    <a-card size="small" style='margin-top:20px'>
+    <a-card size="small" style='margin-top:15px'>
       {{mt('Show','ws', 'Column')}}：
       <a-checkbox v-model:checked='store.websiteList.showSecondDomainName'>
         {{ mt('Second', 'ws', 'DomainName') }}
@@ -18,7 +18,7 @@
       </a-checkbox>
     </a-card>
 
-    <a-table :scroll="{y: 'calc(100vh - 250px)'}"
+    <a-table :scroll="{y: 'calc(100vh - 245px)'}"
              :columns="columns"
              :data-source="list"
              class="content-table web-table scroller"
@@ -77,7 +77,7 @@ const columns = computed(() => {
   return [
     {
       title: t('DomainName'),
-      width: 120,
+      width: 150,
       dataIndex: 'serverName',
       ellipsis: true
     },
@@ -90,7 +90,7 @@ const columns = computed(() => {
     },
     {
       title: mt('Note'),
-      width: 100,
+      width: 120,
       dataIndex: 'note',
       ellipsis: true,
       hidden: !store.websiteList.showNote
