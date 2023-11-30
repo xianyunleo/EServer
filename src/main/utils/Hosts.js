@@ -1,24 +1,9 @@
 import GetPath from "@/shared/utils/GetPath";
-import fs from "fs";
 import {EOL} from "os";
-import Command from "@/main/utils/Command";
 import FileUtil from "@/main/utils/FileUtil";
+import FsUtil from '@/main/utils/FsUtil'
 
 export default class Hosts {
-    /**
-     *
-     * @returns {boolean}
-     */
-    static canEditHosts() {
-        let path = GetPath.getHostsPath();
-        try {
-            fs.accessSync(path, fs.constants.R_OK | fs.constants.W_OK);
-            return true;
-        } catch {
-            return false;
-        }
-    }
-
     /**
      * 添加一条127.0.0.1的host，已有则不添加
      * @param domain {string}
@@ -37,10 +22,10 @@ export default class Hosts {
 
         appendText += `127.0.0.1 ${domain}${EOL}`;
 
-        if (FileUtil.Exists(path) && !Hosts.canEditHosts()) {
-            await Command.sudoExec(`chmod 666 ${path}`);
+        if (FileUtil.Exists(path) && !await FsUtil.CanReadWrite(path)) {
+            await FsUtil.ChmodReadWrite(path)
         }
-        FileUtil.AppendAllText(path, appendText);
+        await FileUtil.AppendAllText(path, appendText);
     }
 
     /**
@@ -52,8 +37,8 @@ export default class Hosts {
         if (!FileUtil.Exists(path)) {
             return;
         }
-        if (!Hosts.canEditHosts()) {
-            await Command.sudoExec(`chmod 666 ${path}`);
+        if (!await FsUtil.CanReadWrite(path)) {
+            await FsUtil.ChmodReadWrite(path)
         }
         let text = FileUtil.ReadAllText(path);
         let domainRegx = this.getDomainRegExp(domain);
