@@ -130,8 +130,8 @@ export default class Nginx {
         const files = Directory.GetFiles(vhostsPath)
         const filterArr = await files.filterAsync(async (path) => {
             let confText = FileUtil.ReadAllText(path)
-            let regExp = new RegExp('server_name.+' + serverName.replaceAll('.', '\\.'))
-            return regExp.test(confText) && this.getPortByConfPath(path) === port
+            const serverNames = this.getAllServerName(confText)
+            return serverNames.includes(serverName) && this.getPortByConfPath(path) === port
         })
         return filterArr.length > 0
     }
@@ -146,6 +146,16 @@ export default class Nginx {
 
     static getWebsiteRewriteConfPath(confName) {
         return path.join(GetPath.getNginxVhostsRewriteDir(), confName);
+    }
+
+    static getAllServerName(text) {
+        const matches = text.match(/server_name\s+(.+);/)
+        if (matches) {
+            const groupStr = matches[1]
+            return groupStr.trim().split(/\s+/)
+        } else {
+            return []
+        }
     }
 
     /**

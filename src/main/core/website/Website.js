@@ -60,9 +60,9 @@ export default class Website {
         return Nginx.getRewriteByRule(ruleName);
     }
 
-    static saveBasicInfo(confName, websiteInfo) {
+    static async saveBasicInfo(confName, websiteInfo) {
         let webSite = new NginxWebsite(confName);
-        webSite.setBasicInfo(websiteInfo);
+        await webSite.setBasicInfo(websiteInfo);
         webSite.save();
     }
 

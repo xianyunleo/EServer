@@ -41,9 +41,10 @@ export default class NginxWebsite {
         }
     }
 
-    getExtraServerName(){
-        let matches = this.confText.match(/server_name\s+[^\s;]+\s*(.+)?\s*;/);
-        return matches ? matches[1] : null;
+    getExtraServerName() {
+        const allServerName = Nginx.getAllServerName(this.confText)
+        //目前只获取第二个域名
+        return allServerName[1] ?? null
     }
 
     static getRewrite(confName) {
@@ -81,10 +82,13 @@ export default class NginxWebsite {
         return key ? extraObj[key] : extraObj;
     }
 
-    setBasicInfo(websiteInfo) {
+    async setBasicInfo(websiteInfo) {
         let text = this.confText;
         let serverNameStr;
         if (websiteInfo.extraServerName) {
+            if (await Nginx.websiteExists(websiteInfo.extraServerName, websiteInfo.port)) {
+                throw new Error('第二域名不能重复！')
+            }
             serverNameStr = `server_name ${this.serverName} ${websiteInfo.extraServerName};`;
         } else {
             serverNameStr = `server_name ${this.serverName};`;
@@ -94,7 +98,7 @@ export default class NginxWebsite {
         text = text.replace(/(?<=root\s+)\S+(?=\s*;)/, websiteInfo.rootPath);
         this.confText = text;
         this.setPHPVersion(websiteInfo.phpVersion);
-        this.setExtraInfo({syncHosts: websiteInfo.syncHosts, note:websiteInfo.note});
+        this.setExtraInfo({ syncHosts: websiteInfo.syncHosts, note: websiteInfo.note });
         FileUtil.WriteAllText(this.confPath, this.confText);
     }
 

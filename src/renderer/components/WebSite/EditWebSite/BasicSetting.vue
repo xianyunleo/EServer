@@ -80,6 +80,7 @@ const save = async () => {
     search()
   } catch (error) {
     MessageBox.error(error.message ?? error, '保存出错！')
+    return
   }
 
   if (websiteInfo.syncHosts) {
