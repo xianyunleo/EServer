@@ -17,11 +17,11 @@ export default class Software {
      * @returns {Promise<SoftwareItem[]>}
      */
     static async getList() {
-        if (Software.#list) {
-            return Software.#list;
+        if (Software.#list && Software.#list.length > 0) {
+            return Software.#list
         }
-        await this.initList();
-        return Software.#list;
+        await this.initList()
+        return Software.#list
     }
 
     static async initList() {
@@ -30,17 +30,20 @@ export default class Software {
         let softConfigPath = path.join(softPath, 'software.json');
         let softIconPath = 'file://' + path.join(softPath, '/icon');
 
-        let list;
+        let list
         try {
-            list = JSON.parse(FileUtil.ReadAllText(softConfigPath));
+            if (FileUtil.Exists(softConfigPath)) {
+                list = JSON.parse(FileUtil.ReadAllText(softConfigPath))
+            } else {
+                list = []
+            }
         } catch {
-            throw new Error(`${softConfigPath} 配置文件错误！`);
+            throw new Error(`${softConfigPath} 配置文件错误！`)
         }
 
         list = await Promise.all(list.map(async item => {
             const Icon = path.join(softIconPath, item.Icon)
-            const Installed = Software.IsInstalled(item)
-            return { ...item, Icon, Installed }
+            return { ...item, Icon }
         }))
 
         Software.#list = list;

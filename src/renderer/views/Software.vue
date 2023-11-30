@@ -148,10 +148,6 @@ if (!softwareTypeSelected.value) {
   softwareTypeSelected.value = InstalledType
 }
 
-for (const item of softwareList.value) {
-  item.Installed = Software.IsInstalled(item)
-}
-
 const setShowList = (type) => {
   for (const item of softwareList.value) {
     if (type === InstalledType) {

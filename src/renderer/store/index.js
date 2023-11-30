@@ -39,7 +39,11 @@ export const useMainStore = defineStore('main', {
             await this.changeTheme(this.settings.ThemeMode, this.settings.ThemeColor);
         },
         async refreshSoftwareList() {
-            this.softwareList = await Software.getList()
+            const list = await Software.getList()
+            this.softwareList = await Promise.all(list.map(async item => {
+                const Installed = Software.IsInstalled(item)
+                return { ...item, Installed }
+            }))
             this.nginxServer = this.softwareList.find((item) => item.Name === 'Nginx')
         },
         async setSettings(key, callback = null) {

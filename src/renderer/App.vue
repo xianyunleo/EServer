@@ -25,7 +25,7 @@ import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import TitleBar from "./components/TitleBar.vue";
 import SideBar from "./components/SideBar.vue";
 import App from "@/main/App";
-import { provide, reactive, ref, watch } from 'vue'
+import { computed, provide, reactive, ref, watch } from 'vue'
 import MessageBox from "@/renderer/utils/MessageBox";
 import UserPwdModal from "@/renderer/components/UserPwdModal.vue";
 import Software from "@/main/core/software/Software";
@@ -52,53 +52,56 @@ provide('GlobalProvide', { serverReactive });
 
 (async () => {
   try {
-    await Software.initList()
+    if (App.initFileExists() && !isDev) {
+      await initOrUpdate()
+    }
+
     await store.init()
+
+    store.loadingTip = computed(() => t('Initializing'))
+    locale.value = store.settings.Language
+    TrayManage.set()
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]))
     App.exit()
   }
-  store.loadingTip = t('Initializing')
-  locale.value = store.settings.Language
-  TrayManage.set()
-  TrayManage.refresh()
 
   if (isWindows) {
     stopWebService()
   }
 
-  if (!App.initFileExists() || isDev) {
-    return
-  }
+})()
+
+async function initOrUpdate() {
   //存在initFile文件的情况下，判断是第一次安装，还是覆盖安装
   if (!Software.DirExists()) { //目录不存在说明是第一次安装
     if (isMacOS) {
       //调用设置（electron-store）会自动创建USER_CORE_DIR，为了捕捉创建失败的错误，先提前写好创建文件夹的代码。
-      await macCreateUserCoreDir();
+      await macCreateUserCoreDir()
     }
-    setLanguageShow.value = true;
+    setLanguageShow.value = true
     watch(setLanguageShow, async setLanguageShow => {
       if (!setLanguageShow) {
         if (isWindows) {
-          await winInit();
+          await winInit()
         } else if (isMacOS) {
-          userPwdModalShow.value = true;
+          userPwdModalShow.value = true
         }
       }
     })
   } else {
     //覆盖安装
     if (isMacOS) {
-      await update();
+      await update()
     }
   }
-})()
+}
 
 async function winInit() {
   try {
     store.loading = true;
     await App.init();
-    store.refreshSoftwareList();
+    await store.refreshSoftwareList();
     store.loading = false;
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]));

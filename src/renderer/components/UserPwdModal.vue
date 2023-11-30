@@ -74,7 +74,7 @@ const saveUserPwd = async () => {
     try {
       store.loading = true;
       await App.init();
-      store.refreshSoftwareList();
+      await store.refreshSoftwareList();
       store.loading = false;
     } catch (error) {
       await MessageBox.error(error.message ?? error,t('errorOccurredDuring', [t('initializing')]));
