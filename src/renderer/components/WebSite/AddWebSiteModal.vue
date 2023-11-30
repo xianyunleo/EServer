@@ -48,15 +48,15 @@ import GetPath from '@/shared/utils/GetPath'
 import MessageBox from '@/renderer/utils/MessageBox'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import Hosts from '@/main/utils/Hosts'
-import { replaceSlash } from '@/shared/utils/utils'
 import Settings from '@/main/Settings'
 import { mt, t } from '@/shared/utils/i18n'
-const { settingsReactive } = inject('GlobalProvide')
+import { useMainStore } from '@/renderer/store'
 const { search, addModalVisible: visible } = inject('WebsiteProvide')
 
-const wwwPath = replaceSlash(GetPath.getWebsiteDir())
+const wwwPath = GetPath.getWebsiteDir().replaceSlash()
 const formRef = ref()
 const { serverReactive } = inject('GlobalProvide')
+const store = useMainStore()
 
 const formData = reactive({
   serverName: '',
@@ -66,8 +66,8 @@ const formData = reactive({
   syncHosts: true
 })
 
-const labelColSpan = settingsReactive.Language === 'zh' ? 6 : 8;
-const wrapperColSpan = settingsReactive.Language === 'zh' ? 18 : 16;
+const labelColSpan = store.settings.Language === 'zh' ? 6 : 8;
+const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 16;
 
 const phpVersionList = ref([])
 let list = SoftwareExtend.getPHPList()
@@ -78,14 +78,12 @@ phpVersionList.value.push({ value: '', label: t('Static') })
 
 const serverNameChange = () => {
   formData.serverName = formData.serverName?.trim().replaceAll(/[^-a-zA-Z0-9.]/g, '')
-  formData.rootPath = replaceSlash(path.join(wwwPath, formData.serverName))
+  formData.rootPath = path.join(wwwPath, formData.serverName).replaceSlash()
 }
 
 const addWebClick = async () => {
   try {
     let values = await formRef.value.validateFields()
-    visible.value = false
-    formRef.value.resetFields()
     await addWeb(values)
     search()
   } catch (errorInfo) {
@@ -95,12 +93,13 @@ const addWebClick = async () => {
 
 const addWeb = async (websiteInfo) => {
   try {
-    Website.add(websiteInfo)
+    await Website.add(websiteInfo)
   } catch (error) {
     MessageBox.error(error.message ?? error, '添加网站出错！')
     return
   }
-
+  visible.value = false
+  formRef.value.resetFields()
   if (websiteInfo.syncHosts) {
     try {
       await Hosts.add(websiteInfo.serverName)
@@ -109,8 +108,8 @@ const addWeb = async (websiteInfo) => {
     }
   }
 
-  if (serverReactive.nginxItem.isRunning && Settings.get('AutoStartAndRestartServer')) {
-    serverReactive.restartFn(serverReactive.nginxItem)
+  if (store.nginxServer.isRunning && Settings.get('AutoStartAndRestartServer')) {
+    serverReactive.restartFn(store.nginxServer)
     if (websiteInfo.phpVersion) {
       serverReactive.startPhpFpmFn(websiteInfo.phpVersion)
     }

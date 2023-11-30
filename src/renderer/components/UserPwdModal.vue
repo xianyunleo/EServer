@@ -25,9 +25,7 @@ import SystemExtend from "@/main/utils/SystemExtend";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {useMainStore} from "@/renderer/store";
 import {mt,t}  from '@/shared/utils/i18n'
-const mainStore = useMainStore();
-
-const { globalReactive } = inject('GlobalProvide')
+const store = useMainStore();
 
 const props =  defineProps({
   show:Boolean,
@@ -74,10 +72,10 @@ const saveUserPwd = async () => {
   visible.value = false;
   if (App.initFileExists()) {
     try {
-      globalReactive.loading = true;
+      store.loading = true;
       await App.init();
-      mainStore.$reset();
-      globalReactive.loading = false;
+      await store.refreshSoftwareList();
+      store.loading = false;
     } catch (error) {
       await MessageBox.error(error.message ?? error,t('errorOccurredDuring', [t('initializing')]));
       App.exit();

@@ -8,10 +8,11 @@ export default class Website {
      *
      * @param websiteInfo {WebsiteItem}
      */
-    static add(websiteInfo) {
-        if (Nginx.websiteExists(websiteInfo.serverName, websiteInfo.port)) {
+    static async add(websiteInfo) {
+        if (await Nginx.websiteExists(websiteInfo.serverName, websiteInfo.port)) {
             throw new Error('网站已经存在！');
         }
+
         if (!FileUtil.Exists(websiteInfo.rootPath)) {
             try {
                 Directory.CreateDirectory(websiteInfo.rootPath)
@@ -30,9 +31,9 @@ export default class Website {
         return await Nginx.getWebsiteList(search);
     }
 
-    static  getBasicInfo(confName) {
+    static getBasicInfo(confName) {
         let webSite = new NginxWebsite(confName);
-        return  webSite.getBasicInfo();
+        return webSite.getBasicInfo();
     }
 
     static getRewrite(confName) {
@@ -59,9 +60,9 @@ export default class Website {
         return Nginx.getRewriteByRule(ruleName);
     }
 
-    static saveBasicInfo(confName, websiteInfo) {
+    static async saveBasicInfo(confName, websiteInfo) {
         let webSite = new NginxWebsite(confName);
-        webSite.setBasicInfo(websiteInfo);
+        await webSite.setBasicInfo(websiteInfo);
         webSite.save();
     }
 
@@ -69,12 +70,4 @@ export default class Website {
         NginxWebsite.saveRewrite(confName, content);
     }
 
-    /**
-     *
-     * @param domain
-     * @returns {Promise<number>}
-     */
-    static async getSameDomainAmount(domain) {
-        return await Nginx.getSameDomainAmount(domain);
-    }
 }

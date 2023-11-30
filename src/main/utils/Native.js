@@ -2,12 +2,12 @@ import { electronRequire } from '@/main/utils/electron'
 import Command from "@/main/utils/Command";
 import MessageBox from "@/renderer/utils/MessageBox";
 import fixPath from "fix-path";
-import Hosts from "@/main/utils/Hosts";
 import GetPath from "@/shared/utils/GetPath";
 import FileUtil from "@/main/utils/FileUtil";
 import Settings from "@/main/Settings";
 import fs from "fs";
 import { isMacOS, isWindows } from '@/main/utils/utils'
+import FsUtil from '@/main/utils/FsUtil'
 
 const shell = electronRequire('shell')
 
@@ -84,15 +84,10 @@ export default class Native {
     }
 
     static async openHosts() {
-        let path = GetPath.getHostsPath();
-        if (isWindows) {
-            await Native.openTextFile(path);
-        } else {
-            if (!Hosts.canEditHosts()) {
-                await Command.sudoExec(`chmod 666 ${path}`);
-            }
-            await Native.openTextFile(path);
+        let path = GetPath.getHostsPath()
+        if (FileUtil.Exists(path) && !await FsUtil.CanReadWrite(path)) {
+            await FsUtil.ChmodReadWrite(path)
         }
+        await Native.openTextFile(path)
     }
-
 }

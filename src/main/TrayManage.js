@@ -8,7 +8,7 @@ import GetPath from '@/shared/utils/GetPath'
 
 export default class TrayManage {
     static #_instance;
-    static set() {
+    static init() {
         let iconPath = this.getIconPath();
         let icon = nativeImage.createFromPath(iconPath).resize({ width: 18, height: 18 })
         icon.setTemplateImage(true)

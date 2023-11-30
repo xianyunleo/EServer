@@ -6,7 +6,6 @@ import Directory from "@/main/utils/Directory";
 import FileUtil from "@/main/utils/FileUtil";
 
 export default class Software {
-
     static #list;
 
     static DirExists() {
@@ -14,35 +13,40 @@ export default class Software {
     }
 
     /**
-     *
-     * @returns {[]}
+     * 获取软件列表
+     * @returns {Promise<SoftwareItem[]>}
      */
-    static getList() {
-        if (Software.#list) {
-            return Software.#list;
+    static async getList() {
+        if (Software.#list && Software.#list.length > 0) {
+            return Software.#list
         }
-        this.initList();
-        return Software.#list;
+        await this.initList()
+        return Software.#list
     }
 
-    static initList() {
+    static async initList() {
         let corePath = App.getCoreDir();
         let softPath = path.join(corePath, '/config/software');
         let softConfigPath = path.join(softPath, 'software.json');
         let softIconPath = 'file://' + path.join(softPath, '/icon');
 
-        let list;
+        let list
         try {
-            list = JSON.parse(FileUtil.ReadAllText(softConfigPath));
+            if (FileUtil.Exists(softConfigPath)) {
+                list = JSON.parse(FileUtil.ReadAllText(softConfigPath))
+            } else {
+                list = []
+            }
         } catch {
-            throw new Error(`${softConfigPath} 配置文件错误！`);
+            throw new Error(`${softConfigPath} 配置文件错误！`)
         }
 
-        for (const item of list) {
-            item.Icon = path.join(softIconPath, item.Icon);
-        }
+        list = await Promise.all(list.map(async item => {
+            const Icon = path.join(softIconPath, item.Icon)
+            return { ...item, Icon }
+        }))
+
         Software.#list = list;
-        return list;
     }
 
     /**

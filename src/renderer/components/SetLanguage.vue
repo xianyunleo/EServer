@@ -6,7 +6,7 @@
     <div class="modal-content">
       <span> {{ t('Language') }} (Language)：</span>
       <a-select
-        v-model:value='settingsReactive.Language'
+        v-model:value='store.settings.Language'
         :options='languageOptions' @change='languageChange'
         placeholder='请选择' style='width: 200px'
       ></a-select>
@@ -19,19 +19,19 @@
 
 <script setup>
 import {t} from "@/shared/utils/i18n";
-import {computed, inject} from "vue";
+import {computed} from "vue";
 import TrayManage from "@/main/TrayManage";
 import Settings from "@/main/Settings";
 import MessageBox from "@/renderer/utils/MessageBox";
-const { settingsReactive } = inject('GlobalProvide')
 import { useI18n } from 'vue-i18n'
+import { useMainStore } from '@/renderer/store'
 
 const { locale } = useI18n()
 const props =  defineProps({
   show:Boolean,
 })
 const emit = defineEmits(['update:show'])
-
+const store = useMainStore()
 const visible = computed({
   get() {
     return props.show;
@@ -50,9 +50,10 @@ const handleOk = () => {
 }
 
 const languageChange = () => {
+  //todo改调用 store.setSettings ，并测试init调用此
   try {
-    Settings.set('Language', settingsReactive.Language)
-    locale.value = settingsReactive.Language
+    Settings.set('Language', store.settings.Language)
+    locale.value = store.settings.Language
     TrayManage.refresh()
   } catch (error) {
     MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('set')]))

@@ -127,22 +127,13 @@ export default class Installer extends EventEmitter {
     }
 
     getFileName() {
-        let ext
-        if (this.softItem.RemoteFileExtension) {
-            ext = this.softItem.RemoteFileExtension
-        } else {
-            if (this.softItem.IsCommonPlatform) {
-                ext = '.zip'
-            } else {
-                ext = isWindows ? '.7z' : '.tar.xz'
-            }
-        }
+        const ext = this.softItem.RemoteArchiveExt ?? '.zip'
         return `${this.softItem.DirName}${ext}`
     }
 
     getDownloadUrl() {
         let url = `${DOWNLOAD_URL}/software`
-        if (this.softItem.IsCommonPlatform) {
+        if (this.softItem.RemoteIsCommonPlatform) {
             url = `${url}/common`;
         } else {
             if (isWindows) {

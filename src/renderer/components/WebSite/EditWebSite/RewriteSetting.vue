@@ -15,7 +15,7 @@
       </a-select>
     </a-form-item>
     <a-form-item label="">
-      <a-textarea v-model:value="formData.rewriteContent" :auto-size="{ minRows: 8, maxRows: 8}" />
+      <a-textarea v-model:value="formData.rewriteContent" :auto-size="{ minRows: 10, maxRows:10}" />
     </a-form-item>
   </a-form>
 
@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import {ref, inject, defineEmits} from "vue";
+import { ref, inject } from 'vue'
 import Website from "@/main/core/website/Website";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {message} from "ant-design-vue";

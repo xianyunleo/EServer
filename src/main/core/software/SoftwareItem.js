@@ -8,10 +8,11 @@ export default class SoftwareItem {
     ServerConfPath;
     Type;
     IsMacApp;
-    IsCommonPlatform;
-    RemoteFileExtension;
+    RemoteIsCommonPlatform;
+    RemoteArchiveExt;
     ShellServerProcess;
     CanDelete;
     Icon;
     Desc;
+    Installed;
 }

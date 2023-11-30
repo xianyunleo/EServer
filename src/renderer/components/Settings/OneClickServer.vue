@@ -4,7 +4,7 @@
       <a-col :span="24" class='flex-vertical-center'>
         <span>{{mt('Server','ws','List')}}：</span>
         <a-select
-            v-model:value="settingsReactive.OneClickServerList"
+            v-model:value="store.settings.OneClickServerList"
             :options="oneClickServerOptions"
             @change="oneClickServerChange"
             mode="multiple" placeholder="请选择" style="flex: 1"
@@ -15,26 +15,16 @@
 </template>
 
 <script setup>
-import {inject} from 'vue'
 import {useMainStore} from "@/renderer/store";
 import {storeToRefs} from "pinia";
-import Software from "@/main/core/software/Software";
 import { mt, t } from '@/shared/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
-const props = defineProps({
-  setFn: Function,
-})
-
-const { settingsReactive } = inject('GlobalProvide')
-const setFn = (key, callback = null) => props.setFn(key, callback)
-
-const mainStore = useMainStore();
-const {serverSoftwareList} = storeToRefs(mainStore);
+const store = useMainStore()
+const { serverList } = storeToRefs(store)
 //把PHP-FPM-X.X 过滤掉
-let serverList = serverSoftwareList.value.filter(item => Software.IsInstalled(item) && item.Type === 'Server');
-const oneClickServerOptions = serverList.map(item => {
+const oneClickServerOptions = serverList.value.map(item => {
   let name = item.Name;
   let obj = {value: name, name};
   if (name === 'Nginx') {
@@ -45,7 +35,7 @@ const oneClickServerOptions = serverList.map(item => {
 oneClickServerOptions.unshift({label: 'PHP-FPM', value: 'PHP-FPM'});
 
 const oneClickServerChange = () => {
-  setFn('OneClickServerList')
+  store.setSettings('OneClickServerList')
 }
 </script>
 

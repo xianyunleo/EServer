@@ -4,7 +4,7 @@
       <a-col :span='24' class='flex-vertical-center'>
         <span> {{ t('Language') }}：</span>
         <a-select
-          v-model:value='settingsReactive.Language'
+          v-model:value='store.settings.Language'
           :options='languageOptions' @change='languageChange'
           placeholder='请选择' style='width: 200px'
         ></a-select>
@@ -14,7 +14,7 @@
       <a-col :span='12' class='flex-vertical-center'>
         <span>{{ mt('Theme','ws','Mode') }}：</span>
         <a-select
-          v-model:value='settingsReactive.ThemeMode'
+          v-model:value='store.settings.ThemeMode'
           :options='modeOptions' @change='themeModeChange'
           placeholder='请选择' style='width: 200px'
         ></a-select>
@@ -22,7 +22,7 @@
       <a-col :span='12' class='flex-vertical-center'>
         <span>{{ mt('Theme','ws','Color') }}：</span>
         <a-select
-          v-model:value='settingsReactive.ThemeColor'
+          v-model:value='store.settings.ThemeColor'
           :options='colorOptions' @change='themeColorChange'
           placeholder='请选择' style='width: 200px'
         ></a-select>
@@ -32,21 +32,18 @@
 </template>
 
 <script setup>
-import {computed, inject} from 'vue'
+import {computed} from 'vue'
 import { useI18n } from 'vue-i18n'
 import {mt,t}  from '@/shared/utils/i18n'
 import TrayManage from '@/main/TrayManage'
 import { createAsyncComponent } from '@/renderer/utils/utils'
+import { useMainStore } from '@/renderer/store'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
-const { themeReactive, settingsReactive } = inject('GlobalProvide')
 const { locale } = useI18n()
-const props = defineProps({
-  setFn: Function
-})
-const setFn = (key, callback = null) => props.setFn(key, callback)
+const store = useMainStore()
 
-const languageOptions= [
+const languageOptions = [
   { label: '中文', value: 'zh' },
   { label: 'English', value: 'en' },
 ]
@@ -71,21 +68,21 @@ const colorOptions = computed(() => {
 })
 
 const languageChange = () => {
-  setFn('Language', async originVal => {
-    locale.value = settingsReactive.Language
+  store.setSettings('Language', async originVal => {
+    locale.value = store.settings.Language
     TrayManage.refresh()
   })
 }
 
 const themeModeChange = () => {
-  setFn('ThemeMode', async originVal => {
-    themeReactive.changeThemeFn(settingsReactive.ThemeMode, settingsReactive.ThemeColor)
+  store.setSettings('ThemeMode', async originVal => {
+    store.changeTheme(store.settings.ThemeMode, store.settings.ThemeColor)
   })
 }
 
 const themeColorChange = () => {
-  setFn('ThemeColor', async originVal => {
-    themeReactive.changeThemeFn(settingsReactive.ThemeMode, settingsReactive.ThemeColor)
+  store.setSettings('ThemeColor', async originVal => {
+    store.changeTheme(store.settings.ThemeMode, store.settings.ThemeColor)
   })
 }
 </script>

@@ -8,18 +8,23 @@
       </div>
     </a-card>
 
-    <a-table :scroll="{y: 'calc(100vh - 180px)'}"
+    <a-card size="small" style='margin-top:15px'>
+      {{mt('Show','ws', 'Column')}}：
+      <a-checkbox v-model:checked='store.websiteList.showSecondDomainName'>
+        {{ mt('Second', 'ws', 'DomainName') }}
+      </a-checkbox>
+      <a-checkbox v-model:checked="store.websiteList.showNote">
+        {{mt('Note')}}
+      </a-checkbox>
+    </a-card>
+
+    <a-table :scroll="{y: 'calc(100vh - 245px)'}"
              :columns="columns"
              :data-source="list"
              class="content-table web-table scroller"
              :pagination="false"
              size="middle">
       <template #bodyCell="{ column, text, record}">
-        <template v-if="column.dataIndex === 'serverName'">
-          <div>{{record.serverName}}</div>
-          <div v-if="record.extraServerName">{{record.extraServerName}}</div>
-        </template>
-
         <template v-if="column.dataIndex === 'operate'">
           <div class="operate">
             <a-dropdown :trigger="['click']">
@@ -45,12 +50,12 @@
       </template>
     </a-table>
   </div>
-  <add-web-site-modal  v-if="addModalVisible" />
+  <add-web-site-modal v-if="addModalVisible" />
   <edit-web-site-modal v-if="editModalVisible" /> <!--加v-if是为了后代组件重新加载，从而更新网站配置信息-->
 </template>
 
 <script setup>
-import {ref, provide} from "vue";
+import { ref, provide, computed } from 'vue'
 import InputWithSearch from "@/renderer/components/Input/InputWithSearch.vue";
 import AddWebSiteModal from "@/renderer/components/WebSite/AddWebSiteModal.vue";
 import EditWebSiteModal from "@/renderer/components/WebSite/EditWebSiteModal.vue";
@@ -61,38 +66,59 @@ import Hosts from "@/main/utils/Hosts";
 import { mt, t } from '@/shared/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
+import { useMainStore } from '@/renderer/store'
 
+const store = useMainStore()
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
 const DownOutlined = createAsyncComponent(import('@ant-design/icons-vue'), 'DownOutlined')
 
-const columns = [
-  {
-    title: t('DomainName'),
-    width: 160,
-    dataIndex: 'serverName',
-    ellipsis: true,
-  },
-  {
-    title: t('Port'),
-    width: 60,
-    dataIndex: 'port',
-  },{
-    title: t('RootPath'),
-    dataIndex: 'rootPath',
-    ellipsis: true,
-  }, {
-    title: `PHP`,
-    dataIndex: 'phpVersion',
-    width: 80,
-    align: 'center',
-  }, {
-    title:  t('Operation'),
-    dataIndex: 'operate',
-    width: 120,
-    align: 'center',
-  }
-];
+const columns = computed(() => {
+  return [
+    {
+      title: t('DomainName'),
+      width: 150,
+      dataIndex: 'serverName',
+      ellipsis: true
+    },
+    {
+      title: mt('Second', 'ws', 'DomainName'),
+      width: 120,
+      dataIndex: 'extraServerName',
+      ellipsis: true,
+      hidden: !store.websiteList.showSecondDomainName
+    },
+    {
+      title: mt('Note'),
+      width: 120,
+      dataIndex: 'note',
+      ellipsis: true,
+      hidden: !store.websiteList.showNote
+    },
+    {
+      title: t('Port'),
+      width: 60,
+      dataIndex: 'port'
+    },
+    {
+      title: t('RootPath'),
+      dataIndex: 'rootPath',
+      ellipsis: true
+    },
+    {
+      title: `PHP`,
+      dataIndex: 'phpVersion',
+      width: 80,
+      align: 'center'
+    },
+    {
+      title: t('Operation'),
+      dataIndex: 'operate',
+      width: 120,
+      align: 'center'
+    }
+  ].filter(item => !item.hidden)
+})
 
 const list = ref([]);
 const confName = ref('');
@@ -141,11 +167,9 @@ const del = async (item) => {
 
   if (item.syncHosts) {
     try {
-      if (await Website.getSameDomainAmount(item.serverName) === 0) {
-        await Hosts.delete(item.serverName);
-      }
-
-      if (item.extraServerName && await Website.getSameDomainAmount(item.extraServerName) === 0) {
+      await Hosts.delete(item.serverName);
+      //删除第二域名时，删除对应的hosts文件配置
+      if (item.extraServerName) {
         await Hosts.delete(item.extraServerName);
       }
     } catch (error) {

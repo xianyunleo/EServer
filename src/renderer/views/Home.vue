@@ -83,7 +83,7 @@
 
 <script setup>
 var timestamp = new Date().getTime();
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { inject, onMounted, ref, watch } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import App from '@/main/App'
 import GetPath from '@/shared/utils/GetPath'
@@ -136,14 +136,8 @@ const columns = [
   }
 ]
 
-const mainStore = useMainStore()
-const { serverSoftwareList } = storeToRefs(mainStore)
-
-const serverList = computed(() => serverSoftwareList.value.filter(item => Software.IsInstalled(item)))
-//这里的nginxItem不能用 serverList find，因为第一次安装打开软件时，这里的serverList是空
-if (!serverReactive.nginxItem) {
-  serverReactive.nginxItem = serverSoftwareList.value.find(item => item.Name === 'Nginx')
-}
+const store = useMainStore()
+const { serverList } = storeToRefs(store)
 
 const getProcessList = async () => {
   let list;

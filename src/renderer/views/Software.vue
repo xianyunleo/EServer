@@ -114,7 +114,7 @@
 </template>
 
 <script setup>
-import { computed, h, inject, ref } from 'vue'
+import { computed, h, ref } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import { storeToRefs } from 'pinia'
 import { message } from 'ant-design-vue'
@@ -134,24 +134,18 @@ import FileDialog from '@/main/utils/FileDialog'
 import LocalInstall from '@/main/core/software/LocalInstall'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 
-const { globalReactive } = inject('GlobalProvide')
 const InstalledType = 'InstalledType'
-
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
 
-const mainStore = useMainStore()
-const { softwareList, softwareTypeSelected } = storeToRefs(mainStore)
+const store = useMainStore()
+const { softwareList, softwareTypeSelected } = storeToRefs(store)
 const phpTypeValue = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)
 const phpExtManagerShow = ref(false)
 const phpVersion = ref('')
 
 if (!softwareTypeSelected.value) {
   softwareTypeSelected.value = InstalledType
-}
-
-for (const item of softwareList.value) {
-  item.Installed = Software.IsInstalled(item)
 }
 
 const setShowList = (type) => {
@@ -292,14 +286,17 @@ const localInstall = async () => {
       MessageBox.info(dirName + mt('ws', 'Installed'))
       return
     }
-    globalReactive.loading = true;
-    globalReactive.loadingTip = t('Installing')
+    store.loading = true;
+    store.loadingTip = t('Installing')
     await LocalInstall.install(path)
     item.Installed = true
+    if (softwareTypeSelected.value === InstalledType) {
+      setShowList(InstalledType)
+    }
   } catch (error) {
     MessageBox.error(error.message ?? error)
   } finally {
-    globalReactive.loading = false;
+    store.loading = false;
   }
 }
 

@@ -25,6 +25,11 @@
     <a-form-item :label="mt('Sync','ws')+'hosts'" name='syncHosts'>
       <a-switch v-model:checked='formData.syncHosts' :disabled='true' />
     </a-form-item>
+
+    <a-form-item :label="mt('Note')" name='note'>
+      <a-input v-model:value='formData.note' :maxlength='20'
+               :placeholder='t("defaultIsEmpty")' spellcheck='false' />
+    </a-form-item>
   </a-form>
 
   <div style='text-align: center'>
@@ -41,17 +46,17 @@ import MessageBox from '@/renderer/utils/MessageBox'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import Hosts from '@/main/utils/Hosts'
 import { mt, t } from '@/shared/utils/i18n'
-const { settingsReactive } = inject('GlobalProvide')
+import { useMainStore } from '@/renderer/store'
 
 const { confName, search } = inject('WebsiteProvide')
-
+const store = useMainStore()
 const formRef = ref();
 const formData = reactive({})
 const phpVersionList = ref([])
 const emits = defineEmits(['editAfter'])
 
-const labelColSpan = settingsReactive.Language === 'zh' ? 6 : 10;
-const wrapperColSpan = settingsReactive.Language === 'zh' ? 18 : 14;
+const labelColSpan = store.settings.Language === 'zh' ? 6 : 10;
+const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 14;
 
 let websiteInfo = Website.getBasicInfo(confName.value)
 Object.assign(formData, websiteInfo)
@@ -75,20 +80,21 @@ const save = async () => {
     search()
   } catch (error) {
     MessageBox.error(error.message ?? error, '保存出错！')
+    return
   }
 
   if (websiteInfo.syncHosts) {
     try {
       let oldExtraServerName = websiteInfo.extraServerName
       if (formData.extraServerName !== oldExtraServerName) {
-
-        if (oldExtraServerName && await Website.getSameDomainAmount(oldExtraServerName) === 0) {
+        //删除旧的第二域名对应的hosts文件配置
+        if (oldExtraServerName) {
           await Hosts.delete(oldExtraServerName)
         }
+        //增加新的第二域名对应的hosts文件配置
         if (formData.extraServerName) {
           await Hosts.add(formData.extraServerName)
         }
-
       }
     } catch (error) {
       MessageBox.error(error.message ?? error, '同步Hosts出错！')
