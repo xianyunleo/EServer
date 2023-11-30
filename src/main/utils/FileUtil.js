@@ -1,4 +1,5 @@
-import fs from "fs";
+import fs from 'fs'
+import fsPromises from 'fs/promises'
 export default class FileUtil {
 
     /**
@@ -75,10 +76,10 @@ export default class FileUtil {
      * 将字符串追加到文件，如果文件不存在，则会创建该文件。
      * @param path {string}
      * @param contents {string}
-     * @param encoding {string|null}
-     * @returns {undefined}
+     * @param options
+     * @returns {Promise<undefined>}
      */
-    static AppendAllText(path, contents, encoding = 'utf8') {
-        return fs.appendFileSync(path, contents, {encoding: encoding});
+    static async AppendAllText(path, contents, options = { encoding: 'utf8' }) {
+        return await fsPromises.appendFile(path, contents, options)
     }
 }
