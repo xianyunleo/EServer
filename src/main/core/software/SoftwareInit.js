@@ -21,7 +21,7 @@ export default class SoftwareInit{
         try {
             let path = Path.Join(GetPath.getNginxConfDir(), 'nginx.conf');
             let text = FileUtil.ReadAllText(path);
-            let pattern = /root\s+\S+\s*;/g;
+            let pattern = /root.+/g;
             let wwwPath = Path.Join(GetPath.getNginxDir(), 'html').replaceSlash();
             let replaceStr = `root ${wwwPath};`;
             text = text.replaceAll(pattern, replaceStr);
@@ -39,7 +39,7 @@ export default class SoftwareInit{
         let path = Path.Join(GetPath.getNginxVhostsDir(), 'localhost_80.conf');
         if (FileUtil.Exists(path)) {
             let text = FileUtil.ReadAllText(path);
-            let pattern = /root\s+\S+\s*;/g;
+            let pattern = /root.+/g;
             let rootPath = Path.Join(GetPath.getWebsiteDir(), 'localhost').replaceSlash();
             let replaceStr = `root ${rootPath};`;
             text = text.replaceAll(pattern, replaceStr);
@@ -51,7 +51,7 @@ export default class SoftwareInit{
         let path = Path.Join(GetPath.getNginxVhostsDir(), 'localhost_888.conf');
         if (FileUtil.Exists(path)) {
             let text = FileUtil.ReadAllText(path);
-            let pattern = /root\s+\S+\s*;/g;
+            let pattern = /root.+/g;
             let rootPath = Path.Join(GetPath.getToolTypeDir(), 'phpMyAdmin').replaceSlash();
             let replaceStr = `root ${rootPath};`;
             text = text.replaceAll(pattern, replaceStr);
