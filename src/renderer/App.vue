@@ -60,7 +60,7 @@ provide('GlobalProvide', { serverReactive });
 
     store.loadingTip = computed(() => t('Initializing'))
     locale.value = store.settings.Language
-    TrayManage.set()
+    TrayManage.init()
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]))
     App.exit()

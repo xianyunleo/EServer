@@ -34,6 +34,7 @@ import GetPath from '@/shared/utils/GetPath'
 import { mt, t } from '@/shared/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
+import { computed } from 'vue'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const store = useMainStore()
@@ -44,10 +45,12 @@ const changeEnableEnv = async () => {
   })
 }
 
-const phpVersionList = SoftwareExtend.getPHPList().map(item => {
+const phpVersionListTemp = SoftwareExtend.getPHPList().map(item => {
   return { value: item.version, label: item.name }
 })
-phpVersionList.push({ value: '', label: mt('Not','ws','Set') })
+const phpVersionList = computed(() => {
+  return [...phpVersionListTemp, { value: '', label: mt('Not', 'ws', 'Set') }]
+})
 
 const phpCliVersionChange = () => {``
   store.setSettings('PhpCliVersion', async originVal => {
