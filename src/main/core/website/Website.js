@@ -10,7 +10,7 @@ export default class Website {
      */
     static async add(websiteInfo) {
         if (await Nginx.websiteExists(websiteInfo.serverName, websiteInfo.port)) {
-            throw new Error('网站已经存在！');
+            throw new Error(`${websiteInfo.serverName}:${websiteInfo.port}\n已经存在，不能重复！`)
         }
 
         if (!FileUtil.Exists(websiteInfo.rootPath)) {

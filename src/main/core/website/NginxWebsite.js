@@ -85,11 +85,13 @@ export default class NginxWebsite {
     async setBasicInfo(websiteInfo) {
         let text = this.confText;
         let serverNameStr;
-        if (websiteInfo.extraServerName) {
-            if (await Nginx.websiteExists(websiteInfo.extraServerName, websiteInfo.port)) {
-                throw new Error('第二域名不能重复！')
-            }
-            serverNameStr = `server_name ${this.serverName} ${websiteInfo.extraServerName};`;
+        let extraServerName = websiteInfo.extraServerName
+        if (extraServerName) {
+            if (extraServerName !== this.getExtraServerName())
+                if (await Nginx.websiteExists(extraServerName, websiteInfo.port)) {
+                    throw new Error(`${extraServerName}:${websiteInfo.port}\n已经存在，不能重复！`)
+                }
+            serverNameStr = `server_name ${this.serverName} ${extraServerName};`
         } else {
             serverNameStr = `server_name ${this.serverName};`;
         }
