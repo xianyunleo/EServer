@@ -41,7 +41,7 @@ export const useMainStore = defineStore('main', {
         async refreshSoftwareList() {
             const list = await Software.getList()
             this.softwareList = await Promise.all(list.map(async item => {
-                const Installed = Software.IsInstalled(item)
+                const Installed = await Software.IsInstalled(item)
                 return { ...item, Installed }
             }))
             this.nginxServer = this.softwareList.find((item) => item.Name === 'Nginx')

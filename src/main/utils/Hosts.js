@@ -10,7 +10,7 @@ export default class Hosts {
      */
     static async add(domain) {
         let path = GetPath.getHostsPath();
-        let text = FileUtil.ReadAllText(path);
+        let text = await FileUtil.ReadAll(path);
 
         let domainRegx = this.getDomainRegExp(domain);
         if (text.match(domainRegx)) {
@@ -22,10 +22,10 @@ export default class Hosts {
 
         appendText += `127.0.0.1 ${domain}${EOL}`;
 
-        if (FileUtil.Exists(path) && !await FsUtil.CanReadWrite(path)) {
+        if (await FileUtil.Exists(path) && !await FsUtil.CanReadWrite(path)) {
             await FsUtil.ChmodReadWrite(path)
         }
-        await FileUtil.AppendAllText(path, appendText);
+        await FileUtil.Append(path, appendText);
     }
 
     /**
@@ -34,16 +34,16 @@ export default class Hosts {
      */
     static async delete(domain) {
         let path = GetPath.getHostsPath();
-        if (!FileUtil.Exists(path)) {
+        if (!await FileUtil.Exists(path)) {
             return;
         }
         if (!await FsUtil.CanReadWrite(path)) {
             await FsUtil.ChmodReadWrite(path)
         }
-        let text = FileUtil.ReadAllText(path);
+        let text = await FileUtil.ReadAll(path);
         let domainRegx = this.getDomainRegExp(domain);
         text = text.replaceAll(domainRegx, '');
-        FileUtil.WriteAllText(path, text);
+        await FileUtil.WriteAll(path, text);
     }
 
     static getDomainRegExp(domain) {

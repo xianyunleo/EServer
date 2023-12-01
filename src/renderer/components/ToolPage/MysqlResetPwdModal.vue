@@ -54,10 +54,12 @@ const formData = ref({});
 const mysqlVersionList = ref([]);
 const hint = ref('');
 
-let list = SoftwareExtend.getMySQLList();
-mysqlVersionList.value = list.map(item => {
-  return {value: item.version, label: item.name};
-});
+;(async () => {
+  const list = await SoftwareExtend.getMySQLList()
+  mysqlVersionList.value = list.map(item => {
+    return { value: item.version, label: item.name }
+  })
+})()
 
 const resetClick = async () => {
   try {

@@ -1,4 +1,4 @@
-import Directory from "@/main/utils/Directory";
+import DirUtil from "@/main/utils/DirUtil";
 import Path from "@/main/utils/Path";
 import GetPath from "@/shared/utils/GetPath";
 import { APP_NAME } from '@/shared/utils/constant'
@@ -53,13 +53,13 @@ pm.max_spare_servers = 3
      * @param phpVersion
      * @returns {string}
      */
-    static getExtensionDir(phpVersion) {
+    static async getExtensionDir(phpVersion) {
         if (isWindows) {
             let phpDir = GetPath.getPhpDir(phpVersion);
             return `${Path.Join(phpDir, 'ext')}`;
         } else {
             let phpDir = GetPath.getPhpDir(phpVersion);
-            let dirs = Directory.GetDirectories(`${Path.Join(phpDir, 'lib/php/extensions')}`, 'no-debug-non-zts');
+            let dirs = await DirUtil.GetDirectories(`${Path.Join(phpDir, 'lib/php/extensions')}`, 'no-debug-non-zts');
             return dirs[0];
         }
     }

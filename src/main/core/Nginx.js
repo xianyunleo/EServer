@@ -1,7 +1,7 @@
 import path from "path";
 import GetPath from "@/shared/utils/GetPath";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
-import Directory from "@/main/utils/Directory";
+import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
 import Path from "@/main/utils/Path";
 import { isWindows } from '@/main/utils/utils'
@@ -14,22 +14,31 @@ export default class Nginx {
      */
     static async getWebsiteList(search) {
         let vhostsPath = GetPath.getNginxVhostsDir();
-        if (!Directory.Exists(vhostsPath)) {
+        if (!await DirUtil.Exists(vhostsPath)) {
             return [];
         }
-        let files = Directory.GetFiles(vhostsPath, search);
-        return await Promise.all(files.map(async path => {
-            let confName = Path.GetBaseName(path);
-            let webSite = new NginxWebsite(confName);
-            return webSite.getBasicInfo();
-        }));
+
+        const files = await DirUtil.GetFiles(vhostsPath, search, true)
+        //根据创建时间倒序
+        files.sort((a,b)=>{
+            return b.stats.birthtimeMs - a.stats.birthtimeMs
+        })
+
+        const mapFn = async (file) => {
+            let confName = Path.GetBaseName(file.path)
+            const website = new NginxWebsite(confName)
+            await website.init()
+            return website.getBasicInfo()
+        }
+
+        return await Promise.all(files.map(mapFn))
     }
 
     /**
      * 添加网站
      * @param websiteInfo {WebsiteItem}
      */
-    static addWebsite(websiteInfo) {
+    static async addWebsite(websiteInfo) {
         let serverName = websiteInfo.serverName;
         let serverNameStr = websiteInfo.extraServerName ? `${serverName} ${websiteInfo.extraServerName}` : serverName;
         let confName = this.getWebsiteConfName(websiteInfo.serverName, websiteInfo.port);
@@ -99,37 +108,40 @@ export default class Nginx {
         }
 
 
-        FileUtil.WriteAllText(confPath, confText);
+        await FileUtil.WriteAll(confPath, confText);
 
-        let website = new NginxWebsite(confName);
+        const website = new NginxWebsite(confName);
+        await website.init();
         website.setPHPVersion(websiteInfo.phpVersion);
-        website.setExtraInfo({syncHosts: websiteInfo.syncHosts});
-        website.save();
+        website.setExtraInfo({ syncHosts: websiteInfo.syncHosts });
+        await website.save();
 
         //创建URL重写文件
         let rewritePath = Nginx.getWebsiteRewriteConfPath(confName);
-        if (!FileUtil.Exists(rewritePath)) {
-            FileUtil.WriteAllText(rewritePath, '');
+        if (!await FileUtil.Exists(rewritePath)) {
+            await FileUtil.WriteAll(rewritePath, '');
         }
     }
 
-    static delWebsite(confName) {
+    static async delWebsite(confName) {
         let confPath = this.getWebsiteConfPath(confName);
-        if (FileUtil.Exists(confPath)) {
-            FileUtil.Delete(confPath);
+        if (await FileUtil.Exists(confPath)) {
+            await FileUtil.Delete(confPath);
         }
 
         let rewritePath = this.getWebsiteRewriteConfPath(confName);
-        if (FileUtil.Exists(rewritePath)) {
-            FileUtil.Delete(rewritePath);
+        if (await FileUtil.Exists(rewritePath)) {
+            await FileUtil.Delete(rewritePath);
         }
     }
 
+
+
     static async websiteExists(serverName, port) {
         const vhostsPath = GetPath.getNginxVhostsDir()
-        const files = Directory.GetFiles(vhostsPath)
+        const files = await DirUtil.GetFiles(vhostsPath)
         const filterArr = await files.filterAsync(async (path) => {
-            let confText = FileUtil.ReadAllText(path)
+            let confText = await FileUtil.ReadAll(path)
             const serverNames = this.getAllServerName(confText)
             return serverNames.includes(serverName) && this.getPortByConfPath(path) === port
         })
@@ -162,12 +174,12 @@ export default class Nginx {
      * 获取URL重写规则列表
      * @returns {Promise<string[]>}
      */
-    static getRewriteRuleList() {
+    static async getRewriteRuleList() {
         let rewritePath = GetPath.getNginxRewriteDir();
-        if (!Directory.Exists(rewritePath)) {
+        if (!await DirUtil.Exists(rewritePath)) {
             return [];
         }
-        let files = Directory.GetFiles(rewritePath, '.conf');
+        let files = await DirUtil.GetFiles(rewritePath, '.conf');
         return files.map(name => {
             return Path.GetFileNameWithoutExtension(name);
         });
@@ -178,12 +190,12 @@ export default class Nginx {
      * @param ruleName {string}
      * @returns {string}
      */
-    static getRewriteByRule(ruleName) {
+    static async getRewriteByRule(ruleName) {
         let rewritePath = path.join(GetPath.getNginxRewriteDir(), `${ruleName}.conf`)
-        if (!FileUtil.Exists(rewritePath)) {
+        if (!await FileUtil.Exists(rewritePath)) {
             return '';
         }
-        return FileUtil.ReadAllText(rewritePath);
+        return await FileUtil.ReadAll(rewritePath);
     }
 
     /**

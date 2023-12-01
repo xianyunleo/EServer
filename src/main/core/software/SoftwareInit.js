@@ -2,7 +2,7 @@ import GetPath from "@/shared/utils/GetPath";
 import FileUtil from "@/main/utils/FileUtil";
 import Path from "@/main/utils/Path";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
-import Directory from "@/main/utils/Directory";
+import DirUtil from "@/main/utils/DirUtil";
 import Php from "@/main/core/php/Php";
  import Database from "@/main/core/Database";
 import {isWindows } from '@/main/utils/utils'
@@ -14,19 +14,18 @@ export default class SoftwareInit{
             this.initAllPHP(),
             this.initAllMySQL()
         ]);
-        await this.initMySQL();
     }
 
     static async initNginx() {
         try {
             let path = Path.Join(GetPath.getNginxConfDir(), 'nginx.conf');
-            let text = FileUtil.ReadAllText(path);
+            let text = await FileUtil.ReadAll(path);
             let pattern = /root.+/g;
             let wwwPath = Path.Join(GetPath.getNginxDir(), 'html').replaceSlash();
             let replaceStr = `root ${wwwPath};`;
             text = text.replaceAll(pattern, replaceStr);
 
-            FileUtil.WriteAllText(path, text);
+            await FileUtil.WriteAll(path, text);
 
             await this.initNginxLocalhostConf();
             await this.initNginxPhpmyadminConf();
@@ -37,31 +36,30 @@ export default class SoftwareInit{
 
     static async initNginxLocalhostConf() {
         let path = Path.Join(GetPath.getNginxVhostsDir(), 'localhost_80.conf');
-        if (FileUtil.Exists(path)) {
-            let text = FileUtil.ReadAllText(path);
+        if (await FileUtil.Exists(path)) {
+            let text = await FileUtil.ReadAll(path);
             let pattern = /root.+/g;
             let rootPath = Path.Join(GetPath.getWebsiteDir(), 'localhost').replaceSlash();
             let replaceStr = `root ${rootPath};`;
             text = text.replaceAll(pattern, replaceStr);
-            FileUtil.WriteAllText(path, text);
+            await FileUtil.WriteAll(path, text);
         }
     }
 
     static async initNginxPhpmyadminConf() {
         let path = Path.Join(GetPath.getNginxVhostsDir(), 'localhost_888.conf');
-        if (FileUtil.Exists(path)) {
-            let text = FileUtil.ReadAllText(path);
+        if (await FileUtil.Exists(path)) {
+            let text = await FileUtil.ReadAll(path);
             let pattern = /root.+/g;
             let rootPath = Path.Join(GetPath.getToolTypeDir(), 'phpMyAdmin').replaceSlash();
             let replaceStr = `root ${rootPath};`;
             text = text.replaceAll(pattern, replaceStr);
-            FileUtil.WriteAllText(path, text);
+            await FileUtil.WriteAll(path, text);
         }
     }
 
     static async initAllPHP() {
-        let phpList = SoftwareExtend.getPHPList()
-
+        const phpList = await SoftwareExtend.getPHPList()
         for (const item of phpList) {
             await this.initPHP(item.version);
         }
@@ -77,8 +75,8 @@ export default class SoftwareInit{
     static async createPHPFpmConf(version) {
         let phpDirPath = GetPath.getPhpDir(version);
         let confPath = Path.Join(phpDirPath, 'etc/php-fpm.conf')
-        if (!FileUtil.Exists(confPath)) {
-            FileUtil.WriteAllText(confPath, Php.getFpmConfText(version))
+        if (!await FileUtil.Exists(confPath)) {
+            await FileUtil.WriteAll(confPath, Php.getFpmConfText(version))
         }
     }
 
@@ -88,11 +86,11 @@ export default class SoftwareInit{
             let confDirPath = isWindows ? phpDirPath : Path.Join(phpDirPath, 'etc');
             let confPath = Path.Join(confDirPath, 'php.ini');
 
-            if (!FileUtil.Exists(confPath)) {
-                FileUtil.Copy(Path.Join(confDirPath, 'php.ini-development'), confPath);
+            if (!await FileUtil.Exists(confPath)) {
+                await FileUtil.Copy(Path.Join(confDirPath, 'php.ini-development'), confPath);
             }
 
-            let text = FileUtil.ReadAllText(confPath);
+            let text = await FileUtil.ReadAll(confPath);
 
             text = text.replace(/(?<=\n);?.?max_execution_time\s*=.*/, 'max_execution_time = 300');
             text = text.replace(/(?<=\n);?.?memory_limit\s*=.*/, 'memory_limit = 512M');
@@ -117,7 +115,7 @@ export default class SoftwareInit{
                 }
             } else {
                 //非Windows系统
-                let extDir = Php.getExtensionDir(version)
+                let extDir = await Php.getExtensionDir(version)
                 //仅替换第一个
                 text = text.replace(/(?<=\n);?.?extension_dir\s*=.*/, `extension_dir = "${extDir}"`);
             }
@@ -131,17 +129,29 @@ export default class SoftwareInit{
             let replaceSessionStr = `session.save_path = "${phpTempPath.replaceSlash()}"`;
             text = text.replaceAll(sessionPattern, replaceSessionStr);
 
-            FileUtil.WriteAllText(confPath, text);
+            await FileUtil.WriteAll(confPath, text);
         } catch (error) {
             throw new Error(`初始化PHP配置失败！${error.message}`);
         }
     }
 
     static async initAllMySQL() {
-        let mysqlList = SoftwareExtend.getMySQLList();
-
+        const mysqlList = await SoftwareExtend.getMySQLList();
         for (const item of mysqlList) {
-            await this.initMySQLConf(item.version);
+            await this.initMySQL(item.version);
+        }
+    }
+
+    /**
+     * 初始化MySQL data目录和重置密码
+     * @returns {Promise<void>}
+     */
+    static async initMySQL(version) {
+        await this.initMySQLConf(version)
+        if (!await DirUtil.Exists(GetPath.getMysqlDataDir(version))) {
+            //如果mysql data目录不存在，初始化生成data目录，并重置密码
+            await Database.initMySQLData(version)
+            await Database.resetMySQLPassword(version)
         }
     }
 
@@ -149,7 +159,7 @@ export default class SoftwareInit{
         try {
             let mysqlDir = GetPath.getMysqlDir(version);
             let confPath = isWindows ? Path.Join(mysqlDir, 'my.ini') : Path.Join(mysqlDir, 'my.cnf');
-            let text = FileUtil.ReadAllText(confPath);
+            let text = await FileUtil.ReadAll(confPath);
             let mysqlPath = GetPath.getMysqlDir(version);
 
             //(?<=\n)basedir\s*=\s*.+
@@ -169,25 +179,11 @@ export default class SoftwareInit{
             let replaceLogStr = `log-error = "${logPath.replaceSlash()}"`;
             text = text.replaceAll(logPattern, replaceLogStr);
 
-            FileUtil.WriteAllText(confPath, text);
+            await FileUtil.WriteAll(confPath, text);
         } catch (error) {
             throw new Error(`初始化MySQL配置失败！${error.message}`);
         }
     }
 
-    /**
-     * 初始化MySQL data目录和重置密码,todo:和initMySQLConf合一个方法
-     * @returns {Promise<void>}
-     */
-    static async initMySQL() {
-        let mysqlList = SoftwareExtend.getMySQLList();
-        for (const item of mysqlList) {
-            let version = item.version;
-            if (!Directory.Exists(GetPath.getMysqlDataDir(version))) {
-                //如果mysql data目录不存在，初始化生成data目录，并重置密码
-                await Database.initMySQL(version);
-            }
-        }
-    }
 
 }

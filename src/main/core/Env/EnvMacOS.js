@@ -21,8 +21,8 @@ export default class EnvMacOS {
         let userName = OS.getUserName();
         let text;
 
-        if (!FileUtil.Exists(envFilePath)) {
-            FileUtil.WriteAllText(envFilePath, '')
+        if (!await FileUtil.Exists(envFilePath)) {
+            await FileUtil.WriteAll(envFilePath, '')
         }
 
         if (!await FsUtil.CanReadWrite(envFilePath)) {
@@ -30,7 +30,7 @@ export default class EnvMacOS {
             await Command.sudoExec(`chown ${userName}:staff ${envFilePath}`)
         }
 
-        text = FileUtil.ReadAllText(envFilePath);
+        text = await FileUtil.ReadAll(envFilePath);
 
         if (enable) {
             let binPath  = GetPath.getBinDir();
@@ -39,11 +39,11 @@ export default class EnvMacOS {
             if (text.slice(-1) !== '\n') {
                 appendText = `\n${appendText}`
             }
-            await FileUtil.AppendAllText(envFilePath, appendText);
+            await FileUtil.Append(envFilePath, appendText);
         } else {
             let regx = new RegExp(`export\\s+PATH.+${APP_NAME}.+`, 'g');
             text = text.replaceAll(regx, '');
-            FileUtil.WriteAllText(envFilePath, text);
+            await FileUtil.WriteAll(envFilePath, text);
         }
     }
 

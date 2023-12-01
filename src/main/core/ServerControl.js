@@ -27,7 +27,7 @@ export default class ServerControl {
             options = { cwd: workPath, shell: true } //使用shell，childProcess返回的pid是shell的pid
         }
 
-        if (!FileUtil.Exists(serverProcessPath)) {
+        if (!await FileUtil.Exists(serverProcessPath)) {
             throw new Error(`${serverProcessPath} 文件不存在！`);
         }
 

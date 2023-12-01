@@ -1,7 +1,7 @@
 import Nginx from "@/main/core/Nginx";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
 import FileUtil from "@/main/utils/FileUtil";
-import Directory from "@/main/utils/Directory";
+import DirUtil from "@/main/utils/DirUtil";
 
 export default class Website {
     /**
@@ -13,31 +13,28 @@ export default class Website {
             throw new Error(`${websiteInfo.serverName}:${websiteInfo.port}\n已经存在，不能重复！`)
         }
 
-        if (!FileUtil.Exists(websiteInfo.rootPath)) {
-            try {
-                Directory.CreateDirectory(websiteInfo.rootPath)
-            } catch {
-                throw new Error('创建根目录失败！');
-            }
+        if (!await FileUtil.Exists(websiteInfo.rootPath)) {
+            await DirUtil.Create(websiteInfo.rootPath)
         }
-        Nginx.addWebsite(websiteInfo);
+        await Nginx.addWebsite(websiteInfo);
     }
 
-    static delete(confName) {
-        Nginx.delWebsite(confName);
+    static async delete(confName) {
+        await Nginx.delWebsite(confName);
     }
 
     static async getList(search) {
         return await Nginx.getWebsiteList(search);
     }
 
-    static getBasicInfo(confName) {
-        let webSite = new NginxWebsite(confName);
-        return webSite.getBasicInfo();
+    static async getBasicInfo(confName) {
+        const website = new NginxWebsite(confName);
+        await website.init()
+        return website.getBasicInfo();
     }
 
-    static getRewrite(confName) {
-        return NginxWebsite.getRewrite(confName);
+    static async getRewrite(confName) {
+        return await NginxWebsite.getRewrite(confName);
     }
 
     static getConfPath(confName) {
@@ -52,22 +49,22 @@ export default class Website {
      * 获取URL重写规则列表
      * @returns {Promise<string[]>}
      */
-    static getRewriteRuleList() {
-        return Nginx.getRewriteRuleList();
+    static async getRewriteRuleList() {
+        return await Nginx.getRewriteRuleList();
     }
 
-    static getRewriteByRule(ruleName) {
-        return Nginx.getRewriteByRule(ruleName);
+    static async getRewriteByRule(ruleName) {
+        return await Nginx.getRewriteByRule(ruleName);
     }
 
     static async saveBasicInfo(confName, websiteInfo) {
-        let webSite = new NginxWebsite(confName);
-        await webSite.setBasicInfo(websiteInfo);
-        webSite.save();
+        const website = new NginxWebsite(confName);
+        await website.init()
+        await website.setBasicInfo(websiteInfo);
+        await website.save();
     }
 
-    static saveRewrite(confName, content) {
-        NginxWebsite.saveRewrite(confName, content);
+    static async saveRewrite(confName, content) {
+        await NginxWebsite.saveRewrite(confName, content);
     }
-
 }

@@ -52,20 +52,22 @@ const { confName, search } = inject('WebsiteProvide')
 const store = useMainStore()
 const formRef = ref();
 const formData = reactive({})
-const phpVersionList = ref([])
 const emits = defineEmits(['editAfter'])
-
+const phpVersionList = ref([])
 const labelColSpan = store.settings.Language === 'zh' ? 6 : 10;
 const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 14;
 
-let websiteInfo = Website.getBasicInfo(confName.value)
-Object.assign(formData, websiteInfo)
+let websiteInfo
+;(async () => {
+  websiteInfo = await Website.getBasicInfo(confName.value)
+  Object.assign(formData, websiteInfo)
 
-let list = SoftwareExtend.getPHPList()
-phpVersionList.value = list.map(item => {
-  return { value: item.version, label: item.name }
-})
-phpVersionList.value.push({ value: '', label: t('Static') })
+  const list = await SoftwareExtend.getPHPList()
+  phpVersionList.value = list.map(item => {
+    return { value: item.version, label: item.name }
+  })
+  phpVersionList.value.push({ value: '', label: t('Static') })
+})()
 
 const save = async () => {
   try {
@@ -83,23 +85,24 @@ const save = async () => {
     return
   }
 
-  if (websiteInfo.syncHosts) {
-    try {
-      let oldExtraServerName = websiteInfo.extraServerName
-      if (formData.extraServerName !== oldExtraServerName) {
-        //删除旧的第二域名对应的hosts文件配置
-        if (oldExtraServerName) {
-          await Hosts.delete(oldExtraServerName)
-        }
-        //增加新的第二域名对应的hosts文件配置
-        if (formData.extraServerName) {
-          await Hosts.add(formData.extraServerName)
-        }
-      }
-    } catch (error) {
-      MessageBox.error(error.message ?? error, '同步Hosts出错！')
-    }
-  }
+  // 会删除所有port的ServerName，需要优化
+  // if (websiteInfo.syncHosts) {
+  //   try {
+  //     let oldExtraServerName = websiteInfo.extraServerName
+  //     if (formData.extraServerName !== oldExtraServerName) {
+  //       //删除旧的第二域名对应的hosts文件配置
+  //       if (oldExtraServerName) {
+  //         await Hosts.delete(oldExtraServerName)
+  //       }
+  //       //增加新的第二域名对应的hosts文件配置
+  //       if (formData.extraServerName) {
+  //         await Hosts.add(formData.extraServerName)
+  //       }
+  //     }
+  //   } catch (error) {
+  //     MessageBox.error(error.message ?? error, '同步Hosts出错！')
+  //   }
+  // }
 
   websiteInfo = JSON.parse(JSON.stringify(formData))
 

@@ -1,14 +1,12 @@
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import SoftwareInit from "@/main/core/software/SoftwareInit";
-import Directory from "@/main/utils/Directory";
-import GetPath from "@/shared/utils/GetPath";
-import Database from "@/main/core/Database";
+import DirUtil from "@/main/utils/DirUtil";
 import { extract7z, extractTar, extractZip } from '@/main/utils/extract'
 
 export default class CommonInstall {
     static async extract(filePath, dest) {
-        if (!Directory.Exists(dest)) {
-            Directory.CreateDirectory(dest);
+        if (!await DirUtil.Exists(dest)) {
+            await DirUtil.Create(dest);
         }
         if (filePath.endsWith('.zip')) {
             await extractZip(filePath, dest)
@@ -21,16 +19,13 @@ export default class CommonInstall {
 
     static async configure(dirName) {
         if (dirName.match(/^mysql-[.\d]+$/)) {
-            let version = SoftwareExtend.getMysqlVersion(dirName);
-            await SoftwareInit.initMySQLConf(version);
-            if (!Directory.Exists(GetPath.getMysqlDataDir(version))) {
-                await Database.initMySQL(version);
-            }
+            const version = SoftwareExtend.getMysqlVersion(dirName)
+            await SoftwareInit.initMySQL(version)
         } else if (dirName.match(/^php-[.\d]+$/)) {
-            let version = SoftwareExtend.getPHPVersion(dirName);
-            await SoftwareInit.initPHP(version);
+            const version = SoftwareExtend.getPHPVersion(dirName)
+            await SoftwareInit.initPHP(version)
         } else if (dirName.match(/^nginx$/)) {
-            await SoftwareInit.initNginx();
+            await SoftwareInit.initNginx()
         }
     }
 }

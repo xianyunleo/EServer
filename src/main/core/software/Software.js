@@ -2,14 +2,14 @@ import App from "@/main/App";
 import path from "path";
 import {EnumSoftwareType} from "@/shared/utils/enum";
 import GetPath from "@/shared/utils/GetPath";
-import Directory from "@/main/utils/Directory";
+import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
 
 export default class Software {
     static #list;
 
-    static DirExists() {
-        return Directory.Exists(GetPath.getSoftwareDir());
+    static async DirExists() {
+        return await DirUtil.Exists(GetPath.getSoftwareDir());
     }
 
     /**
@@ -32,8 +32,8 @@ export default class Software {
 
         let list
         try {
-            if (FileUtil.Exists(softConfigPath)) {
-                list = JSON.parse(FileUtil.ReadAllText(softConfigPath))
+            if (await FileUtil.Exists(softConfigPath)) {
+                list = JSON.parse(await FileUtil.ReadAll(softConfigPath))
             } else {
                 list = []
             }
@@ -54,9 +54,9 @@ export default class Software {
      * @param item {SoftwareItem}
      * @returns {boolean}
      */
-    static IsInstalled(item) {
+    static async IsInstalled(item) {
         let path = Software.getPath(item);
-        return Directory.Exists(path);
+        return await DirUtil.Exists(path);
     }
 
     /**

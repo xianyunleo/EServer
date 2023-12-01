@@ -105,20 +105,20 @@ const updateList = async () => {
 updateList();
 
 
-const openExtDir = () => {
-  Native.openDirectory(Php.getExtensionDir(props.phpVersion));
+const openExtDir = async () => {
+  Native.openDirectory(await Php.getExtensionDir(props.phpVersion));
 }
 
 let installer;
 let eventEmitter;
-const install = (item) => {
+const install = async (item) => {
   let extVersion = Extension.getVersion(item.name, props.phpVersion);
   if (!extVersion) {
     MessageBox.error(`没有找到php-${props.phpVersion}可用的${item.name}扩展版本！`, '安装出错！');
     return;
   }
 
-  if (isMacOS && Extension.isNeedX64Brew(item.name) && !Extension.isInstalledX64Brew()) {
+  if (isMacOS && Extension.isNeedX64Brew(item.name) && !await Extension.isInstalledX64Brew()) {
     let scriptFilePath = Path.Join(GetPath.getScriptDir(), `x86_64-brew-install.sh`);
     fs.chmodSync(scriptFilePath, '0755');
     MessageBox.error(`安装${item.name}扩展需要先安装 -x86_64 的 Homebrew！\n请复制命令安装\n${scriptFilePath}`, '安装出错！');
@@ -128,7 +128,7 @@ const install = (item) => {
   taskVisible.value = true;
   eventEmitter = new EventEmitter();
   installer = new Installer(item.name, extVersion, props.phpVersion, eventEmitter);
-  let commandStr = installer.install();
+  let commandStr = await installer.install();
 
   if (!isWindows) {
     msg.value += `执行安装扩展的命令\n${commandStr}\n如果安装失败, 可尝试复制命令自行安装\n\n`;

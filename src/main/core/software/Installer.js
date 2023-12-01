@@ -4,7 +4,7 @@ import path from 'path'
 import { EnumSoftwareInstallStatus } from '@/shared/utils/enum'
 import Software from '@/main/core/software/Software'
 import { DOWNLOAD_URL } from '@/shared/utils/constant'
-import Directory from '@/main/utils/Directory'
+import DirUtil from '@/main/utils/DirUtil'
 import got from 'got'
 import { pipeline } from 'stream/promises'
 import fs from 'fs'
@@ -36,12 +36,12 @@ export default class Installer extends EventEmitter {
     }
 
     async install() {
-        if (!Directory.Exists(GetPath.getDownloadsDir())) {
-            Directory.CreateDirectory(GetPath.getDownloadsDir());
+        if (!await DirUtil.Exists(GetPath.getDownloadsDir())) {
+            await DirUtil.Create(GetPath.getDownloadsDir());
         }
 
-        if(FileUtil.Exists(this.tempFilePath)){
-            FileUtil.Delete(this.tempFilePath);
+        if(await FileUtil.Exists(this.tempFilePath)){
+            await FileUtil.Delete(this.tempFilePath);
         }
 
         try {
@@ -95,7 +95,7 @@ export default class Installer extends EventEmitter {
         });
 
         await pipeline(responseStream, writeStream,{signal: this.dlAbortController.signal});
-        FileUtil.Move(this.tempFilePath, this.filePath);
+        await FileUtil.Move(this.tempFilePath, this.filePath);
         this.changeStatus(EnumSoftwareInstallStatus.Downloaded);
     }
 
@@ -122,8 +122,8 @@ export default class Installer extends EventEmitter {
      */
     static async uninstall(item) {
         let path = Software.getPath(item);
-        await Directory.Delete(path);
-        return !Directory.Exists(path);
+        await DirUtil.Delete(path);
+        return !await DirUtil.Exists(path);
     }
 
     getFileName() {

@@ -5,14 +5,14 @@ import { isWindows } from '@/main/utils/utils'
 import GetPath from '@/shared/utils/GetPath'
 
 export default class Extension {
-     static async getList(phpVersion) {
+    static async getList(phpVersion) {
         let list = this.getSimpleList();
 
-        let extDir = Php.getExtensionDir(phpVersion);
+        let extDir = await Php.getExtensionDir(phpVersion);
 
         let newList = await Promise.all(
             list.map(async item => {
-                let isInstalled = FileUtil.Exists(Path.Join(extDir,item.extFileName));
+                let isInstalled = await FileUtil.Exists(Path.Join(extDir,item.extFileName));
                 return Object.assign({isInstalled},item);
             })
         );
@@ -53,8 +53,8 @@ export default class Extension {
         return this.getSimpleList().find(item => item.nam == extName)?.needX64Brew;
     }
 
-    static isInstalledX64Brew() {
-        return FileUtil.Exists('/usr/local/homebrew/bin/brew');
+    static async isInstalledX64Brew() {
+        return await FileUtil.Exists('/usr/local/homebrew/bin/brew');
     }
 
     static getSimpleListForWindows(){

@@ -1,5 +1,5 @@
 import GetPath from "@/shared/utils/GetPath";
-import Directory from "@/main/utils/Directory";
+import DirUtil from "@/main/utils/DirUtil";
 import Path from "@/main/utils/Path";
 import FileUtil from "@/main/utils/FileUtil";
 
@@ -11,13 +11,13 @@ export default class SoftwareExtend {
      */
     static async getNginxRequirePhpList() {
         let nginxVhostsPath = GetPath.getNginxVhostsDir();
-        let vhosts = Directory.GetFiles(nginxVhostsPath, '.conf');
+        let vhosts = await DirUtil.GetFiles(nginxVhostsPath, '.conf');
         if (!vhosts || vhosts.length === 0) {
             return [];
         }
         //获取所有网站PHP版本数组，并发读文件并匹配PHP版本
         let phpVersionList = await Promise.all(vhosts.map(async confPath => {
-            let text = FileUtil.ReadAllText(confPath);
+            let text = await FileUtil.ReadAll(confPath);
             let matches = text.match(/php-(\S+?)\.conf/);
             return matches ? matches[1] : null;
         }));
@@ -27,40 +27,31 @@ export default class SoftwareExtend {
         return phpVersionList;
     }
 
-
-    /**
-     *
-     * @returns {*[]|{name: string, version: string}[]}
-     */
-    static getPHPList() {
+    static async getPHPList() {
         let path = GetPath.getPhpTypeDir();
-        if (!Directory.Exists(path)) {
+        if (!await DirUtil.Exists(path)) {
             return [];
         }
-        let list = Directory.GetDirectories(path, 'php-');
+        let list = await DirUtil.GetDirectories(path, 'php-');
 
         return list.map(path => {
             let name = Path.GetBaseName(path);
             let version = SoftwareExtend.getPHPVersion(name);
-            return {version, name};
+            return { version, name };
         });
     }
 
-    /**
-     *
-     * @returns {*[]|{name: string, version: string}[]}
-     */
-    static getMySQLList() {
+    static async getMySQLList() {
         let path = GetPath.getServerTypeDir();
-        if (!Directory.Exists(path)) {
+        if (!await DirUtil.Exists(path)) {
             return [];
         }
-        let list = Directory.GetDirectories(path, 'mysql-');
+        let list = await DirUtil.GetDirectories(path, 'mysql-');
 
         return list.map(path => {
             let name = Path.GetBaseName(path);
             let version = SoftwareExtend.getMysqlVersion(name);
-            return {version, name};
+            return { version, name };
         });
     }
 

@@ -9,18 +9,6 @@ import TcpProcess from "@/main/utils/TcpProcess";
 import { isWindows } from '@/main/utils/utils'
 
 export default class Database {
-
-    /**
-     *
-     * @param version {string}
-     * @returns {Promise<void>}
-     */
-    static async initMySQL(version) {
-        //mysql user的密码在mysql data目录
-        await Database.initMySQLData(version);
-        await Database.resetMySQLPassword(version);
-    }
-
     /**
      *
      * @param version {string}
@@ -52,14 +40,15 @@ export default class Database {
         }
         let mysqlPath = GetPath.getMysqlDir(version);
         let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
-        FileUtil.WriteAllText(resetPwdPath, resetCommand);
+        await FileUtil.WriteAll(resetPwdPath, resetCommand);
 
         let confFilePath = this.getMySQLConfFilePath(version);
-        let portMatch = FileUtil.ReadAllText(confFilePath).match(/\[mysqld].*?port\s*=\s*(\d+)/s);
+        let confText = await FileUtil.ReadAll(confFilePath)
+        let portMatch = confText.match(/\[mysqld].*?port\s*=\s*(\d+)/s)
         let port = portMatch ? portMatch[1] : 3306;
 
         let oldPid = await TcpProcess.getPidByPort(port);
-        if(oldPid){
+        if (oldPid) {
             await ProcessExtend.kill(oldPid);
         }
 
@@ -79,7 +68,7 @@ export default class Database {
         }
         await sleep(100);
         await ProcessExtend.kill(childProcess.pid);
-        FileUtil.Delete(resetPwdPath);
+        await FileUtil.Delete(resetPwdPath);
     }
 
     static getMySQLConfFilePath(version) {

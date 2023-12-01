@@ -27,6 +27,7 @@
 </template>
 
 <script setup>
+import { computed, ref } from 'vue'
 import Env from '@/main/core/Env/Env'
 import { message } from 'ant-design-vue'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
@@ -34,7 +35,7 @@ import GetPath from '@/shared/utils/GetPath'
 import { mt, t } from '@/shared/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
-import { computed } from 'vue'
+
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const store = useMainStore()
@@ -45,20 +46,26 @@ const changeEnableEnv = async () => {
   })
 }
 
-const phpVersionListTemp = SoftwareExtend.getPHPList().map(item => {
-  return { value: item.version, label: item.name }
-})
+const phpVersionListTemp = ref([])
+
 const phpVersionList = computed(() => {
-  return [...phpVersionListTemp, { value: '', label: mt('Not', 'ws', 'Set') }]
+  return [...phpVersionListTemp.value, { value: '', label: mt('Not', 'ws', 'Set') }]
 })
 
-const phpCliVersionChange = () => {``
+;(async () => {
+  const list = await SoftwareExtend.getPHPList()
+  phpVersionListTemp.value = list.map(item => {
+    return { value: item.version, label: item.name }
+  })
+})()
+
+const phpCliVersionChange = () => {
   store.setSettings('PhpCliVersion', async originVal => {
     if (store.settings.PhpCliVersion) {
       let path = GetPath.getPhpExePath(store.settings.PhpCliVersion)
-      Env.createBinFile(path, 'php')
+      await Env.createBinFile(path, 'php')
     } else {
-      Env.deleteBinFile('php')
+      await Env.deleteBinFile('php')
     }
     message.success('设置成功，已生效，不需要重启终端！')
   })
@@ -68,9 +75,9 @@ const changeEnableComposer = async () => {
   store.setSettings('EnableComposer', async originVal => {
     if (store.settings.EnableComposer) {
       let path = GetPath.getComposerExePath()
-      Env.createBinFile(path, 'composer')
+      await Env.createBinFile(path, 'composer')
     } else {
-      Env.deleteBinFile('composer')
+      await Env.deleteBinFile('composer')
     }
     message.success('设置成功，已生效，不需要重启终端！')
   })

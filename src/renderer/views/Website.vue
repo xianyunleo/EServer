@@ -18,11 +18,11 @@
       </a-checkbox>
     </a-card>
 
-    <a-table :scroll="{y: 'calc(100vh - 245px)'}"
+    <a-table :scroll="{y: 'calc(100vh - 300px)'}"
              :columns="columns"
              :data-source="list"
              class="content-table web-table scroller"
-             :pagination="false"
+             :pagination="pagination"
              size="middle">
       <template #bodyCell="{ column, text, record}">
         <template v-if="column.dataIndex === 'operate'">
@@ -72,6 +72,12 @@ const store = useMainStore()
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
 const DownOutlined = createAsyncComponent(import('@ant-design/icons-vue'), 'DownOutlined')
+
+const pagination = {
+  defaultPageSize: 10,
+  showSizeChanger: true,
+  showTotal: total => `Total ${total} items`
+}
 
 const columns = computed(() => {
   return [
@@ -158,24 +164,25 @@ const del = async (item) => {
       cancelText:t('Cancel'),
     };
     if (await MessageBox.confirm(options)) {
-      Website.delete(item.confName);
+      await Website.delete(item.confName);
     }
    } catch (error) {
     MessageBox.error(error.message ?? error, '删除出错！');
     return;
   }
 
-  if (item.syncHosts) {
-    try {
-      await Hosts.delete(item.serverName);
-      //删除第二域名时，删除对应的hosts文件配置
-      if (item.extraServerName) {
-        await Hosts.delete(item.extraServerName);
-      }
-    } catch (error) {
-      MessageBox.error(error.message ?? error, t('errorOccurredDuring', [mt('sync', 'ws') + 'hosts']))
-    }
-  }
+  //// 会删除所有port的ServerName，需要优化
+  // if (item.syncHosts) {
+  //   try {
+  //     await Hosts.delete(item.serverName);
+  //     //删除第二域名时，删除对应的hosts文件配置
+  //     if (item.extraServerName) {
+  //       await Hosts.delete(item.extraServerName);
+  //     }
+  //   } catch (error) {
+  //     MessageBox.error(error.message ?? error, t('errorOccurredDuring', [mt('sync', 'ws') + 'hosts']))
+  //   }
+  // }
 
   search();
 }

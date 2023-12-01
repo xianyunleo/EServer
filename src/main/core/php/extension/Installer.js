@@ -3,7 +3,7 @@ import Path from '@/main/utils/Path'
 import GetPath from '@/shared/utils/GetPath'
 import child_process from 'child_process'
 import fs from 'fs'
-import Directory from '@/main/utils/Directory'
+import DirUtil from '@/main/utils/DirUtil'
 import fixPath from 'fix-path'
 import Extension from './Extension'
 import Php from '@/main/core/php/Php'
@@ -24,24 +24,24 @@ export default class Installer {
 
     /**
      *
-     * @returns {string} command
+     * @returns {Promise<string>} command
      */
-    install() {
+    async install() {
         if (isMacOS) {
             fixPath();
         }
 
         let commandStr;
         let phpExtDlDir = Path.Join(GetPath.getDownloadsDir(), 'phpExt');
-        if(!Directory.Exists(phpExtDlDir)){
-            Directory.CreateDirectory(phpExtDlDir);
+        if (!await DirUtil.Exists(phpExtDlDir)) {
+            await DirUtil.Create(phpExtDlDir);
         }
         let phpDir = GetPath.getPhpDir(this.phpVersion);
 
         const scriptPath = Extension.getInstallScriptPath(this.extName);
         if (isWindows) {
             let extFileName = Extension.getFileName(this.extName);
-            let phpExtDir = Php.getExtensionDir(this.phpVersion);
+            let phpExtDir = await Php.getExtensionDir(this.phpVersion);
             let dlFileName = this.getDownloadFileName();
             commandStr = ` powershell.exe -ExecutionPolicy Bypass -File "${scriptPath}"`;
             commandStr += ` ${phpExtDlDir} ${phpDir} ${this.extVersion} ${this.extName} ${extFileName} ${phpExtDir} ${dlFileName}`;
@@ -53,24 +53,20 @@ export default class Installer {
         let childProcess = child_process.exec(commandStr);
 
         childProcess.stderr.on('data', (data) => {
-            if (isDev) console.log('phpExt:stderr',data.toString())
-            this.eventEmitter.emit('phpExt:stderr',data.toString())
+            this.eventEmitter.emit('phpExt:stderr', data.toString())
         });
 
         childProcess.stdout.on('data', (data) => {
-            if(isDev) console.log('phpExt:stdout',data.toString())
-            this.eventEmitter.emit('phpExt:stdout',data.toString())
+            this.eventEmitter.emit('phpExt:stdout', data.toString())
         });
 
-        childProcess.on('exit', (code,signal) => {
-            this.eventEmitter.emit('phpExt:exit',code,signal)
+        childProcess.on('exit', (code, signal) => {
+            this.eventEmitter.emit('phpExt:exit', code, signal)
         });
 
         this.eventEmitter.on('phpExt:stop', () => {
             childProcess.kill();
         })
-
-        if (isDev) console.log("install command:\n", commandStr);
         return commandStr;
     }
 

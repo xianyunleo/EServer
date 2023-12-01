@@ -10,11 +10,23 @@ export default class FsUtil {
      */
     static async Exists(path) {
         try {
-            await fsPromises.access(path, constants.F_OK)
+            await fsPromises.access(path)
             return true
         } catch {
             return false
         }
+    }
+
+    static async Copy(source, dest, options = {}) {
+        return await fsPromises.cp(source, dest, options)
+    }
+
+    static async Rename(oldPath, newPath) {
+        return await fsPromises.rename(oldPath, newPath)
+    }
+
+    static async Remove(path, options = {}) {
+        return await fsPromises.rm(path, options)
     }
 
     /**

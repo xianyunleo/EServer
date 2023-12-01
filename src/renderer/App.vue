@@ -31,7 +31,7 @@ import UserPwdModal from "@/renderer/components/UserPwdModal.vue";
 import Software from "@/main/core/software/Software";
 import Service from "@/main/utils/Service";
 import {message} from "ant-design-vue";
-import Directory from "@/main/utils/Directory";
+import DirUtil from "@/main/utils/DirUtil";
 import {MAC_USER_CORE_DIR} from "@/main/utils/constant";
 import ConfigProvider from "@/renderer/components/Theme/ConfigProvider.vue";
 import TrayManage from '@/main/TrayManage'
@@ -52,7 +52,7 @@ provide('GlobalProvide', { serverReactive });
 
 (async () => {
   try {
-    if (App.initFileExists() && !isDev) {
+    if (await App.initFileExists() && !isDev) {
       await initOrUpdate()
     }
 
@@ -74,7 +74,7 @@ provide('GlobalProvide', { serverReactive });
 
 async function initOrUpdate() {
   //存在initFile文件的情况下，判断是第一次安装，还是覆盖安装
-  if (!Software.DirExists()) { //目录不存在说明是第一次安装
+  if (!await Software.DirExists()) { //目录不存在说明是第一次安装
     if (isMacOS) {
       //调用设置（electron-store）会自动创建USER_CORE_DIR，为了捕捉创建失败的错误，先提前写好创建文件夹的代码。
       await macCreateUserCoreDir()
@@ -111,8 +111,8 @@ async function winInit() {
 
 async function macCreateUserCoreDir() {
   try {
-    if (!Directory.Exists(MAC_USER_CORE_DIR)) {
-      Directory.CreateDirectory(MAC_USER_CORE_DIR);
+    if (!await DirUtil.Exists(MAC_USER_CORE_DIR)) {
+      await DirUtil.Create(MAC_USER_CORE_DIR);
     }
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]));
@@ -124,7 +124,7 @@ async function update() {
   try {
     store.loading = true;
     await App.update();
-    App.deleteInitFile();
+    await App.deleteInitFile();
     store.loading = false;
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('update')]));

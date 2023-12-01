@@ -11,10 +11,10 @@ export default class Env {
      * @param targetPath
      * @param binName
      */
-    static createBinFile(targetPath, binName) {
+    static async createBinFile(targetPath, binName) {
         let binDirPath = GetPath.getBinDir();
         let path = Path.Join(binDirPath, this.getBinFileName(binName));
-        this.deleteBinFile(binName);
+        await this.deleteBinFile(binName);
         if (isWindows) {
             let text;
             if (binName === 'composer') {
@@ -22,7 +22,7 @@ export default class Env {
             } else {
                 text = `@echo off\r\n"${targetPath}" %*`
             }
-            FileUtil.WriteAllText(path, text);
+            await FileUtil.WriteAll(path, text);
         } else {
             if (binName === 'php') {
                 this.createOtherBinFile(targetPath, 'phpize', 'phpize');
@@ -38,22 +38,22 @@ export default class Env {
         FileUtil.CreateSymbolicLink(path, targetOtherFilePath);
     }
 
-    static deleteBinFile(binName) {
+    static async deleteBinFile(binName) {
         let path = Path.Join(GetPath.getBinDir(), this.getBinFileName(binName));
-        if (FileUtil.Exists(path)) {
-            FileUtil.Delete(path);
+        if (await FileUtil.Exists(path)) {
+            await FileUtil.Delete(path);
         }
         if (!isWindows) {
             if (binName === 'php') {
-                this.deleteOtherBinFile('phpize');
+                await this.deleteOtherBinFile('phpize');
             }
         }
     }
 
-    static deleteOtherBinFile(otherBinName) {
+    static async deleteOtherBinFile(otherBinName) {
         let path = Path.Join(GetPath.getBinDir(), this.getBinFileName(otherBinName));
-        if (FileUtil.Exists(path)) {
-            FileUtil.Delete(path);
+        if (await FileUtil.Exists(path)) {
+            await FileUtil.Delete(path);
         }
     }
 

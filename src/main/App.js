@@ -9,14 +9,14 @@ import {
     InitFiles_DIR_NAME,
     TEMP_DIR_NAME
 } from '@/main/utils/constant'
-import Directory from '@/main/utils/Directory'
+import DirUtil from '@/main/utils/DirUtil'
 import FileUtil from '@/main/utils/FileUtil'
 import Path from '@/main/utils/Path'
 import child_process from 'child_process'
-import fs from 'fs'
 import Software from "@/main/core/software/Software";
 import GetPath from "@/shared/utils/GetPath";
 import LocalInstall from "@/main/core/software/LocalInstall";
+import FsUtil from '@/main/utils/FsUtil'
 
 const app = electronRequire('app');
 
@@ -112,8 +112,8 @@ export default class App {
         return path.join(this.getDir(), `extra/${process.platform}`);
     }
 
-    static initFileExists() {
-        return FileUtil.Exists(this.getInitFilePath());
+    static async initFileExists() {
+        return await FileUtil.Exists(this.getInitFilePath());
     }
 
     static async init() {
@@ -123,34 +123,34 @@ export default class App {
 
         let initFile = this.getInitFilePath();
 
-        if (!FileUtil.Exists(initFile)) {
+        if (!await FileUtil.Exists(initFile)) {
             return;
         }
 
-        const softwareDirExists = Software.DirExists();
+        const softwareDirExists = await Software.DirExists();
 
         if (isMacOS && !isDev) {
-            if (!Directory.Exists(MAC_USER_CORE_DIR)) {
-                Directory.CreateDirectory(MAC_USER_CORE_DIR);
+            if (!await DirUtil.Exists(MAC_USER_CORE_DIR)) {
+                await DirUtil.Create(MAC_USER_CORE_DIR);
             }
             await this.updateMacCoreSubDir(['Library']);
         }
 
-        this.moveInitFiles(["downloads", "www"]);
-        this.createCoreSubDir(["software", "database", "bin",`${TEMP_DIR_NAME}/php`]);
+        await this.moveInitFiles(["downloads", "www"]);
+        await this.createCoreSubDir(["software", "database", "bin",`${TEMP_DIR_NAME}/php`]);
 
         if (!softwareDirExists) { //目录不存在说明是第一次安装，不是覆盖安装
-            const files = Directory.GetFiles(GetPath.getDownloadsDir());
+            const files = await DirUtil.GetFiles(GetPath.getDownloadsDir());
             await LocalInstall.installMultiple(files)
         }
 
-        FileUtil.Delete(initFile);
+        await FileUtil.Delete(initFile);
     }
 
-    static deleteInitFile(){
+    static async deleteInitFile() {
         let initFile = this.getInitFilePath();
-        if (FileUtil.Exists(initFile)) {
-            FileUtil.Delete(initFile);
+        if (await FileUtil.Exists(initFile)) {
+            await FileUtil.Delete(initFile);
         }
     }
 
@@ -169,15 +169,15 @@ export default class App {
         let corePath = this.getCoreDir();
         for (const dir of dirs) {
             let source = Path.Join(corePath, dir);
-            if (!Directory.Exists(source)) {
+            if (!await DirUtil.Exists(source)) {
                 continue;
             }
             let target = Path.Join(MAC_USER_CORE_DIR, dir);
-            if (!Directory.Exists(target)) {
-                Directory.CreateDirectory(target);
+            if (!await DirUtil.Exists(target)) {
+                await DirUtil.Create(target);
             }
             child_process.execSync(`rsync -a ${source}/* ${target}`);
-            await Directory.Delete(source);
+            await DirUtil.Delete(source);
         }
     }
 
@@ -185,11 +185,11 @@ export default class App {
      * 创建目录，如果目录不存在的情况下
      * @param dirs
      */
-    static createCoreSubDir(dirs) {
+    static async createCoreSubDir(dirs) {
         for (const dir of dirs) {
             let p = path.join(this.getUserCoreDir(), dir);
-            if (!Directory.Exists(p)) {
-                Directory.CreateDirectory(p);
+            if (!await DirUtil.Exists(p)) {
+                await DirUtil.Create(p);
             }
         }
     }
@@ -198,24 +198,20 @@ export default class App {
      * 将initFiles目录下的文件（文件夹）移动到用户操作的核心目录
      * @param files
      */
-    static moveInitFiles(files = []) {
-        let initFilesPath = Path.Join(this.getCoreDir(),InitFiles_DIR_NAME);
+    static async moveInitFiles(files = []) {
+        let initFilesPath = Path.Join(this.getCoreDir(), InitFiles_DIR_NAME);
         for (const file of files) {
-            let source = Path.Join(initFilesPath, file);
-            if(!fs.existsSync(source)){
-                continue;
-            }
-            let target = Path.Join(this.getUserCoreDir(), file);
-            if (!fs.existsSync(target)) {
-                fs.renameSync(source, target);
+            const source = Path.Join(initFilesPath, file);
+            const target = Path.Join(this.getUserCoreDir(), file);
+
+            if (await FsUtil.Exists(target)) {
+                FsUtil.Remove(source, { force: true, recursive: true }) //不捕捉错误
             } else {
-                let options = {force: true, recursive: true};
-                fs.rm(source, options, err => {
-                    console.log(`Error moveInitFiles fs.rm ${source}\r${err}`);
-                });
+                await FsUtil.Rename(source, target)
             }
         }
     }
+
     static exit() {
         app.exit();
     }

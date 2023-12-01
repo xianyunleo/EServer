@@ -57,7 +57,7 @@ const wwwPath = GetPath.getWebsiteDir().replaceSlash()
 const formRef = ref()
 const { serverReactive } = inject('GlobalProvide')
 const store = useMainStore()
-
+const phpVersionList = ref([])
 const formData = reactive({
   serverName: '',
   port: 80,
@@ -69,12 +69,13 @@ const formData = reactive({
 const labelColSpan = store.settings.Language === 'zh' ? 6 : 8;
 const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 16;
 
-const phpVersionList = ref([])
-let list = SoftwareExtend.getPHPList()
-phpVersionList.value = list.map(item => {
-  return { value: item.version, label: item.name }
-})
-phpVersionList.value.push({ value: '', label: t('Static') })
+;(async () => {
+  const list = await SoftwareExtend.getPHPList()
+  phpVersionList.value = list.map(item => {
+    return { value: item.version, label: item.name }
+  })
+  phpVersionList.value.push({ value: '', label: t('Static') })
+})()
 
 const serverNameChange = () => {
   formData.serverName = formData.serverName?.trim().replaceAll(/[^-a-zA-Z0-9.]/g, '')

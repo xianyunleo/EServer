@@ -36,7 +36,7 @@ export default class Native {
             fixPath()  //mac下修复环境变量不识别的问题
         }
         try {
-            if (!FileUtil.Exists(filePath)) {
+            if (!await FileUtil.Exists(filePath)) {
                 throw new Error(`${filePath} 文件不存在`)
             }
 
@@ -85,7 +85,7 @@ export default class Native {
 
     static async openHosts() {
         let path = GetPath.getHostsPath()
-        if (FileUtil.Exists(path) && !await FsUtil.CanReadWrite(path)) {
+        if (await FileUtil.Exists(path) && !await FsUtil.CanReadWrite(path)) {
             await FsUtil.ChmodReadWrite(path)
         }
         await Native.openTextFile(path)

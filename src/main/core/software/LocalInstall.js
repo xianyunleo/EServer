@@ -16,7 +16,9 @@ export default class LocalInstall {
         const dest = await this.getDestPath(dirName)
         if (!dest) return
         await CommonInstall.extract(filePath, dest)
-        if (deleteSrc) FileUtil.Delete(filePath)
+        if (deleteSrc){
+            await FileUtil.Delete(filePath)
+        }
         await CommonInstall.configure(dirName)
     }
 

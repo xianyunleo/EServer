@@ -21,10 +21,13 @@ export default class NginxWebsite {
      * @param confName 配置文件名，带扩展名
      */
     constructor(confName) {
-        this.confName = confName;
-        this.serverName = Path.GetFileNameWithoutExtension(confName).split('_')[0];
-        this.confPath = Nginx.getWebsiteConfPath(confName);
-        this.confText = FileUtil.ReadAllText(this.confPath);
+        this.confName = confName
+    }
+
+    async init() {
+        this.serverName = Path.GetFileNameWithoutExtension(this.confName).split('_')[0]
+        this.confPath = Nginx.getWebsiteConfPath(this.confName)
+        this.confText = await FileUtil.ReadAll(this.confPath)
     }
 
     getBasicInfo() {
@@ -47,9 +50,9 @@ export default class NginxWebsite {
         return allServerName[1] ?? null
     }
 
-    static getRewrite(confName) {
+    static async getRewrite(confName) {
         let rewritePath = Nginx.getWebsiteRewriteConfPath(confName);
-        return FileUtil.ReadAllText(rewritePath);
+        return await FileUtil.ReadAll(rewritePath);
     }
 
     getPort() {
@@ -101,12 +104,12 @@ export default class NginxWebsite {
         this.confText = text;
         this.setPHPVersion(websiteInfo.phpVersion);
         this.setExtraInfo({ syncHosts: websiteInfo.syncHosts, note: websiteInfo.note });
-        FileUtil.WriteAllText(this.confPath, this.confText);
+        await FileUtil.WriteAll(this.confPath, this.confText);
     }
 
-    static saveRewrite(confName, content) {
+    static async saveRewrite(confName, content) {
         let rewritePath = Nginx.getWebsiteRewriteConfPath(confName);
-        FileUtil.WriteAllText(rewritePath, content);
+        await FileUtil.WriteAll(rewritePath, content);
     }
 
     /**
@@ -131,7 +134,7 @@ export default class NginxWebsite {
         this.confText = this.confText.replace(/(?<=#EXTRA_INFO_START[\s\S]{0,9}#).*(?=[\s\S]{0,9}#EXTRA_INFO_END)/, extraStr);
     }
 
-    save() {
-        FileUtil.WriteAllText(this.confPath, this.confText);
+    async save() {
+        await FileUtil.WriteAll(this.confPath, this.confText);
     }
 }
