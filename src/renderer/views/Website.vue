@@ -18,7 +18,7 @@
       </a-checkbox>
     </a-card>
 
-    <a-table :scroll="{y: 'calc(100vh - 300px)'}"
+    <a-table :scroll="{y: 'calc(100vh - 280px)'}"
              :columns="columns"
              :data-source="list"
              class="content-table web-table scroller"
@@ -226,5 +226,8 @@ const openRootPath = (item) => {
 }
 :deep(td) {
   height: 57px;
+}
+:deep(.ant-table-pagination) {
+  margin: 6px 0!important;
 }
 </style>
