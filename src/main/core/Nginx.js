@@ -135,16 +135,21 @@ export default class Nginx {
         }
     }
 
-
-
-    static async websiteExists(serverName, port) {
+    static async websiteExists(serverName, port = null) {
         const vhostsPath = GetPath.getNginxVhostsDir()
         const files = await DirUtil.GetFiles(vhostsPath)
-        const filterArr = await files.filterAsync(async (path) => {
-            let confText = await FileUtil.ReadAll(path)
+        const filterFn = async (path) => {
+            const confText = await FileUtil.ReadAll(path)
             const serverNames = this.getAllServerName(confText)
-            return serverNames.includes(serverName) && this.getPortByConfPath(path) === port
-        })
+            if (serverNames.includes(serverName)) {
+                if (port != null) {
+                    return this.getPortByConfPath(path) === port
+                }
+                return true
+            }
+            return false
+        }
+        const filterArr = await files.filterAsync(filterFn)
         return filterArr.length > 0
     }
 

@@ -9,7 +9,7 @@ export default class Website {
      * @param websiteInfo {WebsiteItem}
      */
     static async add(websiteInfo) {
-        if (await Nginx.websiteExists(websiteInfo.serverName, websiteInfo.port)) {
+        if (await this.exists(websiteInfo.serverName, websiteInfo.port)) {
             throw new Error(`${websiteInfo.serverName}:${websiteInfo.port}\n已经存在，不能重复！`)
         }
 
@@ -17,6 +17,10 @@ export default class Website {
             await DirUtil.Create(websiteInfo.rootPath)
         }
         await Nginx.addWebsite(websiteInfo);
+    }
+
+    static async exists(serverName, port = null) {
+        return await Nginx.websiteExists(serverName, port)
     }
 
     static async delete(confName) {

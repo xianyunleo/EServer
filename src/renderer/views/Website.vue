@@ -159,32 +159,38 @@ search();
 const del = async (item) => {
   try {
     let options = {
-      content:t('areYouSure'),
+      content:t('Delete')+` ${item.serverName}:${item.port} ？`,
       okText:t('Confirm'),
       cancelText:t('Cancel'),
     };
     if (await MessageBox.confirm(options)) {
       await Website.delete(item.confName);
     }
-   } catch (error) {
+  } catch (error) {
     MessageBox.error(error.message ?? error, '删除出错！');
     return;
   }
 
-  //// 会删除所有port的ServerName，需要优化
-  // if (item.syncHosts) {
-  //   try {
-  //     await Hosts.delete(item.serverName);
-  //     //删除第二域名时，删除对应的hosts文件配置
-  //     if (item.extraServerName) {
-  //       await Hosts.delete(item.extraServerName);
-  //     }
-  //   } catch (error) {
-  //     MessageBox.error(error.message ?? error, t('errorOccurredDuring', [mt('sync', 'ws') + 'hosts']))
-  //   }
-  // }
+  if (item.syncHosts) {
+    const { serverName, extraServerName } = item
+    syncHosts(serverName, extraServerName)
+  }
 
   search();
+}
+
+async function syncHosts(serverName, extraServerName) {
+  try {
+    if (!await Website.exists(serverName)) {
+      await Hosts.delete(serverName);
+    }
+
+    if (extraServerName && !await Website.exists(extraServerName)) {
+      await Hosts.delete(extraServerName);
+    }
+  } catch {
+    /* empty */
+  }
 }
 
 const showAdd = () => {
@@ -222,12 +228,11 @@ const openRootPath = (item) => {
 .web-header {
   display: flex;
   justify-content: space-between;
-  //padding: 15px 15px;
 }
 :deep(td) {
   height: 57px;
 }
 :deep(.ant-table-pagination) {
-  margin: 6px 0!important;
+  margin: 6px 10px !important;
 }
 </style>

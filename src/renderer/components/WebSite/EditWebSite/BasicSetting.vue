@@ -85,28 +85,32 @@ const save = async () => {
     return
   }
 
-  // 会删除所有port的ServerName，需要优化
-  // if (websiteInfo.syncHosts) {
-  //   try {
-  //     let oldExtraServerName = websiteInfo.extraServerName
-  //     if (formData.extraServerName !== oldExtraServerName) {
-  //       //删除旧的第二域名对应的hosts文件配置
-  //       if (oldExtraServerName) {
-  //         await Hosts.delete(oldExtraServerName)
-  //       }
-  //       //增加新的第二域名对应的hosts文件配置
-  //       if (formData.extraServerName) {
-  //         await Hosts.add(formData.extraServerName)
-  //       }
-  //     }
-  //   } catch (error) {
-  //     MessageBox.error(error.message ?? error, '同步Hosts出错！')
-  //   }
-  // }
+  if (websiteInfo.syncHosts) {
+    const oldExtSerName = websiteInfo.extraServerName
+    const newExtSerName = formData.extraServerName
+    syncHosts(oldExtSerName, newExtSerName)
+  }
 
   websiteInfo = JSON.parse(JSON.stringify(formData))
 
   emits('editAfter', websiteInfo.phpVersion)
+}
+
+async function syncHosts(oldExtSerName, newExtSerName) {
+  try {
+    if (newExtSerName !== oldExtSerName) {
+      //删除旧的第二域名对应的hosts文件配置
+      if (oldExtSerName && !await Website.exists(oldExtSerName)) {
+        await Hosts.delete(oldExtSerName)
+      }
+      //增加新的第二域名对应的hosts文件配置
+      if (newExtSerName) {
+        await Hosts.add(newExtSerName)
+      }
+    }
+  } catch {
+    /* empty */
+  }
 }
 
 const extraServerNameChange = () => {
