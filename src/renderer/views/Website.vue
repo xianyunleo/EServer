@@ -3,22 +3,20 @@
     <a-card size="small">
       <div class='web-header' >
         <a-button type="primary" @click="showAdd">{{t("Add")}}</a-button>
-        <input-with-search :placeholder="mt('Input','ws','DomainName')"
-                           style='width: 200px' @search='search' />
+        <div>
+          {{mt('Show','ws', 'Column')}}：
+          <a-checkbox v-model:checked='store.websiteList.showSecondDomainName'>
+            {{ mt('Second', 'ws', 'DomainName') }}
+          </a-checkbox>
+          <a-checkbox v-model:checked="store.websiteList.showNote">
+            {{mt('Note')}}
+          </a-checkbox>
+        </div>
+        <input-with-search :placeholder="mt('Input','ws','DomainName')" style="width: 200px" @search="search" />
       </div>
     </a-card>
 
-    <a-card size="small" style='margin-top:15px'>
-      {{mt('Show','ws', 'Column')}}：
-      <a-checkbox v-model:checked='store.websiteList.showSecondDomainName'>
-        {{ mt('Second', 'ws', 'DomainName') }}
-      </a-checkbox>
-      <a-checkbox v-model:checked="store.websiteList.showNote">
-        {{mt('Note')}}
-      </a-checkbox>
-    </a-card>
-
-    <a-table :scroll="{y: 'calc(100vh - 280px)'}"
+    <a-table :scroll="{y: 'calc(100vh - 220px)'}"
              :columns="columns"
              :data-source="list"
              class="content-table web-table scroller"
@@ -228,6 +226,7 @@ const openRootPath = (item) => {
 .web-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 :deep(td) {
   height: 57px;
