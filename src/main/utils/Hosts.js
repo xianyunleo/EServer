@@ -33,6 +33,7 @@ export default class Hosts {
      * @param domain {string}
      */
     static async delete(domain) {
+        if (domain === 'localhost') return
         let path = GetPath.getHostsPath();
         if (!await FileUtil.Exists(path)) {
             return;
