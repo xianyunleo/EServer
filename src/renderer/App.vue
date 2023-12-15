@@ -73,6 +73,10 @@ provide('GlobalProvide', { serverReactive });
 })()
 
 async function initOrUpdate() {
+  if (isMacOS && process.arch === 'arm64' && !App.checkInstallRosetta()) {
+    await MessageBox.error(`需要Rosetta支持，请复制命令到终端执行安装\nsoftwareupdate --install-rosetta`)
+    App.exit()
+  }
   //存在initFile文件的情况下，判断是第一次安装，还是覆盖安装
   if (!await Software.DirExists()) { //目录不存在说明是第一次安装
     if (isMacOS) {
