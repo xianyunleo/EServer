@@ -13,6 +13,7 @@ mac:
     - target: dmg
       arch:
         - x64
+        - arm64
   extraFiles:
     - from: ./extra/darwin/Core/Library/
       to: ./Core/Library/
