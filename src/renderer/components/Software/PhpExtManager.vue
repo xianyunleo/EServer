@@ -114,14 +114,14 @@ let eventEmitter;
 const install = async (item) => {
   let extVersion = Extension.getVersion(item.name, props.phpVersion);
   if (!extVersion) {
-    MessageBox.error(`没有找到php-${props.phpVersion}可用的${item.name}扩展版本！`, '安装出错！');
+    MessageBox.error(`没有找到php-${props.phpVersion}可用的${item.name}扩展版本！`);
     return;
   }
 
   if (isMacOS && Extension.isNeedX64Brew(item.name) && !await Extension.isInstalledX64Brew()) {
     let scriptFilePath = Path.Join(GetPath.getScriptDir(), `x86_64-brew-install.sh`);
     fs.chmodSync(scriptFilePath, '0755');
-    MessageBox.error(`安装${item.name}扩展需要先安装 -x86_64 的 Homebrew！\n请复制命令安装\n${scriptFilePath}`, '安装出错！');
+    MessageBox.error(`安装${item.name}扩展需要先安装 -x86_64 的 Homebrew！\n请复制命令到终端执行安装\n${scriptFilePath}`);
     return;
   }
 
