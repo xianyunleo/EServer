@@ -67,7 +67,7 @@ provide('GlobalProvide', { serverReactive });
   }
 
   if (isWindows) {
-    stopWebService()
+    stopIIS()
   }
 
 })()
@@ -132,14 +132,13 @@ async function update() {
   }
 }
 
-async function stopWebService() {
-  const IISServiceName = 'W3SVC';
+async function stopIIS() {
+  const IISServiceName = 'W3SVC'
   if (await Service.isRunning(IISServiceName)) {
-    await Service.stop(IISServiceName);
-    message.info('已自动停止IIS服务');
+    await Service.stop(IISServiceName)
+    message.info('已自动停止IIS服务')
   }
 }
-
 </script>
 
 <style>
