@@ -116,6 +116,10 @@ export default class App {
         return await FileUtil.Exists(this.getInitFilePath());
     }
 
+    static async isInstallRosetta() {
+        return await FsUtil.Exists('/usr/libexec/rosetta/runtime')
+    }
+
     static async init() {
         if (this.getDir().includes(' ')) {
             throw new Error('安装路径不能包含空格！');

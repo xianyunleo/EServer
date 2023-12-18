@@ -73,7 +73,7 @@ provide('GlobalProvide', { serverReactive });
 })()
 
 async function initOrUpdate() {
-  if (isMacOS && process.arch === 'arm64' && !App.checkInstallRosetta()) {
+  if (isMacOS && process.arch === 'arm64' && !(await App.isInstallRosetta())) {
     await MessageBox.error(`需要Rosetta支持，请复制命令到终端执行安装\nsoftwareupdate --install-rosetta`)
     App.exit()
   }
