@@ -4,7 +4,7 @@
       :ok-text="t('Submit')"
       :cancel-text="props.cancelIsExit?t('Exit'):t('Cancel')"
       @ok="saveUserPwd" @cancel="cancel"
-      :ok-button-props="{disabled:okButtonDisabled}"
+      :ok-button-props="{loading:okButtonLoading}"
       v-model:open="visible"
       :right-pwd="rightPwd"
       centered
@@ -17,23 +17,24 @@
 </template>
 
 <script setup>
-import {computed, ref, inject} from "vue";
-import Settings from "@/main/Settings";
-import {message} from 'ant-design-vue';
-import App from "@/main/App";
-import SystemExtend from "@/main/utils/SystemExtend";
-import MessageBox from "@/renderer/utils/MessageBox";
-import {useMainStore} from "@/renderer/store";
-import {mt,t}  from '@/shared/utils/i18n'
-const store = useMainStore();
+import { computed, ref } from 'vue'
+import Settings from '@/main/Settings'
+import { message } from 'ant-design-vue'
+import App from '@/main/App'
+import SystemExtend from '@/main/utils/SystemExtend'
+import MessageBox from '@/renderer/utils/MessageBox'
+import { useMainStore } from '@/renderer/store'
+import { mt, t } from '@/shared/utils/i18n'
 
-const props =  defineProps({
-  show:Boolean,
-  rightPwd:String,
-  cancelIsExit:Boolean,
+const store = useMainStore()
+
+const props = defineProps({
+  show: Boolean,
+  rightPwd: String,
+  cancelIsExit: Boolean
 })
 
-const emit = defineEmits(['update:show','update:rightPwd'])
+const emit = defineEmits(['update:show', 'update:rightPwd'])
 
 const visible = computed({
   get() {
@@ -54,17 +55,17 @@ const rightPwd = computed({
 });
 
 const userPwd = ref('');
-const okButtonDisabled = ref(false);
+const okButtonLoading = ref(false);
 
 const saveUserPwd = async () => {
   if (!userPwd.value) {
     return;
   }
-  okButtonDisabled.value = true
+  okButtonLoading.value = true
   message.info(t('pleaseWait'));
   if (!await SystemExtend.checkUserPwd(userPwd.value)) {
     message.error(mt('Wrong','ws','Pwd'));
-    okButtonDisabled.value = false;
+    okButtonLoading.value = false;
     return;
   }
   rightPwd.value = userPwd.value;
@@ -81,7 +82,7 @@ const saveUserPwd = async () => {
       App.exit();
     }
   }
-  okButtonDisabled.value = false;
+  okButtonLoading.value = false;
 }
 
 const cancel = () => {
