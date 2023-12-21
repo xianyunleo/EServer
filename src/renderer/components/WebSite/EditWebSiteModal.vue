@@ -15,6 +15,9 @@
         <a-tab-pane key='rewriteSetting' :tab='t("UrlRewrite")'>
           <rewrite-setting @editAfter='editAfter' />
         </a-tab-pane>
+        <a-tab-pane key='sslSetting' tab='SSL'>
+          <ssl-setting @editAfter='editAfter' />
+        </a-tab-pane>
       </a-tabs>
     </div>
   </a-modal>
@@ -22,8 +25,9 @@
 
 <script setup>
 import { ref, inject } from 'vue'
-import RewriteSetting from '@/renderer/components/WebSite/EditWebSite/RewriteSetting.vue'
 import BasicSetting from '@/renderer/components/WebSite/EditWebSite/BasicSetting.vue'
+import RewriteSetting from '@/renderer/components/WebSite/EditWebSite/RewriteSetting.vue'
+import SslSetting from '@/renderer/components/WebSite/EditWebSite/SslSetting.vue'
 import Settings from '@/main/Settings'
 import { mt, t } from '@/shared/utils/i18n'
 import { useMainStore } from '@/renderer/store'

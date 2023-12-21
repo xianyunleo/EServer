@@ -3,6 +3,8 @@ import {EOL} from "os";
 import {CONF_INDENT} from "@/main/utils/constant";
 import FileUtil from "@/main/utils/FileUtil";
 import Path from "@/main/utils/Path";
+import GetPath from '@/shared/utils/GetPath'
+import DirUtil from '@/main/utils/DirUtil'
 
 const N = EOL; //换行符
 const T = CONF_INDENT; //缩进符
@@ -105,6 +107,72 @@ export default class NginxWebsite {
         this.setPHPVersion(websiteInfo.phpVersion);
         this.setExtraInfo({ syncHosts: websiteInfo.syncHosts, note: websiteInfo.note });
         await FileUtil.WriteAll(this.confPath, this.confText);
+    }
+
+    async setSsl(sslInfo) {
+        let text = this.confText
+        const sslDir = GetPath.getNginxVhostsSslDir();
+        if(!await DirUtil.Exists(sslDir)) DirUtil.Create(sslDir)
+
+        const keyName = Path.GetBaseName(sslInfo.keyPath)
+        const keyPath = Path.Join(sslDir,keyName).replaceSlash()
+        await FileUtil.Copy(sslInfo.keyPath,keyPath)
+
+        const certName = Path.GetBaseName(sslInfo.certPath)
+        const certPath = Path.Join(sslDir, certName).replaceSlash()
+        await FileUtil.Copy(sslInfo.certPath, certPath)
+
+        //增加listen 443，注意listen后面还有可能有 “default_server” 关键字
+        const listenPattern = /(?<=listen.*;)[\s\S]+?(?=server_name)/;
+        text = text.replace(listenPattern, `${N}${T}listen 443 ssl;${N}${T}`);
+
+        const toHttpsPattern = /(?<=#HTTP_TO_HTTPS_START)[\s\S]+?(?=#HTTP_TO_HTTPS_END)/;
+        if (sslInfo.isForceHttps)
+        {
+            //插入重定向到https的配置
+            const toHttpsText = Nginx.getToHttpsConfText();
+            text = text.replace(toHttpsPattern, `${N}${toHttpsText}${N}${T}`)
+        }
+        else
+        {
+            //删除重定向到https的配置
+            text = text.replace(toHttpsPattern, `${N}${T}`)
+        }
+
+        //插入ssl配置
+        const httpsConf = Nginx.getSslConfText(certPath,keyPath)
+        const sslPattern = /(?<=#SSL_START)[\s\S]+?(?=#SSL_END)/
+        text = text.replace(sslPattern, `${N}${httpsConf}${N}${T}`)
+        this.confText = text;
+    }
+
+    async closeSsl(){
+        let text = this.confText
+        const listenPattern = /.*listen\s+443\s+ssl\d*;\r?\n/
+        text = text.replace(listenPattern, '')
+
+        const toHttpsPattern = /(?<=#HTTP_TO_HTTPS_START)[\s\S]+?(?=#HTTP_TO_HTTPS_END)/
+        text = text.replace(toHttpsPattern, `${N}${T}`)
+        const httpsPattern = /(?<=#SSL_START)[\s\S]+?(?=#SSL_END)/
+        text = text.replace(httpsPattern, `${N}${T}`)
+
+        this.confText = text
+    }
+
+
+     async getSslInfo(){
+        const text = this.confText;
+        const certPattern = /ssl_certificate\s+(.+);/
+        const certMatch = text.match(certPattern)
+        const keyPattern = /ssl_certificate_key\s+(.+);/
+        const keyMatch = text.match(keyPattern)
+        const toHttpsPattern = /#HTTP_TO_HTTPS_START([\s\S]+?)#HTTP_TO_HTTPS_END/
+        const toHttpsMatch = text.match(toHttpsPattern)
+        return {
+            certPath: certMatch ?certMatch[1]:null,
+            keyPath: keyMatch ?keyMatch[1]:null,
+            isForceHttps: !!(toHttpsMatch && toHttpsMatch[1].trim())
+        }
     }
 
     static async saveRewrite(confName, content) {

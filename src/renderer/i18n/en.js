@@ -90,6 +90,10 @@ export default {
     Match:'Match',
     Script:'Script',
     Note:'Note',
+    Close:'Close',
+    Force: 'Force',
+    Key: 'Key',
+    Certificate: 'Certificate',
     //Lowercase
     none: 'none',
     auto: 'auto',
@@ -119,6 +123,7 @@ export default {
     goToSettings: 'Go to settings',
     areYouSure: 'Are you sure?',
     pleaseWait: 'Please wait!',
+    cannotBeEmpty: 'can not be empty',
     mysqlResetPwdTip: 'Stop the MySQL service first, then reset the password',
     defaultIsEmpty: 'Default is empty',
     oneClickStartAndStop: 'One click to start and stop',

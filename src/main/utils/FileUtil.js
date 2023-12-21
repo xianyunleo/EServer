@@ -36,8 +36,8 @@ export default class FileUtil {
         return await FsUtil.Rename(oldPath, newPath)
     }
 
-    static async Copy(source, dest, options = { force: true }) {
-        return await FsUtil.Copy(source, dest, options)
+    static async Copy(source, dest) {
+        return await fsPromises.copyFile(source, dest)
     }
 
     /**

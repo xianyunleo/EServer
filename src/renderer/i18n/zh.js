@@ -91,6 +91,10 @@ export default {
     Match:'匹配',
     Script:'脚本',
     Note:'备注',
+    Close:'关闭',
+    Force: '强制',
+    Key: '秘钥',
+    Certificate: '证书',
     //Lowercase
     none: '无',
     auto: '自动',
@@ -120,6 +124,7 @@ export default {
     goToSettings: '前往设置',
     areYouSure: '你确定吗？',
     pleaseWait: '请等待...',
+    cannotBeEmpty: '不能为空',
     mysqlResetPwdTip: '先停止MySQL服务，再重置密码',
     defaultIsEmpty: '默认为空',
     oneClickStartAndStop: '一键启动和停止',

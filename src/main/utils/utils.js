@@ -12,3 +12,11 @@ export function devConsoleLog(...str) {
         console.log(...str)
     }
 }
+
+export function replaceLineBreak(str) {
+    if (isWindows) {
+        return str.replaceAll('\n', '\r\n')
+    } else {
+        return str.replaceAll('\r\n', '\n')
+    }
+}

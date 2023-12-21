@@ -4,7 +4,12 @@ import NginxWebsite from "@/main/core/website/NginxWebsite";
 import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
 import Path from "@/main/utils/Path";
-import { isWindows } from '@/main/utils/utils'
+import { isWindows, replaceLineBreak } from '@/main/utils/utils'
+import { EOL } from 'os'
+import { CONF_INDENT } from '@/main/utils/constant'
+
+const N = EOL; //换行符
+const T = CONF_INDENT; //缩进符
 
 export default class Nginx {
     /**
@@ -103,10 +108,7 @@ export default class Nginx {
     error_log  logs/${Path.GetFileNameWithoutExtension(confName)}.error.log;
 }`;
 
-        if (isWindows) {
-            confText = confText.replaceAll("\n", "\r\n");
-        }
-
+        confText = replaceLineBreak(confText)
 
         await FileUtil.WriteAll(confPath, confText);
 
@@ -214,5 +216,23 @@ export default class Nginx {
 
     static getErrorLogOffValue(){
         return isWindows ? 'nul' : '/dev/null';
+    }
+
+    static getSslConfText(certPath, ketPath) {
+        const text = `${T}ssl_certificate ${certPath};
+${T}ssl_certificate_key ${ketPath};
+${T}ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
+${T}ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
+${T}ssl_prefer_server_ciphers on;`
+
+        return replaceLineBreak(text)
+    }
+
+    static getToHttpsConfText() {
+        const text = `${T}if ($scheme != https){
+${T}${T}return 301 https://$host$request_uri;
+${T}}`
+
+        return replaceLineBreak(text)
     }
 }

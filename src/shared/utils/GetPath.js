@@ -64,6 +64,10 @@ export default class GetPath {
         return path.join(this.getNginxVhostsDir(), 'rewrite');
     }
 
+    static getNginxVhostsSslDir() {
+        return path.join(this.getNginxVhostsDir(), 'ssl')
+    }
+
     static getDatabaseDir() {
         return path.join(App.getUserCoreDir(), 'database');
     }

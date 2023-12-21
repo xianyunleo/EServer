@@ -71,4 +71,24 @@ export default class Website {
     static async saveRewrite(confName, content) {
         await NginxWebsite.saveRewrite(confName, content);
     }
+
+    static async setSSL(confName, sslInfo) {
+        const website = new NginxWebsite(confName)
+        await website.init()
+        await website.setSsl(sslInfo)
+        await website.save()
+    }
+
+    static async closeSSL(confName) {
+        const website = new NginxWebsite(confName)
+        await website.init()
+        await website.closeSsl()
+        await website.save()
+    }
+
+    static async getSslInfo(confName) {
+        const website = new NginxWebsite(confName)
+        await website.init()
+        return website.getSslInfo()
+    }
 }
