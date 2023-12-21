@@ -63,9 +63,9 @@ const rewriteSelectChange = async (val) => {
 const save = async () => {
   try {
     await Website.saveRewrite(confName.value, formData.value.rewriteContent);
-    message.info('保存成功');
+    message.info(t('successfulOperation'))
   } catch (error) {
-    MessageBox.error(error.message ?? error, '保存出错！');
+    MessageBox.error(error.message ?? error);
   }
 
   emits('editAfter');

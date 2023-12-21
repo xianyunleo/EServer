@@ -78,10 +78,10 @@ const save = async () => {
   }
   try {
     await Website.saveBasicInfo(confName.value, formData)
-    message.info('保存成功')
+    message.info(t('successfulOperation'))
     search()
   } catch (error) {
-    MessageBox.error(error.message ?? error, '保存出错！')
+    MessageBox.error(error.message ?? error)
     return
   }
 

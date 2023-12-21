@@ -13,7 +13,7 @@
         :label-col='{ span: labelColSpan}' :wrapper-col='{ span: wrapperColSpan}'
       >
         <a-form-item :label="t('DomainName')+''" name='serverName'
-                     :rules="[{ required: true, message: '请输入域名!' }]">
+                     :rules="[{ required: true, message: t('cannotBeEmpty')}]">
           <a-input v-model:value='formData.serverName' @change='serverNameChange' spellcheck='false' />
         </a-form-item>
 
