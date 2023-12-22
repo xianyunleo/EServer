@@ -24,6 +24,9 @@ export default class FileDialog {
             filters
         }
         if (defaultPath) {
+            if (isWindows) {
+                defaultPath = defaultPath.replaceAll('/', '\\')
+            }
             options.defaultPath = defaultPath
         }
         let res = dialog.showOpenDialogSync(options)
@@ -43,6 +46,9 @@ export default class FileDialog {
             filters: filters
         }
         if (defaultPath) {
+            if (isWindows) {
+                defaultPath = defaultPath.replaceAll('/', '\\')
+            }
             options.defaultPath = defaultPath;
         }else {
             if(isMacOS){
