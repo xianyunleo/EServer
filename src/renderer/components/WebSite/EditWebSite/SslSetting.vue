@@ -8,7 +8,7 @@
       <input-open-file-dialog v-model:value='formData.certPath' :toForwardSlash='true'></input-open-file-dialog>
     </a-form-item>
 
-    <a-form-item :label="mt('Key')" name="keyPath"
+    <a-form-item label="Key" name="keyPath"
                  :rules="[{ required: true, message:t('cannotBeEmpty') }]">
       <input-open-file-dialog v-model:value='formData.keyPath' :toForwardSlash='true'></input-open-file-dialog>
     </a-form-item>

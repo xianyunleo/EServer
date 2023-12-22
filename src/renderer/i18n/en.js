@@ -92,7 +92,6 @@ export default {
     Note:'Note',
     Close:'Close',
     Force: 'Force',
-    Key: 'Key',
     Certificate: 'Certificate',
     //Lowercase
     none: 'none',

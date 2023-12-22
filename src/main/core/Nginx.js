@@ -222,7 +222,6 @@ export default class Nginx {
         const text = `${T}ssl_certificate ${certPath};
 ${T}ssl_certificate_key ${ketPath};
 ${T}ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
-${T}ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
 ${T}ssl_prefer_server_ciphers on;`
 
         return replaceLineBreak(text)

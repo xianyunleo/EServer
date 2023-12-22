@@ -93,7 +93,6 @@ export default {
     Note:'备注',
     Close:'关闭',
     Force: '强制',
-    Key: '秘钥',
     Certificate: '证书',
     //Lowercase
     none: '无',
