@@ -69,7 +69,7 @@ const toolItems = [
   {
     key: 'mysqlResetPwd',
     icon: GetPath.getMysqlIconPath(),
-    title: `MySQL${mt('ws','Reset','ws','Pwd')}`,
+    title: t('mysqlResetRootAccountPwd'),
     desc: '修改、重置MySQL的root账户的密码',
     func: mysqlResetPwd,
   },

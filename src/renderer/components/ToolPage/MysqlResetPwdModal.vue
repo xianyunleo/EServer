@@ -1,6 +1,6 @@
 <template>
   <a-modal
-      :title="`MySQL${mt('ws','Reset','ws','Pwd')}`"
+      :title="t('mysqlResetRootAccountPwd')"
       :ok-text="t('Submit')"
       :cancel-text="t('Cancel')"
       :ok-button-props="{loading:okButtonLoading}"

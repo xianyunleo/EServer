@@ -138,4 +138,5 @@ export default {
     pathCannotContainSpaces: '路径不能包含空格',
     installPackageDownloadUrl: '安装包下载地址',
     softwareUninstallErrorTip: '请打开文件管理器，手动删除{0}目录',
+    mysqlResetRootAccountPwd: 'MySQL 重置 root 账户的密码',
 }
