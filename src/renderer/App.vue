@@ -58,7 +58,6 @@ provide('GlobalProvide', { serverReactive });
 
     await store.init()
 
-    //todo 支持 computed
     store.loadingTip = t('Initializing')
     locale.value = store.settings.Language
     TrayManage.init()

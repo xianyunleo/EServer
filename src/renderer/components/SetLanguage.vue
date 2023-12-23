@@ -55,6 +55,7 @@ const languageChange = () => {
     Settings.set('Language', store.settings.Language)
     locale.value = store.settings.Language
     TrayManage.refresh()
+    store.loadingTip = t('Initializing')
   } catch (error) {
     MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('set')]))
   }
