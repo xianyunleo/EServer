@@ -8,6 +8,7 @@ import { t } from '@/shared/utils/i18n'
 import SystemTheme from '@/main/utils/SystemTheme'
 import { theme } from 'ant-design-vue'
 import { setTwoToneColor } from '@ant-design/icons-vue'
+import { color } from '@/renderer/utils/constant'
 
 export const useMainStore = defineStore('main', {
     state: () => {
@@ -35,8 +36,6 @@ export const useMainStore = defineStore('main', {
     actions: {
         async init() {
             await this.refreshSoftwareList()
-            this.settings = Settings.getAll()
-            await this.changeTheme(this.settings.ThemeMode, this.settings.ThemeColor);
         },
         async refreshSoftwareList() {
             const list = await Software.getList()
@@ -70,18 +69,17 @@ export const useMainStore = defineStore('main', {
                 MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('set')]))
             }
         },
-        async changeTheme(modeStr, primaryColor) {
+         changeTheme(modeStr, primaryColor) {
             const isDark = modeStr === 'dark' || (modeStr === 'system' && SystemTheme.isDarkModel())
             let customToken = {
-                colorBgLayout: '#F5F7FA',
+                colorBgLayout: color.light.bgColor,
                 colorPrimary: primaryColor,
                 borderRadius: 5
             }
 
             let darkToken = {
-                colorBgLayout: '#202020',
+                colorBgLayout: color.dark.bgColor,
                 colorBgContainer: '#303030',
-                colorBorder: 'rgba(255, 255, 255, 0.15)',
                 colorBorderSecondary: 'rgba(255, 255, 255, 0.06)',
                 colorSplit: 'rgba(255, 255, 255, 0.06)',
                 colorBgElevated: '#3F3F3F'

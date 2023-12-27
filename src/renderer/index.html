@@ -8,10 +8,52 @@
 <!--      http-equiv="Content-Security-Policy"-->
 <!--      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"-->
 <!--    />-->
+    <style>
+      html,body{
+        padding:0;margin:0;
+      }
+      .xxx-container {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+      }
+      .xxx-container .sidebar{
+        height: 100vh;
+        width:16.66%;
+        border-collapse: collapse;
+      }
+      .xxx-container .right-container{
+        flex: 1;
+        height: 100vh;
+      }
+      .xxx-container .title-bar{
+        height:32px;
+      }
+    </style>
   </head>
 
   <body>
-    <div id="app"></div>
-    <script type="module" src="main.js"></script>
+    <div id="app">
+      <div class='xxx-container'>
+        <div class="sidebar"></div>
+        <div class="right-container">
+          <div class='title-bar'></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const { ipcRenderer } = require('electron')
+      const colors = ipcRenderer.sendSync('getColors')
+
+      let element = document.querySelector('.xxx-container')
+      element.style.background = colors.bgColor
+
+      element = document.querySelector('.xxx-container .sidebar')
+      element.style.borderRight = `1px solid ${colors.borderColor}`
+
+      element = document.querySelector('.xxx-container .title-bar')
+      element.style.borderBottom = `1px solid ${colors.borderColor}`
+    </script>
+    <script type='module' src='main.js'></script>
   </body>
 </html>

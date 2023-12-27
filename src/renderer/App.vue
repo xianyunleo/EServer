@@ -25,7 +25,7 @@ import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import TitleBar from "./components/TitleBar.vue";
 import SideBar from "./components/SideBar.vue";
 import App from "@/main/App";
-import { computed, provide, reactive, ref, watch } from 'vue'
+import { provide, reactive, ref, watch } from 'vue'
 import MessageBox from "@/renderer/utils/MessageBox";
 import UserPwdModal from "@/renderer/components/UserPwdModal.vue";
 import Software from "@/main/core/software/Software";
@@ -38,8 +38,8 @@ import TrayManage from '@/main/TrayManage'
 import { useI18n } from 'vue-i18n'
 import SetLanguage from "@/renderer/components/SetLanguage.vue";
 import { useMainStore } from '@/renderer/store'
-
-import { t } from "@/shared/utils/i18n";
+import Settings from '@/main/Settings'
+import { t } from '@/shared/utils/i18n'
 
 const store = useMainStore();
 const { locale } = useI18n()
@@ -48,9 +48,12 @@ const setLanguageShow = ref(false);
 
 const serverReactive = reactive({ restartFn: undefined, startPhpFpmFn: undefined })
 
-provide('GlobalProvide', { serverReactive });
+provide('GlobalProvide', { serverReactive })
 
-(async () => {
+const settings = Settings.getAll()
+store.changeTheme(settings.ThemeMode, settings.ThemeColor)
+store.settings = settings
+;(async () => {
   try {
     if (await App.initFileExists() && !isDev) {
       await initOrUpdate()
@@ -69,7 +72,6 @@ provide('GlobalProvide', { serverReactive });
   if (isWindows) {
     stopIIS()
   }
-
 })()
 
 async function initOrUpdate() {
