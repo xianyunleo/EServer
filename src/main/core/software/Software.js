@@ -4,6 +4,7 @@ import {EnumSoftwareType} from "@/shared/utils/enum";
 import GetPath from "@/shared/utils/GetPath";
 import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
+import GetAppPath from '@/main/utils/GetAppPath'
 
 export default class Software {
     static #list;
@@ -25,7 +26,7 @@ export default class Software {
     }
 
     static async initList() {
-        let corePath = App.getCoreDir();
+        let corePath = GetAppPath.getCoreDir();
         let softPath = path.join(corePath, '/config/software');
         let softConfigPath = path.join(softPath, 'software.json');
         let softIconPath = 'file://' + path.join(softPath, '/icon');
@@ -128,7 +129,7 @@ export default class Software {
     }
 
     static getIconPath() {
-        let corePath = App.getCoreDir();
+        let corePath = GetAppPath.getCoreDir();
         let softPath = path.join(corePath, '/config/software');
         return path.join(softPath, '/icon');
     }

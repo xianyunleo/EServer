@@ -82,11 +82,12 @@
 </template>
 
 <script setup>
-var timestamp = new Date().getTime();
+var timestamp = new Date().getTime()
+
 import { inject, onMounted, ref, watch } from 'vue'
 import { useMainStore } from '@/renderer/store'
-import App from '@/main/App'
 import GetPath from '@/shared/utils/GetPath'
+import GetAppPath from '@/main/utils/GetAppPath'
 import Software from '@/main/core/software/Software'
 import ServerControl from '@/main/core/ServerControl'
 import MessageBox from '@/renderer/utils/MessageBox'
@@ -130,7 +131,7 @@ const columns = [
     width: 100,
     align: 'center'
   }, {
-    title:  t('Operation'),
+    title: t('Operation'),
     dataIndex: 'operate',
     align: 'center'
   }
@@ -187,7 +188,7 @@ const initServerListStatus = async () => {
 
 
 const corePathClick = () => {
-  Native.openDirectory(App.getUserCoreDir())
+  Native.openDirectory(GetAppPath.getUserCoreDir())
 }
 const wwwPathClick = () => {
   Native.openDirectory(GetPath.getWebsiteDir())

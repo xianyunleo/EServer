@@ -14,6 +14,7 @@ import GetPath from '@/shared/utils/GetPath'
 import { EventEmitter } from 'events'
 import { mt, t } from '@/shared/utils/i18n'
 import CommonInstall from "@/main/core/software/CommonInstall";
+import GetAppPath from '@/main/utils/GetAppPath'
 
 export default class Installer extends EventEmitter {
     softItem;
@@ -147,6 +148,6 @@ export default class Installer extends EventEmitter {
     }
 
     getDownloadsPath() {
-        return path.join(App.getUserCoreDir(), 'downloads');
+        return path.join(GetAppPath.getUserCoreDir(), 'downloads');
     }
 }

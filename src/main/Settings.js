@@ -4,6 +4,7 @@ import { SETTINGS_FILE_NAME } from '@/main/utils/constant'
 import Path from '@/main/utils/Path'
 import GetPath from '@/shared/utils/GetPath'
 import { isMacOS, isWindows } from '@/main/utils/utils'
+import GetAppPath from '@/main/utils/GetAppPath'
 
 export default class Settings {
     static #_instance;
@@ -59,7 +60,7 @@ export default class Settings {
             PhpCliVersion: '',
             EnableComposer: false,
             TextEditor: this.#_getDefaultTextEditorPath(),
-            WebsiteDir: Path.Join(App.getUserCoreDir(), 'www'),
+            WebsiteDir: Path.Join(GetAppPath.getUserCoreDir(), 'www'),
             OneClickServerList: ['Nginx', 'PHP-FPM', 'MySQL-5.7'],
             AutoStartAndRestartServer: true,
         };
@@ -74,8 +75,8 @@ export default class Settings {
         }
     }
 
-    static getDir(){
-        return App.getSettingsDir();
+    static getDir() {
+        return GetAppPath.getSettingsDir()
     }
 
     /**

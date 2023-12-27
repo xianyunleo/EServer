@@ -4,7 +4,7 @@ const { app, Tray, Menu, nativeImage, getGlobal } = electronRequireMulti()
 import { isMacOS } from '@/main/utils/utils'
 import {t}  from '@/shared/utils/i18n'
 import Path from '@/main/utils/Path'
-import GetPath from '@/shared/utils/GetPath'
+import GetAppPath from '@/main/utils/GetAppPath'
 
 export default class TrayManage {
     static #_instance;
@@ -44,8 +44,8 @@ export default class TrayManage {
 
     static getIconPath() {
         if (isMacOS) {
-            return Path.Join(GetPath.getStaticDir(), 'img/icons/icon-tray-Mac.png')
+            return Path.Join(GetAppPath.getStaticDir(), 'img/icons/icon-tray-Mac.png')
         }
-        return Path.Join(GetPath.getStaticDir(), 'img/icons/icon-tray.png')
+        return Path.Join(GetAppPath.getStaticDir(), 'img/icons/icon-tray.png')
     }
 }
