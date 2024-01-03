@@ -5,12 +5,12 @@ import { MAC_USER_CORE_DIR, InitFiles_DIR_NAME, TEMP_DIR_NAME } from '@/main/uti
 import DirUtil from '@/main/utils/DirUtil'
 import FileUtil from '@/main/utils/FileUtil'
 import Path from '@/main/utils/Path'
-import child_process from 'child_process'
 import Software from '@/main/core/software/Software'
 import GetPath from '@/shared/utils/GetPath'
 import LocalInstall from '@/main/core/software/LocalInstall'
 import FsUtil from '@/main/utils/FsUtil'
 import GetAppPath from '@/main/utils/GetAppPath'
+import Command from '@/main/utils/Command'
 
 const app = electronRequire('app')
 
@@ -99,7 +99,7 @@ export default class App {
             if (!await DirUtil.Exists(target)) {
                 await DirUtil.Create(target)
             }
-            child_process.execSync(`rsync -a ${source}/* ${target}`)
+            await Command.exec(`rsync -a ${source}/* ${target}`)
             await DirUtil.Delete(source)
         }
     }

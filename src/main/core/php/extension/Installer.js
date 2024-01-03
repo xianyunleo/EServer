@@ -2,7 +2,7 @@ import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import Path from '@/main/utils/Path'
 import GetPath from '@/shared/utils/GetPath'
 import child_process from 'child_process'
-import fs from 'fs'
+import fsPromises from 'fs/promises'
 import DirUtil from '@/main/utils/DirUtil'
 import fixPath from 'fix-path'
 import Extension from './Extension'
@@ -46,7 +46,7 @@ export default class Installer {
             commandStr = ` powershell.exe -ExecutionPolicy Bypass -File "${scriptPath}"`;
             commandStr += ` ${phpExtDlDir} ${phpDir} ${this.extVersion} ${this.extName} ${extFileName} ${phpExtDir} ${dlFileName}`;
         } else {
-            fs.chmodSync(scriptPath, '0755');
+            await fsPromises.chmod(scriptPath, '0755');
             commandStr = `${scriptPath} ${phpExtDlDir} ${phpDir} ${this.extVersion}`;
         }
 

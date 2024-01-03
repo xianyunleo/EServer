@@ -30,6 +30,16 @@ export default class FsUtil {
     }
 
     /**
+     * 创建符号链接
+     * @param path {string} 符号链接的路径
+     * @param pathToTarget {string} 符号链接指向的目标的路径
+     * @returns {undefined}
+     */
+    static async CreateSymbolicLink(path, pathToTarget) {
+        return await fsPromises.symlink(pathToTarget, path)
+    }
+
+    /**
      *
      * @param path {string}
      * @returns {Promise<boolean>}

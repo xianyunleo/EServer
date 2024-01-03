@@ -4,6 +4,7 @@ import GetPath from "@/shared/utils/GetPath";
 import EnvMacOS from "@/main/core/Env/EnvMacOS";
 import EnvWindows from "@/main/core/Env/EnvWindows";
 import { isWindows, isMacOS } from '@/main/utils/utils'
+import FsUtil from '@/main/utils/FsUtil'
 
 export default class Env {
     /**
@@ -25,17 +26,17 @@ export default class Env {
             await FileUtil.WriteAll(path, text);
         } else {
             if (binName === 'php') {
-                this.createOtherBinFile(targetPath, 'phpize', 'phpize');
+                await this.createOtherBinFile(targetPath, 'phpize', 'phpize');
             }
-            FileUtil.CreateSymbolicLink(path, targetPath);
+            await FsUtil.CreateSymbolicLink(path, targetPath);
         }
     }
 
-    static createOtherBinFile(targetPath, targetOtherFileName, otherBinName) {
+    static async createOtherBinFile(targetPath, targetOtherFileName, otherBinName) {
         let binDirPath = GetPath.getBinDir();
         let path = Path.Join(binDirPath, otherBinName);
         let targetOtherFilePath = Path.Join(Path.GetDirectoryName(targetPath), targetOtherFileName);
-        FileUtil.CreateSymbolicLink(path, targetOtherFilePath);
+        await FsUtil.CreateSymbolicLink(path, targetOtherFilePath);
     }
 
     static async deleteBinFile(binName) {

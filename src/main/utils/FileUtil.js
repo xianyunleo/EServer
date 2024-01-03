@@ -1,18 +1,7 @@
-import fs from 'fs'
 import fsPromises from 'fs/promises'
 import FsUtil from '@/main/utils/FsUtil'
 
 export default class FileUtil {
-    /**
-     * 创建文件符号链接
-     * @param path {string} 符号链接的路径
-     * @param pathToTarget {string} 符号链接指向的目标的路径
-     * @returns {undefined}
-     */
-    static CreateSymbolicLink(path, pathToTarget) {
-        return fs.symlinkSync(pathToTarget, path);
-    }
-
     static async Delete(path, options = { force: true }) {
         return await FsUtil.Remove(path, options)
     }
