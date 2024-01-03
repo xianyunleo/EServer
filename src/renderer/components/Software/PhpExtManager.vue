@@ -112,10 +112,10 @@ const openExtDir = async () => {
 let installer;
 let eventEmitter;
 const install = async (item) => {
-  let extVersion = Extension.getVersion(item.name, props.phpVersion);
+  const extVersion = Extension.getVersion(item.name, props.phpVersion)
   if (!extVersion) {
-    MessageBox.error(`没有找到php-${props.phpVersion}可用的${item.name}扩展版本！`);
-    return;
+    MessageBox.warning(`没有找到php-${props.phpVersion}可用的${item.name}扩展版本！`)
+    return
   }
 
   if (isMacOS && Extension.isNeedX64Brew(item.name) && !await Extension.isInstalledX64Brew()) {
