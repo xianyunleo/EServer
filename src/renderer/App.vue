@@ -56,6 +56,7 @@ store.settings = settings
 ;(async () => {
   try {
     if (await App.initFileExists() && !isDev) {
+      await App.checkInstall()
       await initOrUpdate()
     }
 

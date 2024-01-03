@@ -1,5 +1,5 @@
 import { electronRequire } from '@/main/utils/electron'
-import { isDev, isMacOS } from '@/main/utils/utils'
+import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import path from 'path'
 import { MAC_USER_CORE_DIR, InitFiles_DIR_NAME, TEMP_DIR_NAME } from '@/main/utils/constant'
 import DirUtil from '@/main/utils/DirUtil'
@@ -28,10 +28,6 @@ export default class App {
     }
 
     static async init() {
-        if (GetAppPath.getDir().includes(' ')) {
-            throw new Error('安装路径不能包含空格！')
-        }
-
         const initFile = GetAppPath.getInitFilePath()
 
         if (!await FileUtil.Exists(initFile)) {
@@ -62,6 +58,22 @@ export default class App {
         const initFile = GetAppPath.getInitFilePath()
         if (await FileUtil.Exists(initFile)) {
             await FileUtil.Delete(initFile)
+        }
+    }
+
+    static async checkInstall(){
+        if (GetAppPath.getDir().includes(' ')) {
+            throw new Error('安装路径不能包含空格！')
+        }
+
+        if (isWindows) {
+            const hmc = require('hmc-win32')
+            const semverDiff = require('semver-diff')
+            const vcVersion = hmc.getStringRegKey('HKEY_LOCAL_MACHINE', 'SOFTWARE\\Microsoft\\DevDiv\\VC\\Servicing\\14.0\\RuntimeMinimum', 'Version')
+            const minVersion = '14.29.0' //Visual Studio 2019
+            if (!vcVersion || !semverDiff(minVersion, vcVersion)) {
+                throw new Error('需要安装最新的Visual C++ 2022 Runtime！\nhttps://aka.ms/vs/17/release/vc_redist.x64.exe')
+            }
         }
     }
 
