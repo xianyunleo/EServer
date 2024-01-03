@@ -6,6 +6,7 @@ import Store from 'electron-store'
 import MainWindow from '@/main/MainWindow'
 import { ipcListen } from "@/main/ipc";
 import { extendPrototype } from '@/shared/utils/utils'
+import { APP_NAME } from '@/shared/utils/constant'
 
 let mainWindow
 const gotTheLock = app.isPackaged ? app.requestSingleInstanceLock() : true //仅生产环境生效
@@ -38,7 +39,8 @@ function createMainWindow() {
             contextIsolation: false,
             webSecurity: false,
             nodeIntegrationInWorker: true
-        }
+        },
+        title: APP_NAME
     })
 
     mainWindow.on('ready-to-show', () => {
