@@ -252,7 +252,7 @@ const oneClickStop = async () => {
 }
 
 const startServerClick = async (item) => {
-  if (item.isRunning) {
+  if (item.isRunning || item.btnLoading) {
     return
   }
   item.btnLoading = true
