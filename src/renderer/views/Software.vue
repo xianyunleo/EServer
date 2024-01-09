@@ -262,7 +262,7 @@ const uninstall = async (item) => {
       MessageBox.error(t('failedOperation') + '\n' + t('softwareUninstallErrorTip', [item.DirName]))
     }
   } catch (error) {
-    MessageBox.error(error.message ?? error, '卸载出错！')
+    MessageBox.error(error.message ?? error, t('errorOccurredDuring', [mt('uninstall', 'ws') + item.Name]))
   }
 }
 

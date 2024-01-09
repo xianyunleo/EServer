@@ -111,6 +111,7 @@ export default {
     desc: 'desc',
     sync: 'sync',
     set: 'set',
+    uninstall: 'uninstall',
     initializing: 'initialize',
     download: 'download',
     uncompress: 'uncompress',

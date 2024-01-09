@@ -112,6 +112,7 @@ export default {
     desc: '描述',
     sync: '同步',
     set: '设置',
+    uninstall: '卸载',
     initializing: '初始化中',
     download: '下载',
     uncompress: '解压',
