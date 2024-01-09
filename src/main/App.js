@@ -24,7 +24,7 @@ export default class App {
     }
 
     static async isInstallRosetta() {
-        return await FsUtil.Exists('/usr/libexec/rosetta/runtime')
+        return await FsUtil.Exists('/Library/Apple/usr/libexec/oah/libRosettaRuntime')
     }
 
     static async init() {
@@ -62,8 +62,13 @@ export default class App {
     }
 
     static async checkInstall(){
-        if (GetAppPath.getDir().includes(' ')) {
+        const appPath = GetAppPath.getDir()
+        if (appPath.includes(' ')) {
             throw new Error('安装路径不能包含空格！')
+        }
+
+        if (/[\u4e00-\u9fa5]/.test(appPath)) {
+            throw new Error('安装路径不能包含中文！')
         }
 
         if (isWindows) {
