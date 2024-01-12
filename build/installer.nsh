@@ -1,10 +1,17 @@
 !macro preInit
+    Var /GLOBAL installDir
 	SetRegView 64
-	WriteRegExpandStr HKLM "${INSTALL_REGISTRY_KEY}" InstallLocation "D:\EServer"
-	WriteRegExpandStr HKCU "${INSTALL_REGISTRY_KEY}" InstallLocation "D:\EServer"
-	SetRegView 32
-	WriteRegExpandStr HKLM "${INSTALL_REGISTRY_KEY}" InstallLocation "D:\EServer"
-	WriteRegExpandStr HKCU "${INSTALL_REGISTRY_KEY}" InstallLocation "D:\EServer"
+    ReadRegStr $installDir HKLM "${INSTALL_REGISTRY_KEY}" InstallLocation
+    ${if} $installDir == ""
+        WriteRegExpandStr HKLM "${INSTALL_REGISTRY_KEY}" InstallLocation "D:\EServer"
+    ${endif}
+
+    ReadRegStr $installDir HKCU "${INSTALL_REGISTRY_KEY}" InstallLocation
+    ${if} $installDir == ""
+         WriteRegExpandStr HKCU "${INSTALL_REGISTRY_KEY}" InstallLocation "D:\EServer"
+    ${endif}
+
+	# SetRegView 32 almost ...
 !macroend
 
 !macro customRemoveFiles
@@ -13,4 +20,10 @@
     ${else}
         RMDir /r $INSTDIR
     ${endIf}
+!macroend
+
+!macro customUnWelcomePage
+  !define MUI_WELCOMEPAGE_TITLE "卸载本软件"
+  !define MUI_WELCOMEPAGE_TEXT "卸载本软件后会删除本软件的所有数据。请备份好重要数据！！！"
+  !insertmacro MUI_UNPAGE_WELCOME
 !macroend
