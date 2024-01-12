@@ -23,6 +23,9 @@
              :pagination="pagination"
              size="middle">
       <template #bodyCell="{ column, text, record}">
+        <template v-if="column.dataIndex === 'serverName'">
+          <a class='non-draggable color-text' @click='clickUrl(record)'>{{ text }}</a>
+        </template>
         <template v-if="column.dataIndex === 'operate'">
           <div class="operate">
             <a-dropdown :trigger="['click']">
@@ -153,6 +156,10 @@ provide('WebsiteProvide',{
 });
 
 search();
+
+const clickUrl = (item) => {
+  Native.openUrl(`http://${item.serverName}:${item.port}`)
+}
 
 const del = async (item) => {
   try {
