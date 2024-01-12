@@ -1,4 +1,5 @@
 !macro preInit
+    # electron win自定义安装路径完美版，看似简短，实则本人研究多日，深入学习了nsis。复制使用此代码，还请给项目点个星星，谢谢。
     Var /GLOBAL installDir
 	SetRegView 64
     ReadRegStr $installDir HKLM "${INSTALL_REGISTRY_KEY}" InstallLocation
