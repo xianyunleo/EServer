@@ -91,6 +91,7 @@ function onRunning() {
 function onBeforeQuit() {
     app.on('before-quit', () => {
         MainWindow.forceQuit = true
+        if (is.dev) mainWindow.webContents.closeDevTools()
     })
 }
 

@@ -58,7 +58,7 @@ const maximizeClick = () => {
 }
 
 const closeClick = () => {
-  mainWindow.hide()
+  mainWindow.close()
 }
 
 mainWindow.on('maximize', () => {
