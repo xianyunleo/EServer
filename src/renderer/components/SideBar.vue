@@ -2,7 +2,7 @@
   <div class="sidebar">
     <div class="draggable"></div>
     <div class="logo-container">
-      <img src="/img/icons/icon-trans.png" >
+      <img src="@/renderer/assets/img/icons/icon-trans.png" alt="icon" />
     </div>
     <a-menu mode="vertical" @select="menuItemSelect" v-model:selectedKeys="selectedKeys">
       <div style="flex: 1" class="non-draggable">
