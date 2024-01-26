@@ -80,6 +80,7 @@ export default class GetAppPath {
     }
 
     static getStaticDir() {
+        //这里的resources是指项目resources目录，非electron resources目录
         return path.join(this.getFrontEndDir(), 'resources')
     }
 
