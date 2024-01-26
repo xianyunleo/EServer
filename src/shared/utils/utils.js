@@ -8,29 +8,6 @@ export function extendPrototype() {
     String.prototype.replaceSlash = function () {
         return this.replaceAll('\\', '/')
     }
-    /**
-     * 去除字符串首位的空白或指定字符
-     * @param char
-     * @param type
-     * @returns {string}
-     */
-    String.prototype.trimChar = function (char = '', type = '') {
-        if (char) {
-            if (type === 'left') {
-                return this.replace(new RegExp('^\\' + char + '+', 'g'), '')
-            } else if (type === 'right') {
-                return this.replace(new RegExp('\\' + char + '+$', 'g'), '')
-            }
-            return this.replace(new RegExp('^\\' + char + '+|\\' + char + '+$', 'g'), '')
-        }
-        return this.replace(/^\s+|\s+$/g, '')
-    }
-    String.prototype.trimCharStart = function (char) {
-        return this.trim(char, 'left')
-    }
-    String.prototype.trimCharEnd = function (char) {
-        return this.trim(char, 'right')
-    }
 
     /**
      * 筛选数组，根据 async callback
