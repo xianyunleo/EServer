@@ -31,7 +31,7 @@ export default class ProcessExtend {
         try {
             if (isWindows) {
                 //taskkill杀不存在的进程会有标准错误，从而引发异常
-                await Command.exec(`taskkill /f /t /im ${name}`);
+                await Command.exec(`taskkill /f /t /im ${name}.exe`);
             } else {
                 //pkill杀不存在的进程会有标准错误，从而引发异常
                 await Command.sudoExec(`pkill ${name}`);
