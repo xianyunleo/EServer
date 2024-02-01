@@ -23,8 +23,7 @@ export default class MainWindow {
     }
 
     static show() {
-        if (this.#instance.isMinimized()) this.#instance.restore()
-        this.#instance.show()
+        this.#instance.isMinimized() ? this.#instance.restore() : this.#instance.show()
     }
 
 }

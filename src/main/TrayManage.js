@@ -1,7 +1,7 @@
 import { electronRequireMulti } from '@/main/utils/electron'
 import { APP_NAME } from '@/shared/utils/constant'
 const { app, Tray, Menu, nativeImage, getGlobal } = electronRequireMulti()
-import { isMacOS } from '@/main/utils/utils'
+import { isMacOS, isWindows } from '@/main/utils/utils'
 import {t}  from '@/shared/utils/i18n'
 import Path from '@/main/utils/Path'
 import GetAppPath from '@/main/utils/GetAppPath'
@@ -16,7 +16,9 @@ export default class TrayManage {
         const contextMenu = this.getContextMenu();
         tray.setToolTip(APP_NAME)
         tray.setContextMenu(contextMenu)
-        tray.on('click', () => this.showMainWindow())
+        if (isWindows) {
+            tray.on('click', () => this.showMainWindow())
+        }
         this.#_instance = tray;
     }
 
