@@ -1,5 +1,5 @@
 <template>
-  <div class='title-bar draggable'>
+  <div class='title-bar draggable' @dblclick="dblclick">
     <div class='notify color-text'>
       {{ APP_NAME }} {{ t('notice') }}：<a class='non-draggable color-text' @click='clickUrl'>🎉{{ t('none') }}</a>
     </div>
@@ -31,7 +31,7 @@ import Native from '@/main/utils/Native'
 import { t } from '@/shared/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
 import { APP_NAME } from '@/shared/utils/constant'
-import { getCurrentWindow } from '@electron/remote'
+import { getCurrentWindow, switchMaximize } from '@/shared/utils/window'
 
 const mainWindow = getCurrentWindow()
 const isWindowMax = ref(false)
@@ -46,12 +46,12 @@ const minimizeClick = () => {
   minimizeIsHover.value = false
 }
 
+const dblclick = () => {
+  if (!isWindows) maximizeClick()
+}
+
 const maximizeClick = () => {
-  if (mainWindow.isMaximized()) {
-    mainWindow.unmaximize()
-  } else {
-    mainWindow.maximize()
-  }
+  switchMaximize(mainWindow)
 }
 
 const closeClick = () => {

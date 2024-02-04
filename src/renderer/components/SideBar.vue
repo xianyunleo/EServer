@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <div class="draggable"></div>
+    <div class="draggable" @dblclick="dblclick"></div>
     <div class="logo-container">
       <img src="@/renderer/assets/img/icons/icon-trans.png" alt="icon" />
     </div>
@@ -44,6 +44,12 @@ import {defineAsyncComponent, ref} from 'vue'
 import {useRouter} from "vue-router";
 const router = useRouter();
 const selectedKeys = ref(['/']);
+import { getCurrentWindow, switchMaximize } from '@/shared/utils/window'
+import { isWindows } from '@/main/utils/utils'
+
+const dblclick = () => {
+  if (!isWindows) switchMaximize(getCurrentWindow())
+}
 
 const AMenu = defineAsyncComponent(() => {
   return new Promise((resolve) => {
