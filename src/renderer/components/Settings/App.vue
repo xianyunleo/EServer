@@ -35,9 +35,9 @@
 import {computed} from 'vue'
 import { useI18n } from 'vue-i18n'
 import {mt,t}  from '@/shared/utils/i18n'
-import TrayManage from '@/main/TrayManage'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
+import { changeLanguageWrapper } from '@/renderer/utils/language'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const { locale } = useI18n()
@@ -69,8 +69,7 @@ const colorOptions = computed(() => {
 
 const languageChange = () => {
   store.setSettings('Language', async originVal => {
-    locale.value = store.settings.Language
-    TrayManage.refresh()
+    await changeLanguageWrapper(store.settings.Language)
   })
 }
 

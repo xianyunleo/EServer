@@ -6,6 +6,7 @@ import Store from 'electron-store'
 import MainWindow from '@/main/MainWindow'
 import { ipcListen } from '@/main/ipc'
 import { extendPrototype } from '@/shared/utils/utils'
+import I18n from '@/shared/i18n/I18n'
 
 let mainWindow
 const gotTheLock = app.isPackaged ? app.requestSingleInstanceLock() : true //仅生产环境生效
@@ -16,11 +17,9 @@ if (!gotTheLock) {
     onReady()
     onRunning()
     onBeforeQuit()
-    remoteMain.initialize()
-    Store.initRenderer()
 }
 
-function createMainWindow() {
+async function createMainWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: is.dev ? 1280 : 900,
@@ -64,13 +63,15 @@ function createMainWindow() {
     }
     remoteMain.enable(mainWindow.webContents)
     MainWindow.init(mainWindow)
-    global.electron = { mainWindow }
-    Store.initRenderer()
 }
 
 function onReady() {
     app.on('ready', async () => {
         createMainWindow()
+        Store.initRenderer()
+        remoteMain.initialize()
+        Store.initRenderer()
+        I18n.init()
     })
 }
 

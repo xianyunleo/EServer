@@ -20,11 +20,11 @@
 <script setup>
 import {t} from "@/shared/utils/i18n";
 import {computed} from "vue";
-import TrayManage from "@/main/TrayManage";
 import Settings from "@/main/Settings";
 import MessageBox from "@/renderer/utils/MessageBox";
 import { useI18n } from 'vue-i18n'
 import { useMainStore } from '@/renderer/store'
+import { changeLanguageWrapper } from '@/renderer/utils/language'
 
 const { locale } = useI18n()
 const props =  defineProps({
@@ -49,12 +49,11 @@ const handleOk = () => {
   visible.value = false
 }
 
-const languageChange = () => {
+const languageChange = async () => {
   //todo改调用 store.setSettings ，并测试init调用此
   try {
     Settings.set('Language', store.settings.Language)
-    locale.value = store.settings.Language
-    TrayManage.refresh()
+    await changeLanguageWrapper(store.settings.Language)
     store.loadingTip = t('Initializing')
   } catch (error) {
     MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('set')]))

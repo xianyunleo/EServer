@@ -1,25 +1,27 @@
-import { electronRequireMulti } from '@/main/utils/electron'
+import { app, Tray, Menu, nativeImage } from 'electron'
 import { APP_NAME } from '@/shared/utils/constant'
-const { app, Tray, Menu, nativeImage, getGlobal } = electronRequireMulti()
 import { isMacOS, isWindows } from '@/main/utils/utils'
-import {t}  from '@/shared/utils/i18n'
+import { t } from '@/shared/utils/i18n'
 import Path from '@/main/utils/Path'
 import GetAppPath from '@/main/utils/GetAppPath'
+import MainWindow from '@/main/MainWindow'
 
 export default class TrayManage {
-    static #_instance;
+    static _instance
+
     static init() {
-        let iconPath = this.getIconPath();
+        if (this._instance) return
+        let iconPath = this.getIconPath()
         let icon = nativeImage.createFromPath(iconPath).resize({ width: 18, height: 18 })
         icon.setTemplateImage(true)
         let tray = new Tray(icon)
-        const contextMenu = this.getContextMenu();
+        const contextMenu = this.getContextMenu()
         tray.setToolTip(APP_NAME)
         tray.setContextMenu(contextMenu)
         if (isWindows) {
             tray.on('click', () => this.showMainWindow())
         }
-        this.#_instance = tray;
+        this._instance = tray
     }
 
     static getContextMenu() {
@@ -36,12 +38,11 @@ export default class TrayManage {
     }
 
     static showMainWindow() {
-        const electron = getGlobal('electron')
-        electron.mainWindow.show()
+        MainWindow.show()
     }
 
-    static refresh() {
-        this.#_instance.setContextMenu(this.getContextMenu())
+    static updateContextMenu() {
+        this._instance.setContextMenu(this.getContextMenu())
     }
 
     static getIconPath() {

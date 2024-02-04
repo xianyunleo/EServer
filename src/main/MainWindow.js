@@ -1,6 +1,6 @@
 export default class MainWindow {
 
-    static #instance;
+    static _instance;
     static forceQuit = false;
 
     /**
@@ -8,6 +8,8 @@ export default class MainWindow {
      * @param mainWindow {BrowserWindow}
      */
     static init(mainWindow) {
+        if (this._instance) return
+        this._instance = mainWindow
         mainWindow.on('close', (event) => {
             if (!this.forceQuit) {
                 event.preventDefault();
@@ -23,7 +25,7 @@ export default class MainWindow {
     }
 
     static show() {
-        this.#instance.isMinimized() ? this.#instance.restore() : this.#instance.show()
+        this._instance.isMinimized() ? this._instance.restore() : this._instance.show()
     }
 
 }

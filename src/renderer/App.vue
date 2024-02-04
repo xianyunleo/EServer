@@ -34,15 +34,13 @@ import {message} from "ant-design-vue";
 import DirUtil from "@/main/utils/DirUtil";
 import {MAC_USER_CORE_DIR} from "@/main/utils/constant";
 import ConfigProvider from "@/renderer/components/Theme/ConfigProvider.vue";
-import TrayManage from '@/main/TrayManage'
-import { useI18n } from 'vue-i18n'
 import SetLanguage from "@/renderer/components/SetLanguage.vue";
 import { useMainStore } from '@/renderer/store'
 import Settings from '@/main/Settings'
 import { t } from '@/shared/utils/i18n'
+import { changeLanguageWrapper } from '@/renderer/utils/language'
 
 const store = useMainStore();
-const { locale } = useI18n()
 const userPwdModalShow = ref(false);
 const setLanguageShow = ref(false);
 
@@ -63,8 +61,8 @@ store.settings = settings
     await store.init()
 
     store.loadingTip = t('Initializing')
-    locale.value = store.settings.Language
-    TrayManage.init()
+    await window.api.callStatic('TrayManage', 'init')
+    await changeLanguageWrapper(store.settings.Language)
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]))
     App.exit()

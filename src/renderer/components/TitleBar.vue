@@ -1,7 +1,7 @@
 <template>
   <div class='title-bar draggable'>
     <div class='notify color-text'>
-      {{APP_NAME}} {{ t('notice') }}：<a class='non-draggable color-text' @click='clickUrl'>🎉{{ t('none') }}</a>
+      {{ APP_NAME }} {{ t('notice') }}：<a class='non-draggable color-text' @click='clickUrl'>🎉{{ t('none') }}</a>
     </div>
     <div class='window-controls-container non-draggable color-text' v-if='isWindows'>
       <div class='window-icon codicon codicon-chrome-minimize '
@@ -23,26 +23,23 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import Native from '@/main/utils/Native'
 import { t } from '@/shared/utils/i18n'
-import { electronRequire } from '@/main/utils/electron'
-import {isWindows} from "@/main/utils/utils";
-import { APP_NAME } from '../../shared/utils/constant'
+import { isWindows } from '@/main/utils/utils'
+import { APP_NAME } from '@/shared/utils/constant'
+import { getCurrentWindow } from '@electron/remote'
 
-const BrowserWindow = electronRequire('BrowserWindow')
+const mainWindow = getCurrentWindow()
+const isWindowMax = ref(false)
+const minimizeIsHover = ref(false)
 
-let clickUrl = () => {
+const clickUrl = () => {
   Native.openUrl('http://www.eserver.app')
 }
-
-const isWindowMax = ref(false)
-const mainWindow = BrowserWindow.getAllWindows()[0]
-const minimizeIsHover = ref(false)
 
 const minimizeClick = () => {
   mainWindow.minimize()
@@ -70,7 +67,7 @@ mainWindow.on('unmaximize', () => {
 })
 </script>
 
-<style scoped lang='less'>
+<style scoped lang="less">
 .notify {
   margin-left: 10px;
   font-size: 14px;
@@ -78,6 +75,7 @@ mainWindow.on('unmaximize', () => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
   a {
     &:hover {
       color: #1890ff;
@@ -98,7 +96,7 @@ mainWindow.on('unmaximize', () => {
 
 .window-icon-close {
   &:hover {
-    background-color: rgba(232, 17, 35, .9);
+    background-color: rgba(232, 17, 35, 0.9);
   }
 }
 
@@ -118,6 +116,4 @@ mainWindow.on('unmaximize', () => {
     align-items: center;
   }
 }
-
-
 </style>

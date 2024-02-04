@@ -1,17 +1,15 @@
-import I18n from '@/renderer/i18n/i18n'
-
-const { t: originT } = I18n.getInstance().global
+import I18n from '@/shared/i18n/I18n'
 
 export function t(...arg) {
-  return originT(...arg)
+    const { t: originT } = I18n.getInstance().global
+    return originT(...arg)
 }
 
 export function mt(...args) {
-  let str = ''
-  for (const arg of args) {
-    str += originT(arg)
-  }
-  return str
+    const { t: originT } = I18n.getInstance().global
+    let str = ''
+    for (const arg of args) {
+        str += originT(arg)
+    }
+    return str
 }
-
-
