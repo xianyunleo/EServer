@@ -53,9 +53,8 @@ export default class Installer extends EventEmitter {
                 return
             } else {
                 this.changeStatus(EnumSoftwareInstallStatus.DownloadError)
-                let errMsg = error.message ?? '未知错误'
-                console.log(t('errorOccurredDuring', [t('download')]), errMsg)
-                throw new Error(`${t('errorOccurredDuring', [t('download')])}，${mt('Network', 'ws', 'Error')}`)
+                const errMsg = error.message ?? '未知错误'
+                throw new Error(`${t('errorOccurredDuring', [t('download')])}，${mt('Network', 'ws', 'Error')}\n${errMsg}`)
             }
         }
 
