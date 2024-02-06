@@ -139,7 +139,7 @@ export default class Installer extends EventEmitter {
             if (isWindows) {
                 url = `${url}/win`;
             } else {
-                url = `${url}/mac_x64`;
+                url = `${url}/v3_mac_x64`;
             }
         }
 
