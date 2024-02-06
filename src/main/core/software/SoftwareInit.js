@@ -122,6 +122,11 @@ export default class SoftwareInit{
                 const extDir = await Php.getExtensionDir(version)
                 //仅替换第一个
                 text = text.replace(/(?<=\n);?.?extension_dir\s*=.*/, `extension_dir = "${extDir}"`);
+
+                const extArr = ['curl', 'gd', 'openssl'];
+                for (const ext of extArr) {
+                    text = Php.addConfExtension(text, ext);
+                }
             }
 
             let phpTempPath = Path.Join(GetPath.geTempDir(), 'php');

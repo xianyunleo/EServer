@@ -3,7 +3,9 @@ import Path from "@/main/utils/Path";
 import GetPath from "@/shared/utils/GetPath";
 import { APP_NAME } from '@/shared/utils/constant'
 import { isWindows } from '@/main/utils/utils'
+import {EOL} from "os";
 
+const N = EOL; //换行符
 export default class Php {
     static getFpmConfText(version) {
         return `[global]
@@ -46,6 +48,18 @@ pm.max_spare_servers = 3
             }
             return replaceText;
         });
+    }
+
+    /**
+     *
+     * @param originText {string}
+     * @param extension {string}
+     * @returns {string}
+     */
+    static addConfExtension(originText, extension) {
+        let command = `extension=${extension}`
+        command += isWindows ? '.dll' : '.so'
+        return `${originText}${N}${command}`
     }
 
     /**
