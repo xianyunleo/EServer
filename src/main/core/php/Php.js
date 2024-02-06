@@ -29,9 +29,9 @@ pm.max_spare_servers = 3
      * @param open {boolean}
      * @returns {string}
      */
-    static getSwitchExtensionConfText(originText, extension, open) {
-        //(?<=\n);?.?extension\s*=\s*bz2.*
-        let regx = new RegExp(`(?<=\\n);?.?extension\\s*=\\s*${extension}.*`);
+    static switchConfExtension(originText, extension, open) {
+        //;?extension\s*=\s*(php_)?bz2(\.dll)?
+        const regx = new RegExp(`;?extension\\s*=\\s*(php_)?${extension}(\\.dll)?`)
 
         return originText.replace(regx, (match) => {
             let replaceText = match.trim();

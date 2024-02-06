@@ -4,7 +4,7 @@ import Path from "@/main/utils/Path";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import DirUtil from "@/main/utils/DirUtil";
 import Php from "@/main/core/php/Php";
- import Database from "@/main/core/Database";
+import Database from "@/main/core/Database";
 import {isWindows } from '@/main/utils/utils'
 
 export default class SoftwareInit{
@@ -107,15 +107,19 @@ export default class SoftwareInit{
                     return ++i === 2 ? 'extension_dir = "ext"' : match;
                 });
 
-                //需要php版本大于等于7.2
-                let extensionArr = ['bz2', 'curl', 'fileinfo', 'gd', 'mbstring', 'exif', 'mysqli', 'odbc',
+                const extArr = ['bz2', 'curl', 'fileinfo', 'mbstring', 'exif', 'mysqli', 'odbc',
                     'openssl', 'pdo_mysql', 'pdo_odbc', 'soap', 'sockets', 'sodium', 'zip'];
-                for (const extension of extensionArr) {
-                    text = Php.getSwitchExtensionConfText(text, extension, true);
+
+                const versionFloat = parseFloat(version)
+
+                versionFloat >= 7.2 ? extArr.push('gd') : extArr.push('gd2')
+
+                for (const ext of extArr) {
+                    text = Php.switchConfExtension(text, ext, true);
                 }
             } else {
                 //非Windows系统
-                let extDir = await Php.getExtensionDir(version)
+                const extDir = await Php.getExtensionDir(version)
                 //仅替换第一个
                 text = text.replace(/(?<=\n);?.?extension_dir\s*=.*/, `extension_dir = "${extDir}"`);
             }
