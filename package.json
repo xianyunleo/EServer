@@ -29,9 +29,10 @@
     "fix-path": "^3.0.0",
     "got": "^11.8.6",
     "hmc-win32": "~1.4.6",
-    "semver-diff":"3.1.1",
-    "vue": "~3.3.4",
     "pinia": "^2.1.6",
+    "semver-diff": "3.1.1",
+    "throttle-debounce": "^5.0.0",
+    "vue": "~3.3.4",
     "vue-i18n": "^9.5.0",
     "vue-router": "^4.2.4"
   },

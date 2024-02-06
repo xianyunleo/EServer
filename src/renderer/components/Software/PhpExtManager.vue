@@ -41,14 +41,14 @@
       :bodyStyle="{height:'calc(100vh - 120px)'}" width="100vw"
       centered :footer="null" :maskClosable="false">
     <div class="modal-content">
-      <pre class="command-out">{{ msg }}</pre>
+      <pre id="command-out">{{ msg }}</pre>
       <div :class="`result ${resultCode==0?'result-success':'result-error'}`">{{ result }}</div>
     </div>
   </a-modal>
 </template>
 
 <script setup>
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {EventEmitter} from "events";
 import Installer from "@/main/core/php/extension/Installer";
 import Extension from "@/main/core/php/extension/Extension";
@@ -61,6 +61,7 @@ import { isMacOS, isWindows } from '@/main/utils/utils'
 import { mt, t } from '@/shared/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import fsPromises from 'fs/promises'
+import {throttle} from "throttle-debounce";
 
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const props = defineProps(['show', 'phpVersion']);
@@ -165,6 +166,17 @@ const closeTaskDialog = () => {
   resultCode.value = 0;
   updateList();
 }
+
+const throttleFunc = throttle(
+  1000,
+  () => {
+    const commandElem = document.getElementById('command-out')
+    commandElem.scrollTop = commandElem.scrollHeight;
+  }
+)
+watch(msg, () => {
+  throttleFunc()
+})
 </script>
 <style scoped lang="less">
 .flex-horizontal-center {
@@ -172,9 +184,7 @@ const closeTaskDialog = () => {
   justify-content: center
 }
 
-.command-out {
-  display: flex;
-  flex-direction: column-reverse;
+#command-out {
   height: calc(100vh - 200px);
   padding: 10px;
   background: #333;
