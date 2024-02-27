@@ -23,6 +23,8 @@ mac:
       to: ./Core/initFiles/
     - from: ./extra/darwin/Core/script/
       to: ./Core/script/
+    - from: ./extra/darwin/Core/update/
+      to: ./Core/update/
     - from: ./extra/darwin/Core/init.txt
       to: ./Core/init.txt
   icon: build/icons/icon.icns
@@ -43,6 +45,8 @@ win:
       to: ./core/initFiles/
     - from: ./extra/win32/core/script/
       to: ./core/script/
+    - from: ./extra/win32/core/update/
+      to: ./core/update/
     - from: ./extra/win32/core/init.txt
       to: ./core/init.txt
   icon: build/icons/icon.ico

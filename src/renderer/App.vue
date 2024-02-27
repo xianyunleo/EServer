@@ -96,9 +96,7 @@ async function initOrUpdate() {
     })
   } else {
     //覆盖安装
-    if (isMacOS) {
-      await update()
-    }
+    await update()
   }
 }
 

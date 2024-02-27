@@ -11,6 +11,7 @@ import LocalInstall from '@/main/core/software/LocalInstall'
 import FsUtil from '@/main/utils/FsUtil'
 import GetAppPath from '@/main/utils/GetAppPath'
 import Command from '@/main/utils/Command'
+import { extractZip } from '@/main/utils/extract'
 
 const app = electronRequire('app')
 
@@ -84,8 +85,23 @@ export default class App {
 
     //覆盖安装，执行update
     static async update() {
-        if (isMacOS && !isDev) {
+        if (isDev) {
+            return
+        }
+
+        if (isMacOS) {
             await this.updateMacCoreSubDir(['Library'])
+        }
+
+        //下面update逻辑，用于更新 UserCoreDir
+        const updateDir = Path.Join(GetAppPath.getCoreDir(), 'update')
+        if (await DirUtil.Exists(updateDir)) {
+            const updateJson = await FileUtil.ReadAll(Path.Join(updateDir, 'update.json'))
+            const updateObj = JSON.parse(updateJson)
+            const updateFile = Path.Join(updateDir, updateObj.archiveFile)
+            if (await FileUtil.Exists(updateFile)) {
+                extractZip(updateFile, Path.Join(GetAppPath.getUserCoreDir(), updateObj.targetDir))
+            }
         }
     }
 
