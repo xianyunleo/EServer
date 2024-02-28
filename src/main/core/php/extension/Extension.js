@@ -96,7 +96,13 @@ export default class Extension {
                     return '8.2';
                 }
             case 'redis':
-                return phpVersion < 7.0 ? '4.3.0' : '5.3.7';
+                if (phpVersion < 7.0) {
+                    return '4.3.0'
+                } else if (phpVersion < 7.2) {
+                    return '5.3.7'
+                } else {
+                    return '6.0.2'
+                }
             case 'swoole':
                 if (phpVersion < 5.5) {
                     return '1.10.5';
@@ -107,30 +113,34 @@ export default class Extension {
                 } else if (phpVersion < 8.0) {
                     return '4.8.13';
                 } else {
-                    return '5.1.0';
+                    return '5.1.1'
                 }
             case 'mongodb':
                 if (phpVersion <= 7.1) {
-                    return '1.7.5';
+                    return '1.7.5'
+                } else if (phpVersion < 7.4) {
+                    return '1.15.3'
                 } else {
-                    return '1.15.3';
+                    return '1.17.2'
                 }
             case 'imagick':
                 if (phpVersion <= 5.6) {
-                    return '3.4.4';
-                }  else {
-                    return '3.7.0';
+                    return '3.4.4'
+                } else {
+                    return '3.7.0'
                 }
             case 'xdebug':
                 if (phpVersion <= 5.6) {
-                    return '2.5.5';
+                    return '2.5.5'
                 } else if (phpVersion <= 7.4) {
-                    return '2.9.8';
-                }  else {
-                    return '3.2.1';
+                    return '2.9.8'
+                } else if (phpVersion < 8.3) {
+                    return '3.2.1'
+                } else {
+                    return '3.3.1'
                 }
         }
-        return null;
+        return null
     }
 
     static getVersionForWindows(extName, phpVersion) {
