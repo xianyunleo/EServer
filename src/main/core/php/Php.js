@@ -5,7 +5,7 @@ import { APP_NAME } from '@/shared/utils/constant'
 import { isWindows } from '@/main/utils/utils'
 import {EOL} from "os";
 
-const N = EOL; //换行符
+const N = EOL //换行符
 export default class Php {
     static getFpmConfText(version) {
         return `[global]
@@ -57,9 +57,14 @@ pm.max_spare_servers = 3
      * @returns {string}
      */
     static addConfExtension(originText, extension) {
-        let command = `extension=${extension}`
+        let command = `${N}extension=${extension}`
         command += isWindows ? '.dll' : '.so'
-        return `${originText}${N}${command}`
+
+        if (originText.includes(command)) {
+            return originText
+        } else {
+            return `${originText}${command}`
+        }
     }
 
     /**
