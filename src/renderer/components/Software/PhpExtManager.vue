@@ -62,6 +62,7 @@ import { mt, t } from '@/shared/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import fsPromises from 'fs/promises'
 import {throttle} from "throttle-debounce";
+import SystemExtend from '@/main/utils/SystemExtend'
 
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const props = defineProps(['show', 'phpVersion']);
@@ -119,7 +120,7 @@ const install = async (item) => {
     return
   }
 
-  if (isMacOS && Extension.isNeedX64Brew(item.name) && !await Extension.isInstalledX64Brew()) {
+  if (isMacOS && Extension.isNeedX64Brew(item.name) && !await SystemExtend.isInstalledX64Brew()) {
     const scriptFilePath = Path.Join(GetPath.getScriptDir(), `x86_64-brew-install.sh`);
     await fsPromises.chmod(scriptFilePath, '0755')
     MessageBox.error(`安装${item.name}扩展需要先安装 -x86_64 的 Homebrew！\n请复制命令到终端执行安装\n${scriptFilePath}`);

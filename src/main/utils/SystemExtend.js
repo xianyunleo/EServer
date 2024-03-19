@@ -1,4 +1,5 @@
-import Command from "@/main/utils/Command";
+import Command from '@/main/utils/Command'
+import FsUtil from '@/main/utils/FsUtil'
 
 export default class SystemExtend {
     /**
@@ -8,10 +9,18 @@ export default class SystemExtend {
      */
     static async checkUserPwd(userPwd) {
         try {
-            await Command.exec(`echo '${userPwd}' | sudo -S -k -l`);
-            return true;
+            await Command.exec(`echo '${userPwd}' | sudo -S -k -l`)
+            return true
         } catch {
-            return false;
+            return false
         }
+    }
+
+    static async isInstalledX64Brew() {
+        return await FsUtil.Exists('/usr/local/homebrew/bin/brew')
+    }
+
+    static async isInstallRosetta() {
+        return await FsUtil.Exists('/Library/Apple/usr/libexec/oah/libRosettaRuntime')
     }
 }

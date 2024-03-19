@@ -24,10 +24,6 @@ export default class App {
         return await FileUtil.Exists(GetAppPath.getInitFilePath())
     }
 
-    static async isInstallRosetta() {
-        return await FsUtil.Exists('/Library/Apple/usr/libexec/oah/libRosettaRuntime')
-    }
-
     static async init() {
         const initFile = GetAppPath.getInitFilePath()
 

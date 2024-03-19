@@ -53,10 +53,6 @@ export default class Extension {
         return this.getSimpleList().find(item => item.nam == extName)?.needX64Brew;
     }
 
-    static async isInstalledX64Brew() {
-        return await FileUtil.Exists('/usr/local/homebrew/bin/brew');
-    }
-
     static getSimpleListForWindows(){
         return [
             {

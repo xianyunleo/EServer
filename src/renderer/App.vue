@@ -39,6 +39,7 @@ import { useMainStore } from '@/renderer/store'
 import Settings from '@/main/Settings'
 import { t } from '@/shared/utils/i18n'
 import { changeLanguageWrapper } from '@/renderer/utils/language'
+import SystemExtend from '@/main/utils/SystemExtend'
 
 const store = useMainStore();
 const userPwdModalShow = ref(false);
@@ -74,7 +75,7 @@ store.settings = settings
 })()
 
 async function initOrUpdate() {
-  if (isMacOS && process.arch === 'arm64' && !(await App.isInstallRosetta())) {
+  if (isMacOS && process.arch === 'arm64' && !(await SystemExtend.isInstallRosetta())) {
     await MessageBox.error(`需要Rosetta支持，请复制命令到终端执行安装\nsoftwareupdate --install-rosetta`)
     App.exit()
   }
