@@ -5,7 +5,6 @@ import fixPath from "fix-path";
 import GetPath from "@/shared/utils/GetPath";
 import FileUtil from "@/main/utils/FileUtil";
 import Settings from "@/main/Settings";
-import fs from "fs";
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import FsUtil from '@/main/utils/FsUtil'
 

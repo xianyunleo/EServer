@@ -1,3 +1,5 @@
+import { Worker } from 'node:worker_threads'
+
 export async function callStatic(className, methodName, ...args) {
     let result, importReturn
 
@@ -16,13 +18,15 @@ export async function callStatic(className, methodName, ...args) {
 }
 
 export async function callWorker(workName, ...args) {
-    let createWorker
+    let importReturn
     if (workName === 'processList') {
-        createWorker = await import(`@/main/worker/processList.js?nodeWorker`)
-        //?nodeWorker 不支持变量
+        importReturn = await import(`@/main/worker/processList.js?modulePath`)
+        //?modulePath 不支持变量
     }
+    const workerPath = importReturn.default
+
     return new Promise((resolve, reject) => {
-        const worker = createWorker.default({ workerData: { args } })
+        const worker = new Worker(workerPath, { workerData: { args } })
         worker.on('message', resolve)
         worker.on('error', reject)
         worker.on('exit', (code) => {
