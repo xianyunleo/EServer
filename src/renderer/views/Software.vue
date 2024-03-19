@@ -133,6 +133,7 @@ import { isMacOS, isWindows } from '@/main/utils/utils'
 import FileDialog from '@/main/utils/FileDialog'
 import LocalInstall from '@/main/core/software/LocalInstall'
 import { createAsyncComponent } from '@/renderer/utils/utils'
+import SystemExtend from '@/main/utils/SystemExtend'
 
 const InstalledType = 'InstalledType'
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
@@ -300,7 +301,11 @@ const localInstall = async () => {
   }
 }
 
-const showPhpExtManager = (item) => {
+const showPhpExtManager = async (item) => {
+  if (!await SystemExtend.isInstalledBrew()) {
+    MessageBox.error(`Homebrew未安装！\n请复制命令到终端执行安装\n/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`)
+    return
+  }
   phpVersion.value = SoftwareExtend.getPHPVersion(item.DirName)
   phpExtManagerShow.value = true
 }

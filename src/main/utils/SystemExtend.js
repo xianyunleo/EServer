@@ -23,4 +23,12 @@ export default class SystemExtend {
     static async isInstallRosetta() {
         return await FsUtil.Exists('/Library/Apple/usr/libexec/oah/libRosettaRuntime')
     }
+
+    static async isInstalledBrew() {
+        if (process.arch === 'arm64') {
+            return await FsUtil.Exists('/opt/homebrew/bin/brew')
+        } else {
+            return await FsUtil.Exists('/usr/local/homebrew/bin/brew')
+        }
+    }
 }
