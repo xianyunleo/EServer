@@ -5,6 +5,8 @@ export default {
     Add: 'Add',
     Delete: 'Delete',
     Modify: 'Modify',
+    Access: 'Access',
+    Log: 'Log',
     Basic: 'Basic',
     Conf: 'Conf',
     Column:'Column',

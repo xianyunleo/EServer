@@ -5,6 +5,8 @@ export default {
     Add: '添加',
     Delete: '删除',
     Modify: '修改',
+    Access: '访问',
+    Log: '日志',
     Basic: '基本',
     Conf: '配置',
     Column:'列',

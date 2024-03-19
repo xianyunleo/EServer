@@ -24,7 +24,10 @@
              size="middle">
       <template #bodyCell="{ column, text, record}">
         <template v-if="column.dataIndex === 'serverName'">
-          <a class='non-draggable color-text' @click='clickUrl(record)'>{{ text }}</a>
+          <a class='non-draggable color-text' @click='openUrl(record)'>{{ text }}</a>
+        </template>
+        <template v-if="column.dataIndex === 'rootPath'">
+          <a class='non-draggable color-text' @click='openRootPath(record)'>{{ text }}</a>
         </template>
         <template v-if="column.dataIndex === 'operate'">
           <div class="operate">
@@ -40,6 +43,12 @@
                   </a-menu-item>
                   <a-menu-item @click="openRewriteConfFile(record)">
                     {{mt('Open','ws','UrlRewrite','ws','File')}}
+                  </a-menu-item>
+                  <a-menu-item @click="openAccessLog(record)">
+                    {{mt('Open','ws','Access','ws','Log')}}
+                  </a-menu-item>
+                  <a-menu-item @click="openErrorLog(record)">
+                    {{mt('Open','ws','Error','ws','Log')}}
                   </a-menu-item>
                   <!--                  <a-menu-item >打开命令行终端</a-menu-item>-->
                 </a-menu>
@@ -68,6 +77,8 @@ import { mt, t } from '@/shared/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
+import GetPath from '@/shared/utils/GetPath'
+import Path from '@/main/utils/Path'
 
 const store = useMainStore()
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
@@ -155,11 +166,7 @@ provide('WebsiteProvide',{
   editModalVisible,
 });
 
-search();
-
-const clickUrl = (item) => {
-  Native.openUrl(`http://${item.serverName}:${item.port}`)
-}
+search()
 
 const del = async (item) => {
   try {
@@ -226,6 +233,16 @@ const openRootPath = (item) => {
     path = path.replaceAll('/', '\\')
   }
   Native.openDirectory(path);
+}
+
+const openAccessLog = (item) => {
+  const filePath = Path.Join(GetPath.getNginxLogsDir(), `${item.serverName}_${item.port}.access.log`)
+  Native.openTextFile(filePath)
+}
+
+const openErrorLog = (item) => {
+  const filePath = Path.Join(GetPath.getNginxLogsDir(), `${item.serverName}_${item.port}.error.log`)
+  Native.openTextFile(filePath)
 }
 </script>
 
