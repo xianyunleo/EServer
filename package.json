@@ -1,7 +1,7 @@
 {
   "name": "eserver",
   "productName": "EServer",
-  "version": "3.2.1",
+  "version": "3.3.0",
   "description": "EServer",
   "main": "./out/main/index.js",
   "author": "xianyunleo",
@@ -47,7 +47,7 @@
     "electron": "^22.3.27",
     "electron-builder": "^24.9.1",
     "electron-devtools-installer": "^3.2.0",
-    "electron-vite": "^1.0.27",
+    "electron-vite": "^2.1.0",
     "eslint": "^8.47.0",
     "eslint-plugin-vue": "^9.17.0",
     "less": "^4.2.0",
