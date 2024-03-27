@@ -147,6 +147,7 @@ const editModalVisible = ref(false);
 
 const search = async (val) => {
   try {
+    val = val ? val.trim() : ''
     const tempList = await Website.getList(val)
     for (const item of tempList) {
       if (!item.phpVersion) item.phpVersion = t('Static')

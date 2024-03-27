@@ -17,13 +17,15 @@ export default class Nginx {
      * @param search {string}
      * @returns {Promise<string[]>}
      */
-    static async getWebsiteList(search) {
+    static async getWebsiteList(search = '') {
         let vhostsPath = GetPath.getNginxVhostsDir();
         if (!await DirUtil.Exists(vhostsPath)) {
             return [];
         }
 
-        const files = await DirUtil.GetFiles(vhostsPath, search, true)
+        const searchRegx = new RegExp(`.*${search}.*\\.conf$`, 'i')
+
+        const files = await DirUtil.GetFiles(vhostsPath, searchRegx, true)
         //根据创建时间倒序
         files.sort((a,b)=>{
             return b.stats.birthtimeMs - a.stats.birthtimeMs
