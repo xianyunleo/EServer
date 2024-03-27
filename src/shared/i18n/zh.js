@@ -134,7 +134,7 @@ export default {
     failedOperation: '操作失败',
     errorOccurredDuring: '{0}过程中发生错误',
     needRestartTerminal: '需要重启终端',
-    autoStartAndRestartServer:'自动启动和重启服务',
+    websiteAutoRestartText: '保存网站后，自动启动或重启服务',
     initConfirmText: '这个操作会重新设置PHP和Server的配置文件，确认吗？',
     theUserPwdForThisComputer: '这台电脑的用户密码',
     thisPwdIsUsedForSudoCommands: '这个密码用于 sudo 命令',

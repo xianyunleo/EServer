@@ -133,7 +133,7 @@ export default {
     failedOperation: 'Failed operation',
     errorOccurredDuring: 'Error occurred during {0}',
     needRestartTerminal: 'Need to restart terminal',
-    autoStartAndRestartServer:'Automatically start and restart server',
+    websiteAutoRestartText: 'After saving the website，automatically start or restart the server',
     initConfirmText: 'This operation will reset the PHP and Server configuration files, confirm?',
     theUserPwdForThisComputer: 'The user password for this computer',
     thisPwdIsUsedForSudoCommands: 'This password is used for sudo commands',

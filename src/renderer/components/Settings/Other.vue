@@ -15,7 +15,7 @@
     <div class='settings-card-row flex-vertical-center'>
       <a-switch v-model:checked='store.settings.AutoStartAndRestartServer' @change='changeAutoStartAndRestartServer'
                 class='settings-switch' />
-      <span>{{ t('autoStartAndRestartServer') }}</span>
+      <span>{{ t('websiteAutoRestartText') }}</span>
     </div>
 
     <a-row type='flex' align='middle' class='settings-card-row'>
