@@ -302,7 +302,7 @@ const localInstall = async () => {
 }
 
 const showPhpExtManager = async (item) => {
-  if (!await SystemExtend.isInstalledBrew()) {
+  if (isMacOS && !await SystemExtend.isInstalledBrew()) {
     MessageBox.error(`Homebrew未安装！\n请复制命令到终端执行安装\n/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`)
     return
   }
