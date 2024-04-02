@@ -49,7 +49,7 @@ import MessageBox from '@/renderer/utils/MessageBox'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import Hosts from '@/main/utils/Hosts'
 import Settings from '@/main/Settings'
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 import { useMainStore } from '@/renderer/store'
 const { search, addModalVisible: visible } = inject('WebsiteProvide')
 

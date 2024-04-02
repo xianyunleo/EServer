@@ -58,7 +58,7 @@ import MessageBox from "@/renderer/utils/MessageBox";
 import Path from "@/main/utils/Path";
 import GetPath from "@/shared/utils/GetPath";
 import { isMacOS, isWindows } from '@/main/utils/utils'
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import fsPromises from 'fs/promises'
 import {throttle} from "throttle-debounce";

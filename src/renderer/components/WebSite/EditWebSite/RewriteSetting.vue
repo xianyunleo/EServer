@@ -29,7 +29,7 @@ import { ref, inject } from 'vue'
 import Website from "@/main/core/website/Website";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {message} from "ant-design-vue";
-import {  t } from '@/shared/utils/i18n'
+import {  t } from '@/renderer/utils/i18n'
 const { confName } = inject('WebsiteProvide')
 const emits = defineEmits(['editAfter'])
 

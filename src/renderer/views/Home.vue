@@ -102,7 +102,7 @@ import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import TcpProcess from '@/main/utils/TcpProcess'
 import { isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 
 const serverTableLoading = ref(false)
 const { serverReactive } = inject('GlobalProvide')

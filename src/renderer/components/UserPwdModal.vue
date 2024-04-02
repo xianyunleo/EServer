@@ -24,7 +24,7 @@ import App from '@/main/App'
 import SystemExtend from '@/main/utils/SystemExtend'
 import MessageBox from '@/renderer/utils/MessageBox'
 import { useMainStore } from '@/renderer/store'
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 
 const store = useMainStore()
 

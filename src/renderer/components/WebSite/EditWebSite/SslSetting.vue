@@ -29,7 +29,7 @@ import { ref, inject, reactive } from 'vue'
 import Website from '@/main/core/website/Website'
 import { message } from 'ant-design-vue'
 import MessageBox from '@/renderer/utils/MessageBox'
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 import { useMainStore } from '@/renderer/store'
 import InputOpenFileDialog from '@/renderer/components/Input/InputOpenFileDialog.vue'
 

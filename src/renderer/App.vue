@@ -37,7 +37,7 @@ import ConfigProvider from "@/renderer/components/Theme/ConfigProvider.vue";
 import SetLanguage from "@/renderer/components/SetLanguage.vue";
 import { useMainStore } from '@/renderer/store'
 import Settings from '@/main/Settings'
-import { t } from '@/shared/utils/i18n'
+import { t } from '@/renderer/utils/i18n'
 import { changeLanguageWrapper } from '@/renderer/utils/language'
 import SystemExtend from '@/main/utils/SystemExtend'
 

@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import App from '@/renderer/components/Settings/app.vue'
+import App from '@/renderer/components/Settings/App.vue'
 import OneClickServer from '@/renderer/components/Settings/OneClickServer.vue'
 import Other from '@/renderer/components/Settings/Other.vue'
 import EnvVar from '@/renderer/components/Settings/EnvVar.vue'

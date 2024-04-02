@@ -32,7 +32,7 @@ import Env from '@/main/core/Env/Env'
 import { message } from 'ant-design-vue'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import GetPath from '@/shared/utils/GetPath'
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
 

@@ -12,7 +12,7 @@ import Path from '@/main/utils/Path'
 import FileUtil from '@/main/utils/FileUtil'
 import GetPath from '@/shared/utils/GetPath'
 import { EventEmitter } from 'events'
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 import CommonInstall from "@/main/core/software/CommonInstall";
 import GetAppPath from '@/main/utils/GetAppPath'
 

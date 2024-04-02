@@ -18,7 +18,7 @@
 import App from "@/main/App";
 import {APP_NAME} from "@/shared/utils/constant";
 import Native from "@/main/utils/Native";
-import { t } from '@/shared/utils/i18n'
+import { t } from '@/renderer/utils/i18n'
 
 const version = App.getVersion();
 

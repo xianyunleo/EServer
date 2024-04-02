@@ -35,7 +35,7 @@ import {ref,computed} from "vue";
 import SoftwareExtend from "@/main/core/software/SoftwareExtend";
 import Database from "@/main/core/Database";
 import MessageBox from "@/renderer/utils/MessageBox";
-import { t,mt } from '@/shared/utils/i18n'
+import { t,mt } from '@/renderer/utils/i18n'
 import { message } from 'ant-design-vue'
 
 const props = defineProps(['show'])

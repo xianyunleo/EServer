@@ -45,7 +45,7 @@ import { message } from 'ant-design-vue'
 import MessageBox from '@/renderer/utils/MessageBox'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import Hosts from '@/main/utils/Hosts'
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 import { useMainStore } from '@/renderer/store'
 
 const { confName, search } = inject('WebsiteProvide')

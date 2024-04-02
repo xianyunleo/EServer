@@ -6,7 +6,7 @@ import Store from 'electron-store'
 import MainWindow from '@/main/MainWindow'
 import { ipcListen } from '@/main/ipc'
 import { extendPrototype } from '@/shared/utils/utils'
-import I18n from '@/shared/i18n/I18n'
+import I18n from '@/main/i18n/I18n'
 
 let mainWindow
 const gotTheLock = app.isPackaged ? app.requestSingleInstanceLock() : true //仅生产环境生效

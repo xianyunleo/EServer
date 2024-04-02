@@ -29,7 +29,7 @@ import BasicSetting from '@/renderer/components/WebSite/EditWebSite/BasicSetting
 import RewriteSetting from '@/renderer/components/WebSite/EditWebSite/RewriteSetting.vue'
 import SslSetting from '@/renderer/components/WebSite/EditWebSite/SslSetting.vue'
 import Settings from '@/main/Settings'
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 import { useMainStore } from '@/renderer/store'
 
 const { serverName, port, editModalVisible: visible } = inject('WebsiteProvide')

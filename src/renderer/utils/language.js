@@ -1,4 +1,4 @@
-import I18n from '@/shared/i18n/I18n'
+import I18n from '@/renderer/i18n/I18n'
 
 export async function changeLanguageWrapper(lang) {
     I18n.setLocale(lang)

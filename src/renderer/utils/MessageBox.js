@@ -1,6 +1,6 @@
 import {Modal} from 'ant-design-vue';
 import {createVNode} from "vue";
-import { t } from '@/shared/utils/i18n'
+import { t } from '@/renderer/utils/i18n'
 
 export default class MessageBox {
     /**

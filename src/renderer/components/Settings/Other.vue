@@ -35,7 +35,7 @@ import FileDialog from '@/main/utils/FileDialog'
 import MessageBox from '@/renderer/utils/MessageBox'
 import SoftwareInit from '@/main/core/software/SoftwareInit'
 import { message } from 'ant-design-vue'
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 import {APP_NAME} from "@/shared/utils/constant";
 import App from "@/main/App";
 import { createAsyncComponent } from '@/renderer/utils/utils'

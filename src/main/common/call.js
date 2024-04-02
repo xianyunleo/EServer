@@ -7,7 +7,7 @@ export async function callStatic(className, methodName, ...args) {
     if (utilsClassArr.includes(className)) {
         importReturn = await import(`@/main/utils/${className}.js`)
     } else if (className === 'I18n') {
-        importReturn = await import(`@/shared/i18n/I18n.js`)
+        importReturn = await import(`@/main/i18n/I18n.js`)
     } else {
         importReturn = await import(`@/main/${className}.js`)
     }

@@ -28,7 +28,7 @@
 <script setup>
 import { ref } from 'vue'
 import Native from '@/main/utils/Native'
-import { t } from '@/shared/utils/i18n'
+import { t } from '@/renderer/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
 import { APP_NAME } from '@/shared/utils/constant'
 import { getCurrentWindow, switchMaximize } from '@/shared/utils/window'

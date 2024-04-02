@@ -49,7 +49,7 @@ import TcpProcess from '@/main/utils/TcpProcess'
 import Native from '@/main/utils/Native'
 import { message } from 'ant-design-vue'
 import { isWindows } from '@/main/utils/utils'
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 
 const props = defineProps(['show'])
 const emit = defineEmits(['update:show'])

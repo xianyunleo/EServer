@@ -17,7 +17,7 @@
 <script setup>
 import {useMainStore} from "@/renderer/store";
 import {storeToRefs} from "pinia";
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')

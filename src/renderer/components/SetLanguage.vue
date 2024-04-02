@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import {t} from "@/shared/utils/i18n";
+import {t} from "@/renderer/utils/i18n";
 import {computed} from "vue";
 import Settings from "@/main/Settings";
 import MessageBox from "@/renderer/utils/MessageBox";

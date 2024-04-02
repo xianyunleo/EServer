@@ -1,7 +1,7 @@
 import { app, Tray, Menu, nativeImage } from 'electron'
 import { APP_NAME } from '@/shared/utils/constant'
 import { isMacOS, isWindows } from '@/main/utils/utils'
-import { t } from '@/shared/utils/i18n'
+import { t } from '@/main/utils/i18n'
 import Path from '@/main/utils/Path'
 import GetAppPath from '@/main/utils/GetAppPath'
 import MainWindow from '@/main/MainWindow'

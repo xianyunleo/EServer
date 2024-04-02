@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { mt,t } from '@/shared/utils/i18n'
+import { mt,t } from '@/renderer/utils/i18n'
 import {ref} from "vue";
 import {message} from 'ant-design-vue';
 import {FileTextTwoTone,FolderOpenTwoTone,DatabaseTwoTone} from "@ant-design/icons-vue";

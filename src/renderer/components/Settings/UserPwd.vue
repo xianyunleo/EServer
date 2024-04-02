@@ -16,7 +16,7 @@
 import UserPwdModal from "@/renderer/components/UserPwdModal.vue";
 import { ref } from 'vue'
 import Settings from "@/main/Settings";
-import {t}  from '@/shared/utils/i18n'
+import {t}  from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')

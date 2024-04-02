@@ -34,7 +34,7 @@
 <script setup>
 import {computed} from 'vue'
 import { useI18n } from 'vue-i18n'
-import {mt,t}  from '@/shared/utils/i18n'
+import {mt,t}  from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
 import { changeLanguageWrapper } from '@/renderer/utils/language'

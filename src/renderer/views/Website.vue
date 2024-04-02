@@ -73,7 +73,7 @@ import Website from "@/main/core/website/Website";
 import MessageBox from "@/renderer/utils/MessageBox";
 import Native from "@/main/utils/Native";
 import Hosts from "@/main/utils/Hosts";
-import { mt, t } from '@/shared/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
