@@ -12,9 +12,9 @@ export default class I18n {
             messages: {
                 'zh': zh,
                 'en': en
-            },
+            }
         }
-        this._instance.t = this._loadMessages()
+        this._instance.translate = this._loadMessages()
     }
 
     static getInstance() {
@@ -24,16 +24,19 @@ export default class I18n {
 
     static setLocale(locale) {
         this._instance.locale = locale
-        this._instance.t = this._loadMessages()
+        this._instance.translate = this._loadMessages()
     }
 
     static _loadMessages() {
-        console.log('this._instance',this._instance)
         const message = this._instance.messages[this._instance.locale]
         const localize = nls.loadMessages(message)
 
-        return (key, args) => {
-            return localize(key, '', args)
+        return (key, ...args) => {
+            return localize(key, '', ...args)
         }
+    }
+
+    static t(...args) {
+        return this._instance.translate(...args)
     }
 }
