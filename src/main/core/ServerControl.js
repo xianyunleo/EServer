@@ -18,6 +18,7 @@ export default class ServerControl {
         const options = { cwd: workPath, detached: true }
 
         if (item.ShellServerProcess) {
+            options.detached = false
             options.shell = true //使用shell，childProcess返回的pid是shell的pid
         }
 
@@ -62,6 +63,7 @@ export default class ServerControl {
         if (item.StopServerArgs) {
             const args = this.parseServerArgs(item, item.StopServerArgs)
             if (item.ShellServerProcess) {
+                options.detached = false
                 options.shell = true //使用shell，childProcess返回的pid是shell的pid
             }
             const serverProcessPath = Path.Join(workPath, item.ServerProcessPath)
@@ -80,8 +82,8 @@ export default class ServerControl {
         const workPath = Software.getPath(item)
         return args.map((arg) => {
             const argObj = {
-                WorkPath: workPath,
-                ServerProcessPath: Path.Join(workPath, item.ServerProcessPath),
+                WorkPath: workPath.replaceSlash(),
+                ServerProcessPath: Path.Join(workPath, item.ServerProcessPath).replaceSlash(),
                 ConfPath: item.ConfPath ? Path.Join(workPath, item.ConfPath).replaceSlash() : null,
                 ServerConfPath: item.ServerConfPath ? Path.Join(workPath, item.ServerConfPath).replaceSlash() : null,
                 ExtraProcessPath: item.ExtraProcessPath ? Path.Join(workPath, item.ExtraProcessPath).replaceSlash() : null
