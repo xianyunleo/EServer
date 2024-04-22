@@ -52,7 +52,7 @@ export default class ServerControl {
         item.pid = childProcess.pid;
     }
 
-    static async getControlProcessPath(item) {
+    static getControlProcessPath(item) {
         const workPath = Software.getPath(item)
         if (item.ControlProcessPath) {
             return Path.Join(workPath, item.ControlProcessPath) //控制进程的目录
