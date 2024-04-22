@@ -14,7 +14,7 @@ export default class ServerControl {
      */
     static async start(item) {
         const workPath = Software.getPath(item) //服务目录
-        const serverProcessPath = Path.Join(workPath, item.ServerProcessPath) //服务进程的目录
+        const serverProcessPath = this.getControlProcessPath(item)
         const options = { cwd: workPath, detached: true }
 
         if (item.ShellServerProcess) {
@@ -52,6 +52,15 @@ export default class ServerControl {
         item.pid = childProcess.pid;
     }
 
+    static async getControlProcessPath(item) {
+        const workPath = Software.getPath(item)
+        if (item.ControlProcessPath) {
+            return Path.Join(workPath, item.ControlProcessPath) //控制进程的目录
+        } else {
+            return Path.Join(workPath, item.ServerProcessPath) //服务进程的目录
+        }
+    }
+
     /**
      *
      * @param item{SoftwareItem}
@@ -66,7 +75,7 @@ export default class ServerControl {
                 options.detached = false
                 options.shell = true //使用shell，childProcess返回的pid是shell的pid
             }
-            const serverProcessPath = Path.Join(workPath, item.ServerProcessPath)
+            const serverProcessPath = this.getControlProcessPath(item)
             child_process.spawn(serverProcessPath, args, options)
         } else {
             await ProcessExtend.kill(item.pid)
