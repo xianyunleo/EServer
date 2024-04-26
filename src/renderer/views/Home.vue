@@ -116,10 +116,6 @@ const PoweroffOutlined = createAsyncComponent(import('@ant-design/icons-vue'), '
 const ReloadOutlined = createAsyncComponent(import('@ant-design/icons-vue'), 'ReloadOutlined')
 const RightSquareFilled = createAsyncComponent(import('@ant-design/icons-vue'), 'RightSquareFilled')
 
-onMounted(() => {
-  var timestamp2 = new Date().getTime();
-  console.log('home onMounted',timestamp2-timestamp)
-})
 const columns = [
   {
     title: t('Name'),
@@ -138,7 +134,24 @@ const columns = [
 ]
 
 const store = useMainStore()
-const { serverList } = storeToRefs(store)
+const { serverList,afterOpenAppStartServerNum } = storeToRefs(store)
+
+
+onMounted(async () => {
+  var timestamp2 = new Date().getTime()
+  console.log('home onMounted', timestamp2 - timestamp)
+
+  if (serverList.value) {
+    serverTableLoading.value = { tip: `${t('RefreshingServer')}...` }
+    await initServerListStatus()
+    serverTableLoading.value = false
+  }
+
+  if (Settings.get('AfterOpenAppStartServer') && afterOpenAppStartServerNum.value >= 1) {
+    afterOpenAppStartServerNum.value -= 1
+    oneClickStart()
+  }
+})
 
 const getProcessList = async () => {
   let list;
@@ -177,15 +190,6 @@ const initServerListStatus = async () => {
   const promiseArray = serverList.value.map(item => initServerStatus(item))
   await Promise.all(promiseArray)
 };
-
-(async () => {
-  if (serverList.value) {
-    serverTableLoading.value = { tip: `${t('RefreshingServer')}...`}
-    await initServerListStatus()
-    serverTableLoading.value = false
-  }
-})()
-
 
 const corePathClick = () => {
   Native.openDirectory(GetAppPath.getUserCoreDir())

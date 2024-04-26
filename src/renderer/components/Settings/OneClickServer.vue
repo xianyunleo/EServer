@@ -1,7 +1,6 @@
 <template>
-  <a-card size="small" :title="t('oneClickStartAndStop')" class="settings-card">
-    <a-row type="flex" align="middle" class="settings-card-row">
-      <a-col :span="24" class='flex-vertical-center'>
+  <a-card size="small" :title="t('Server')" class="settings-card">
+    <div class='settings-card-row flex-vertical-center'>
         <span>{{mt('Server','ws','List')}}：</span>
         <a-select
             v-model:value="store.settings.OneClickServerList"
@@ -9,8 +8,19 @@
             @change="oneClickServerChange"
             mode="multiple" placeholder="请选择" style="flex: 1"
         ></a-select>
-      </a-col>
-    </a-row>
+    </div>
+
+    <div class='settings-card-row flex-vertical-center'>
+      <a-switch v-model:checked='store.settings.AutoStartAndRestartServer' @change='changeAutoStartAndRestartServer'
+                class='settings-switch' />
+      <span>{{ t('websiteAutoRestartText') }}</span>
+    </div>
+
+    <div class='settings-card-row flex-vertical-center'>
+      <a-switch v-model:checked='store.settings.AfterOpenAppStartServer' @change='changeAfterOpenAppStartServer'
+                class='settings-switch' />
+      <span>{{ t('afterOpenAppStartServer') }}</span>
+    </div>
   </a-card>
 </template>
 
@@ -36,6 +46,12 @@ oneClickServerOptions.unshift({label: 'PHP-FPM', value: 'PHP-FPM'});
 
 const oneClickServerChange = () => {
   store.setSettings('OneClickServerList')
+}
+const changeAutoStartAndRestartServer = () => {
+  store.setSettings('AutoStartAndRestartServer')
+}
+const changeAfterOpenAppStartServer = () => {
+  store.setSettings('AfterOpenAppStartServer')
 }
 </script>
 

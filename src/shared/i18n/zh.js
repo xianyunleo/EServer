@@ -142,4 +142,5 @@ export default {
     installPackageDownloadUrl: '安装包下载地址',
     softwareUninstallErrorTip: '请打开文件管理器，手动删除{0}目录',
     mysqlResetRootAccountPwd: 'MySQL 重置 root 账户的密码',
+    afterOpenAppStartServer: '打开软件后，启动服务',
 }

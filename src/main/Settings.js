@@ -63,6 +63,7 @@ export default class Settings {
             WebsiteDir: Path.Join(GetAppPath.getUserCoreDir(), 'www'),
             OneClickServerList: ['Nginx', 'PHP-FPM', 'MySQL-5.7'],
             AutoStartAndRestartServer: true,
+            AfterOpenAppStartServer: false,
         };
     }
 

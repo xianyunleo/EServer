@@ -12,12 +12,6 @@
         <a-button @click='changeWebsiteDir' style='margin-left: 5px'>...</a-button>
     </div>
 
-    <div class='settings-card-row flex-vertical-center'>
-      <a-switch v-model:checked='store.settings.AutoStartAndRestartServer' @change='changeAutoStartAndRestartServer'
-                class='settings-switch' />
-      <span>{{ t('websiteAutoRestartText') }}</span>
-    </div>
-
     <a-row type='flex' align='middle' class='settings-card-row'>
       <a-col :span='6' class='flex-vertical-center'>
         <a-button @click='exitApp' type='primary'>{{ t('Exit') }} {{APP_NAME}}</a-button>
@@ -65,10 +59,6 @@ const changeWebsiteDir = () => {
     }
     return path
   })
-}
-
-const changeAutoStartAndRestartServer = () => {
-  store.setSettings('AutoStartAndRestartServer')
 }
 
 const exitApp = ()=>{

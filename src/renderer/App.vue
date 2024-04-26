@@ -25,7 +25,7 @@ import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import TitleBar from "./components/TitleBar.vue";
 import SideBar from "./components/SideBar.vue";
 import App from "@/main/App";
-import { provide, reactive, ref, watch } from 'vue'
+import { onMounted, provide, reactive, ref, watch } from 'vue'
 import MessageBox from "@/renderer/utils/MessageBox";
 import UserPwdModal from "@/renderer/components/UserPwdModal.vue";
 import Software from "@/main/core/software/Software";
@@ -52,7 +52,8 @@ provide('GlobalProvide', { serverReactive })
 const settings = Settings.getAll()
 store.changeTheme(settings.ThemeMode, settings.ThemeColor)
 store.settings = settings
-;(async () => {
+
+onMounted(async () => {
   try {
     if (await App.initFileExists() && !isDev) {
       await App.checkInstall()
@@ -72,7 +73,7 @@ store.settings = settings
   if (isWindows) {
     stopIIS()
   }
-})()
+})
 
 async function initOrUpdate() {
   if (isMacOS && process.arch === 'arm64' && !(await SystemExtend.isInstallRosetta())) {

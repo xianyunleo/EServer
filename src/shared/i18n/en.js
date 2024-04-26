@@ -141,4 +141,5 @@ export default {
     installPackageDownloadUrl: 'Download URL of installation package',
     softwareUninstallErrorTip: 'Please open the file manager and manually delete the {0} directory',
     mysqlResetRootAccountPwd: 'MySQL reset password for root account',
+    afterOpenAppStartServer: 'After opening the app, start the server',
 }

@@ -21,6 +21,7 @@ export const useMainStore = defineStore('main', {
             settings: {},
             customTheme: {},
             websiteList: { showSecondDomainName: false, showNote: false },
+            afterOpenAppStartServerNum: 1,
         }
     },
     getters: {
