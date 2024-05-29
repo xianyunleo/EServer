@@ -17,8 +17,6 @@ mac:
   extraFiles:
     - from: ./extra/darwin/Core/Library/
       to: ./Core/Library/
-    - from: ./extra/darwin/Core/config/
-      to: ./Core/config/
     - from: ./extra/darwin/Core/initFiles/
       to: ./Core/initFiles/
     - from: ./extra/darwin/Core/script/
@@ -39,8 +37,6 @@ win:
         - x64
   requestedExecutionLevel: requireAdministrator
   extraFiles:
-    - from: ./extra/win32/core/config/
-      to: ./core/config/
     - from: ./extra/win32/core/initFiles/
       to: ./core/initFiles/
     - from: ./extra/win32/core/script/

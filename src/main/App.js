@@ -40,7 +40,7 @@ export default class App {
             await this.updateMacCoreSubDir(['Library'])
         }
 
-        await this.moveInitFiles(['downloads', 'www'])
+        await this.moveInitFiles(['downloads', 'www', 'config'])
         await this.createCoreSubDir(['software', 'database', 'bin', `${TEMP_DIR_NAME}/php`])
 
         if (!softwareDirExists) { //目录不存在说明是第一次安装，不是覆盖安装

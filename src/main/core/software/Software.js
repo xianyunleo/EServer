@@ -26,7 +26,7 @@ export default class Software {
     }
 
     static async initList() {
-        let corePath = GetAppPath.getCoreDir();
+        let corePath = GetAppPath.getUserCoreDir();
         let softPath = path.join(corePath, '/config/software');
         let softConfigPath = path.join(softPath, 'software.json');
         let softIconPath = 'file://' + path.join(softPath, '/icon');
