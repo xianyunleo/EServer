@@ -87,8 +87,8 @@ export default class App {
 
         if (isMacOS) {
             await this.updateMacCoreSubDir(['Library'])
-            await this.moveInitFiles(['downloads', 'www', 'config'])
         }
+        await this.moveInitFiles(['downloads', 'www', 'config'])
 
         //下面update逻辑，用于更新 UserCoreDir
         const updateDir = Path.Join(GetAppPath.getCoreDir(), 'update')
@@ -136,7 +136,7 @@ export default class App {
     }
 
     /**
-     * 将initFiles目录下的文件（文件夹）移动到用户操作的核心目录
+     * 将initFiles目录下的文件（文件夹）移动到用户操作的核心目录，如果已存在，不会覆盖。
      * @param files
      */
     static async moveInitFiles(files = []) {
