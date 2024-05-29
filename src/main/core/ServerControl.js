@@ -1,4 +1,4 @@
-import { isDev, isWindows } from '@/main/utils/utils'
+import { devConsoleLog } from '@/main/utils/utils'
 import ProcessExtend from "@/main/utils/ProcessExtend";
 import Software from "@/main/core/software/Software";
 import { parseTemplateStrings} from "@/shared/utils/utils";
@@ -14,7 +14,7 @@ export default class ServerControl {
      */
     static async start(item) {
         const workPath = Software.getPath(item) //服务目录
-        const serverProcessPath = this.getControlProcessPath(item)
+        const ctrlProcessPath = this.getControlProcessPath(item)
         const options = { cwd: workPath, detached: true }
 
         if (item.ShellServerProcess) {
@@ -22,8 +22,8 @@ export default class ServerControl {
             options.shell = true //使用shell，childProcess返回的pid是shell的pid
         }
 
-        if (!await FileUtil.Exists(serverProcessPath)) {
-            throw new Error(`${serverProcessPath} 文件不存在！`);
+        if (!await FileUtil.Exists(ctrlProcessPath)) {
+            throw new Error(`${ctrlProcessPath} 文件不存在！`);
         }
 
         let args = []
@@ -34,20 +34,20 @@ export default class ServerControl {
         item.isRunning = true
         item.errMsg = ''
 
-        const childProcess = child_process.spawn(serverProcessPath, args, options);
+        const childProcess = child_process.spawn(ctrlProcessPath, args, options);
 
         childProcess.stderr.on('data', (data) => {
-            console.log('stderr data',data?.toString())
-            item.errMsg = data?.toString();
-        });
+            devConsoleLog('stderr data', data?.toString())
+            item.errMsg = data?.toString()
+        })
 
         childProcess.on('close', (code) => {
-            if (isDev) console.log(`${Path.GetBaseName(serverProcessPath)},exit code ${code}`);
-            item.isRunning = false;
-        });
+            devConsoleLog(`${Path.GetBaseName(ctrlProcessPath)},exit code ${code}`)
+            item.isRunning = false
+        })
 
-        if (isDev) console.log('ServerControl start command:', `${serverProcessPath} ${args.join(' ')}`);
-        if (isDev) console.log(`${Path.GetBaseName(serverProcessPath)},pid ${childProcess.pid}`);
+        devConsoleLog('ServerControl start command:', `${ctrlProcessPath} ${args.join(' ')}`)
+        devConsoleLog(`${Path.GetBaseName(ctrlProcessPath)},pid ${childProcess.pid}`)
 
         item.pid = childProcess.pid;
     }
@@ -75,8 +75,8 @@ export default class ServerControl {
                 options.detached = false
                 options.shell = true //使用shell，childProcess返回的pid是shell的pid
             }
-            const serverProcessPath = this.getControlProcessPath(item)
-            child_process.spawn(serverProcessPath, args, options)
+            const ctrlProcessPath = this.getControlProcessPath(item)
+            child_process.spawn(ctrlProcessPath, args, options)
         } else {
             await ProcessExtend.kill(item.pid)
         }
