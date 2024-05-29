@@ -1,6 +1,6 @@
 import path from "path";
 import GetPath from "@/shared/utils/GetPath";
-import Command from "@/main/utils/Command";
+import Shell from "@/main/utils/Shell";
 import ProcessExtend from "@/main/utils/ProcessExtend";
 import {sleep} from "@/shared/utils/utils";
 import child_process from "child_process";
@@ -17,7 +17,7 @@ export default class Database {
     static async initMySQLData(version) {
         let mysqlPath = GetPath.getMysqlDir(version);
         let command = `${this.getMySQLDFilePath(version)} --defaults-file=${this.getMySQLConfFilePath(version)} --initialize`;
-        await Command.exec(command, {cwd: mysqlPath});
+        await Shell.exec(command, {cwd: mysqlPath});
     }
 
     /**

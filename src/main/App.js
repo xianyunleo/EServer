@@ -10,7 +10,7 @@ import GetPath from '@/shared/utils/GetPath'
 import LocalInstall from '@/main/core/software/LocalInstall'
 import FsUtil from '@/main/utils/FsUtil'
 import GetAppPath from '@/main/utils/GetAppPath'
-import Command from '@/main/utils/Command'
+import Shell from '@/main/utils/Shell'
 import { extractZip } from '@/main/utils/extract'
 
 const app = electronRequire('app')
@@ -116,7 +116,7 @@ export default class App {
             if (!await DirUtil.Exists(target)) {
                 await DirUtil.Create(target)
             }
-            await Command.exec(`rsync -a ${source}/* ${target}`)
+            await Shell.exec(`rsync -a ${source}/* ${target}`)
             await DirUtil.Delete(source)
         }
     }

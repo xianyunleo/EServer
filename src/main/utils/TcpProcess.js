@@ -1,5 +1,5 @@
 import { electronRequire } from '@/main/utils/electron'
-import Command from '@/main/utils/Command'
+import Shell from '@/main/utils/Shell'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 
@@ -19,7 +19,7 @@ export default class TcpProcess {
     static async getListForMacOS() {
         let commandStr = `lsof -iTCP -sTCP:LISTEN -P -n|awk 'NR!=1{print $1,$2,$3,$5,$9}'`;
         try {
-            let resStr = await Command.sudoExec(commandStr);
+            let resStr = await Shell.sudoExec(commandStr);
             resStr = resStr.trim();
             if (!resStr) {
                 return [];
@@ -50,7 +50,7 @@ export default class TcpProcess {
         commandStr += ' | fl | Out-String -Width 999';
 
         try {
-            let resStr = await Command.exec(commandStr, {shell: 'powershell'});
+            let resStr = await Shell.exec(commandStr, {shell: 'powershell'});
             resStr = resStr.trim();
             if (!resStr) {
                 return [];
@@ -88,10 +88,10 @@ export default class TcpProcess {
 
             if (isWindows) {
                 commandStr = `(Get-NetTCPConnection -LocalPort ${port} -State Listen).OwningProcess`;
-                resStr = await Command.exec(commandStr, {shell: 'powershell'});
+                resStr = await Shell.exec(commandStr, {shell: 'powershell'});
             } else {
                 commandStr = `lsof -t -sTCP:LISTEN -i:${port}`;
-                resStr = await Command.exec(commandStr);
+                resStr = await Shell.exec(commandStr);
             }
 
             if (!resStr) {
@@ -114,10 +114,10 @@ export default class TcpProcess {
 
             if (isWindows) {
                 commandStr = `(Get-Process -Id (Get-NetTCPConnection -LocalPort ${port} -State Listen).OwningProcess).Path"`;
-                resStr = await Command.exec(commandStr, {shell: 'powershell'});
+                resStr = await Shell.exec(commandStr, {shell: 'powershell'});
             } else {
                 commandStr = `lsof -t -sTCP:LISTEN -i:${port}|head -n 1|xargs lsof -a -w -d txt -Fn -p|awk 'NR==3{print}'|sed "s/n//"`;
-                resStr = await Command.exec(commandStr);
+                resStr = await Shell.exec(commandStr);
             }
 
             if (!resStr) {

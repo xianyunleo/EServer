@@ -1,4 +1,4 @@
-import Command from "@/main/utils/Command";
+import Shell from "@/main/utils/Shell";
 import extract from 'extract-zip'
 
 export async function extractZip(path, dest) {
@@ -20,5 +20,5 @@ export async function extractTar(path, dest) {
     if (path.endsWith('.tar.xz')) {
         commandStr = `tar -xf ${path} -C ${dest}`;
     }
-    await Command.exec(commandStr);
+    await Shell.exec(commandStr);
 }

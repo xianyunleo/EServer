@@ -2,7 +2,7 @@ import {electronRequire} from '@/main/utils/electron';
 import FileUtil from "@/main/utils/FileUtil";
 import Path from "@/main/utils/Path";
 import OS from "@/main/utils/OS";
-import Command from "@/main/utils/Command";
+import Shell from "@/main/utils/Shell";
 import {APP_NAME} from "@/shared/utils/constant";
 import GetPath from "@/shared/utils/GetPath";
 import FsUtil from '@/main/utils/FsUtil'
@@ -27,7 +27,7 @@ export default class EnvMacOS {
 
         if (!await FsUtil.CanReadWrite(envFilePath)) {
             //envFile正常是可以编辑的，考虑到own变成root的情况
-            await Command.sudoExec(`chown ${userName}:staff ${envFilePath}`)
+            await Shell.sudoExec(`chown ${userName}:staff ${envFilePath}`)
         }
 
         text = await FileUtil.ReadAll(envFilePath);

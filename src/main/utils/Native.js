@@ -1,5 +1,5 @@
 import { electronRequire } from '@/main/utils/electron'
-import Command from "@/main/utils/Command";
+import Shell from "@/main/utils/Shell";
 import MessageBox from "@/renderer/utils/MessageBox";
 import fixPath from "fix-path";
 import GetPath from "@/shared/utils/GetPath";
@@ -20,7 +20,7 @@ export default class Native {
         if(isWindows){
             Native.openExternal(path)
         }else if(isMacOS){
-            await Command.exec(`open -a "${path}"`)
+            await Shell.exec(`open -a "${path}"`)
         }else {
             throw new Error(`todo`)
         }
@@ -50,7 +50,7 @@ export default class Native {
             } else if (isWindows) {
                 command = `"${editorPath}" "${filePath}"`
             }
-            await Command.exec(command)
+            await Shell.exec(command)
 
         } catch (error) {
             //todo渲染进程捕捉错误

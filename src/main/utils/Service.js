@@ -1,4 +1,4 @@
-import Command from "@/main/utils/Command";
+import Shell from "@/main/utils/Shell";
 import { isWindows } from '@/main/utils/utils'
 
 export default class Service {
@@ -8,7 +8,7 @@ export default class Service {
 
             if (isWindows) {
                 commandStr = `Get-Service ${name} |Where-Object {$_.Status -eq "Running"}`;
-                res = await Command.exec(commandStr, {shell: 'powershell'});
+                res = await Shell.exec(commandStr, {shell: 'powershell'});
                 return !!res;
                 // eslint-disable-next-line no-empty
             } else {
@@ -25,7 +25,7 @@ export default class Service {
 
             if (isWindows) {
                 commandStr = `Stop-Service ${name}`;
-                await Command.exec(commandStr, {shell: 'powershell'});
+                await Shell.exec(commandStr, {shell: 'powershell'});
                 // eslint-disable-next-line no-empty
             } else {
 

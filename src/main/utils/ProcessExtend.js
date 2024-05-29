@@ -1,4 +1,4 @@
-import Command from '@/main/utils/Command'
+import Shell from '@/main/utils/Shell'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 
 export default class ProcessExtend {
@@ -11,10 +11,10 @@ export default class ProcessExtend {
         try {
             if (isWindows) {
                 //taskkill杀不存在的进程会有标准错误，从而引发异常
-                await Command.exec(`taskkill /f /t /pid ${pid}`);
+                await Shell.exec(`taskkill /f /t /pid ${pid}`);
             } else {
                 //pkill杀不存在的进程会有标准错误，从而引发异常
-                await Command.sudoExec(`kill ${pid}`);
+                await Shell.sudoExec(`kill ${pid}`);
             }
             // eslint-disable-next-line no-empty
         } catch {
@@ -31,10 +31,10 @@ export default class ProcessExtend {
         try {
             if (isWindows) {
                 //taskkill杀不存在的进程会有标准错误，从而引发异常
-                await Command.exec(`taskkill /f /t /im ${name}.exe`);
+                await Shell.exec(`taskkill /f /t /im ${name}.exe`);
             } else {
                 //pkill杀不存在的进程会有标准错误，从而引发异常
-                await Command.sudoExec(`pkill ${name}`);
+                await Shell.sudoExec(`pkill ${name}`);
             }
             // eslint-disable-next-line no-empty
         } catch {
@@ -57,10 +57,10 @@ export default class ProcessExtend {
 
             if (isWindows) {
                 commandStr = `(Get-Process -Id ${pid}).Path`;
-                resStr = await Command.exec(commandStr, {shell: 'powershell'});
+                resStr = await Shell.exec(commandStr, {shell: 'powershell'});
             } else {
                 commandStr = `lsof -p ${pid} -a -w -d txt -Fn|awk 'NR==3{print}'|sed "s/n//"`;
-                resStr = await Command.exec(commandStr);
+                resStr = await Shell.exec(commandStr);
             }
             path = resStr.trim().split("\n")[0];
             return path.trim();
@@ -103,7 +103,7 @@ export default class ProcessExtend {
         }
         command += "|grep -v .dylib|awk '{print $1,$2,$3,$10}'";
         try {
-            let str =  await Command.sudoExec(command);
+            let str =  await Shell.sudoExec(command);
             str = str.trim();
             if(!str){
                 return [];
@@ -136,7 +136,7 @@ export default class ProcessExtend {
         command += " |Select-Object Name,ProcessId,ParentProcessId,ExecutablePath | Format-List | Out-String -Width 999";
 
         try {
-            let str =  await Command.exec(command,{shell: 'powershell'});
+            let str =  await Shell.exec(command,{shell: 'powershell'});
             str = str.trim();
             if(!str){
                 return [];
