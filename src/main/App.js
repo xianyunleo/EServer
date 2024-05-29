@@ -87,6 +87,7 @@ export default class App {
 
         if (isMacOS) {
             await this.updateMacCoreSubDir(['Library'])
+            await this.moveInitFiles(['downloads', 'www', 'config'])
         }
 
         //下面update逻辑，用于更新 UserCoreDir
