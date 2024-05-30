@@ -26,28 +26,42 @@ export default class Software {
     }
 
     static async initList() {
-        let corePath = GetAppPath.getCoreDir();
-        let softPath = path.join(corePath, '/config/software');
-        let softConfigPath = path.join(softPath, 'software.json');
-        let softIconPath = 'file://' + path.join(softPath, '/icon');
+        const softDir = path.join(GetAppPath.getCoreDir(), '/config/software')
+        const softConfigPath = path.join(softDir, 'software.json')
+        const softIconDir = 'file://' + path.join(softDir, '/icon')
 
         let list
         try {
-            if (await FileUtil.Exists(softConfigPath)) {
-                list = JSON.parse(await FileUtil.ReadAll(softConfigPath))
-            } else {
-                list = []
-            }
+            list = JSON.parse(await FileUtil.ReadAll(softConfigPath))
+            list = await Promise.all(list.map(async item => {
+                const Icon = path.join(softIconDir, item.Icon)
+                return { ...item, Icon }
+            }))
         } catch {
             throw new Error(`${softConfigPath} 配置文件错误！`)
         }
 
-        list = await Promise.all(list.map(async item => {
-            const Icon = path.join(softIconPath, item.Icon)
-            return { ...item, Icon }
-        }))
+        //自定义software配置
+        const customSoftDir = path.join(GetAppPath.getUserCoreDir(), '/custom/software')
+        const customSoftConfigPath = path.join(customSoftDir, 'software.json')
+        const customSoftIconDir = 'file://' + path.join(customSoftDir, '/icon')
 
-        Software.#list = list;
+        let customList
+        try {
+            if (await FileUtil.Exists(customSoftConfigPath)) {
+                customList = JSON.parse(await FileUtil.ReadAll(customSoftConfigPath))
+                customList = await Promise.all(customList.map(async item => {
+                    const Icon = path.join(customSoftIconDir, item.Icon)
+                    return { ...item, Icon }
+                }))
+            } else {
+                customList = []
+            }
+        } catch {
+            throw new Error(`${customSoftConfigPath} 配置文件错误！`)
+        }
+
+        Software.#list = list.concat(customList)
     }
 
     /**
