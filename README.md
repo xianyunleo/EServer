@@ -1,4 +1,4 @@
-## EServer | [中文](https://github.com/xianyunleo/EServer/raw/master/README_zh.md)
+## EServer | [中文](https://github.com/xianyunleo/EServer/blob/master/README_zh.md)
 ### A GUI software for Windows and Mac platforms that integrates Nginx, PHP, MySQL, Redis and other servers.
 
 ## doc：www.eserver.app/doc
