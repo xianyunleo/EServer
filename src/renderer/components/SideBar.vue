@@ -1,8 +1,8 @@
 <template>
   <div class="sidebar">
-    <div class="draggable" @dblclick="dblclick"></div>
-    <div class="logo-container">
+    <div class="draggable logo-container" @dblclick="dblclick">
       <img src="@/renderer/assets/img/icons/icon-trans.png" alt="icon" />
+      <span>{{ APP_NAME }} </span>
     </div>
     <a-menu mode="vertical" @select="menuItemSelect" v-model:selectedKeys="selectedKeys">
       <div style="flex: 1" class="non-draggable">
@@ -32,6 +32,7 @@
 </template>
 
 <script setup>
+import { APP_NAME } from '@/shared/utils/constant'
 import {
   AppstoreTwoTone,
   ExclamationCircleTwoTone,

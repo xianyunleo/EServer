@@ -1,7 +1,7 @@
 <template>
   <div class='title-bar draggable' @dblclick="dblclick">
     <div class='notify color-text'>
-      {{ APP_NAME }} {{ t('notice') }}：<a class='non-draggable color-text' @click='clickUrl'>🎉{{ t('none') }}</a>
+      {{ t('notice') }}：<a class='non-draggable color-text' @click='clickUrl'>🎉{{ t('none') }}</a>
     </div>
     <div class='window-controls-container non-draggable color-text' v-if='isWindows'>
       <div class='window-icon codicon codicon-chrome-minimize '

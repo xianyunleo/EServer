@@ -42,17 +42,24 @@ img, a {
   }
 
   .logo-container {
-    height: 100px;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
+    padding: 30px 0;
+    border-bottom: 1px solid var(--colorBorder)
   }
 
   .logo-container img {
-    width: 90px;
-    height: 90px;
+    width: 25px;
+    height: 25px;
     background: linear-gradient(to bottom, @colorPrimaryHover, @colorPrimary, @colorPrimaryActive);
     border-radius: @borderRadius;
+  }
+
+  .logo-container span {
+    margin-left: 10px;
+    font-size: 20px;
+    font-weight: bold;
   }
 
   .ant-menu {
