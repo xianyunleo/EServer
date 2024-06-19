@@ -109,7 +109,7 @@ export default class Extension {
                 } else if (phpVersion < 8.0) {
                     return '4.8.13';
                 } else {
-                    return '5.1.1'
+                    return '5.1.3'
                 }
             case 'mongodb':
                 if (phpVersion <= 7.1) {
