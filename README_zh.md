@@ -1,4 +1,4 @@
-## EServer | [English](https://github.com/xianyunleo/EServer/raw/master/README.md)
+## EServer | [English](https://github.com/xianyunleo/EServer/blob/master/README.md)
 ### Windows Mac平台下的一款集成Nginx、PHP、MySQL、Redis等服务的GUI集成环境
 
 ## 文档：www.eserver.app/doc
