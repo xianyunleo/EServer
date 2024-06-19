@@ -20,6 +20,9 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 brew install pkg-config autoconf automake libtool
 cd "swoole-$extVersion"
 $phpDir/bin/phpize
-./configure --with-php-config=$phpDir/bin/php-config
+./configure \
+--with-php-config=$phpDir/bin/php-config \
+--with-openssl-dir=/Applications/EServer/Library/openssl@1.1/
+
 arch -x86_64 make -j4
 make install

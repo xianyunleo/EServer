@@ -1,9 +1,10 @@
-# EServer
-### Windows Mac平台下的一款集成Nginx、PHP、MySQL、Redis等服务的GUI集成环境
+## EServer | [中文](https://github.com/xianyunleo/EServer/raw/master/README_zh.md)
+### A GUI software for Windows and Mac platforms that integrates Nginx, PHP, MySQL, Redis and other servers.
 
-## 文档：www.eserver.app/doc
+## doc：www.eserver.app/doc
 
-### 本软件的前身是 phpEnv ，www.phpenv.cn
-![主界面](https://github.com/xianyunleo/EServer/raw/master/screenshots/home.png)
+### The predecessor of this software is phpEnv ，www.phpenv.cn
 
 ![home](https://github.com/xianyunleo/EServer/raw/master/screenshots/home-en.png)
+
+![主界面](https://github.com/xianyunleo/EServer/raw/master/screenshots/home.png)
