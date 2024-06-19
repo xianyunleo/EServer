@@ -1,7 +1,7 @@
 <template>
   <div class='content-container'>
     <App />
-    <OneClickServer />
+    <Server />
     <EnvVar />
     <Other />
     <UserPwd v-if='!isWindows' />
@@ -10,7 +10,7 @@
 
 <script setup>
 import App from '@/renderer/components/Settings/App.vue'
-import OneClickServer from '@/renderer/components/Settings/OneClickServer.vue'
+import Server from '@/renderer/components/Settings/Server.vue'
 import Other from '@/renderer/components/Settings/Other.vue'
 import EnvVar from '@/renderer/components/Settings/EnvVar.vue'
 import UserPwd from '@/renderer/components/Settings/UserPwd.vue'
