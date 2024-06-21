@@ -3,24 +3,23 @@
     <a-row type="flex" align="middle" class="settings-card-row">
       <a-col :span="24" class="flex-vertical-center">
         <a-switch v-model:checked="store.settings.EnableEnv" @change="changeEnableEnv" class="settings-switch" />
-        <span>{{mt('Enable','ws','EnvironmentVariables')}}</span>
-        <a-typography-text  style="margin-left: 20px" type="danger">* {{t('needRestartTerminal')}}
-        </a-typography-text>
+        <span>{{ mt('Enable', 'ws', 'EnvironmentVariables') }}</span>
+        <a-typography-text style="margin-left: 20px" type="danger">* {{ t('needRestartTerminal') }} </a-typography-text>
       </a-col>
     </a-row>
     <a-row type="flex" justify="space-around" align="middle" class="settings-card-row">
       <a-col :span="12" class="flex-vertical-center">
-        <span :class="!store.settings.EnableEnv?'disabled-text':''">
-          PHP-CLI {{t('Version')}}：
-        </span>
-        <a-select style="width: 120px" :options="phpVersionList" :disabled="!store.settings.EnableEnv"
-                  v-model:value="store.settings.PhpCliVersion" @change="phpCliVersionChange"/>
+        <span :class="!store.settings.EnableEnv ? 'disabled-text' : ''"> PHP-CLI {{ t('Version') }}： </span>
+        <a-select style="width: 120px" :options="phpVersionList" :disabled="!store.settings.EnableEnv" v-model:value="store.settings.PhpCliVersion" @change="phpCliVersionChange" />
       </a-col>
       <a-col :span="12" class="flex-vertical-center">
-        <a-switch v-model:checked="store.settings.EnableComposer" @change="changeEnableComposer"
-                  class="settings-switch"
-                  :disabled="!store.settings.EnableEnv || store.settings.PhpCliVersion===''" />
-          <span :class="!store.settings.EnableEnv?'disabled-text':''">{{t('Enable')}} Composer：</span>
+        <a-switch
+          v-model:checked="store.settings.EnableComposer"
+          @change="changeEnableComposer"
+          class="settings-switch"
+          :disabled="!store.settings.EnableEnv || store.settings.PhpCliVersion === ''"
+        />
+        <span :class="!store.settings.EnableEnv ? 'disabled-text' : ''">{{ t('Enable') }} Composer：</span>
       </a-col>
     </a-row>
   </a-card>
@@ -36,12 +35,11 @@ import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
 
-
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const store = useMainStore()
 
 const changeEnableEnv = async () => {
-  store.setSettings('EnableEnv', async originVal => {
+  store.setSettings('EnableEnv', async (originVal) => {
     await Env.switch(store.settings.EnableEnv)
   })
 }
@@ -54,36 +52,34 @@ const phpVersionList = computed(() => {
 
 ;(async () => {
   const list = await SoftwareExtend.getPHPList()
-  phpVersionListTemp.value = list.map(item => {
+  phpVersionListTemp.value = list.map((item) => {
     return { value: item.version, label: item.name }
   })
 })()
 
 const phpCliVersionChange = () => {
-  store.setSettings('PhpCliVersion', async originVal => {
+  store.setSettings('PhpCliVersion', async (originVal) => {
     if (store.settings.PhpCliVersion) {
       let path = GetPath.getPhpExePath(store.settings.PhpCliVersion)
       await Env.createBinFile(path, 'php')
     } else {
       await Env.deleteBinFile('php')
     }
-    message.success('设置成功，已生效，不需要重启终端！')
+    message.success(t('The setting is successful and has taken effect. There is no need to restart the terminal!'))
   })
 }
 
 const changeEnableComposer = async () => {
-  store.setSettings('EnableComposer', async originVal => {
+  store.setSettings('EnableComposer', async (originVal) => {
     if (store.settings.EnableComposer) {
       let path = GetPath.getComposerExePath()
       await Env.createBinFile(path, 'composer')
     } else {
       await Env.deleteBinFile('composer')
     }
-    message.success('设置成功，已生效，不需要重启终端！')
+    message.success(t('The setting is successful and has taken effect. There is no need to restart the terminal!'))
   })
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

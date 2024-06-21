@@ -4,17 +4,17 @@
         "DirName": "nginx",
         "ServerProcessPath": "sbin/nginx",
         "ServerConfPath": "conf/nginx.conf",
-        "StartServerArgs": ["-p","${WorkPath}","-g","daemon off;"],
+        "StartServerArgs": ["-p", "${WorkPath}", "-g", "daemon off;"],
         "ServerPort": 80,
         "ExtraFiles": [
-            {"Name": "access.log", "Path": "logs/access.log"},
-            {"Name": "error.log", "Path": "logs/error.log"}
+            { "Name": "access.log", "Path": "logs/access.log" },
+            { "Name": "error.log", "Path": "logs/error.log" }
         ],
         "Type": "Server",
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": false,
         "Icon": "nginx.png",
-        "Desc": "Web服务器"
+        "Desc": "Web Server"
     },
     {
         "Name": "PHP-5.6",
@@ -23,12 +23,12 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
+        "StartServerArgs": ["-c", "${ConfPath}", "-y", "${ServerConfPath}", "-F"],
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言"
+        "Desc": "PHP is the best programming language in the world"
     },
     {
         "Name": "PHP-7.0",
@@ -37,12 +37,12 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
+        "StartServerArgs": ["-c", "${ConfPath}", "-y", "${ServerConfPath}", "-F"],
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言"
+        "Desc": "PHP is the best programming language in the world"
     },
     {
         "Name": "PHP-7.1",
@@ -51,12 +51,12 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
+        "StartServerArgs": ["-c", "${ConfPath}", "-y", "${ServerConfPath}", "-F"],
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言"
+        "Desc": "PHP is the best programming language in the world"
     },
     {
         "Name": "PHP-7.2",
@@ -65,12 +65,12 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
+        "StartServerArgs": ["-c", "${ConfPath}", "-y", "${ServerConfPath}", "-F"],
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言"
+        "Desc": "PHP is the best programming language in the world"
     },
     {
         "Name": "PHP-7.3",
@@ -79,12 +79,12 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
+        "StartServerArgs": ["-c", "${ConfPath}", "-y", "${ServerConfPath}", "-F"],
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言"
+        "Desc": "PHP is the best programming language in the world"
     },
     {
         "Name": "PHP-7.4",
@@ -93,12 +93,12 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
+        "StartServerArgs": ["-c", "${ConfPath}", "-y", "${ServerConfPath}", "-F"],
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言"
+        "Desc": "PHP is the best programming language in the world"
     },
     {
         "Name": "PHP-8.0",
@@ -107,12 +107,12 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
+        "StartServerArgs": ["-c", "${ConfPath}", "-y", "${ServerConfPath}", "-F"],
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言"
+        "Desc": "PHP is the best programming language in the world"
     },
     {
         "Name": "PHP-8.1",
@@ -121,12 +121,12 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
+        "StartServerArgs": ["-c", "${ConfPath}", "-y", "${ServerConfPath}", "-F"],
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言"
+        "Desc": "PHP is the best programming language in the world"
     },
     {
         "Name": "PHP-8.2",
@@ -135,12 +135,12 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
+        "StartServerArgs": ["-c", "${ConfPath}", "-y", "${ServerConfPath}", "-F"],
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言"
+        "Desc": "PHP is the best programming language in the world"
     },
     {
         "Name": "PHP-8.3",
@@ -149,12 +149,12 @@
         "ConfPath": "etc/php.ini",
         "ServerProcessPath": "sbin/php-fpm",
         "ServerConfPath": "etc/php-fpm.conf",
-        "StartServerArgs": ["-c","${ConfPath}","-y","${ServerConfPath}","-F"],
+        "StartServerArgs": ["-c", "${ConfPath}", "-y", "${ServerConfPath}", "-F"],
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
-        "Desc": "PHP是世界上最好的编程语言"
+        "Desc": "PHP is the best programming language in the world"
     },
     {
         "Name": "MySQL-5.7",
@@ -164,13 +164,11 @@
         "ServerConfPath": "my.cnf",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
         "ServerPort": 3306,
-        "ExtraFiles": [
-            {"Name": "mysql.log", "Path": "logs/mysql.log"}
-        ],
+        "ExtraFiles": [{ "Name": "mysql.log", "Path": "logs/mysql.log" }],
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "mysql.png",
-        "Desc": "MySQL是一种关系数据库"
+        "Desc": "MySQL Is a Relational Database"
     },
     {
         "Name": "MySQL-8.0",
@@ -180,13 +178,11 @@
         "ServerConfPath": "my.cnf",
         "StartServerArgs": ["--defaults-file=${ServerConfPath}"],
         "ServerPort": 3306,
-        "ExtraFiles": [
-            {"Name": "mysql.log", "Path": "logs/mysql.log"}
-        ],
+        "ExtraFiles": [{ "Name": "mysql.log", "Path": "logs/mysql.log" }],
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "mysql.png",
-        "Desc": "MySQL是一种关系数据库"
+        "Desc": "MySQL Is a Relational Database"
     },
     {
         "Name": "Redis-7.2",
@@ -199,7 +195,7 @@
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "redis.png",
-        "Desc": "一款高性能的Key-Value数据库"
+        "Desc": "A high-performance Key-Value database"
     },
     {
         "Name": "Composer",
@@ -208,7 +204,7 @@
         "RemoteIsCommonPlatform": true,
         "CanDelete": true,
         "Icon": "Composer.png",
-        "Desc": "PHP依赖管理工具（需要在设置里启用）"
+        "Desc": "PHP dependency management tool"
     },
     {
         "Name": "Notepad--",
@@ -218,7 +214,7 @@
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "Notepad--.png",
-        "Desc": "国产跨平台文本、代码编辑器"
+        "Desc": "cross-platform text and code editor"
     },
     {
         "Name": "phpMyAdmin",
@@ -228,6 +224,6 @@
         "RemoteArchiveExt": ".7z",
         "CanDelete": true,
         "Icon": "phpmyadmin.png",
-        "Desc": "Web端的MySQL管理工具"
+        "Desc": "MySQL management tool on the web"
     }
 ]

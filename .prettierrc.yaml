@@ -1,5 +1,5 @@
 singleQuote: true
 semi: false
-printWidth: 100
+printWidth: 180
 trailingComma: none
 endOfLine: auto

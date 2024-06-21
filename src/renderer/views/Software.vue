@@ -1,54 +1,51 @@
 <template>
-  <div class='content-container'>
-    <div class='category'>
-      <a-radio-group v-model:value='softwareTypeSelected' button-style='solid' @change='radioGroupChange'>
-        <a-radio-button :value='InstalledType'>{{ t('Installed') }}</a-radio-button>
-        <a-radio-button :value='enumGetName(EnumSoftwareType, EnumSoftwareType.Server)'>{{ t('Server') }}
-        </a-radio-button>
-        <a-radio-button :value='enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)'>PHP</a-radio-button>
-        <a-radio-button :value='enumGetName(EnumSoftwareType, EnumSoftwareType.Tool)'>{{ t('Tool') }}</a-radio-button>
+  <div class="content-container">
+    <div class="category">
+      <a-radio-group v-model:value="softwareTypeSelected" button-style="solid" @change="radioGroupChange">
+        <a-radio-button :value="InstalledType">{{ t('Installed') }}</a-radio-button>
+        <a-radio-button :value="enumGetName(EnumSoftwareType, EnumSoftwareType.Server)">{{ t('Server') }} </a-radio-button>
+        <a-radio-button :value="enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)">PHP</a-radio-button>
+        <a-radio-button :value="enumGetName(EnumSoftwareType, EnumSoftwareType.Tool)">{{ t('Tool') }}</a-radio-button>
       </a-radio-group>
     </div>
 
-    <div class='soft-list piece'>
-      <div class='soft-head'>
-        <div class='soft-item'>
-          <div class='soft-item-content'>
-            <div class='soft-item-avatar'>
+    <div class="soft-list piece">
+      <div class="soft-head">
+        <div class="soft-item">
+          <div class="soft-item-content">
+            <div class="soft-item-avatar">
               <span></span>
             </div>
-            <div class='soft-item-title'>{{ t('Name') }}</div>
-            <div class='soft-item-desc'>{{ t('Desc') }}</div>
-            <div class='soft-item-operate'>{{ t('Operation') }}</div>
+            <div class="soft-item-title">{{ t('Name') }}</div>
+            <div class="soft-item-desc">{{ t('Desc') }}</div>
+            <div class="soft-item-operate">{{ t('Operation') }}</div>
           </div>
         </div>
       </div>
 
-      <div class='soft-body'>
-        <template v-for='item in softwareList' :key='item.Name'>
-          <div v-if='item.show' class='soft-item'>
-            <div class='soft-item-content'>
-              <div class='soft-item-avatar'>
-                <img :src='item.Icon' />
+      <div class="soft-body">
+        <template v-for="item in softwareList" :key="item.Name">
+          <div v-if="item.show" class="soft-item">
+            <div class="soft-item-content">
+              <div class="soft-item-avatar">
+                <img :src="item.Icon" />
               </div>
-              <div class='soft-item-title'>{{ item.Name }}</div>
-              <div class='soft-item-desc'>{{ item.Desc }}</div>
-              <div class='soft-item-operate'>
-                <template v-if='item.Installed'>
-                  <a-button type='primary' danger style='margin-right: 5px'
-                    :disabled='item.CanDelete === false' @click='uninstall(item)'
-                  >{{ t('Uninstall') }}</a-button>
+              <div class="soft-item-title">{{ item.Name }}</div>
+              <div class="soft-item-desc">{{ t(item.Desc) }}</div>
+              <div class="soft-item-operate">
+                <template v-if="item.Installed">
+                  <a-button type="primary" danger style="margin-right: 5px" :disabled="item.CanDelete === false" @click="uninstall(item)">{{ t('Uninstall') }}</a-button>
 
                   <a-dropdown :trigger="['click']">
                     <template #overlay>
                       <a-menu>
-                        <a-menu-item v-if='item.IsMacApp || item.WinExePath' @click='openApp(item)'>
+                        <a-menu-item v-if="item.IsMacApp || item.WinExePath" @click="openApp(item)">
                           {{ t('Open') }}
                         </a-menu-item>
-                        <a-menu-item @click='openInstallPath(item)'>
+                        <a-menu-item @click="openInstallPath(item)">
                           {{ mt('Open', 'ws', 'Directory') }}
                         </a-menu-item>
-                        <a-menu-item v-if='item.Type === phpTypeValue' @click='showPhpExtManager(item)'>
+                        <a-menu-item v-if="item.Type === phpTypeValue" @click="showPhpExtManager(item)">
                           {{ mt('Install', 'ws', 'Extension') }}
                         </a-menu-item>
                       </a-menu>
@@ -57,31 +54,28 @@
                   </a-dropdown>
                 </template>
                 <template v-else>
-                  <a-button  v-if='item.installInfo == null || item.showStatusErrorText'
-                             type='primary' @click='clickInstall(item)'>{{ t('Install') }}</a-button>
+                  <a-button v-if="item.installInfo == null || item.showStatusErrorText" type="primary" @click="clickInstall(item)">{{ t('Install') }}</a-button>
 
-                  <a-button v-else type='primary' @click='clickStop(item)'>{{ t('Stop') }}</a-button>
+                  <a-button v-else type="primary" @click="clickStop(item)">{{ t('Stop') }}</a-button>
                 </template>
               </div>
             </div>
-            <div v-if='item.installInfo' class='soft-item-progress'>
-              <a-progress :percent='item.installInfo?.dlInfo?.percent' :show-info='false' status='active' />
-              <div class='progress-info'>
-                <div class='progress-info-left'>
-                  <span v-if='item.installInfo?.status === EnumSoftwareInstallStatus.Downloading'>
+            <div v-if="item.installInfo" class="soft-item-progress">
+              <a-progress :percent="item.installInfo?.dlInfo?.percent" :show-info="false" status="active" />
+              <div class="progress-info">
+                <div class="progress-info-left">
+                  <span v-if="item.installInfo?.status === EnumSoftwareInstallStatus.Downloading">
                     {{ item.installInfo?.dlInfo?.completedSizeText }}/{{ item.installInfo?.dlInfo?.totalSizeText }}
                   </span>
                 </div>
-                <div v-if='item.showStatusErrorText' class='status-text-error'>
+                <div v-if="item.showStatusErrorText" class="status-text-error">
                   <a-tooltip>
                     <template #title>{{ item.statusErrorText }}</template>
                     {{ item.statusErrorText }}
                   </a-tooltip>
                 </div>
-                <div class='progress-info-right'>
-                  <span v-if='item.installInfo?.status === EnumSoftwareInstallStatus.Downloading'>
-                    ↓{{ item.installInfo?.dlInfo?.perSecondText }}/S
-                  </span>
+                <div class="progress-info-right">
+                  <span v-if="item.installInfo?.status === EnumSoftwareInstallStatus.Downloading"> ↓{{ item.installInfo?.dlInfo?.perSecondText }}/S </span>
                   <span v-else>
                     {{ item.statusText }}
                   </span>
@@ -93,14 +87,14 @@
       </div>
     </div>
 
-    <a-card size='small'>
-      <div style='display: flex; justify-content: space-between'>
-        <a-button type='primary' :icon='h(AppstoreAddOutlined)' @click='localInstall'>
+    <a-card size="small">
+      <div style="display: flex; justify-content: space-between">
+        <a-button type="primary" :icon="h(AppstoreAddOutlined)" @click="localInstall">
           {{ mt('Local', 'ws', 'Install') }}
         </a-button>
-        <div style='display: flex; align-items: center'>
+        <div style="display: flex; align-items: center">
           {{ t('installPackageDownloadUrl') }}:
-          <a style='margin: 0 10px' @click="openUrl('http://github.com/xianyunleo/EServerAppStore')">Github</a>
+          <a style="margin: 0 10px" @click="openUrl('http://github.com/xianyunleo/EServerAppStore')">Github</a>
           <a @click="openUrl('https://gitee.com/xianyunleo/EServerAppStore')">Gitee</a>
         </div>
       </div>
@@ -108,9 +102,7 @@
   </div>
 
   <!--  v-if防止不显示就执行modal里面的代码-->
-  <php-ext-manager v-if='phpExtManagerShow' v-model:show='phpExtManagerShow' :phpVersion='phpVersion'>
-  </php-ext-manager>
-
+  <php-ext-manager v-if="phpExtManagerShow" v-model:show="phpExtManagerShow" :phpVersion="phpVersion"> </php-ext-manager>
 </template>
 
 <script setup>
@@ -175,13 +167,13 @@ const clickInstall = async (item) => {
     }
     switch (item.installInfo.status) {
       case EnumSoftwareInstallStatus.Ready:
-        return '正在开始'
+        return t('Ready')
       case EnumSoftwareInstallStatus.Downloading:
-        return '下载中'
+        return t('Downloading')
       case EnumSoftwareInstallStatus.Extracting:
-        return '解压中'
+        return t('Unzipping')
       case EnumSoftwareInstallStatus.Configuring:
-        return '配置中'
+        return t('Configuring')
       default:
         return ''
     }
@@ -287,7 +279,7 @@ const localInstall = async () => {
       MessageBox.info(dirName + mt('ws', 'Installed'))
       return
     }
-    store.loading = true;
+    store.loading = true
     store.loadingTip = t('Installing')
     await LocalInstall.install(path)
     item.Installed = true
@@ -297,12 +289,12 @@ const localInstall = async () => {
   } catch (error) {
     MessageBox.error(error.message ?? error)
   } finally {
-    store.loading = false;
+    store.loading = false
   }
 }
 
 const showPhpExtManager = async (item) => {
-  if (isMacOS && !await SystemExtend.isInstalledBrew()) {
+  if (isMacOS && !(await SystemExtend.isInstalledBrew())) {
     MessageBox.error(`Homebrew未安装！\n请复制命令到终端执行安装\n/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`)
     return
   }
@@ -315,7 +307,7 @@ const openUrl = (url) => {
 }
 </script>
 
-<style scoped lang='less'>
+<style scoped lang="less">
 @import '@/renderer/assets/css/var';
 
 .category {

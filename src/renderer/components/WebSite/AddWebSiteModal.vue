@@ -1,40 +1,27 @@
 <template>
-  <a-modal
-    :title="mt('Add','ws','Website')"
-    :ok-text="t('Submit')"
-    :cancel-text="t('Cancel')"
-    @ok='addWebClick'
-    v-model:open='visible'
-    centered
-    :maskClosable='false'>
-    <div class='modal-content'>
-      <a-form
-        ref='formRef' :model='formData' name='basic' autocomplete='off'
-        :label-col='{ span: labelColSpan}' :wrapper-col='{ span: wrapperColSpan}'
-      >
-        <a-form-item :label="t('DomainName')+''" name='serverName'
-                     :rules="[{ required: true, message: t('cannotBeEmpty')}]">
-          <a-input v-model:value='formData.serverName' @change='serverNameChange' spellcheck='false' />
+  <a-modal :title="mt('Add', 'ws', 'Website')" :ok-text="t('Submit')" :cancel-text="t('Cancel')" @ok="addWebClick" v-model:open="visible" centered :maskClosable="false">
+    <div class="modal-content">
+      <a-form ref="formRef" :model="formData" name="basic" autocomplete="off" :label-col="{ span: labelColSpan }" :wrapper-col="{ span: wrapperColSpan }">
+        <a-form-item :label="t('DomainName') + ''" name="serverName" :rules="[{ required: true, message: t('cannotBeEmpty') }]">
+          <a-input v-model:value="formData.serverName" @change="serverNameChange" spellcheck="false" />
         </a-form-item>
 
-        <a-form-item :label="t('Port')" name='port'
-                     :rules="[{  required: true, type: 'number', min: 80, max: 65535 }]">
-          <a-input-number v-model:value='formData.port' min='80' max='65535' />
+        <a-form-item :label="t('Port')" name="port" :rules="[{ required: true, type: 'number', min: 80, max: 65535 }]">
+          <a-input-number v-model:value="formData.port" min="80" max="65535" />
         </a-form-item>
 
-        <a-form-item :label="t('RootPath')" name='rootPath' :rules='rootPathRules'>
-          <input-open-dir-dialog v-model:value='formData.rootPath' :toForwardSlash='true'></input-open-dir-dialog>
+        <a-form-item :label="t('RootPath')" name="rootPath" :rules="rootPathRules">
+          <input-open-dir-dialog v-model:value="formData.rootPath" :toForwardSlash="true"></input-open-dir-dialog>
         </a-form-item>
 
-        <a-form-item :label="'PHP'+mt('ws','Version')" name='phpVersion'>
-          <a-select style='width: 120px' v-model:value='formData.phpVersion' :options='phpVersionList' />
+        <a-form-item :label="'PHP' + mt('ws', 'Version')" name="phpVersion">
+          <a-select style="width: 120px" v-model:value="formData.phpVersion" :options="phpVersionList" />
         </a-form-item>
 
-        <a-form-item :label="mt('Sync','ws')+'hosts'" name='syncHosts'>
-          <a-switch v-model:checked='formData.syncHosts' />
+        <a-form-item :label="mt('Sync', 'ws') + 'hosts'" name="syncHosts">
+          <a-switch v-model:checked="formData.syncHosts" />
         </a-form-item>
       </a-form>
-
     </div>
   </a-modal>
 </template>
@@ -66,12 +53,12 @@ const formData = reactive({
   syncHosts: true
 })
 
-const labelColSpan = store.settings.Language === 'zh' ? 6 : 8;
-const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 16;
+const labelColSpan = store.settings.Language === 'zh' ? 6 : 8
+const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 16
 
 ;(async () => {
   const list = await SoftwareExtend.getPHPList()
-  phpVersionList.value = list.map(item => {
+  phpVersionList.value = list.map((item) => {
     return { value: item.version, label: item.name }
   })
   phpVersionList.value.push({ value: '', label: t('Static') })
@@ -96,7 +83,7 @@ const addWeb = async (websiteInfo) => {
   try {
     await Website.add(websiteInfo)
   } catch (error) {
-    MessageBox.error(error.message ?? error, '添加网站出错！')
+    MessageBox.error(error.message ?? error, t('Error adding website!'))
     return
   }
   visible.value = false
@@ -105,7 +92,7 @@ const addWeb = async (websiteInfo) => {
     try {
       await Hosts.add(websiteInfo.serverName)
     } catch (error) {
-      MessageBox.error(error.message ?? error,  t('errorOccurredDuring', [mt('sync', 'ws') + 'hosts']))
+      MessageBox.error(error.message ?? error, t('errorOccurredDuring', [mt('sync', 'ws') + 'hosts']))
     }
   }
 

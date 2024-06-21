@@ -1,6 +1,7 @@
 import { createI18n } from 'vue-i18n'
 import zh from '@/shared/i18n/zh'
 import en from '@/shared/i18n/en'
+import fr from '@/shared/i18n/fr'
 
 export default class I18n {
     static _instance
@@ -10,8 +11,9 @@ export default class I18n {
             legacy: false,
             locale: 'zh',
             messages: {
-                'zh': zh,
-                'en': en
+                zh: zh,
+                en: en,
+                fr: fr
             }
         })
     }
