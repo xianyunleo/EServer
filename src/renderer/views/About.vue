@@ -1,9 +1,6 @@
 <template>
   <div class="content-container color-text">
     <p style="text-align: center; font-size: 18px; margin-top: 50px">{{ APP_NAME }}</p>
-    <p style="text-align: center; font-size: 18px; font-weight: bold">
-      {{ t('integratedServiceEnvironment') }}
-    </p>
     <p style="text-align: center">{{ $t('Version') }}：{{ version }}</p>
     <p style="text-align: center">
       {{ t('OfficialSite') }}：<a @click="openUrl('http://www.eserver.app')">www.eserver.app</a>
