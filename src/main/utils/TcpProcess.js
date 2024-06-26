@@ -9,11 +9,11 @@ export default class TcpProcess {
 
     static async getList() {
         if (isMacOS) {
-            return await this.getListForMacOS();
+            return await this.getListForMacOS()
         } else if (isWindows) {
-            return await this.getListForWindows();
+            return await this.getListForWindows()
         }
-        return [];
+        return []
     }
 
     static async getListForMacOS() {
@@ -44,7 +44,7 @@ export default class TcpProcess {
         }
     }
 
-    static async getListForWindows() {
+    static async getListForWindowsByShell() {
         let commandStr = ` Get-NetTCPConnection -State Listen|select-Object OwningProcess,LocalAddress,LocalPort`;
         commandStr += ', @{n="Name" ;e= {(Get-Process -Id $_.OwningProcess).Name } }  , @{n="Path" ;e= {(Get-Process -Id $_.OwningProcess).Path } }';
         commandStr += ' | fl | Out-String -Width 999';
@@ -76,65 +76,54 @@ export default class TcpProcess {
         }
     }
 
+    static async getListForWindows() {
+        const net = require('net-win32')
+        const hmc = require('hmc-win32')
+        try {
+            let list = await net.getConnectNetListAsync(true, false, true, false)
+            list = await list.filterAsync((item) => item.state === 'LISTEN')
+            //由于hmc的promise暂不支持并发，所以先用for of
+            const result = []
+            for (const item of list) {
+                const { pid, ip, port } = item
+                const name = await hmc.getProcessName2(pid)
+                const path = await hmc.getProcessFilePath2(pid)
+                result.push({ pid, ip, port, name, path })
+            }
+
+            return result
+        } catch (e) {
+            return []
+        }
+    }
 
     /**
      *
-     * @param port
+     * @param port {number}
      * @returns {Promise<number|null>}
      */
     static async getPidByPort(port) {
         try {
-            let commandStr, resStr, pid;
-
-            if (isWindows) {
-                commandStr = `(Get-NetTCPConnection -LocalPort ${port} -State Listen).OwningProcess`;
-                resStr = await Shell.exec(commandStr, {shell: 'powershell'});
-            } else {
-                commandStr = `lsof -t -sTCP:LISTEN -i:${port}`;
-                resStr = await Shell.exec(commandStr);
-            }
-
-            if (!resStr) {
-                return null;
-            }
-            pid = resStr.trim().split("\n")[0];
-            return parseInt(pid);
+            port = parseInt(port)
+            const net = require('net-win32')
+            return await net.getTCPv4PortProcessIDAsync(port)
         } catch {
-            return null;
+            return null
         }
     }
 
     /**
-     * @param port
+     * @param port {number}
      * @returns {Promise<null|string>}
      */
     static async getPathByPort(port) {
         try {
-            let commandStr, resStr, path;
-
-            if (isWindows) {
-                commandStr = `(Get-Process -Id (Get-NetTCPConnection -LocalPort ${port} -State Listen).OwningProcess).Path"`;
-                resStr = await Shell.exec(commandStr, {shell: 'powershell'});
-            } else {
-                commandStr = `lsof -t -sTCP:LISTEN -i:${port}|head -n 1|xargs lsof -a -w -d txt -Fn -p|awk 'NR==3{print}'|sed "s/n//"`;
-                resStr = await Shell.exec(commandStr);
-            }
-
-            if (!resStr) {
-                return null;
-            }
-            path = resStr.trim().split("\n")[0];
-            return path.trim();
+            port = parseInt(port)
+            const pid = TcpProcess.getPidByPort(port)
+            const hmc = require('hmc-win32')
+            return await hmc.getProcessFilePath2(pid)
         } catch {
-            return null;
-        }
-    }
-
-
-    static async killByPort(port) {
-        let pid = await TcpProcess.getPidByPort(port);
-        if (pid) {
-            await ProcessExtend.kill(pid);
+            return null
         }
     }
 }

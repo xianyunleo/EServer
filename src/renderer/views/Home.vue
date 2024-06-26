@@ -264,7 +264,8 @@ const startServerClick = async (item) => {
       if (item.ServerPort == 80) {
         await ProcessExtend.killWebServer()
       } else {
-        await TcpProcess.killByPort(item.ServerPort)
+        const pid = await TcpProcess.getPidByPort(item.ServerPort)
+        await ProcessExtend.kill(pid)
       }
     }
 
