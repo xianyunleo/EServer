@@ -142,7 +142,6 @@ export default {
     softwareUninstallErrorTip: 'Veuillez ouvrir le gestionnaire de fichiers et supprimer manuellement le répertoire {0}.',
     mysqlResetRootAccountPwd: 'Réinitialiser le mot de passe du compte root MySQL.',
     afterOpenAppStartServer: "Démarrez le service après avoir ouvert l'application.",
-    integratedServiceEnvironment: 'Environnement de services intégrés',
     pleaseChoose: "Choisissez s'il vous plaît",
     'MySQL Is a Relational Database': 'MySQL is a relational database',
     'Web Server': 'Serveur Web',

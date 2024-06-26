@@ -142,7 +142,6 @@ export default {
     softwareUninstallErrorTip: 'Please open the file manager and manually delete the {0} directory',
     mysqlResetRootAccountPwd: 'MySQL reset password for root account',
     afterOpenAppStartServer: 'After opening the app, start the server',
-    integratedServiceEnvironment: 'Integrated Service Environment',
     pleaseChoose: 'Please choose',
     'MySQL Is a Relational Database': 'MySQL is a relational database',
     'Web Server': 'Web Server',

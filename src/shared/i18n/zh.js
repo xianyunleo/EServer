@@ -143,7 +143,6 @@ export default {
     softwareUninstallErrorTip: '请打开文件管理器，手动删除{0}目录',
     mysqlResetRootAccountPwd: 'MySQL 重置 root 账户的密码',
     afterOpenAppStartServer: '打开软件后，启动服务',
-    integratedServiceEnvironment: '打开软件后，启动服务',
     pleaseChoose: '请选择',
     'MySQL Is a Relational Database': 'MySQL是一种关系数据库',
     'Web Server': 'Web服务器',
