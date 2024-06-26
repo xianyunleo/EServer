@@ -89,7 +89,7 @@ export default class TcpProcess {
                 const name = await hmc.getProcessName2(pid)
                 const path = await hmc.getProcessFilePath2(pid)
                 const icon = path ? (await app.getFileIcon(path))?.toDataURL() : null
-                result.push({ pid, ip, port, name, path, icon })
+                result.push({ pid, ip, port, name, path, status: 'Listen', icon })
             }
 
             return result
