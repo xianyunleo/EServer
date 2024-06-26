@@ -1,30 +1,36 @@
 <template>
-  <a-card size="small" :title='t("Application")' class='settings-card'>
-    <a-row type='flex' align='middle' class='settings-card-row'>
-      <a-col :span='24' class='flex-vertical-center'>
+  <a-card size="small" :title="t('Application')" class="settings-card">
+    <a-row type="flex" align="middle" class="settings-card-row">
+      <a-col :span="24" class="flex-vertical-center">
         <span> {{ t('Language') }}：</span>
         <a-select
-          v-model:value='store.settings.Language'
-          :options='languageOptions' @change='languageChange'
-          placeholder='请选择' style='width: 200px'
+          v-model:value="store.settings.Language"
+          :options="languageOptions"
+          @change="languageChange"
+          placeholder="{{ t('pleaseChoose') }}"
+          style="width: 200px"
         ></a-select>
       </a-col>
     </a-row>
-    <a-row type='flex' align='middle' class='settings-card-row'>
-      <a-col :span='12' class='flex-vertical-center'>
-        <span>{{ mt('Theme','ws','Mode') }}：</span>
+    <a-row type="flex" align="middle" class="settings-card-row">
+      <a-col :span="12" class="flex-vertical-center">
+        <span>{{ mt('Theme', 'ws', 'Mode') }}：</span>
         <a-select
-          v-model:value='store.settings.ThemeMode'
-          :options='modeOptions' @change='themeModeChange'
-          placeholder='请选择' style='width: 200px'
+          v-model:value="store.settings.ThemeMode"
+          :options="modeOptions"
+          @change="themeModeChange"
+          placeholder="{{ t('pleaseChoose') }}"
+          style="width: 200px"
         ></a-select>
       </a-col>
-      <a-col :span='12' class='flex-vertical-center'>
-        <span>{{ mt('Theme','ws','Color') }}：</span>
+      <a-col :span="12" class="flex-vertical-center">
+        <span>{{ mt('Theme', 'ws', 'Color') }}：</span>
         <a-select
-          v-model:value='store.settings.ThemeColor'
-          :options='colorOptions' @change='themeColorChange'
-          placeholder='请选择' style='width: 200px'
+          v-model:value="store.settings.ThemeColor"
+          :options="colorOptions"
+          @change="themeColorChange"
+          placeholder="{{ t('pleaseChoose') }}"
+          style="width: 200px"
         ></a-select>
       </a-col>
     </a-row>
@@ -32,9 +38,9 @@
 </template>
 
 <script setup>
-import {computed} from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {mt,t}  from '@/renderer/utils/i18n'
+import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
 import { changeLanguageWrapper } from '@/renderer/utils/language'
@@ -46,6 +52,7 @@ const store = useMainStore()
 const languageOptions = [
   { label: '中文', value: 'zh' },
   { label: 'English', value: 'en' },
+  { label: 'Français', value: 'fr' }
 ]
 
 const modeOptions = computed(() => {
@@ -63,29 +70,27 @@ const colorOptions = computed(() => {
     { label: t('red'), value: '#DC4437' },
     { label: t('cyan'), value: '#02BCAA' },
     { label: t('pink'), value: '#fb7299' },
-    { label: t('purple'), value: '#673BB7' },
+    { label: t('purple'), value: '#673BB7' }
   ]
 })
 
 const languageChange = () => {
-  store.setSettings('Language', async originVal => {
+  store.setSettings('Language', async (originVal) => {
     await changeLanguageWrapper(store.settings.Language)
   })
 }
 
 const themeModeChange = () => {
-  store.setSettings('ThemeMode', async originVal => {
+  store.setSettings('ThemeMode', async (originVal) => {
     store.changeTheme(store.settings.ThemeMode, store.settings.ThemeColor)
   })
 }
 
 const themeColorChange = () => {
-  store.setSettings('ThemeColor', async originVal => {
+  store.setSettings('ThemeColor', async (originVal) => {
     store.changeTheme(store.settings.ThemeMode, store.settings.ThemeColor)
   })
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

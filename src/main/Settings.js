@@ -7,16 +7,16 @@ import { isMacOS, isWindows } from '@/main/utils/utils'
 import GetAppPath from '@/main/utils/GetAppPath'
 
 export default class Settings {
-    static #_instance;
-    static #_fileName = SETTINGS_FILE_NAME;
-    static #_fileExtension = 'json';
+    static #_instance
+    static #_fileName = SETTINGS_FILE_NAME
+    static #_fileExtension = 'json'
 
     static get(key) {
-        return this.getInstance().get(key);
+        return this.getInstance().get(key)
     }
 
     static set(key, val) {
-        return this.getInstance().set(key, val);
+        return this.getInstance().set(key, val)
     }
 
     static getAll() {
@@ -29,23 +29,23 @@ export default class Settings {
      */
     static getInstance() {
         if (this.#_instance) {
-            return this.#_instance;
+            return this.#_instance
         }
-        this.init();
-        return this.#_instance;
+        this.init()
+        return this.#_instance
     }
 
     static init() {
         if (this.#_instance) {
-            return;
+            return
         }
         const options = {
             name: this.#_fileName,
             fileExtension: this.#_fileExtension,
-            cwd: this.getDir(),
-        };
-        options.defaults = this.#_getDefault();
-        this.#_instance = new Store(options);
+            cwd: this.getDir()
+        }
+        options.defaults = this.#_getDefault()
+        this.#_instance = new Store(options)
     }
 
     /**
@@ -53,9 +53,9 @@ export default class Settings {
      */
     static #_getDefault() {
         return {
-            Language:'zh',
-            ThemeMode:'system',
-            ThemeColor:'#1890FF',
+            Language: 'zh',
+            ThemeMode: 'system',
+            ThemeColor: '#1890FF',
             EnableEnv: false,
             PhpCliVersion: '',
             EnableComposer: false,
@@ -63,16 +63,16 @@ export default class Settings {
             WebsiteDir: Path.Join(GetAppPath.getUserCoreDir(), 'www'),
             OneClickServerList: ['Nginx', 'PHP-FPM', 'MySQL-5.7'],
             AutoStartAndRestartServer: true,
-            AfterOpenAppStartServer: false,
-        };
+            AfterOpenAppStartServer: false
+        }
     }
 
     static #_getDefaultTextEditorPath() {
-        let toolTypePath =  GetPath.getToolTypeDir();
+        let toolTypePath = GetPath.getToolTypeDir()
         if (isMacOS) {
-           return Path.Join(toolTypePath, 'Notepad--.app');
+            return Path.Join(toolTypePath, 'Notepad--.app')
         } else if (isWindows) {
-            return Path.Join(toolTypePath, 'Notepad3/Notepad3.exe');
+            return Path.Join(toolTypePath, 'Notepad3/Notepad3.exe')
         }
     }
 
@@ -84,7 +84,7 @@ export default class Settings {
      * 获取设置文件完整的路径
      * @returns {string}
      */
-    static getFilePath(){
-        return Path.Join(this.getDir(), `${this.#_fileName}.${this.#_fileExtension}`);
+    static getFilePath() {
+        return Path.Join(this.getDir(), `${this.#_fileName}.${this.#_fileExtension}`)
     }
 }

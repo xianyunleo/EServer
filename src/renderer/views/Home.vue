@@ -1,75 +1,73 @@
 <template>
-  <div class='content-container'>
-    <a-card :title='t("ShortcutActions")' size="small">
-      <div class='quick-card-content'>
-        <a-button type='primary' @click='oneClickStart' :disabled='!!serverTableLoading'>
+  <div class="content-container">
+    <a-card :title="t('ShortcutActions')" size="small">
+      <div class="quick-card-content">
+        <a-button type="primary" @click="oneClickStart" :disabled="!!serverTableLoading">
           {{ mt('OneClick', 'ws', 'Start') }}
         </a-button>
-        <a-button type='primary' @click='oneClickStop' :disabled='!!serverTableLoading'>
+        <a-button type="primary" @click="oneClickStop" :disabled="!!serverTableLoading">
           {{ mt('OneClick', 'ws', 'Stop') }}
         </a-button>
-        <a-button type='primary' @click='corePathClick'>
-          {{ APP_NAME }} {{ mt('ws', 'Directory') }}
-        </a-button>
-        <a-button type='primary' @click='wwwPathClick'>
+        <a-button type="primary" @click="corePathClick"> {{ APP_NAME }} {{ mt('ws', 'Directory') }} </a-button>
+        <a-button type="primary" @click="wwwPathClick">
           {{ mt('Website', 'ws', 'Directory') }}
         </a-button>
       </div>
     </a-card>
 
-    <a-table :columns='columns' :data-source='serverList' class='content-table' :pagination='false' size='middle'
-             :loading='serverTableLoading' :scroll="{y: 'calc(100vh - 220px)'}">
-      <template #bodyCell='{ column, record}'>
+    <a-table
+      :columns="columns"
+      :data-source="serverList"
+      class="content-table"
+      :pagination="false"
+      size="middle"
+      :loading="serverTableLoading"
+      :scroll="{ y: 'calc(100vh - 220px)' }"
+    >
+      <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'name'">
           <div>
             {{ record.ServerName ? record.ServerName : record.Name }}
           </div>
         </template>
         <template v-if="column.dataIndex === 'status'">
-          <div style='font-size: 20px;'>
-            <RightSquareFilled class='status-stop' v-if='!record.isRunning' />
-            <RightSquareFilled class='status-start' v-if='record.isRunning' />
+          <div style="font-size: 20px">
+            <RightSquareFilled class="status-stop" v-if="!record.isRunning" />
+            <RightSquareFilled class="status-start" v-if="record.isRunning" />
           </div>
         </template>
 
         <template v-if="column.dataIndex === 'operate'">
-          <div class='operate-td'>
-            <a-button type='primary' @click='startServerClick(record)' v-if='!record.isRunning'
-                      :loading='record.btnLoading'>
+          <div class="operate-td">
+            <a-button type="primary" @click="startServerClick(record)" v-if="!record.isRunning" :loading="record.btnLoading">
               <template #icon>
                 <PoweroffOutlined />
               </template>
-              {{t("Start")}}
+              {{ t('Start') }}
             </a-button>
-            <a-button type='primary' @click='stopServerClick(record)' v-if='record.isRunning'
-                      :loading='record.btnLoading'>
+            <a-button type="primary" @click="stopServerClick(record)" v-if="record.isRunning" :loading="record.btnLoading">
               <template #icon>
                 <PoweroffOutlined />
               </template>
-              {{t("Stop")}}
+              {{ t('Stop') }}
             </a-button>
-            <a-button type='primary' @click='restartServerClick(record)'
-                      :loading='record.btnLoading' :disabled='!record.isRunning'>
+            <a-button type="primary" @click="restartServerClick(record)" :loading="record.btnLoading" :disabled="!record.isRunning">
               <template #icon>
                 <ReloadOutlined />
               </template>
-              {{t("Restart")}}
+              {{ t('Restart') }}
             </a-button>
             <a-dropdown :trigger="['click']">
               <template #overlay>
                 <a-menu>
-                  <a-menu-item @click='openInstallDir(record)' key='999'>
-                    {{ mt('Open','ws','Directory') }}
+                  <a-menu-item @click="openInstallDir(record)" key="999">
+                    {{ mt('Open', 'ws', 'Directory') }}
                   </a-menu-item>
-                  <a-menu-item v-if='record.ConfPath' @click='openConfFile(record)' key='998'>
-                    {{ mt('Open','ws') }}{{ Path.GetBaseName(record.ConfPath) }}
+                  <a-menu-item v-if="record.ConfPath" @click="openConfFile(record)" key="998"> {{ mt('Open', 'ws') }}{{ Path.GetBaseName(record.ConfPath) }} </a-menu-item>
+                  <a-menu-item v-if="record.ServerConfPath" @click="openServerConfFile(record)" key="997">
+                    {{ mt('Open', 'ws') }}{{ Path.GetBaseName(record.ServerConfPath) }}
                   </a-menu-item>
-                  <a-menu-item v-if='record.ServerConfPath' @click='openServerConfFile(record)' key='997'>
-                    {{ mt('Open','ws') }}{{ Path.GetBaseName(record.ServerConfPath) }}
-                  </a-menu-item>
-                  <a-menu-item v-for='(item,i) in record.ExtraFiles' :key='i' @click='openExtraFile(record,item)'>
-                    {{ mt('Open','ws') }}{{ item.Name }}
-                  </a-menu-item>
+                  <a-menu-item v-for="(item, i) in record.ExtraFiles" :key="i" @click="openExtraFile(record, item)"> {{ mt('Open', 'ws') }}{{ item.Name }} </a-menu-item>
                 </a-menu>
               </template>
               <a-button>{{ t('Manage') }}<DownOutlined /></a-button>
@@ -121,12 +119,14 @@ const columns = [
     title: t('Name'),
     width: 180,
     dataIndex: 'name'
-  }, {
+  },
+  {
     title: t('Status'),
     dataIndex: 'status',
     width: 100,
     align: 'center'
-  }, {
+  },
+  {
     title: t('Operation'),
     dataIndex: 'operate',
     align: 'center'
@@ -134,8 +134,7 @@ const columns = [
 ]
 
 const store = useMainStore()
-const { serverList,afterOpenAppStartServerNum } = storeToRefs(store)
-
+const { serverList, afterOpenAppStartServerNum } = storeToRefs(store)
 
 onMounted(async () => {
   var timestamp2 = new Date().getTime()
@@ -154,7 +153,7 @@ onMounted(async () => {
 })
 
 const getProcessList = async () => {
-  let list;
+  let list
   const options = { directory: GetPath.getSoftwareDir() }
   if (isWindows) {
     list = await window.api.callStatic('ProcessLibrary', 'getList', options)
@@ -164,7 +163,7 @@ const getProcessList = async () => {
   //过滤掉子进程，剔除子进程
   let newList = []
   for (const item of list) {
-    if (!list.find(item2 => item2.pid === item.ppid)) {
+    if (!list.find((item2) => item2.pid === item.ppid)) {
       newList.push([item.path, item.pid])
     }
   }
@@ -187,9 +186,9 @@ const initServerListStatus = async () => {
     }
   }
 
-  const promiseArray = serverList.value.map(item => initServerStatus(item))
+  const promiseArray = serverList.value.map((item) => initServerStatus(item))
   await Promise.all(promiseArray)
-};
+}
 
 const corePathClick = () => {
   Native.openDirectory(GetAppPath.getUserCoreDir())
@@ -216,7 +215,7 @@ const openExtraFile = (item, extraFile) => {
 
 const getNginxRequirePhpList = async () => {
   const list = await SoftwareExtend.getNginxRequirePhpList()
-  return list.map(item => `PHP-${item}`)
+  return list.map((item) => `PHP-${item}`)
 }
 
 const oneClickStart = async () => {
@@ -271,14 +270,17 @@ const startServerClick = async (item) => {
 
     await ServerControl.start(item)
     if (!item.unwatch) {
-      item.unwatch = watch(() => item.errMsg, (errMsg) => {
-        if (errMsg) {
-          MessageBox.error(errMsg, '启动服务出错！')
+      item.unwatch = watch(
+        () => item.errMsg,
+        (errMsg) => {
+          if (errMsg) {
+            MessageBox.error(errMsg, t('Error starting service!'))
+          }
         }
-      })
+      )
     }
   } catch (error) {
-    MessageBox.error(error.message ?? error, '启动服务出错！')
+    MessageBox.error(error.message ?? error, t('Error starting service!'))
   }
   item.btnLoading = false
 }
@@ -297,12 +299,12 @@ async function restartServerClick(item) {
     }
 
     if (item.isRunning) {
-      throw new Error('服务没有成功停止！')
+      throw new Error(t('The service was not stopped successfully!'))
     }
 
     await ServerControl.start(item)
   } catch (error) {
-    MessageBox.error(error.message ?? error, '重启服务出错！')
+    MessageBox.error(error.message ?? error, t('Error starting service!'))
   }
   item.btnLoading = false
 }
@@ -323,22 +325,21 @@ const stopServerClick = async (item) => {
       item.isRunning = ProcessExtend.pidIsRunning(item.pid)
     }
   } catch (error) {
-    MessageBox.error(error.message ?? error, '停止服务出错！')
+    MessageBox.error(error.message ?? error, t('Error stopping service!'))
   }
   item.btnLoading = false
 }
 
 async function startPhpFpm(phpVersion) {
-  let item = serverList.value.find(item => item.Name === `PHP-${phpVersion}`)
+  let item = serverList.value.find((item) => item.Name === `PHP-${phpVersion}`)
   if (item) {
     await startServerClick(item)
   }
 }
-
 </script>
 
-<style scoped lang='less'>
-@import "@/renderer/assets/css/var";
+<style scoped lang="less">
+@import '@/renderer/assets/css/var';
 
 :deep(td) {
   height: 57px;
@@ -352,11 +353,10 @@ async function startPhpFpm(phpVersion) {
   color: @colorErrorActive;
 }
 
-
 .quick-card-content {
   height: calc(@controlHeight * 1px);
   display: flex;
-  justify-content: space-around
+  justify-content: space-around;
 }
 
 .operate-td {

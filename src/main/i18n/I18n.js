@@ -1,5 +1,6 @@
 import zh from '@/shared/i18n/zh'
 import en from '@/shared/i18n/en'
+import fr from '@/shared/i18n/fr'
 import nls from '@tiny-libs/nls'
 
 export default class I18n {
@@ -10,8 +11,9 @@ export default class I18n {
         this._instance = {
             locale: 'zh',
             messages: {
-                'zh': zh,
-                'en': en
+                zh: zh,
+                en: en,
+                fr: fr
             }
         }
         this._instance.translate = this._loadMessages()
