@@ -97,10 +97,6 @@ function mysqlResetPwd() {
 const tcpProcessListModalShow = ref(false)
 
 function tcpProcessList() {
-  if (isWindows && OS.getMajorVersion() <= 6.1) {
-    MessageBox.error(t('Your system version is too low, this function is not available!'), t('This feature is not available!'))
-    return
-  }
   tcpProcessListModalShow.value = true
 }
 </script>

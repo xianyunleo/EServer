@@ -28,7 +28,8 @@
     "extract-zip": "^2.0.1",
     "fix-path": "^3.0.0",
     "got": "^11.8.6",
-    "hmc-win32": "~1.4.6",
+    "hmc-win32": "~1.4.92",
+    "net-win32": "^1.0.1",
     "semver-diff": "3.1.1",
     "throttle-debounce": "^5.0.0"
   },
@@ -53,8 +54,8 @@
     "unplugin-vue-components": "^0.25.2",
     "vite": "^5.2.7",
     "vite-plugin-commonjs-externals": "^0.1.4",
-    "vue-router": "^4.3.0",
     "vue": "~3.4.21",
-    "vue-i18n": "^9.5.0"
+    "vue-i18n": "^9.5.0",
+    "vue-router": "^4.3.0"
   }
 }
