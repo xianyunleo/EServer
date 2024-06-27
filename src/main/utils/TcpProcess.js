@@ -33,10 +33,10 @@ export default class TcpProcess {
                     [name, pid, user, type, ipAndPort] = lineArr;
                     let tempArr = ipAndPort.match(/^(.*):(\d+)$/);
                     let ip, port;
-                    [,ip, port] = tempArr;
+                    [, ip, port] = tempArr
 
-                    let path = await ProcessExtend.getPathByPid(pid);
-                    return {name, pid, user, type, ip, port, path, status: 'Listen'};
+                    const path = await ProcessExtend.getPathByPid(pid)
+                    return { name, pid, user, type, ip, port, path, status: 'Listen' }
                 })
             );
         } catch (e) {
@@ -87,7 +87,7 @@ export default class TcpProcess {
             for (const item of list) {
                 const { pid, ip, port } = item
                 const name = await hmc.getProcessName2(pid)
-                const path = await hmc.getProcessFilePath2(pid)
+                const path = await ProcessExtend.getPathByPid(pid)
                 const icon = path ? (await app.getFileIcon(path))?.toDataURL() : null
                 result.push({ pid, ip, port, name, path, status: 'Listen', icon })
             }
@@ -106,8 +106,20 @@ export default class TcpProcess {
     static async getPidByPort(port) {
         try {
             port = parseInt(port)
-            const net = require('net-win32')
-            return await net.getTCPv4PortProcessIDAsync(port)
+            let pid
+
+            if (isWindows) {
+                const net = require('net-win32')
+                // pid = await net.getTCPv4PortProcessIDAsync(port)  //Async has promise.all bug
+                pid = net.getTCPv4PortProcessID(port)
+            } else {
+                const commandStr = `lsof -t -sTCP:LISTEN -i:${port}`
+                const resStr = await Shell.exec(commandStr)
+                if (!resStr) return null
+                pid = resStr.trim().split('\n')[0]
+            }
+
+            return parseInt(pid)
         } catch {
             return null
         }
@@ -120,9 +132,19 @@ export default class TcpProcess {
     static async getPathByPort(port) {
         try {
             port = parseInt(port)
-            const pid = TcpProcess.getPidByPort(port)
-            const hmc = require('hmc-win32')
-            return await hmc.getProcessFilePath2(pid)
+            let path
+
+            if (isWindows) {
+                const pid = await TcpProcess.getPidByPort(port)
+                path = await ProcessExtend.getPathByPid(pid)
+            } else {
+                const commandStr = `lsof -t -sTCP:LISTEN -i:${port}|head -n 1|xargs lsof -a -w -d txt -Fn -p|awk 'NR==3{print}'|sed "s/n//"`
+                const resStr = await Shell.exec(commandStr)
+                if (!resStr) return null
+                path = resStr.trim().split('\n')[0]
+            }
+
+            return path.trim()
         } catch {
             return null
         }

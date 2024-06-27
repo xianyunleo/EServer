@@ -177,13 +177,8 @@ const initServerListStatus = async () => {
   const initServerStatus = async (item) => {
     const itemProcessPath = Software.getServerProcessPath(item)
     const pid = processMap.get(itemProcessPath)
-    if (pid) {
-      item.isRunning = true
-      item.pid = pid
-    } else {
-      item.isRunning = false
-      item.pid = null
-    }
+    item.isRunning = !!pid
+    item.pid = pid ?? null
   }
 
   const promiseArray = serverList.value.map((item) => initServerStatus(item))
@@ -265,7 +260,7 @@ const startServerClick = async (item) => {
         await ProcessExtend.killWebServer()
       } else {
         const pid = await TcpProcess.getPidByPort(item.ServerPort)
-        await ProcessExtend.kill(pid)
+        if (pid) await ProcessExtend.kill(pid)
       }
     }
 

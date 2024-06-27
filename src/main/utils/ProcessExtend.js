@@ -53,19 +53,23 @@ export default class ProcessExtend {
 
     static async getPathByPid(pid) {
         try {
-            let commandStr, resStr, path;
+            pid = parseInt(pid)
+            let path
 
             if (isWindows) {
-                commandStr = `(Get-Process -Id ${pid}).Path`;
-                resStr = await Shell.exec(commandStr, {shell: 'powershell'});
+                const hmc = require('hmc-win32')
+                path = await hmc.getProcessFilePath2(pid)
+                path = path ?? ''
+                path = path.startsWith('\\Device\\HarddiskVolume') ? '' : path //过滤掉 getProcessFilePath2 错误的path
             } else {
-                commandStr = `lsof -p ${pid} -a -w -d txt -Fn|awk 'NR==3{print}'|sed "s/n//"`;
-                resStr = await Shell.exec(commandStr);
+                const commandStr = `lsof -p ${pid} -a -w -d txt -Fn|awk 'NR==3{print}'|sed "s/n//"`
+                const resStr = await Shell.exec(commandStr)
+                path = resStr.trim().split('\n')[0]
             }
-            path = resStr.trim().split("\n")[0];
-            return path.trim();
+
+            return path.trim()
         } catch {
-            return null;
+            return null
         }
     }
 
