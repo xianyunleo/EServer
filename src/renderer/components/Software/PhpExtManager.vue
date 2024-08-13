@@ -19,7 +19,7 @@
               <a-button type="primary" disabled v-if="record.isInstalled">
                 {{t('Installed')}}
               </a-button>
-              <a-button type="primary" style='margin-left: 10px' @click="editScript(record)">
+              <a-button v-if="!isWindows" type="primary" style='margin-left: 10px' @click="editScript(record)">
                 {{mt('Edit','ws','Script')}}
               </a-button>
             </div>
@@ -29,6 +29,10 @@
       <div class="flex-horizontal-center">
         <a-button type="primary" @click="openExtDir">
           {{mt('Open','ws','Extension','ws','Directory')}}
+        </a-button>
+
+        <a-button v-if="isWindows" type="primary" style='margin-left: 10px' @click="editScript()">
+          {{mt('Edit','ws','Script')}}
         </a-button>
       </div>
 
@@ -157,7 +161,7 @@ const install = async (item) => {
 }
 
 const editScript = (item) => {
-  Native.openTextFile(Extension.getInstallScriptPath(item.name))
+  Native.openTextFile(Extension.getInstallScriptPath(item?.name))
 }
 
 const closeTaskDialog = () => {

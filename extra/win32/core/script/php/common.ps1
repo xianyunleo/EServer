@@ -9,8 +9,10 @@ $dlFileName=$Args[6]
 
 [Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12
 
-$dlUrl = "https://windows.php.net/downloads/pecl/releases/$extName/$extVersion/$dlFileName"
+$dlUrl = "https://downloads.php.net/~windows/pecl/releases/$extName/$extVersion/$dlFileName"
 $dlFilePath=Join-Path $dlDir $dlFileName
+
+echo $dlUrl
 
 'Downloading...'
 
