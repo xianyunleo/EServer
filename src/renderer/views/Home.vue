@@ -8,10 +8,8 @@
         <a-button type="primary" @click="oneClickStop" :disabled="!!serverTableLoading">
           {{ mt('OneClick', 'ws', 'Stop') }}
         </a-button>
-        <a-button type="primary" @click="corePathClick"> {{ APP_NAME }} {{ mt('ws', 'Directory') }} </a-button>
-        <a-button type="primary" @click="wwwPathClick">
-          {{ mt('Website', 'ws', 'Directory') }}
-        </a-button>
+        <a-button type="primary" @click="corePathClick"> {{ APP_NAME }} {{ mt('ws', 'Directory') }}</a-button>
+        <a-button type="primary" @click="wwwPathClick">{{ mt('Website', 'ws', 'Directory') }}</a-button>
       </div>
     </a-card>
 
@@ -63,11 +61,15 @@
                   <a-menu-item @click="openInstallDir(record)" key="999">
                     {{ mt('Open', 'ws', 'Directory') }}
                   </a-menu-item>
-                  <a-menu-item v-if="record.ConfPath" @click="openConfFile(record)" key="998"> {{ mt('Open', 'ws') }}{{ Path.GetBaseName(record.ConfPath) }} </a-menu-item>
+                  <a-menu-item v-if="record.ConfPath" @click="openConfFile(record)" key="998">
+                    {{ mt('Open', 'ws') }}{{ Path.GetBaseName(record.ConfPath) }}
+                  </a-menu-item>
                   <a-menu-item v-if="record.ServerConfPath" @click="openServerConfFile(record)" key="997">
                     {{ mt('Open', 'ws') }}{{ Path.GetBaseName(record.ServerConfPath) }}
                   </a-menu-item>
-                  <a-menu-item v-for="(item, i) in record.ExtraFiles" :key="i" @click="openExtraFile(record, item)"> {{ mt('Open', 'ws') }}{{ item.Name }} </a-menu-item>
+                  <a-menu-item v-for="(item, i) in record.ExtraFiles" :key="i" @click="openExtraFile(record, item)">
+                    {{ mt('Open', 'ws') }}{{ item.Name }}
+                  </a-menu-item>
                 </a-menu>
               </template>
               <a-button>{{ t('Manage') }}<DownOutlined /></a-button>
@@ -214,14 +216,14 @@ const getNginxRequirePhpList = async () => {
 }
 
 const oneClickStart = async () => {
-  const oneClickServerList = ref(Settings.get('OneClickServerList'))
-  //oneClickServerIncludePhpFpm 基本上默认为true
-  const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM')
+  const oneClickServerList = (ref(Settings.get('OneClickServerList'))).value
+  const websitePhpFpmSwitch = oneClickServerList.includes('PHP-FPM')
   const requirePhpList = await getNginxRequirePhpList()
   const doStartServerClick = async (item) => {
-    if (oneClickServerList.value.includes(item.Name)) {
+    if (oneClickServerList.includes(item.Name)) {
       startServerClick(item)
-    } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && oneClickServerIncludePhpFpm) {
+    } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && websitePhpFpmSwitch) {
+      //自动判断网站列表的PHP-FPM
       startServerClick(item)
     }
   }
@@ -232,14 +234,14 @@ const oneClickStart = async () => {
 }
 
 const oneClickStop = async () => {
-  const oneClickServerList = ref(Settings.get('OneClickServerList'))
-  //oneClickServerIncludePhpFpm 基本上默认为true
-  const oneClickServerIncludePhpFpm = oneClickServerList.value.includes('PHP-FPM')
+  const oneClickServerList = (ref(Settings.get('OneClickServerList'))).value
+  const websitePhpFpmSwitch = oneClickServerList.includes('PHP-FPM')
   const requirePhpList = await getNginxRequirePhpList()
   const doStopServerClick = async (item) => {
-    if (oneClickServerList.value.includes(item.Name)) {
+    if (oneClickServerList.includes(item.Name)) {
       stopServerClick(item)
-    } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && oneClickServerIncludePhpFpm) {
+    } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && websitePhpFpmSwitch) {
+      //自动判断网站列表的PHP-FPM
       stopServerClick(item)
     }
   }

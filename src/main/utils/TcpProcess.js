@@ -2,6 +2,7 @@ import { electronRequire } from '@/main/utils/electron'
 import Shell from '@/main/utils/Shell'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import { isMacOS, isWindows } from '@/main/utils/utils'
+import { PowerShell } from '@/main/utils/constant'
 
 const app = electronRequire('app')
 
@@ -45,34 +46,34 @@ export default class TcpProcess {
     }
 
     static async getListForWindowsByShell() {
-        let commandStr = ` Get-NetTCPConnection -State Listen|select-Object OwningProcess,LocalAddress,LocalPort`;
-        commandStr += ', @{n="Name" ;e= {(Get-Process -Id $_.OwningProcess).Name } }  , @{n="Path" ;e= {(Get-Process -Id $_.OwningProcess).Path } }';
-        commandStr += ' | fl | Out-String -Width 999';
+        let commandStr = ` Get-NetTCPConnection -State Listen|select-Object OwningProcess,LocalAddress,LocalPort`
+        commandStr += ', @{n="Name" ;e= {(Get-Process -Id $_.OwningProcess).Name } }  , @{n="Path" ;e= {(Get-Process -Id $_.OwningProcess).Path } }'
+        commandStr += ' | fl | Out-String -Width 999'
 
         try {
-            let resStr = await Shell.exec(commandStr, {shell: 'powershell'});
-            resStr = resStr.trim();
+            let resStr = await Shell.exec(commandStr, { shell: PowerShell })
+            resStr = resStr.trim()
             if (!resStr) {
-                return [];
+                return []
             }
-            let list = resStr.split(/\r?\n\r?\n/);
+            let list = resStr.split(/\r?\n\r?\n/)
 
             return await Promise.all(
                 list.map(async item => {
-                    let lineArr = item.split(/r?\n/);
+                    let lineArr = item.split(/r?\n/)
 
                     let arr = lineArr.map(line => {
                         return line.split(' : ')[1]?.trim()
-                    });
+                    })
                     let pid, ip, port, name, path;
-                    [pid, ip, port, name, path] = arr;
+                    [pid, ip, port, name, path] = arr
 
-                    let icon = path ? (await app.getFileIcon(path))?.toDataURL() : null;
-                    return {pid, ip, port, name, path, status: 'Listen', icon};
+                    let icon = path ? (await app.getFileIcon(path))?.toDataURL() : null
+                    return { pid, ip, port, name, path, status: 'Listen', icon }
                 })
-            );
+            )
         } catch (e) {
-            return [];
+            return []
         }
     }
 

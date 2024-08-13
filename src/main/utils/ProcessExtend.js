@@ -1,5 +1,6 @@
 import Shell from '@/main/utils/Shell'
 import { isMacOS, isWindows } from '@/main/utils/utils'
+import { PowerShell } from '@/main/utils/constant'
 
 export default class ProcessExtend {
     /**
@@ -128,36 +129,36 @@ export default class ProcessExtend {
 
     }
 
-    static async getListForWindows(options={}) {
-        let command = ' Get-WmiObject -Class Win32_Process -Filter ';
+    static async getListForWindows(options = {}) {
+        let command = ' Get-WmiObject -Class Win32_Process -Filter '
         if (options) {
-            if(options.directory){
+            if (options.directory) {
                 let formatDir = options.directory.replaceAll('\\', '\\\\')
                 //这里只能是ExecutablePath不能是Path，因为Path是PowerShell的'ScriptProperty'
-                command += `"ExecutablePath like '${formatDir}%'"`;
+                command += `"ExecutablePath like '${formatDir}%'"`
             }
         }
-        command += " |Select-Object Name,ProcessId,ParentProcessId,ExecutablePath | Format-List | Out-String -Width 999";
+        command += ' |Select-Object Name,ProcessId,ParentProcessId,ExecutablePath | Format-List | Out-String -Width 999'
 
         try {
-            let str =  await Shell.exec(command,{shell: 'powershell'});
-            str = str.trim();
-            if(!str){
-                return [];
+            let str = await Shell.exec(command, { shell: PowerShell })
+            str = str.trim()
+            if (!str) {
+                return []
             }
-            let list = str.split(/\r?\n\r?\n/);
+            let list = str.split(/\r?\n\r?\n/)
             list = list.map(item => {
-                let lineArr = item.split(/\r?\n/);
+                let lineArr = item.split(/\r?\n/)
 
-                let arr = lineArr.map(line =>{
+                let arr = lineArr.map(line => {
                     return line.split(' : ')[1]?.trim()
-                });
+                })
 
                 let name, pid, ppid, path;
-                [name, pid, ppid, path] = arr;
-                return {name, pid, ppid, path};
-            });
-            return list;
+                [name, pid, ppid, path] = arr
+                return { name, pid, ppid, path }
+            })
+            return list
         } catch (e) {
             return []
         }
