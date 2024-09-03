@@ -64,8 +64,8 @@ export default class App {
             throw new Error('安装路径不能包含空格！')
         }
 
-        if (/[\u4e00-\u9fa5]/.test(appPath)) {
-            throw new Error('安装路径不能包含中文！')
+        if (/[\u2E80-\u9FFF]/.test(appPath)) {
+            throw new Error('安装路径不能包含中文等汉字！')
         }
 
         if (isWindows) {

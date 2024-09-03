@@ -46,7 +46,7 @@ export default class Installer {
             commandStr = ` powershell.exe -ExecutionPolicy Bypass -File "${scriptPath}"`;
             commandStr += ` ${phpExtDlDir} ${phpDir} ${this.extVersion} ${this.extName} ${extFileName} ${phpExtDir} ${dlFileName}`;
         } else {
-            await fsPromises.chmod(scriptPath, '0755');
+            await fsPromises.chmod(scriptPath, 0o755);
             commandStr = `${scriptPath} ${phpExtDlDir} ${phpDir} ${this.extVersion}`;
         }
 
