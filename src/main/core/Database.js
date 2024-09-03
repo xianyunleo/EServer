@@ -54,21 +54,21 @@ export default class Database {
 
         await sleep(100);
 
-        let args = [`--defaults-file=${confFilePath}`, `--init-file=${resetPwdPath}`];
-        let mysqldPath = this.getMySQLDFilePath(version);
+        const args = [`--defaults-file=${confFilePath}`, `--init-file=${resetPwdPath}`]
+        const mysqldPath = this.getMySQLDFilePath(version)
         //mysqld执行此命令会一直前台运行不退出
-        let childProcess = child_process.execFile(mysqldPath, args, {cwd: mysqlPath});
+        const childProcess = child_process.execFile(mysqldPath, args, { cwd: mysqlPath })
 
-        for (let i = 0; i < 10; i++) {
-            await sleep(500);
-            let path = await TcpProcess.getPathByPort(port);
+        for (let i = 0; i < 30; i++) {
+            await sleep(500)
+            let path = await TcpProcess.getPathByPort(port)
             if (path === mysqldPath) {
-                break;
+                break
             }
         }
-        await sleep(100);
-        await ProcessExtend.kill(childProcess.pid);
-        await FileUtil.Delete(resetPwdPath);
+        await sleep(100)
+        await ProcessExtend.kill(childProcess.pid)
+        await FileUtil.Delete(resetPwdPath)
     }
 
     static getMySQLConfFilePath(version) {
