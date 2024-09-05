@@ -2,7 +2,7 @@ import { ipcMain } from 'electron'
 import { callStatic } from '@/main/common/call'
 import Settings from '@/main/Settings'
 import SystemTheme from '@/main/utils/SystemTheme'
-import { color } from '@/renderer/utils/constant'
+import { color } from '@/shared/utils/constant'
 
 export function ipcListen() {
     ipcMain.handle('callStatic', async (event, className, methodName, ...args) => {

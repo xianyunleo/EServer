@@ -8,7 +8,7 @@ import { t } from '@/renderer/utils/i18n'
 import SystemTheme from '@/main/utils/SystemTheme'
 import { theme } from 'ant-design-vue'
 import { setTwoToneColor } from '@ant-design/icons-vue'
-import { color } from '@/renderer/utils/constant'
+import { color } from '@/shared/utils/constant'
 
 export const useMainStore = defineStore('main', {
     state: () => {

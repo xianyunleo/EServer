@@ -1,7 +1,8 @@
 import { isDev, isWindows } from '@/main/utils/utils'
-import child_process from "child_process";
-import SettingsExtend from "@/main/core/SettingsExtend";
-import util from "util";
+import child_process from 'child_process'
+import SettingsExtend from '@/main/core/SettingsExtend'
+import util from 'util'
+// import { PowerShell } from '@/main/utils/constant'
 
 export default class Shell {
     /**
@@ -11,30 +12,19 @@ export default class Shell {
      * @returns {Promise<string>}
      */
     static async exec(command, options = {}) {
-        if (isDev) console.log('Command.exec command', command);
-
-        let formatCommand;
-        if (options.chcp && isWindows) {
-            formatCommand = '@chcp 65001 >nul & cmd /d/s/c ';
-            command = formatCommand + command;
-        }
+        if (isDev) console.log('Shell.exec command', command)
 
         if (!options.encoding) {
-            options.encoding = "utf8";
+            options.encoding = 'utf8'
         }
 
-        const exec = util.promisify(child_process.exec);
+        // if (options.shell === PowerShell) {
+        //     command = `$OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding;${command}`
+        // }
 
-        try {
-            const {stdout} = await exec(command, options);
-            return stdout;
-        } catch (error) {
-            if (isWindows && !options.shell) {
-                // eslint-disable-next-line no-ex-assign
-                error = new Error(error.message.replace(formatCommand, ''))
-            }
-            throw error;
-        }
+        const exec = util.promisify(child_process.exec)
+        const { stdout } = await exec(command, options)
+        return stdout
     }
 
     /**
@@ -45,22 +35,19 @@ export default class Shell {
      */
     static async sudoExec(command, options = {}) {
         if (isWindows) {
-            throw new Error(`Cannot be executed on Windows!`);
+            throw new Error(`Cannot be executed on Windows!`)
         }
-        if (isDev) console.log('Command.sudoExec command', command);
+        if (isDev) console.log('Shell.sudoExec command', command)
 
-        command = `echo '${SettingsExtend.getUserPwd()}' | sudo -S ${command}`;
+        command = `echo '${SettingsExtend.getUserPwd()}' | sudo -S ${command}`
 
         if (!options.encoding) {
-            options.encoding = "utf8";
+            options.encoding = 'utf8'
         }
 
-        const exec = util.promisify(child_process.exec);
+        const exec = util.promisify(child_process.exec)
 
-        const {stdout} = await exec(command, options);
-        return stdout;
+        const { stdout } = await exec(command, options)
+        return stdout
     }
 }
-
-
-
