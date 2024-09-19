@@ -37,7 +37,7 @@ export default class Installer extends EventEmitter {
         this.fileName = this.getFileName()
         this.filePath = Path.Join(this.getDownloadsPath(), this.fileName)
         this.tempFilePath = `${this.filePath}.dl`
-        this.downloader = new Downloader(this.getDownloadUrl(), this.tempFilePath,{timeout:3})
+        this.downloader = new Downloader(this.getDownloadUrl(), this.tempFilePath)
 
         if (!await DirUtil.Exists(GetPath.getDownloadsDir())) await DirUtil.Create(GetPath.getDownloadsDir())
         if (await FileUtil.Exists(this.filePath)) await FileUtil.Delete(this.filePath)
