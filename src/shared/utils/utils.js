@@ -60,3 +60,16 @@ export function getFileSizeText(byte, defaultVal = 0) {
 export function isRendererProcess() {
     return process.type === 'renderer'
 }
+
+/**
+ *
+ * @param error {Error}
+ * @returns {Error}
+ */
+export function getIpcError(error) {
+    const regx = /':\s(\w*Error):\s(.*)/
+    const matches = regx.exec(error.message)
+    const err = new Error(matches[2])
+    err.name = matches[1]
+    return err
+}

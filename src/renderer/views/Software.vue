@@ -3,7 +3,8 @@
     <div class="category">
       <a-radio-group v-model:value="softwareTypeSelected" button-style="solid" @change="radioGroupChange">
         <a-radio-button :value="InstalledType">{{ t('Installed') }}</a-radio-button>
-        <a-radio-button :value="enumGetName(EnumSoftwareType, EnumSoftwareType.Server)">{{ t('Server') }} </a-radio-button>
+        <a-radio-button :value="enumGetName(EnumSoftwareType, EnumSoftwareType.Server)">{{ t('Server') }}
+        </a-radio-button>
         <a-radio-button :value="enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)">PHP</a-radio-button>
         <a-radio-button :value="enumGetName(EnumSoftwareType, EnumSoftwareType.Tool)">{{ t('Tool') }}</a-radio-button>
       </a-radio-group>
@@ -34,7 +35,9 @@
               <div class="soft-item-desc">{{ t(item.Desc) }}</div>
               <div class="soft-item-operate">
                 <template v-if="item.Installed">
-                  <a-button type="primary" danger style="margin-right: 5px" :disabled="item.CanDelete === false" @click="uninstall(item)">{{ t('Uninstall') }}</a-button>
+                  <a-button type="primary" danger style="margin-right: 5px" :disabled="item.CanDelete === false"
+                            @click="uninstall(item.Name)">{{ t('Uninstall') }}
+                  </a-button>
 
                   <a-dropdown :trigger="['click']">
                     <template #overlay>
@@ -50,36 +53,44 @@
                         </a-menu-item>
                       </a-menu>
                     </template>
-                    <a-button>{{ t('Manage') }}<DownOutlined /></a-button>
+                    <a-button>{{ t('Manage') }}
+                      <DownOutlined />
+                    </a-button>
                   </a-dropdown>
                 </template>
                 <template v-else>
-                  <a-button v-if="item.installInfo == null || item.showStatusErrorText" type="primary" @click="clickInstall(item)">{{ t('Install') }}</a-button>
-
-                  <a-button v-else type="primary" @click="clickStop(item)">{{ t('Stop') }}</a-button>
+                  <a-button v-if="instMap[item.Name] && !instMap[item.Name].errMsg" type="primary"
+                            @click="clickStop(item.Name)">{{ t('Stop') }}
+                  </a-button>
+                  <a-button v-else type="primary" @click="clickInstall(item.Name)">
+                    {{ t('Install') }}
+                  </a-button>
                 </template>
               </div>
             </div>
-            <div v-if="item.installInfo" class="soft-item-progress">
-              <a-progress :percent="item.installInfo?.dlInfo?.percent" :show-info="false" status="active" />
+            <!-- 安装下载-->
+            <div v-if="instMap[item.Name]" class="soft-item-progress">
+              <a-progress :percent="instMap[item.Name]?.percent" :show-info="false" status="active" />
               <div class="progress-info">
-                <div class="progress-info-left">
-                  <span v-if="item.installInfo?.status === EnumSoftwareInstallStatus.Downloading">
-                    {{ item.installInfo?.dlInfo?.completedSizeText }}/{{ item.installInfo?.dlInfo?.totalSizeText }}
-                  </span>
-                </div>
-                <div v-if="item.showStatusErrorText" class="status-text-error">
+                <div v-if="instMap[item.Name]?.errMsg" class="status-text-error">
                   <a-tooltip>
-                    <template #title>{{ item.statusErrorText }}</template>
-                    {{ item.statusErrorText }}
+                    <template #title>{{ instMap[item.Name]?.errMsg }}</template>
+                    {{ instMap[item.Name]?.errMsg }}
                   </a-tooltip>
                 </div>
-                <div class="progress-info-right">
-                  <span v-if="item.installInfo?.status === EnumSoftwareInstallStatus.Downloading"> ↓{{ item.installInfo?.dlInfo?.perSecondText }}/S </span>
-                  <span v-else>
-                    {{ item.statusText }}
-                  </span>
-                </div>
+                <template v-else>
+                  <div class="progress-info-left">
+                    <span v-if="instMap[item.Name]?.status === InstStatus.Downloading">
+                      {{ instMap[item.Name]?.receivedSizeText }}/{{ instMap[item.Name]?.totalSizeText }}
+                    </span>
+                  </div>
+                  <div class="progress-info-right">
+                    <span v-if="instMap[item.Name]?.status === InstStatus.Downloading">
+                      ↓{{ instMap[item.Name]?.perSecondText }}/S
+                    </span>
+                    <span v-else>{{ instMap[item.Name]?.statusText }}</span>
+                  </div>
+                </template>
               </div>
             </div>
           </div>
@@ -102,20 +113,19 @@
   </div>
 
   <!--  v-if防止不显示就执行modal里面的代码-->
-  <php-ext-manager v-if="phpExtManagerShow" v-model:show="phpExtManagerShow" :phpVersion="phpVersion"> </php-ext-manager>
+  <php-ext-manager v-if="phpExtManagerShow" v-model:show="phpExtManagerShow" :phpVersion="phpVersion"></php-ext-manager>
 </template>
 
 <script setup>
-import { computed, h, ref } from 'vue'
+import { h, reactive, ref } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import { storeToRefs } from 'pinia'
 import { message } from 'ant-design-vue'
 import { EnumSoftwareInstallStatus, EnumSoftwareType } from '@/shared/utils/enum'
-import Installer from '@/main/core/software/Installer'
 import { AppstoreAddOutlined, DownOutlined } from '@ant-design/icons-vue'
 import Software from '@/main/core/software/Software'
 import MessageBox from '@/renderer/utils/MessageBox'
-import { enumGetName, getFileSizeText } from '@/shared/utils/utils'
+import { enumGetName, getFileSizeText, getIpcError } from '@/shared/utils/utils'
 import Native from '@/main/utils/Native'
 import PhpExtManager from '@/renderer/components/Software/PhpExtManager.vue'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
@@ -136,6 +146,7 @@ const { softwareList, softwareTypeSelected } = storeToRefs(store)
 const phpTypeValue = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)
 const phpExtManagerShow = ref(false)
 const phpVersion = ref('')
+const InstStatus = EnumSoftwareInstallStatus
 
 if (!softwareTypeSelected.value) {
   softwareTypeSelected.value = InstalledType
@@ -151,83 +162,83 @@ const setShowList = (type) => {
   }
 }
 
+const instMap = reactive({})
+
 setShowList(softwareTypeSelected.value)
 
 const radioGroupChange = () => {
   setShowList(softwareTypeSelected.value)
 }
 
-const clickInstall = async (item) => {
-  item.installInfo = { status: '', downloadProgress: {}, dlInfo: {}, dlIntervalId: 0 }
-  item.showStatusErrorText = false
-
-  item.statusText = computed(() => {
-    if (!item.installInfo) {
+const getStatusText = (status) => {
+  switch (status) {
+    case InstStatus.Ready:
+      return t('Ready')
+    case InstStatus.Downloading:
+      return t('Downloading')
+    case InstStatus.Extracting:
+      return t('Unzipping')
+    case InstStatus.Configuring:
+      return t('Configuring')
+    default:
       return ''
-    }
-    switch (item.installInfo.status) {
-      case EnumSoftwareInstallStatus.Ready:
-        return t('Ready')
-      case EnumSoftwareInstallStatus.Downloading:
-        return t('Downloading')
-      case EnumSoftwareInstallStatus.Extracting:
-        return t('Unzipping')
-      case EnumSoftwareInstallStatus.Configuring:
-        return t('Configuring')
-      default:
-        return ''
-    }
-  })
-
-  try {
-    let installer = new Installer({ ...item }) //将item由Proxy对象转成普通对象
-    item.installer = installer
-
-    installer.on('downloadProgress', (progress) => {
-      item.installInfo.downloadProgress = progress
-    })
-
-    let beforeCompletedSize = 0
-
-    item.installInfo.dlIntervalId = setInterval(() => {
-      let progress = item.installInfo.downloadProgress
-      setItemDownloadInfo(item, {
-        completedSizeText: getFileSizeText(progress.transferred),
-        totalSizeText: getFileSizeText(progress.total),
-        percent: parseInt(progress.percent * 100),
-        perSecondText: getFileSizeText(progress.transferred - beforeCompletedSize)
-      })
-      beforeCompletedSize = progress.transferred
-    }, 1000)
-
-    installer.on('installStatus', (status) => {
-      item.installInfo.status = status
-      if (status === EnumSoftwareInstallStatus.Downloaded) {
-        setItemDownloadInfo(item, { percent: 100 })
-        clearInterval(item.installInfo?.dlIntervalId)
-      }
-      if (status === EnumSoftwareInstallStatus.Finish) {
-        item.Installed = true
-      }
-    })
-
-    await installer.install()
-    item.installInfo = null
-  } catch (error) {
-    //catch 不item.installInfo = null，因为installInfo有信息
-    item.statusErrorText = error.message
-    item.showStatusErrorText = true
-    clearInterval(item.installInfo?.dlIntervalId)
   }
 }
 
-const setItemDownloadInfo = (item, dlInfo) => {
-  item.installInfo.dlInfo = { ...item.installInfo.dlInfo, ...dlInfo }
+const findItem = (name) => softwareList.value.find((item) => item.Name === name)
+
+const clickInstall = async (name) => {
+  instMap[name] = {}
+  let beforeCompletedSize = 0
+  instMap[name].dlIntervalId = setInterval(() => {
+    const receivedBytes = instMap[name].receivedBytes
+    instMap[name].perSecondText = getFileSizeText(receivedBytes - beforeCompletedSize)
+    beforeCompletedSize = receivedBytes
+  }, 1000)
+
+  try {
+    await window.api.call('softwareInstall', name)
+  } catch (e) {
+    clearInterval(instMap[name].dlIntervalId)
+    instMap[name].errMsg = getIpcError(e).message
+  }
 }
 
-const clickStop = (item) => {
-  item.installer.stopDownload()
-  clearInterval(item.installInfo.dlIntervalId)
+window.api.onSoftDlProgress((name, progress) => {
+  instMap[name] = {
+    ...instMap[name],
+    receivedBytes: progress.receivedBytes,
+    receivedSizeText: getFileSizeText(progress.receivedBytes),
+    totalSizeText: getFileSizeText(progress.totalBytes),
+    percent: parseInt(progress.receivedBytes / progress.totalBytes * 100)
+  }
+})
+
+window.api.onSoftInstStatus((name, status) => {
+  if (status === InstStatus.Downloaded) {
+    clearInterval(instMap[name].dlIntervalId)
+  }
+  const statusText = getStatusText(status)
+  instMap[name] = { ...instMap[name], status, statusText }
+
+  if (status === InstStatus.Finish) {
+    instMap[name] = null
+    findItem(name).Installed = true
+  }
+})
+
+window.api.onSoftDlCancelled((name) => {
+  //如果不是点击clickStop的取消
+  if (instMap[name]) {
+    clearInterval(instMap[name].dlIntervalId)
+    instMap[name].errMsg = `${t('errorOccurredDuring', [t('download')])}，${mt('Network', 'ws', 'Error')}`
+  }
+})
+
+const clickStop = (name) => {
+  clearInterval(instMap[name].dlIntervalId)
+  instMap[name] = null
+  window.api.call('softwareStopInstall', name)
 }
 
 const openApp = (item) => {
@@ -245,17 +256,18 @@ const openInstallPath = async (item) => {
   Native.openDirectory(path)
 }
 
-const uninstall = async (item) => {
+const uninstall = async (name) => {
+  const item = findItem(name)
   try {
-    if (await Installer.uninstall(item)) {
-      item.installInfo = null
+    const res = await window.api.call('softwareUninstall', name)
+    if (res) {
       item.Installed = false
       message.info(t('successfulOperation'))
     } else {
       MessageBox.error(t('failedOperation') + '\n' + t('softwareUninstallErrorTip', [item.DirName]))
     }
-  } catch (error) {
-    MessageBox.error(error.message ?? error, t('errorOccurredDuring', [mt('uninstall', 'ws') + item.Name]))
+  } catch (e) {
+    MessageBox.error(getIpcError(e).message, t('errorOccurredDuring', [mt('uninstall', 'ws') + item.Name]))
   }
 }
 

@@ -1,5 +1,4 @@
-import App from "@/main/App";
-import path from "path";
+import Path from '@/main/utils/Path'
 import {EnumSoftwareType} from "@/shared/utils/enum";
 import GetPath from "@/shared/utils/GetPath";
 import DirUtil from "@/main/utils/DirUtil";
@@ -26,15 +25,15 @@ export default class Software {
     }
 
     static async initList() {
-        const softDir = path.join(GetAppPath.getCoreDir(), '/config/software')
-        const softConfigPath = path.join(softDir, 'software.json')
-        const softIconDir = 'file://' + path.join(softDir, '/icon')
+        const softDir = Path.Join(GetAppPath.getCoreDir(), '/config/software')
+        const softConfigPath = Path.Join(softDir, 'software.json')
+        const softIconDir = 'file://' + Path.Join(softDir, '/icon')
 
         let list
         try {
             list = JSON.parse(await FileUtil.ReadAll(softConfigPath))
             list = await Promise.all(list.map(async item => {
-                const Icon = path.join(softIconDir, item.Icon)
+                const Icon = Path.Join(softIconDir, item.Icon)
                 return { ...item, Icon }
             }))
         } catch {
@@ -42,16 +41,16 @@ export default class Software {
         }
 
         //自定义software配置
-        const customSoftDir = path.join(GetAppPath.getUserCoreDir(), '/custom/software')
-        const customSoftConfigPath = path.join(customSoftDir, 'software.json')
-        const customSoftIconDir = 'file://' + path.join(customSoftDir, '/icon')
+        const customSoftDir = Path.Join(GetAppPath.getUserCoreDir(), '/custom/software')
+        const customSoftConfigPath = Path.Join(customSoftDir, 'software.json')
+        const customSoftIconDir = 'file://' + Path.Join(customSoftDir, '/icon')
 
         let customList
         try {
             if (await FileUtil.Exists(customSoftConfigPath)) {
                 customList = JSON.parse(await FileUtil.ReadAll(customSoftConfigPath))
                 customList = await Promise.all(customList.map(async item => {
-                    const Icon = path.join(customSoftIconDir, item.Icon)
+                    const Icon = Path.Join(customSoftIconDir, item.Icon)
                     return { ...item, Icon }
                 }))
             } else {
@@ -62,6 +61,10 @@ export default class Software {
         }
 
         Software.#list = list.concat(customList)
+    }
+
+    static async findItem(name) {
+        return (await Software.getList()).find((item) => item.Name === name)
     }
 
     /**
@@ -81,7 +84,7 @@ export default class Software {
      */
     static getPath(item) {
         let typePath = Software.getTypePath(item.Type);
-        return path.join(typePath, item.DirName);
+        return Path.Join(typePath, item.DirName);
     }
 
     /**
@@ -94,7 +97,7 @@ export default class Software {
             throw new Error(`${item.Name} Conf Path 没有配置！`);
         }
         let softPath = Software.getPath(item);
-        return path.join(softPath, item.ConfPath);
+        return Path.Join(softPath, item.ConfPath);
     }
 
     /**
@@ -107,7 +110,7 @@ export default class Software {
             throw new Error(`${item.Name} Server Conf Path 没有配置！`);
         }
         let softPath = Software.getPath(item);
-        return path.join(softPath, item.ServerConfPath);
+        return Path.Join(softPath, item.ServerConfPath);
     }
 
     /**
@@ -120,7 +123,7 @@ export default class Software {
             throw new Error(`${item.Name} Server Process Path 没有配置！`);
         }
         let workPath = Software.getPath(item); //服务目录
-        return path.join(workPath, item.ServerProcessPath);  //服务的进程目录
+        return Path.Join(workPath, item.ServerProcessPath);  //服务的进程目录
     }
 
     /**
@@ -144,8 +147,8 @@ export default class Software {
 
     static getIconPath() {
         let corePath = GetAppPath.getCoreDir();
-        let softPath = path.join(corePath, '/config/software');
-        return path.join(softPath, '/icon');
+        let softPath = Path.Join(corePath, '/config/software');
+        return Path.Join(softPath, '/icon');
     }
 
 }
