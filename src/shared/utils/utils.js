@@ -52,7 +52,7 @@ export function replaceSlash(str) {
 export function getFileSizeText(byte, defaultVal = 0) {
     byte = byte ? byte : defaultVal
     if (byte > 1024 * 1024) {
-        return parseInt(byte / (1024 * 1024)) + 'MB'
+        return (byte / (1024 * 1024)).toFixed(1) + 'MB'
     }
     return parseInt(byte / 1024) + 'KB'
 }

@@ -86,7 +86,7 @@
                   </div>
                   <div class="progress-info-right">
                     <span v-if="instMap[item.Name]?.status === InstStatus.Downloading">
-                      ↓{{ instMap[item.Name]?.perSecondText }}/S
+                      ↓ {{ instMap[item.Name]?.perSecondText }}/S
                     </span>
                     <span v-else>{{ instMap[item.Name]?.statusText }}</span>
                   </div>
