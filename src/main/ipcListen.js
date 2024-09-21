@@ -1,8 +1,8 @@
-import { ipcMain } from 'electron'
-import { callStatic } from '@/main/common/call'
+import {app, ipcMain} from 'electron'
+import {callStatic} from '@/main/common/call'
 import Settings from '@/main/Settings'
 import SystemTheme from '@/main/utils/SystemTheme'
-import { color } from '@/shared/utils/constant'
+import {color} from '@/shared/utils/constant'
 import Installer from '@/main/core/software/Installer'
 import Downloader from 'electron-dl-downloader'
 
@@ -26,6 +26,29 @@ ipcMain.on('getColors', (event) => {
 })
 
 const functions = {
+    appGetVersion: async () => {
+        return app.getVersion()
+    },
+    appExit: async () => {
+        return app.exit()
+    },
+    fileGetIcon: async (event, path, options) => {
+        return await app.getFileIcon(path, options)
+    },
+    windowSwitchMax: async (event) => {
+        const win = event.sender.getOwnerBrowserWindow()
+        if (win.isMaximized()) {
+            win.unmaximize()
+        } else {
+            win.maximize()
+        }
+    },
+    windowMinimize: async (event) => {
+        event.sender.getOwnerBrowserWindow().minimize()
+    },
+    windowClose: async (event) => {
+        event.sender.getOwnerBrowserWindow().close()
+    },
     softwareInstall: async (event, name) => {
         const installer = new Installer(name)
         installer.on('status', (status) => {
@@ -35,7 +58,7 @@ const functions = {
         const dlItem = await installer.install()
         dlItem.on('updated', (event2, state) => {
             if (state === Downloader.STATES.progressing) {
-                const progress = { receivedBytes: dlItem.getReceivedBytes(), totalBytes: dlItem.getTotalBytes() }
+                const progress = {receivedBytes: dlItem.getReceivedBytes(), totalBytes: dlItem.getTotalBytes()}
                 event.sender.send('software-downloadProgress', name, progress)
             } else {
                 event.sender.send('software-downloadCancelled', name)

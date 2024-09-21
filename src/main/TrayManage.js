@@ -2,9 +2,9 @@ import { app, Tray, Menu, nativeImage } from 'electron'
 import { APP_NAME } from '@/shared/utils/constant'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import { t } from '@/main/utils/i18n'
-import Path from '@/main/utils/Path'
-import GetAppPath from '@/main/utils/GetAppPath'
 import MainWindow from '@/main/MainWindow'
+import trayIcon from '@/../resources/img/icons/icon-tray.png?asset'
+import trayMacIcon from '@/../resources/img/icons/icon-tray-Mac.png?asset'
 
 export default class TrayManage {
     static _instance
@@ -47,8 +47,8 @@ export default class TrayManage {
 
     static getIconPath() {
         if (isMacOS) {
-            return Path.Join(GetAppPath.getStaticDir(), 'img/icons/icon-tray-Mac.png')
+            return trayMacIcon
         }
-        return Path.Join(GetAppPath.getStaticDir(), 'img/icons/icon-tray.png')
+        return trayIcon
     }
 }

@@ -9,6 +9,8 @@ const api = {
     callStatic: async (className, methodName, ...args) => {
         return await ipcRenderer.invoke('callStatic', className, methodName, ...args)
     },
+    onMainWindowMaximize: (callback) => ipcRenderer.on('mainWindowMaximize', (_event, ...args) => callback(...args)),
+    onMainWindowUnmaximize: (callback) => ipcRenderer.on('mainWindowUnmaximize', (_event, ...args) => callback(...args)),
     onSoftDlProgress: (callback) => ipcRenderer.on('software-downloadProgress', (_event, ...args) => callback(...args)),
     onSoftDlCancelled: (callback) => ipcRenderer.on('software-downloadCancelled', (_event, ...args) => callback(...args)),
     onSoftInstStatus: (callback) => ipcRenderer.on('software-installStatus', (_event, ...args) => callback(...args))

@@ -1,4 +1,3 @@
-import { electronRequire } from '@/main/utils/electron'
 import Shell from '@/main/utils/Shell'
 import MessageBox from '@/renderer/utils/MessageBox'
 import fixPath from 'fix-path'
@@ -8,8 +7,7 @@ import Settings from '@/main/Settings'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import FsUtil from '@/main/utils/FsUtil'
 import { t } from '@/renderer/utils/i18n'
-
-const shell = electronRequire('shell')
+const { shell } = require('electron')
 
 export default class Native {
     /**

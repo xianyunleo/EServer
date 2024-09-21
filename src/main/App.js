@@ -1,4 +1,3 @@
-import { electronRequire } from '@/main/utils/electron'
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import path from 'path'
 import { MAC_USER_CORE_DIR, InitFiles_DIR_NAME, TEMP_DIR_NAME } from '@/main/utils/constant'
@@ -13,13 +12,7 @@ import GetAppPath from '@/main/utils/GetAppPath'
 import Shell from '@/main/utils/Shell'
 import { extractZip } from '@/main/utils/extract'
 
-const app = electronRequire('app')
-
 export default class App {
-    static getVersion() {
-        return app.getVersion()
-    }
-
     static async initFileExists() {
         return await FileUtil.Exists(GetAppPath.getInitFilePath())
     }
@@ -152,9 +145,4 @@ export default class App {
             }
         }
     }
-
-    static exit() {
-        app.exit()
-    }
-
 }

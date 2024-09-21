@@ -35,7 +35,7 @@ export default class Env {
     static async createOtherBinFile(targetPath, targetOtherFileName, otherBinName) {
         let binDirPath = GetPath.getBinDir();
         let path = Path.Join(binDirPath, otherBinName);
-        let targetOtherFilePath = Path.Join(Path.GetDirectoryName(targetPath), targetOtherFileName);
+        let targetOtherFilePath = Path.Join(Path.GetDirName(targetPath), targetOtherFileName);
         await FsUtil.CreateSymbolicLink(path, targetOtherFilePath);
     }
 

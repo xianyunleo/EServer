@@ -27,7 +27,7 @@ export default class NginxWebsite {
     }
 
     async init() {
-        this.serverName = Path.GetFileNameWithoutExtension(this.confName).split('_')[0]
+        this.serverName = Path.GetFileNameWithoutExt(this.confName).split('_')[0]
         this.confPath = Nginx.getWebsiteConfPath(this.confName)
         this.confText = await FileUtil.ReadAll(this.confPath)
     }

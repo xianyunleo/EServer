@@ -24,22 +24,21 @@
 </template>
 
 <script setup>
-import FileDialog from '@/main/utils/FileDialog'
 import MessageBox from '@/renderer/utils/MessageBox'
 import SoftwareInit from '@/main/core/software/SoftwareInit'
 import { message } from 'ant-design-vue'
 import { mt, t } from '@/renderer/utils/i18n'
 import { APP_NAME } from '@/shared/utils/constant'
-import App from '@/main/App'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
-
+const call = window.api.call
+const callStatic = window.api.callStatic
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const store = useMainStore()
 
 const changeTextEditor = () => {
   store.setSettings('TextEditor', async (originVal) => {
-    let path = FileDialog.showOpenApp(originVal)
+    let path = await callStatic('FileDialog', 'showOpenApp', originVal)
     if (!path) {
       return false
     }
@@ -49,7 +48,7 @@ const changeTextEditor = () => {
 
 const changeWebsiteDir = () => {
   store.setSettings('WebsiteDir', async (originVal) => {
-    let path = FileDialog.showOpenDirectory(originVal)
+    let path = await callStatic('FileDialog', 'showOpenDirectory', originVal)
     if (!path) {
       return false
     }
@@ -61,7 +60,7 @@ const changeWebsiteDir = () => {
 }
 
 const exitApp = () => {
-  App.exit()
+  call('appExit')
 }
 
 const init = async () => {

@@ -3,6 +3,10 @@ export default class MainWindow {
     static _instance;
     static forceQuit = false;
 
+    static getInstance(){
+        return this._instance
+    }
+
     /**
      *
      * @param mainWindow {BrowserWindow}
@@ -21,6 +25,14 @@ export default class MainWindow {
                     mainWindow.hide()
                 }
             }
+        })
+
+        mainWindow.on('maximize', () => {
+            mainWindow.webContents.send('mainWindowMaximize')
+        })
+
+        mainWindow.on('unmaximize', () => {
+            mainWindow.webContents.send('mainWindowUnmaximize')
         })
     }
 

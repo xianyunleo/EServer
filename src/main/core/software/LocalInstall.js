@@ -35,9 +35,9 @@ export default class LocalInstall {
     };
 
     static getDirName(filePath) {
-        let dirName = Path.GetFileNameWithoutExtension(filePath);
+        let dirName = Path.GetFileNameWithoutExt(filePath);
         if (dirName.endsWith('.tar')) {
-            dirName = Path.GetFileNameWithoutExtension(dirName);
+            dirName = Path.GetFileNameWithoutExt(dirName);
         }
         return dirName;
     }

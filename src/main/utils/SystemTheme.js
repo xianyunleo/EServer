@@ -1,14 +1,10 @@
-import { electronRequire } from '@/main/utils/electron'
-
-const nativeTheme = electronRequire('nativeTheme')
-const systemPreferences = electronRequire('systemPreferences')
 export default class SystemTheme {
     static isDarkModel() {
-        return nativeTheme.shouldUseDarkColors;
+        if (process.type === 'renderer') {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches
+        } else {
+            const { nativeTheme } = require('electron')
+            return nativeTheme.shouldUseDarkColors
+        }
     }
-
-    static getColor(){
-        return systemPreferences.getAccentColor();
-    }
-
 }
