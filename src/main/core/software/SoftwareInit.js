@@ -102,15 +102,25 @@ export default class SoftwareInit {
                     return ++i === 2 ? 'extension_dir = "ext"' : match
                 })
 
-                const extArr = ['bz2', 'curl', 'fileinfo', 'mbstring', 'exif', 'mysqli', 'odbc',
-                    'openssl', 'pdo_mysql', 'pdo_odbc', 'soap', 'sockets', 'sodium', 'zip']
+                const extArr = ['bz2', 'curl', 'fileinfo', 'mbstring', 'exif', 'mysqli', 'openssl',
+                    'pdo_mysql', 'pdo_odbc', 'soap', 'sockets']
 
                 const versionFloat = parseFloat(version)
 
-                versionFloat >= 7.2 ? extArr.push('gd') : extArr.push('gd2')
+                if (versionFloat >= 7.2) {
+                    extArr.push('gd')
+                    extArr.push('sodium')
+                    extArr.push('odbc')
+                } else {
+                    extArr.push('gd2')
+                }
+
+                if (versionFloat >= 8.2){
+                    extArr.push('zip')
+                }
 
                 for (const ext of extArr) {
-                    text = Php.switchExtensionByText(text, ext, true)
+                    text = Php.switchExtensionByText(version, text, ext, true)
                 }
             } else {
                 //非Windows系统
@@ -120,7 +130,7 @@ export default class SoftwareInit {
 
                 const extArr = ['curl', 'gd', 'openssl']
                 for (const ext of extArr) {
-                    text = Php.addExtensionByText(text, ext)
+                    text = Php.addExtensionByText(version, text, ext)
                 }
             }
 

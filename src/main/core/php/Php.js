@@ -1,9 +1,9 @@
 import DirUtil from '@/main/utils/DirUtil'
 import Path from '@/main/utils/Path'
 import GetPath from '@/shared/utils/GetPath'
-import { APP_NAME } from '@/shared/utils/constant'
-import { isWindows } from '@/main/utils/utils'
-import { EOL } from 'os'
+import {APP_NAME} from '@/shared/utils/constant'
+import {isWindows} from '@/main/utils/utils'
+import {EOL} from 'os'
 import FileUtil from '@/main/utils/FileUtil'
 
 const N = EOL //换行符
@@ -17,7 +17,7 @@ export default class Php {
     static async switchExtension(version, extension, open, isZend) {
         const confPath = Php.getConfPath(version)
         let text = await FileUtil.ReadAll(confPath)
-        text = this.switchExtensionByText(text, extension, open, isZend)
+        text = this.switchExtensionByText(version, text, extension, open, isZend)
         await FileUtil.WriteAll(confPath, text)
     }
 
@@ -32,55 +32,70 @@ export default class Php {
 
     /**
      *
+     * @param version php version
      * @param originText {string}
      * @param extension {string} php扩展文件名，不含后缀
      * @param open {boolean}
      * @param isZend {boolean}
      * @returns {string}
      */
-    static switchExtensionByText(originText, extension, open, isZend = false) {
+    static switchExtensionByText(version, originText, extension, open, isZend = false) {
         //(?<=\n);?extension\s*=\s*(php_)?mysqli(\.dll)?
         const confKey = isZend ? 'zend_extension' : 'extension'
         const fileExt = isWindows ? 'dll' : 'so'
         const regx = new RegExp(`(?<=\\n);?${confKey}\\s*=\\s*(php_)?${extension}(\\.${fileExt})?`)
 
-        let newText = originText.replace(regx, (match) => {
-            let replaceText = match.trim()
+        if (regx.test(originText)) {
+            return originText.replace(regx, (match) => {
+                let replaceText = match.trim()
+                if (open) {
+                    if (replaceText.charAt(0) === ';') {
+                        replaceText = replaceText.replace(';', '')
+                    }
+                } else {
+                    if (replaceText.charAt(0) !== ';') {
+                        replaceText = `;${replaceText}`
+                    }
+                }
+                return replaceText
+            })
+        } else {
+            //没找到指定扩展的字符串，启用扩展时，新增它
             if (open) {
-                if (replaceText.charAt(0) === ';') {
-                    replaceText = replaceText.replace(';', '')
-                }
-            } else {
-                if (replaceText.charAt(0) !== ';') {
-                    replaceText = `;${replaceText}`
-                }
+                return this.addExtensionByText(version, originText, extension, isZend)
             }
-            return replaceText
-        })
-        //启用扩展时，没找到指定扩展的字符串，新增它
-        if (open && newText === originText) {
-            newText = this.addExtensionByText(originText, extension, isZend)
         }
-
-        return newText
+        return originText
     }
 
     /**
      *
+     * @param version php version
      * @param originText {string}
      * @param extension {string}
      * @param isZend
      * @returns {string}
      */
-    static addExtensionByText(originText, extension, isZend = false) {
+    static addExtensionByText(version, originText, extension, isZend = false) {
+        const versionFloat = parseFloat(version)
         const confKey = isZend ? 'zend_extension' : 'extension'
-        let command = `${N}${confKey}=${extension}`
-        command += isWindows ? '.dll' : '.so'
 
-        if (originText.includes(command)) {
+        if (versionFloat <= 7.1) {
+            if (isWindows && !extension.startsWith('php_')) {
+                extension = `php_${extension}`
+            }
+            extension += isWindows ? '.dll' : '.so'
+        } else {
+            if (extension.startsWith('php_')) {
+                extension = extension.replace('php_', '')
+            }
+        }
+        const append = `${N}${confKey}=${extension}`
+
+        if (originText.includes(append)) {
             return originText
         } else {
-            return `${originText}${command}`
+            return `${originText}${append}`
         }
     }
 

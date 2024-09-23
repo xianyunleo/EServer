@@ -143,7 +143,9 @@ export default class Extension {
             case 'memcache':
                 if (phpVersion <= 5.6) {
                     return '3.0.8'
-                } else if (phpVersion >= 7.2 && phpVersion <= 7.4) {
+                } else if (phpVersion >= 7.0 && phpVersion <= 7.1) {
+                    return null
+                } else if (phpVersion >= 7.2 && phpVersion <= 7.4) { //todo 7.2的包改官方的 memcache扩展
                     return '4.0.5.2'
                 } else {
                     return '8.2'
