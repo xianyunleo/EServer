@@ -106,8 +106,8 @@ import { mt, t } from '@/renderer/utils/i18n'
 
 const serverTableLoading = ref(false)
 const { serverReactive } = inject('GlobalProvide')
-serverReactive.restartFn = restartServerClick
-serverReactive.startPhpFpmFn = startPhpFpm
+serverReactive.restartFn = restartFn
+serverReactive.isRunningFn = isRunningFn
 
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
@@ -328,11 +328,14 @@ const stopServerClick = async (item) => {
   item.btnLoading = false
 }
 
-async function startPhpFpm(phpVersion) {
-  let item = serverList.value.find((item) => item.Name === `PHP-${phpVersion}`)
-  if (item) {
-    await startServerClick(item)
-  }
+function isRunningFn(name) {
+  const item = serverList.value.find((item) => item.Name === name)
+  return item && item.isRunning
+}
+
+async function restartFn(name) {
+  const item = serverList.value.find((item) => item.Name === name)
+  if (item) await restartServerClick(item)
 }
 </script>
 

@@ -80,6 +80,7 @@ const addWebClick = async () => {
 }
 
 const addWeb = async (websiteInfo) => {
+  const { serverName, phpVersion, syncHosts } = websiteInfo
   try {
     await Website.add(websiteInfo)
   } catch (error) {
@@ -88,19 +89,17 @@ const addWeb = async (websiteInfo) => {
   }
   visible.value = false
   formRef.value.resetFields()
-  if (websiteInfo.syncHosts) {
+  if (syncHosts) {
     try {
-      await Hosts.add(websiteInfo.serverName)
+      await Hosts.add(serverName)
     } catch (error) {
       MessageBox.error(error.message ?? error, t('errorOccurredDuring', [mt('sync', 'ws') + 'hosts']))
     }
   }
 
-  if (store.nginxServer.isRunning && Settings.get('AutoStartAndRestartServer')) {
-    serverReactive.restartFn(store.nginxServer)
-    if (websiteInfo.phpVersion) {
-      serverReactive.startPhpFpmFn(websiteInfo.phpVersion)
-    }
+  if (Settings.get('AutoStartAndRestartServer') && serverReactive.isRunningFn('Nginx')) {
+    serverReactive.restartFn('Nginx')
+    if (phpVersion) serverReactive.restartFn(SoftwareExtend.getPhpName(phpVersion))
   }
 }
 

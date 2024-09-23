@@ -44,7 +44,7 @@ const store = useMainStore()
 const userPwdModalShow = ref(false)
 const setLanguageShow = ref(false)
 
-const serverReactive = reactive({ restartFn: undefined, startPhpFpmFn: undefined })
+const serverReactive = reactive({ restartFn: undefined, isRunningFn: undefined })
 const call = window.api.call
 provide('GlobalProvide', { serverReactive })
 

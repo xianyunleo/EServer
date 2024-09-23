@@ -14,7 +14,6 @@ export const useMainStore = defineStore('main', {
     state: () => {
         return {
             softwareList: [], //软件列表
-            nginxServer: null,
             softwareTypeSelected: '',
             loading: false,
             loadingTip: 'Loading',
@@ -44,7 +43,6 @@ export const useMainStore = defineStore('main', {
                 const Installed = await Software.IsInstalled(item)
                 return { ...item, Installed }
             }))
-            this.nginxServer = this.softwareList.find((item) => item.Name === 'Nginx')
         },
         async setSettings(key, callback = null) {
             const originVal = Settings.get(key)

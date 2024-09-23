@@ -75,4 +75,7 @@ export default class SoftwareExtend {
         return matches ? matches[1] : null;
     }
 
+    static getPhpName(phpVersion) {
+        return `PHP-${phpVersion}`
+    }
 }

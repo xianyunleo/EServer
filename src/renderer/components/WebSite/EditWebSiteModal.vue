@@ -30,23 +30,19 @@ import RewriteSetting from '@/renderer/components/WebSite/EditWebSite/RewriteSet
 import SslSetting from '@/renderer/components/WebSite/EditWebSite/SslSetting.vue'
 import Settings from '@/main/Settings'
 import { mt, t } from '@/renderer/utils/i18n'
-import { useMainStore } from '@/renderer/store'
+import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 
 const { serverName, port, editModalVisible: visible } = inject('WebsiteProvide')
 const defaultKey = 'basicSetting'
 const activeKey = ref(defaultKey)
 const { serverReactive } = inject('GlobalProvide')
-const store = useMainStore()
 
 const editAfter = (phpVersion = '') => {
-  if (store.nginxServer.isRunning && Settings.get('AutoStartAndRestartServer')) {
-    serverReactive.restartFn(store.nginxServer)
-    if (phpVersion) {
-      serverReactive.startPhpFpmFn(phpVersion)
-    }
+  if (Settings.get('AutoStartAndRestartServer') && serverReactive.isRunningFn('Nginx')) {
+    serverReactive.restartFn('Nginx')
+    if (phpVersion) serverReactive.restartFn(SoftwareExtend.getPhpName(phpVersion))
   }
 }
-
 </script>
 
 <style scoped lang='less'>
