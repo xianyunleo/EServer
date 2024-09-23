@@ -46,77 +46,76 @@
       centered :footer="null" :maskClosable="false">
     <div class="modal-content">
       <pre id="command-out">{{ msg }}</pre>
-      <div :class="`result ${resultCode==0?'result-success':'result-error'}`">{{ result }}</div>
+      <div :class="`result ${resultCode===0?'result-success':'result-error'}`">{{ result }}</div>
     </div>
   </a-modal>
 </template>
 
 <script setup>
-import {computed, ref, watch} from "vue";
-import {EventEmitter} from "events";
-import Installer from "@/main/core/php/extension/Installer";
-import Extension from "@/main/core/php/extension/Extension";
-import Native from "@/main/utils/Native";
-import Php from "@/main/core/php/Php";
-import MessageBox from "@/renderer/utils/MessageBox";
-import Path from "@/main/utils/Path";
-import GetPath from "@/shared/utils/GetPath";
+import { computed, inject, ref, watch } from 'vue'
+import { EventEmitter } from 'events'
+import Installer from '@/main/core/php/extension/Installer'
+import Extension from '@/main/core/php/extension/Extension'
+import Native from '@/main/utils/Native'
+import Php from '@/main/core/php/Php'
+import MessageBox from '@/renderer/utils/MessageBox'
+import Path from '@/main/utils/Path'
+import GetPath from '@/shared/utils/GetPath'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import fsPromises from 'fs/promises'
-import {throttle} from "throttle-debounce";
+import { throttle } from 'throttle-debounce'
 import SystemExtend from '@/main/utils/SystemExtend'
+import Settings from '@/main/Settings'
+import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
-const props = defineProps(['show', 'phpVersion']);
-
-const emit = defineEmits(['update:show']);
+const props = defineProps({ show: Boolean, phpVersion: String })
+const { serverReactive } = inject('GlobalProvide')
+const emit = defineEmits(['update:show'])
 
 const visible = computed({
   get() {
-    return props.show;
+    return props.show
   },
   set(value) {
-    emit('update:show', value);
+    emit('update:show', value)
   }
-});
+})
 
-const taskVisible = ref(false);
-const msg = ref('');
-const result = ref('');
-const resultCode = ref(0);
-
+const taskVisible = ref(false)
+const msg = ref('')
+const result = ref('')
+const resultCode = ref(0)
 
 const columns = [
   {
     title: t('Name'),
     width: 180,
-    dataIndex: 'name',
+    dataIndex: 'name'
   }, {
-    title:  t('Operation'),
+    title: t('Operation'),
     dataIndex: 'operate',
-    align: 'center',
+    align: 'center'
   }
-];
+]
 
-const list = ref([]);
-
+const list = ref([])
 
 const updateList = async () => {
-  list.value = [];
-  list.value = await Extension.getList(props.phpVersion);
+  list.value = []
+  list.value = await Extension.getList(props.phpVersion)
 }
 
-updateList();
-
+updateList()
 
 const openExtDir = async () => {
   Native.openDirectory(await Php.getExtensionDir(props.phpVersion));
 }
 
-let installer;
-let eventEmitter;
+let installer
+let eventEmitter
 const install = async (item) => {
   const extVersion = Extension.getVersion(item.name, props.phpVersion)
   if (!extVersion) {
@@ -124,38 +123,48 @@ const install = async (item) => {
     return
   }
 
-  if (isMacOS && Extension.isNeedX64Brew(item.name) && !await SystemExtend.isInstalledX64Brew()) {
-    const scriptFilePath = Path.Join(GetPath.getScriptDir(), `x86_64-brew-install.sh`);
+  if (isMacOS && Extension.isNeedX64Brew(item.name) && !(await SystemExtend.isInstalledX64Brew())) {
+    const scriptFilePath = Path.Join(GetPath.getScriptDir(), `x86_64-brew-install.sh`)
     await fsPromises.chmod(scriptFilePath, '0755')
-    MessageBox.error(`安装${item.name}扩展需要先安装 -x86_64 的 Homebrew！\n请复制命令到终端执行安装\n${scriptFilePath}`);
-    return;
+    MessageBox.error(`安装${item.name}扩展需要先安装 -x86_64 的 Homebrew！\n请复制命令到终端执行安装\n${scriptFilePath}`)
+    return
   }
 
-  taskVisible.value = true;
-  eventEmitter = new EventEmitter();
-  installer = new Installer(item.name, extVersion, props.phpVersion, eventEmitter);
-  let commandStr = await installer.install();
+  taskVisible.value = true
+  eventEmitter = new EventEmitter()
+  installer = new Installer(item.name, extVersion, props.phpVersion, eventEmitter)
+  const commandStr = await installer.install()
 
   if (!isWindows) {
-    msg.value += `执行安装扩展的命令\n${commandStr}\n如果安装失败, 可尝试复制命令自行安装\n\n`;
+    msg.value += `执行安装扩展的命令\n${commandStr}\n如果安装失败, 可尝试复制命令自行安装\n\n`
   }
 
   eventEmitter.on('phpExt:stdout', (data) => {
     if (taskVisible.value) {
-      msg.value += data;
+      msg.value += data
     }
   })
 
   eventEmitter.on('phpExt:stderr', (data) => {
     if (taskVisible.value) {
-      msg.value += data;
+      msg.value += data
     }
   })
 
-  eventEmitter.on('phpExt:exit', (code) => {
+  eventEmitter.on('phpExt:exit', async (code) => {
     if (taskVisible.value) {
-      resultCode.value = code;
-      result.value = code == 0 ? '安装完成，请修改 php.ini 后，重启服务生效！' : '安装失败';
+      resultCode.value = code
+      if (code === 0) {
+        result.value = '安装成功😀'
+        const extension = Path.GetFileNameWithoutExt(item.fileName)
+        await Php.switchExtension(props.phpVersion, extension, true, item.isZend)
+        const phpName = SoftwareExtend.getPhpName(props.phpVersion)
+        if (Settings.get('AutoStartAndRestartServer') && serverReactive.isRunningFn(phpName)) {
+          serverReactive.restartFn(phpName)
+        }
+      } else {
+        result.value = '安装失败😣'
+      }
     }
   })
 }
@@ -165,20 +174,17 @@ const editScript = (item) => {
 }
 
 const closeTaskDialog = () => {
-  installer?.stop();
-  msg.value = '';
-  result.value = '';
-  resultCode.value = 0;
-  updateList();
+  installer?.stop()
+  msg.value = ''
+  result.value = ''
+  resultCode.value = 0
+  updateList()
 }
 
-const throttleFunc = throttle(
-  1000,
-  () => {
-    const commandElem = document.getElementById('command-out')
-    commandElem.scrollTop = commandElem.scrollHeight;
-  }
-)
+const throttleFunc = throttle(1000, () => {
+  const commandElem = document.getElementById('command-out')
+  commandElem.scrollTop = commandElem.scrollHeight
+})
 watch(msg, () => {
   throttleFunc()
 })

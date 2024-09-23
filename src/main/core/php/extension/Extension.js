@@ -6,18 +6,16 @@ import GetPath from '@/shared/utils/GetPath'
 
 export default class Extension {
     static async getList(phpVersion) {
-        let list = this.getSimpleList()
+        const list = this.getSimpleList()
 
-        let extDir = await Php.getExtensionDir(phpVersion)
+        const extDir = await Php.getExtensionDir(phpVersion)
 
-        let newList = await Promise.all(
-            list.map(async item => {
-                let isInstalled = await FileUtil.Exists(Path.Join(extDir, item.extFileName))
+        return await Promise.all(
+            list.map(async (item) => {
+                let isInstalled = await FileUtil.Exists(Path.Join(extDir, item.fileName))
                 return Object.assign({ isInstalled }, item)
             })
         )
-
-        return newList
     }
 
     static getSimpleList() {
@@ -28,52 +26,54 @@ export default class Extension {
         return [
             {
                 name: 'memcache',
-                extFileName: 'memcache.so'
+                fileName: 'memcache.so'
             }, {
                 name: 'redis',
-                extFileName: 'redis.so'
+                fileName: 'redis.so'
             }, {
                 name: 'swoole',
-                extFileName: 'swoole.so'
+                fileName: 'swoole.so'
             }, {
                 name: 'mongodb',
-                extFileName: 'mongodb.so'
+                fileName: 'mongodb.so'
             }, {
                 name: 'xdebug',
-                extFileName: 'xdebug.so'
+                fileName: 'xdebug.so',
+                isZend: true
             }, {
                 name: 'imagick',
-                extFileName: 'imagick.so',
+                fileName: 'imagick.so',
                 needX64Brew: true
             }
         ]
     }
 
     static isNeedX64Brew(extName) {
-        return this.getSimpleList().find(item => item.nam == extName)?.needX64Brew
+        return this.getSimpleList().find(item => item.nam === extName)?.needX64Brew
     }
 
     static getSimpleListForWindows() {
         return [
             {
                 name: 'memcache',
-                extFileName: 'php_memcache.dll'
+                fileName: 'php_memcache.dll'
             }, {
                 name: 'redis',
-                extFileName: 'php_redis.dll'
+                fileName: 'php_redis.dll'
             }, {
                 name: 'mongodb',
-                extFileName: 'php_mongodb.dll'
+                fileName: 'php_mongodb.dll'
             }, {
                 name: 'xdebug',
-                extFileName: 'php_xdebug.dll'
+                fileName: 'php_xdebug.dll',
+                isZend: true
             }
         ]
     }
 
     static getFileName(extName) {
         let list = this.getSimpleList()
-        return list.find(v => v.name == extName)?.extFileName
+        return list.find(v => v.name === extName)?.fileName
     }
 
     static getVersion(extName, phpVersion) {

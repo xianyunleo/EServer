@@ -48,6 +48,12 @@
                         <a-menu-item @click="openInstallPath(item)">
                           {{ mt('Open', 'ws', 'Directory') }}
                         </a-menu-item>
+                        <a-menu-item v-if="item.ConfPath" @click="openConfFile(item)" key="998">
+                          {{ mt('Open', 'ws') }}{{ Path.GetBaseName(item.ConfPath) }}
+                        </a-menu-item>
+                        <a-menu-item v-if="item.ServerConfPath" @click="openServerConfFile(item)" key="997">
+                          {{ mt('Open', 'ws') }}{{ Path.GetBaseName(item.ServerConfPath) }}
+                        </a-menu-item>
                         <a-menu-item v-if="item.Type === phpTypeValue" @click="showPhpExtManager(item)">
                           {{ mt('Install', 'ws', 'Extension') }}
                         </a-menu-item>
@@ -254,6 +260,8 @@ const openInstallPath = async (item) => {
   let path = item.IsMacApp ? Software.getTypePath(item.Type) : Software.getPath(item)
   Native.openDirectory(path)
 }
+
+const openConfFile = (item) => Native.openTextFile(Software.getConfPath(item))
 
 const uninstall = async (name) => {
   const item = findItem(name)
