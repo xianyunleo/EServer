@@ -45,7 +45,7 @@ const userPwdModalShow = ref(false)
 const setLanguageShow = ref(false)
 
 const serverReactive = reactive({ restartFn: undefined, startPhpFpmFn: undefined })
-
+const call = window.api.call
 provide('GlobalProvide', { serverReactive })
 
 const settings = Settings.getAll()
@@ -66,7 +66,7 @@ onMounted(async () => {
     await changeLanguageWrapper(store.settings.Language)
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]))
-    App.exit()
+    await call('appExit')
   }
 
   if (isWindows) {
@@ -77,7 +77,7 @@ onMounted(async () => {
 async function initOrUpdate() {
   if (isMacOS && process.arch === 'arm64' && !(await SystemExtend.isInstallRosetta())) {
     await MessageBox.error(`需要Rosetta支持，请复制命令到终端执行安装\nsoftwareupdate --install-rosetta`)
-    App.exit()
+    await call('appExit')
   }
   //存在initFile文件的情况下，判断是第一次安装，还是覆盖安装
   if (!(await Software.DirExists())) {
@@ -110,7 +110,7 @@ async function winInit() {
     store.loading = false
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]))
-    App.exit()
+    await call('appExit')
   }
 }
 
@@ -121,7 +121,7 @@ async function macCreateUserCoreDir() {
     }
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]))
-    App.exit()
+    await call('appExit')
   }
 }
 
@@ -133,7 +133,7 @@ async function update() {
     store.loading = false
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('update')]))
-    App.exit()
+    await call('appExit')
   }
 }
 

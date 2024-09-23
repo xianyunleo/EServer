@@ -1,7 +1,6 @@
 import { app, shell, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
-import remoteMain from '@electron/remote/main'
 import Store from 'electron-store'
 import MainWindow from '@/main/MainWindow'
 import '@/main/ipcListen'
@@ -36,7 +35,6 @@ async function createMainWindow() {
             nodeIntegration: true,
             contextIsolation: false,
             webSecurity: false,
-            nodeIntegrationInWorker: true
         }
     })
 
@@ -61,7 +59,6 @@ async function createMainWindow() {
     } else {
         mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
     }
-    remoteMain.enable(mainWindow.webContents)
     MainWindow.init(mainWindow)
 }
 
@@ -69,7 +66,6 @@ function onReady() {
     app.on('ready', async () => {
         createMainWindow()
         Store.initRenderer()
-        remoteMain.initialize()
         I18n.init()
     })
 }

@@ -43,13 +43,13 @@ import {
 } from "@ant-design/icons-vue";
 import { defineAsyncComponent, onMounted, ref } from 'vue'
 import {useRouter} from "vue-router";
+const call = window.api.call
 const router = useRouter();
 const selectedKeys = ref(['/']);
-import { getCurrentWindow, switchMaximize } from '@/shared/utils/window'
 import { isWindows ,isMacOS} from '@/main/utils/utils'
 
 const dblclick = () => {
-  if (!isWindows) switchMaximize(getCurrentWindow())
+  if (!isWindows) call('switchMax')
 }
 
 const logoContainer = ref()

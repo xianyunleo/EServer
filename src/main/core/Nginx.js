@@ -106,8 +106,8 @@ export default class Nginx {
         access_log off;
     }
 
-    access_log  logs/${Path.GetFileNameWithoutExtension(confName)}.access.log;
-    error_log  logs/${Path.GetFileNameWithoutExtension(confName)}.error.log;
+    access_log  logs/${Path.GetFileNameWithoutExt(confName)}.access.log;
+    error_log  logs/${Path.GetFileNameWithoutExt(confName)}.error.log;
 }`;
 
         confText = replaceLineBreak(confText)
@@ -190,7 +190,7 @@ export default class Nginx {
         }
         let files = await DirUtil.GetFiles(rewritePath, '.conf');
         return files.map(name => {
-            return Path.GetFileNameWithoutExtension(name);
+            return Path.GetFileNameWithoutExt(name);
         });
     }
 
@@ -213,7 +213,7 @@ export default class Nginx {
      * @returns {number}
      */
     static getPortByConfPath(path){
-        return Number(Path.GetFileNameWithoutExtension(path).split('_')[1])
+        return Number(Path.GetFileNameWithoutExt(path).split('_')[1])
     }
 
     static getErrorLogOffValue(){

@@ -1,13 +1,10 @@
-import { electronRequire } from '@/main/utils/electron'
 import Shell from '@/main/utils/Shell'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import { PowerShell } from '@/main/utils/constant'
-
-const app = electronRequire('app')
+import { getFileIcon } from '@/shared/utils/file'
 
 export default class TcpProcess {
-
     static async getList() {
         if (isMacOS) {
             return await this.getListForMacOS()
@@ -18,30 +15,30 @@ export default class TcpProcess {
     }
 
     static async getListForMacOS() {
-        let commandStr = `lsof -iTCP -sTCP:LISTEN -P -n|awk 'NR!=1{print $1,$2,$3,$5,$9}'`;
+        let commandStr = `lsof -iTCP -sTCP:LISTEN -P -n|awk 'NR!=1{print $1,$2,$3,$5,$9}'`
         try {
-            let resStr = await Shell.sudoExec(commandStr);
-            resStr = resStr.trim();
+            let resStr = await Shell.sudoExec(commandStr)
+            resStr = resStr.trim()
             if (!resStr) {
-                return [];
+                return []
             }
-            let list = resStr.split('\n');
+            let list = resStr.split('\n')
 
             return await Promise.all(
-                list.map(async line => {
-                    let lineArr = line.split(' ');
-                    let name, pid, user, type, ipAndPort;
-                    [name, pid, user, type, ipAndPort] = lineArr;
-                    let tempArr = ipAndPort.match(/^(.*):(\d+)$/);
-                    let ip, port;
-                    [, ip, port] = tempArr
+                list.map(async (line) => {
+                    let lineArr = line.split(' ')
+                    let name, pid, user, type, ipAndPort
+                    ;[name, pid, user, type, ipAndPort] = lineArr
+                    let tempArr = ipAndPort.match(/^(.*):(\d+)$/)
+                    let ip, port
+                    ;[, ip, port] = tempArr
 
                     const path = await ProcessExtend.getPathByPid(pid)
                     return { name, pid, user, type, ip, port, path, status: 'Listen' }
                 })
-            );
+            )
         } catch (e) {
-            return [];
+            return []
         }
     }
 
@@ -59,16 +56,16 @@ export default class TcpProcess {
             let list = resStr.split(/\r?\n\r?\n/)
 
             return await Promise.all(
-                list.map(async item => {
+                list.map(async (item) => {
                     let lineArr = item.split(/r?\n/)
 
-                    let arr = lineArr.map(line => {
+                    let arr = lineArr.map((line) => {
                         return line.split(' : ')[1]?.trim()
                     })
-                    let pid, ip, port, name, path;
-                    [pid, ip, port, name, path] = arr
+                    let pid, ip, port, name, path
+                    ;[pid, ip, port, name, path] = arr
 
-                    let icon = path ? (await app.getFileIcon(path))?.toDataURL() : null
+                    let icon = path ? await getFileIcon(path) : null
                     return { pid, ip, port, name, path, status: 'Listen', icon }
                 })
             )
@@ -89,7 +86,7 @@ export default class TcpProcess {
                 const { pid, ip, port } = item
                 const name = await hmc.getProcessName2(pid)
                 const path = await ProcessExtend.getPathByPid(pid)
-                const icon = path ? (await app.getFileIcon(path))?.toDataURL() : null
+                const icon = path ? await getFileIcon(path) : null
                 result.push({ pid, ip, port, name, path, status: 'Listen', icon })
             }
 

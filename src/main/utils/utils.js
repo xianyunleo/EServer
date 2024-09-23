@@ -1,12 +1,11 @@
-import { electronRequire } from '@/main/utils/electron'
+import { sep } from 'path'
 import OS from '@/main/utils/OS'
 
-const app = electronRequire('app')
+export const isDev = process.resourcesPath.includes(`${sep}node_modules${sep}`)
 
+export const isWindows = OS.isWindows()
+export const isMacOS = OS.isMacOS()
 
-export const isDev = !app.isPackaged
-export const isWindows = OS.isWindows();
-export const isMacOS = OS.isMacOS();
 export function devConsoleLog(...str) {
     if (isDev) {
         console.log(...str)

@@ -30,10 +30,7 @@ import { ref } from 'vue'
 import Native from '@/main/utils/Native'
 import { t } from '@/renderer/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
-import { APP_NAME } from '@/shared/utils/constant'
-import { getCurrentWindow, switchMaximize } from '@/shared/utils/window'
-
-const mainWindow = getCurrentWindow()
+const call = window.api.call
 const isWindowMax = ref(false)
 const minimizeIsHover = ref(false)
 
@@ -42,7 +39,7 @@ const clickUrl = () => {
 }
 
 const minimizeClick = () => {
-  mainWindow.minimize()
+  call('windowMinimize')
   minimizeIsHover.value = false
 }
 
@@ -51,18 +48,18 @@ const dblclick = () => {
 }
 
 const maximizeClick = () => {
-  switchMaximize(mainWindow)
+  call('windowSwitchMax')
 }
 
 const closeClick = () => {
-  mainWindow.close()
+  call('windowClose')
 }
 
-mainWindow.on('maximize', () => {
+window.api.onMainWindowMaximize(() => {
   isWindowMax.value = true
 })
 
-mainWindow.on('unmaximize', () => {
+window.api.onMainWindowUnmaximize(() => {
   isWindowMax.value = false
 })
 </script>

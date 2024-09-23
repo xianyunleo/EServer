@@ -8,6 +8,7 @@ files:
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
   - '!extra/*'
+  - '!screenshots/*'
 mac:
   target:
     - target: dmg

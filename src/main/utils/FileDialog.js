@@ -1,7 +1,6 @@
-import { electronRequire } from '@/main/utils/electron'
+import { dialog } from 'electron'
 import { isMacOS, isWindows } from '@/main/utils/utils'
-
-const dialog = electronRequire('dialog')
+import MainWindow from "@/main/MainWindow";
 
 export default class FileDialog {
     static showOpenDirectory(defaultPath = null) {
@@ -14,7 +13,7 @@ export default class FileDialog {
             }
             options.defaultPath = defaultPath;
         }
-        let res = dialog.showOpenDialogSync(options);
+        let res = dialog.showOpenDialogSync(MainWindow.getInstance(),options);
         return res ? res[0] : null;
     }
 
@@ -29,7 +28,7 @@ export default class FileDialog {
             }
             options.defaultPath = defaultPath
         }
-        let res = dialog.showOpenDialogSync(options)
+        let res = dialog.showOpenDialogSync(MainWindow.getInstance(),options)
         return res ? res[0] : null
     }
 
@@ -55,7 +54,7 @@ export default class FileDialog {
                 options.defaultPath = '/Applications';
             }
         }
-        let res = dialog.showOpenDialogSync(options);
+        let res = dialog.showOpenDialogSync(MainWindow.getInstance(),options);
         return res ? res[0] : null;
     }
 }

@@ -15,7 +15,7 @@ export default class Path {
      * @param path {string}
      * @returns {string}
      */
-    static GetFileNameWithoutExtension(path) {
+    static GetFileNameWithoutExt(path) {
         return nodePath.parse(path).name
     }
 
@@ -24,7 +24,7 @@ export default class Path {
      * @param path {string}
      * @returns {string}
      */
-    static GetExtension(path) {
+    static GetExt(path) {
         return nodePath.extname(path)
     }
 
@@ -33,7 +33,7 @@ export default class Path {
      * @param path {string}
      * @returns {string}
      */
-    static GetDirectoryName(path) {
+    static GetDirName(path) {
         return nodePath.dirname(path)
     }
 

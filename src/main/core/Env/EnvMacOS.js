@@ -1,4 +1,3 @@
-import {electronRequire} from '@/main/utils/electron';
 import FileUtil from "@/main/utils/FileUtil";
 import Path from "@/main/utils/Path";
 import OS from "@/main/utils/OS";
@@ -7,13 +6,11 @@ import {APP_NAME} from "@/shared/utils/constant";
 import GetPath from "@/shared/utils/GetPath";
 import FsUtil from '@/main/utils/FsUtil'
 
-const app = electronRequire('app')
-
 export default class EnvMacOS {
     static _envFileName = '.zshrc';
 
     static getEnvFilePath() {
-        return Path.Join(app.getPath('home'), this._envFileName);
+        return Path.Join(OS.getHomeDir(), this._envFileName);
     }
 
     static async switch(enable) {

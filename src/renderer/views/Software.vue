@@ -132,11 +132,10 @@ import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import Path from '@/main/utils/Path'
 import { mt, t } from '@/renderer/utils/i18n'
 import { isMacOS, isWindows } from '@/main/utils/utils'
-import FileDialog from '@/main/utils/FileDialog'
 import LocalInstall from '@/main/core/software/LocalInstall'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import SystemExtend from '@/main/utils/SystemExtend'
-
+const callStatic = window.api.callStatic
 const InstalledType = 'InstalledType'
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
@@ -274,7 +273,7 @@ const uninstall = async (name) => {
 const localInstall = async () => {
   try {
     const extensions = isWindows ? ['zip', '7z'] : ['zip', '7z', 'tar.xz']
-    const path = FileDialog.showOpenFile(null, [{ name: 'package', extensions }])
+    const path = await callStatic('FileDialog', 'showOpenFile', null, [{ name: 'package', extensions }])
     if (!path) return
     const dirName = LocalInstall.getDirName(path)
 

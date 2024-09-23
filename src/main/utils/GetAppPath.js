@@ -1,21 +1,18 @@
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
-import path from 'path'
-import { electronRequire } from '@/main/utils/electron'
 import {
     INIT_FILE_NAME,
     MAC_CORE_PATH_NAME,
     MAC_USER_CORE_DIR,
     WIN_CORE_PATH_NAME
 } from '@/main/utils/constant'
-
-const app = electronRequire('app')
+import Path from '@/main/utils/Path'
 
 export default class GetAppPath {
     static getDir() {
         if (isDev) {
-            return app.getAppPath()
+            return process.cwd()
         } else {
-            return path.dirname(this.getExePath())
+            return Path.GetDirName(this.getExePath())
         }
     }
 
@@ -24,7 +21,7 @@ export default class GetAppPath {
      * @returns {string}
      */
     static getExePath() {
-        return app.getPath('exe')
+        return process.execPath //同app.getPath('exe')
     }
 
     /**
@@ -35,15 +32,15 @@ export default class GetAppPath {
         let result = ''
         if (isWindows) {
             if (isDev) {
-                result = path.join(this.getDevPlatformDir(), WIN_CORE_PATH_NAME)
+                result = Path.Join(this.getDevPlatformDir(), WIN_CORE_PATH_NAME)
             } else {
-                result = path.join(this.getDir(), WIN_CORE_PATH_NAME)
+                result = Path.Join(this.getDir(), WIN_CORE_PATH_NAME)
             }
         } else if (isMacOS) {
             if (isDev) {
-                result = path.join(this.getDevPlatformDir(), MAC_CORE_PATH_NAME)
+                result = Path.Join(this.getDevPlatformDir(), MAC_CORE_PATH_NAME)
             } else {
-                result = path.join(this.getContentsDir(), MAC_CORE_PATH_NAME)
+                result = Path.Join(this.getContentsDir(), MAC_CORE_PATH_NAME)
             }
         }
         return result
@@ -66,7 +63,7 @@ export default class GetAppPath {
      */
     static getContentsDir() {
         if (isMacOS) {
-            return path.join(this.getDir(), '..')
+            return Path.Join(this.getDir(), '..')
         }
         return ''
     }
@@ -75,20 +72,11 @@ export default class GetAppPath {
         return this.getUserCoreDir()
     }
 
-    static getFrontEndDir() {
-        return app.getAppPath()
-    }
-
-    static getStaticDir() {
-        //这里的resources是指项目resources目录，非electron resources目录
-        return path.join(this.getFrontEndDir(), 'resources')
-    }
-
     static getDevPlatformDir() {
-        return path.join(this.getDir(), `extra/${process.platform}`)
+        return Path.Join(this.getDir(), `extra/${process.platform}`)
     }
 
     static getInitFilePath() {
-        return path.join(this.getCoreDir(), INIT_FILE_NAME)
+        return Path.Join(this.getCoreDir(), INIT_FILE_NAME)
     }
 }

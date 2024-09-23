@@ -26,6 +26,10 @@ export default class OS {
         return this._majorVersion
     }
 
+    static getHomeDir() {
+        return os.homedir()
+    }
+
     static getUserName() {
         return os.userInfo().username
     }
