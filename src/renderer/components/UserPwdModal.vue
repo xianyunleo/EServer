@@ -28,12 +28,7 @@ import { mt, t } from '@/renderer/utils/i18n'
 const call = window.api.call
 const store = useMainStore()
 
-const props = defineProps({
-  show: Boolean,
-  rightPwd: String,
-  cancelIsExit: Boolean
-})
-
+const props = defineProps({ show: Boolean, rightPwd: String, cancelIsExit: Boolean })
 const emit = defineEmits(['update:show', 'update:rightPwd'])
 
 const visible = computed({

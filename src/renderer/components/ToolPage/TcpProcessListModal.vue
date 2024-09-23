@@ -51,7 +51,7 @@ import { message } from 'ant-design-vue'
 import { isWindows } from '@/main/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
 
-const props = defineProps(['show'])
+const props = defineProps({ show: Boolean })
 const emit = defineEmits(['update:show'])
 const visible = computed({
   get() {

@@ -38,7 +38,7 @@ import MessageBox from "@/renderer/utils/MessageBox";
 import { t,mt } from '@/renderer/utils/i18n'
 import { message } from 'ant-design-vue'
 
-const props = defineProps(['show'])
+const props = defineProps({ show: Boolean })
 const emit = defineEmits(['update:show'])
 
 const visible = computed({

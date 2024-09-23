@@ -12,7 +12,7 @@
 import { computed } from 'vue'
 import { FolderOpenFilled } from '@ant-design/icons-vue'
 
-const props = defineProps(['value', 'toForwardSlash'])
+const props = defineProps({ value: String, toForwardSlash: Boolean })
 const emit = defineEmits(['update:value'])
 
 const val = computed({

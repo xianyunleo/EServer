@@ -21,14 +21,10 @@ import { t } from '@/renderer/utils/i18n'
 import { computed } from 'vue'
 import Settings from '@/main/Settings'
 import MessageBox from '@/renderer/utils/MessageBox'
-import { useI18n } from 'vue-i18n'
 import { useMainStore } from '@/renderer/store'
 import { changeLanguageWrapper } from '@/renderer/utils/language'
 
-const { locale } = useI18n()
-const props = defineProps({
-  show: Boolean
-})
+const props = defineProps({ show: Boolean })
 const emit = defineEmits(['update:show'])
 const store = useMainStore()
 const visible = computed({

@@ -22,34 +22,32 @@
       :loading="serverTableLoading"
       :scroll="{ y: 'calc(100vh - 220px)' }"
     >
-      <template #bodyCell="{ column, record }">
+      <template #bodyCell="{ column, record : item }">
         <template v-if="column.dataIndex === 'name'">
-          <div>
-            {{ record.ServerName ? record.ServerName : record.Name }}
-          </div>
+          <div>{{ item.ServerName ? item.ServerName : item.Name }}</div>
         </template>
         <template v-if="column.dataIndex === 'status'">
           <div style="font-size: 20px">
-            <RightSquareFilled class="status-stop" v-if="!record.isRunning" />
-            <RightSquareFilled class="status-start" v-if="record.isRunning" />
+            <RightSquareFilled class="status-stop" v-if="!item.isRunning" />
+            <RightSquareFilled class="status-start" v-if="item.isRunning" />
           </div>
         </template>
 
         <template v-if="column.dataIndex === 'operate'">
           <div class="operate-td">
-            <a-button type="primary" @click="startServerClick(record)" v-if="!record.isRunning" :loading="record.btnLoading">
+            <a-button type="primary" @click="startServerClick(item)" v-if="!item.isRunning" :loading="item.btnLoading">
               <template #icon>
                 <PoweroffOutlined />
               </template>
               {{ t('Start') }}
             </a-button>
-            <a-button type="primary" @click="stopServerClick(record)" v-if="record.isRunning" :loading="record.btnLoading">
+            <a-button type="primary" @click="stopServerClick(item)" v-if="item.isRunning" :loading="item.btnLoading">
               <template #icon>
                 <PoweroffOutlined />
               </template>
               {{ t('Stop') }}
             </a-button>
-            <a-button type="primary" @click="restartServerClick(record)" :loading="record.btnLoading" :disabled="!record.isRunning">
+            <a-button type="primary" @click="restartServerClick(item)" :loading="item.btnLoading" :disabled="!item.isRunning">
               <template #icon>
                 <ReloadOutlined />
               </template>
@@ -58,16 +56,16 @@
             <a-dropdown :trigger="['click']">
               <template #overlay>
                 <a-menu>
-                  <a-menu-item @click="openInstallDir(record)" key="999">
+                  <a-menu-item @click="openInstallDir(item)" key="999">
                     {{ mt('Open', 'ws', 'Directory') }}
                   </a-menu-item>
-                  <a-menu-item v-if="record.ConfPath" @click="openConfFile(record)" key="998">
-                    {{ mt('Open', 'ws') }}{{ Path.GetBaseName(record.ConfPath) }}
+                  <a-menu-item v-if="item.ConfPath" @click="openConfFile(item)" key="998">
+                    {{ mt('Open', 'ws') }}{{ Path.GetBaseName(item.ConfPath) }}
                   </a-menu-item>
-                  <a-menu-item v-if="record.ServerConfPath" @click="openServerConfFile(record)" key="997">
-                    {{ mt('Open', 'ws') }}{{ Path.GetBaseName(record.ServerConfPath) }}
+                  <a-menu-item v-if="item.ServerConfPath" @click="openServerConfFile(item)" key="997">
+                    {{ mt('Open', 'ws') }}{{ Path.GetBaseName(item.ServerConfPath) }}
                   </a-menu-item>
-                  <a-menu-item v-for="(item, i) in record.ExtraFiles" :key="i" @click="openExtraFile(record, item)">
+                  <a-menu-item v-for="(item, i) in item.ExtraFiles" :key="i" @click="openExtraFile(item, item)">
                     {{ mt('Open', 'ws') }}{{ item.Name }}
                   </a-menu-item>
                 </a-menu>
