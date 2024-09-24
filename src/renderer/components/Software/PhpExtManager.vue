@@ -157,7 +157,7 @@ const install = async (item) => {
       if (code === 0) {
         result.value = '安装成功😀'
         const extension = Path.GetFileNameWithoutExt(item.fileName)
-        await Php.switchExtension(props.phpVersion, extension, true, item.isZend)
+        await Php.addExtension(props.phpVersion, extension, item.isZend)
         const phpName = SoftwareExtend.getPhpName(props.phpVersion)
         if (Settings.get('AutoStartAndRestartServer') && serverReactive.isRunningFn(phpName)) {
           serverReactive.restartFn(phpName)
