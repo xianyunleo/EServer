@@ -1,3 +1,4 @@
+$ErrorActionPreference = 'Stop'
 
 $dlDir=$Args[0]
 $phpDir=$Args[1]
