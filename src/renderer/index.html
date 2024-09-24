@@ -41,19 +41,25 @@
         </div>
       </div>
     </div>
-    <script>
-      const { ipcRenderer } = require('electron')
-      const colors = ipcRenderer.sendSync('getColors')
+    <script type="module">
+      import { colorConst } from '@/shared/utils/constant'
+      import Settings from '@/main/Settings'
+      import SystemTheme from '@/main/utils/SystemTheme'
+
+      const settings = Settings.getAll()
+      const isDarkModel = SystemTheme.isDarkModel()
+      const isDark = settings.ThemeMode === 'dark' || (settings.ThemeMode === 'system' && isDarkModel)
+      const colorObj = isDark ? colorConst.dark : colorConst.light
 
       let element = document.querySelector('.xxx-container')
-      element.style.background = colors.bgColor
+      element.style.background = colorObj.bgColor
 
       element = document.querySelector('.xxx-container .sidebar')
-      element.style.borderRight = `1px solid ${colors.borderColor}`
+      element.style.borderRight = `1px solid ${colorObj.borderColor}`
 
       element = document.querySelector('.xxx-container .title-bar')
-      element.style.borderBottom = `1px solid ${colors.borderColor}`
+      element.style.borderBottom = `1px solid ${colorObj.borderColor}`
     </script>
-    <script type='module' src='main.js'></script>
+    <script type='module' src='main.js' async></script>
   </body>
 </html>

@@ -1,7 +1,7 @@
 export const APP_NAME = 'EServer'
 export const DOWNLOAD_URL = 'http://dl.eserver.app'
 
-export const color = {
+export const colorConst = {
     light: {
         color: 'rgba(0, 0, 0, 0.88)',
         bgColor: '#F5F7FA',

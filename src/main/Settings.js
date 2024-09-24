@@ -1,4 +1,3 @@
-import App from '@/main/App'
 import Store from 'electron-store'
 import { SETTINGS_FILE_NAME } from '@/main/utils/constant'
 import Path from '@/main/utils/Path'
