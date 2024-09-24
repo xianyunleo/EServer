@@ -6,6 +6,7 @@ import {
     WIN_CORE_PATH_NAME
 } from '@/main/utils/constant'
 import Path from '@/main/utils/Path'
+import {APP_NAME} from "@/shared/utils/constant";
 
 export default class GetAppPath {
     static getDir() {
@@ -21,7 +22,18 @@ export default class GetAppPath {
      * @returns {string}
      */
     static getExePath() {
-        return process.execPath //同app.getPath('exe')
+        if (process.type === 'renderer') {
+            if (isWindows){
+                return process.execPath
+            }else if(isMacOS){
+                //Applications/EServer.app/Contents/Frameworks/EServer Helper (Renderer).app/Contents/MacOS/EServer Helper (Renderer)
+                return Path.Join(process.execPath,`../../../../../MacOS/${APP_NAME}`)
+            }
+            return ''
+        } else {
+            const { app } = require('electron')
+            return app.getPath('exe')
+        }
     }
 
     /**
