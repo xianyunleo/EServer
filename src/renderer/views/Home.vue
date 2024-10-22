@@ -80,9 +80,8 @@
 </template>
 
 <script setup>
-var timestamp = new Date().getTime()
-
-import { inject, onMounted, ref, watch } from 'vue'
+import { EnumSoftwareType } from '@/shared/utils/enum'
+import { inject, onMounted, ref, watch} from 'vue'
 import { useMainStore } from '@/renderer/store'
 import GetPath from '@/shared/utils/GetPath'
 import GetAppPath from '@/main/utils/GetAppPath'
@@ -92,7 +91,7 @@ import MessageBox from '@/renderer/utils/MessageBox'
 import { storeToRefs } from 'pinia/dist/pinia'
 import { APP_NAME } from '@/shared/utils/constant'
 import Native from '@/main/utils/Native'
-import { sleep } from '@/shared/utils/utils'
+import { enumGetName, sleep } from '@/shared/utils/utils'
 import Path from '@/main/utils/Path'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import Settings from '@/main/Settings'
@@ -101,6 +100,8 @@ import TcpProcess from '@/main/utils/TcpProcess'
 import { isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
+
+var timestamp = new Date().getTime()
 
 const serverTableLoading = ref(false)
 const { serverReactive } = inject('GlobalProvide')
@@ -133,16 +134,20 @@ const columns = [
   }
 ]
 
+const serverList = ref([])
 const store = useMainStore()
-const { softwareList, serverList, afterOpenAppStartServerMark } = storeToRefs(store)
+const { softwareList, afterOpenAppStartServerMark } = storeToRefs(store)
+
+watch(softwareList, () => {
+  serverList.value = getServerList()
+}, { immediate: true, deep: 2 })
+
 onMounted(async () => {
   var timestamp2 = new Date().getTime()
   console.log('home onMounted', timestamp2 - timestamp)
 
-  if (softwareList?.value?.length > 0) await store.refreshServerList()
   if (serverList?.value?.length > 0) {
     serverTableLoading.value = { tip: `${t('RefreshingServer')}...` }
-    console.log('softwareList', softwareList)
     await initServerListStatus()
     serverTableLoading.value = false
   }
@@ -152,6 +157,14 @@ onMounted(async () => {
     oneClickStart()
   }
 })
+
+function getServerList() {
+  const phpTypeName = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)
+  const serverTypeName = enumGetName(EnumSoftwareType, EnumSoftwareType.Server)
+  const typeArr = [phpTypeName, serverTypeName]
+
+  return softwareList.value.filter(item => typeArr.includes(item.Type) && item.Installed)
+}
 
 const getProcessList = async () => {
   let list
