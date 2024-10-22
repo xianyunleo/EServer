@@ -57,9 +57,9 @@ onMounted(async () => {
     if ((await App.initFileExists()) && !isDev) {
       await App.checkInstall()
       await initOrUpdate()
+    } else {
+      await store.init()
     }
-
-    await store.init()
 
     store.loadingTip = t('Initializing')
     await window.api.callStatic('TrayManage', 'init')

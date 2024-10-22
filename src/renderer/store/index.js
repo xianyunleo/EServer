@@ -14,25 +14,17 @@ export const useMainStore = defineStore('main', {
     state: () => {
         return {
             softwareList: [], //软件列表
+            serverList: [], //已安装的server软件列表
             softwareTypeSelected: '',
             loading: false,
             loadingTip: 'Loading',
             settings: {},
             customTheme: {},
             websiteList: { showSecondDomainName: false, showNote: false },
-            afterOpenAppStartServerNum: 1,
+            afterOpenAppStartServerMark: true,
         }
     },
-    getters: {
-        //已安装的server软件列表
-        serverList(state) {
-            let phpTypeName = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)
-            let serverTypeName = enumGetName(EnumSoftwareType, EnumSoftwareType.Server)
-            let typeArr = [phpTypeName, serverTypeName]
-
-            return state.softwareList.filter(item => item.Installed && typeArr.includes(item.Type))
-        }
-    },
+    getters: {},
     actions: {
         async init() {
             await this.refreshSoftwareList()
@@ -43,6 +35,16 @@ export const useMainStore = defineStore('main', {
                 const Installed = await Software.IsInstalled(item)
                 return { ...item, Installed }
             }))
+        },
+        /**
+         * 软刷新，已安装的server软件列表
+         * @returns {Promise<array>}
+         */
+        async refreshServerList() {
+            const phpTypeName = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)
+            const serverTypeName = enumGetName(EnumSoftwareType, EnumSoftwareType.Server)
+            const typeArr = [phpTypeName, serverTypeName]
+            this.serverList = this.softwareList.filter(item => item.Installed && typeArr.includes(item.Type))
         },
         async setSettings(key, callback = null) {
             const originVal = Settings.get(key)

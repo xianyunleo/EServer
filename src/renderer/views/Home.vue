@@ -134,20 +134,21 @@ const columns = [
 ]
 
 const store = useMainStore()
-const { serverList, afterOpenAppStartServerNum } = storeToRefs(store)
-
+const { softwareList, serverList, afterOpenAppStartServerMark } = storeToRefs(store)
 onMounted(async () => {
   var timestamp2 = new Date().getTime()
   console.log('home onMounted', timestamp2 - timestamp)
 
-  if (serverList.value) {
+  if (softwareList?.value?.length > 0) await store.refreshServerList()
+  if (serverList?.value?.length > 0) {
     serverTableLoading.value = { tip: `${t('RefreshingServer')}...` }
+    console.log('softwareList', softwareList)
     await initServerListStatus()
     serverTableLoading.value = false
   }
 
-  if (Settings.get('AfterOpenAppStartServer') && afterOpenAppStartServerNum.value >= 1) {
-    afterOpenAppStartServerNum.value -= 1
+  if (Settings.get('AfterOpenAppStartServer') && afterOpenAppStartServerMark.value) {
+    afterOpenAppStartServerMark.value = false
     oneClickStart()
   }
 })
