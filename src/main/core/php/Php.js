@@ -88,6 +88,10 @@ export default class Php {
                     extension = extension.replace('php_', '')
                 }
             }
+        } else {
+            if (versionFloat <= 7.1) {
+                extension += `.${fileExt}`
+            }
         }
 
         const append = `${N}${confKey}=${extension}`
