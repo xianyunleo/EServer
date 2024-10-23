@@ -12,6 +12,7 @@ export const useMainStore = defineStore('main', {
     state: () => {
         return {
             softwareList: [], //软件列表
+            serverList: [], //已安装的服务列表
             softwareTypeSelected: '',
             loading: false,
             loadingTip: 'Loading',

@@ -134,13 +134,8 @@ const columns = [
   }
 ]
 
-const serverList = ref([])
 const store = useMainStore()
-const { softwareList, afterOpenAppStartServerMark } = storeToRefs(store)
-
-watch(softwareList, () => {
-  serverList.value = getServerList()
-}, { immediate: true, deep: 2 })
+const { serverList, afterOpenAppStartServerMark } = storeToRefs(store)
 
 onMounted(async () => {
   var timestamp2 = new Date().getTime()
@@ -157,14 +152,6 @@ onMounted(async () => {
     oneClickStart()
   }
 })
-
-function getServerList() {
-  const phpTypeName = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)
-  const serverTypeName = enumGetName(EnumSoftwareType, EnumSoftwareType.Server)
-  const typeArr = [phpTypeName, serverTypeName]
-
-  return softwareList.value.filter(item => typeArr.includes(item.Type) && item.Installed)
-}
 
 const getProcessList = async () => {
   let list
