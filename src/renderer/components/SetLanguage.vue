@@ -50,7 +50,7 @@ const languageChange = async () => {
   try {
     Settings.set('Language', store.settings.Language)
     await changeLanguageWrapper(store.settings.Language)
-    store.loadingTip = t('Initializing')
+    store.loadingTip = t('Initializing') //todo 删除这行？
   } catch (error) {
     MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('set')]))
   }
