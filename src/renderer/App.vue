@@ -74,11 +74,9 @@ onMounted(async () => {
     if ((await App.initFileExists()) && !isDev) {
       await App.checkInstall()
       await initOrUpdate()
-    } else {
-      await store.init()
     }
 
-    store.loadingTip = t('Initializing')
+    await store.init()
     await window.api.callStatic('TrayManage', 'init')
     await changeLanguageWrapper(store.settings.Language)
   } catch (error) {
@@ -92,6 +90,8 @@ onMounted(async () => {
 })
 
 async function initOrUpdate() {
+  store.loadingTip = t('Initializing')
+
   if (isMacOS && process.arch === 'arm64' && !(await SystemExtend.isInstallRosetta())) {
     await MessageBox.error(`需要Rosetta支持，请复制命令到终端执行安装\nsoftwareupdate --install-rosetta`)
     await call('appExit')
