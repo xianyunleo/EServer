@@ -1,7 +1,7 @@
 {
   "name": "eserver",
   "productName": "EServer",
-  "version": "3.12.9",
+  "version": "3.12.10",
   "description": "EServer",
   "main": "./out/main/index.js",
   "author": "xianyunleo",
