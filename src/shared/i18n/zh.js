@@ -180,5 +180,10 @@ export default {
     Timer: '定时器',
     TimerServerList: '服务列表',
     RestartIntervalText: '重启周期',
-    ServerAutoRestartText: '定时重启服务'
+    ServerAutoRestartText: '定时重启服务',
+    Hours: '小时',
+    Minutes: '分钟',
+    Seconds: '秒',
+    Days: '天',
+    Weeks: '周'
 }

@@ -176,5 +176,14 @@ export default {
     'file does not exist': 'file does not exist',
     'Error opening file!': 'Error opening file!',
     'does not exist!': 'does not exist!',
-    'Please reset the text editor': 'Please reset the text editor'
+    'Please reset the text editor': 'Please reset the text editor',
+    Timer: 'Timer',
+    TimerServerList: 'Timed Service List',
+    RestartIntervalText: 'Timed Cycle',
+    ServerAutoRestartText: 'Scheduled Restart Service',
+    Hours: 'Hours',
+    Minutes: 'Minutes',
+    Seconds: 'Seconds',
+    Days: 'Days',
+    Weeks: 'Weeks'
 }
