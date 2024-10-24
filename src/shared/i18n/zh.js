@@ -176,5 +176,9 @@ export default {
     'file does not exist': '文件不存在',
     'Error opening file!': '打开文件出错！',
     'does not exist!': '不存在！',
-    'Please reset the text editor': '请重新设置文本编辑器'
+    'Please reset the text editor': '请重新设置文本编辑器',
+    Timer: '定时器',
+    TimerServerList: '服务列表',
+    RestartIntervalText: '重启周期',
+    ServerAutoRestartText: '定时重启服务'
 }
