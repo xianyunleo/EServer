@@ -2,6 +2,7 @@
   <div class='content-container'>
     <App />
     <Server />
+    <Timer />
     <EnvVar />
     <Other />
     <UserPwd v-if='!isWindows' />
@@ -11,6 +12,7 @@
 <script setup>
 import App from '@/renderer/components/Settings/App.vue'
 import Server from '@/renderer/components/Settings/Server.vue'
+import Timer from '@/renderer/components/Settings/Timer.vue'
 import Other from '@/renderer/components/Settings/Other.vue'
 import EnvVar from '@/renderer/components/Settings/EnvVar.vue'
 import UserPwd from '@/renderer/components/Settings/UserPwd.vue'

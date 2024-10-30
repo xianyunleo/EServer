@@ -176,5 +176,14 @@ export default {
     'file does not exist': 'fichier ne existe pas',
     'Error opening file!': "Erreur lors de l'ouverture du fichier !",
     'does not exist!': "n'existe pas!",
-    'Please reset the text editor': 'Veuillez réinitialiser votre éditeur de texte'
+    'Please reset the text editor': 'Veuillez réinitialiser votre éditeur de texte',
+    Timer: 'Minuterie',
+    TimerServerList: 'Liste de services temporisés',
+    RestartIntervalText: 'Cycle horaire',
+    ServerAutoRestartText: 'Service de redémarrage planifié',
+    Hours: 'Heures',
+    Minutes: 'Minutes',
+    Seconds: 'Secondes',
+    Days: 'Jours',
+    Weeks: 'Semaines'
 }
