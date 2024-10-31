@@ -1,33 +1,27 @@
 <template>
   <a-card size="small" :title="t('Timer')" class="settings-card">
     <div class="settings-card-row flex-vertical-center">
-      <a-tooltip>
-        <template #title>{{ t('TimerServerList') }}</template>
-        <span>{{ mt('Server', 'ws', 'List') }}</span>
-      </a-tooltip>
-
+      <a-switch v-model:checked="store.settings.AutoTimerRestartServer" class="settings-switch"
+                @change="changeAutoTimerRestartServer" />
+      <span>{{ t('ServerAutoRestartText') }}</span>
+    </div>
+    <div class="settings-card-row flex-vertical-center">
+      <span :class="disabledTextClass()">{{ mt('Server', 'ws', 'List') }}：</span>
       <a-select
         v-model:value="store.settings.AutoTimerServerList"
-        :options="TimerServerOptions"
-        mode="multiple"
-        style="flex: 1"
-        placeholder="请选择"
+        :options="timerServerOptions" :disabled="!store.settings.AutoTimerRestartServer"
+        mode="multiple" style="flex: 1" :placeholder="t('pleaseChoose')"
         @change="AutoTimerServerChange"
       ></a-select>
     </div>
 
-    <div class="interval-card-row flex-vertical-center">
-      <a-tooltip>
-        <template #title>{{ t('RestartIntervalText') }}</template>
-        <span>{{ t('RestartIntervalText') }}：</span>
-      </a-tooltip>
-
-      <a-select v-model:value="store.settings.AutoTimerInterval" :options="intervalOptions" placeholder="选择重启间隔" style="flex: 1" @change="changeAutoTimerInterval"></a-select>
-    </div>
-
     <div class="settings-card-row flex-vertical-center">
-      <a-switch v-model:checked="store.settings.AutoTimerRestartServer" class="settings-switch" @change="changeAutoTimerRestartServer" />
-      <span>{{ t('ServerAutoRestartText') }}</span>
+      <span :class="disabledTextClass()">{{ t('RestartIntervalText') }}：</span>
+      <a-select v-model:value="store.settings.AutoTimerInterval"
+        :options="intervalOptions" :placeholder="t('pleaseChoose')" style="flex: 1"
+        :disabled="!store.settings.AutoTimerRestartServer"
+        @change="changeAutoTimerInterval"
+      ></a-select>
     </div>
   </a-card>
 </template>
@@ -68,14 +62,10 @@ const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const store = useMainStore()
 const { serverList } = storeToRefs(store)
 const { serverReactive } = inject('GlobalProvide')
-const TimerServerOptions = computed(() => {
+const timerServerOptions = computed(() => {
   const options = serverList.value.map((item) => {
     const name = item.Name
-    const obj = { value: name, label: item.ServerName ? item.ServerName : name }
-    if (name === 'Nginx') {
-      obj.disabled = true
-    }
-    return obj
+    return { value: name, label: item.ServerName ? item.ServerName : name }
   })
   options.unshift({ label: t('Website') + ' PHP-FPM', value: 'PHP-FPM' })
   return options
@@ -128,6 +118,8 @@ const changeAutoTimerRestartServer = () => {
   store.setSettings('AutoTimerRestartServer')
   setRestartTimer()
 }
+
+const disabledTextClass = () => !store.settings.AutoTimerRestartServer ? 'disabled-text' : ''
 </script>
 
 <style scoped></style>
