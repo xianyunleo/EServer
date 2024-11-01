@@ -23,7 +23,6 @@ x86_64_brewPath=/usr/local/homebrew/bin/brew
 
 prefix=$(arch -x86_64 $x86_64_brewPath --prefix)
 export CFLAGS=-I$prefix/include
-lib=$prefix/opt/zlib
 
 cd "xlswriter-$extVersion"
 $phpDir/bin/phpize
