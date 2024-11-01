@@ -189,8 +189,15 @@ export default class Extension {
                     return '3.3.2'
                 }
             case 'xlswriter':
-                if (phpVersion >= 7.2){
-                    return '1.5.7'
+                
+                if (phpVersion == 7.0){
+                    return '1.2.3'
+                }else if (phpVersion == 7.1){
+                    return '1.3.2'
+                }else if (phpVersion == 7.2){
+                    return '1.3.7'
+                }else if (phpVersion >= 7.3 && phpVersion < 8.2){
+                    return '1.5.1'
                 }
         }
         return null
