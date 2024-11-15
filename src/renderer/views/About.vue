@@ -3,10 +3,10 @@
     <p style="text-align: center; font-size: 18px; margin-top: 50px">{{ APP_NAME }}</p>
     <p style="text-align: center">{{ $t('Version') }}：{{ version }}</p>
     <p style="text-align: center">
-      {{ t('OfficialSite') }}：<a @click="openUrl('http://www.eserver.app')">www.eserver.app</a>
+      {{ t('OfficialSite') }}：<a @click="openUrl(OFFICIAL_URL)">{{ OFFICIAL_HOST }}</a>
     </p>
     <p style="text-align: center">
-      {{ t('Doc') }}：<a @click="openUrl('http://www.eserver.app/doc')">www.eserver.app/doc</a>
+      {{ t('Doc') }}：<a @click="openUrl(`${OFFICIAL_URL}/doc`)">{{ `${OFFICIAL_HOST}/doc` }}</a>
     </p>
     <p style="text-align: center">
       Github：<a @click="openUrl('http://github.com/xianyunleo/EServer')"
@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { APP_NAME } from '@/shared/utils/constant'
+import { APP_NAME, OFFICIAL_HOST, OFFICIAL_URL } from '@/shared/utils/constant'
 import Native from '@/main/utils/Native'
 import { t } from '@/renderer/utils/i18n'
 import {onMounted, ref} from 'vue'
