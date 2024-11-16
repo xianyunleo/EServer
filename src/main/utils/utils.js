@@ -6,9 +6,10 @@ export const isDev = process.resourcesPath.includes(`${sep}node_modules${sep}`)
 export const isWindows = OS.isWindows()
 export const isMacOS = OS.isMacOS()
 
-export function devConsoleLog(...str) {
+export function devConsoleLog(...inputArr) {
     if (isDev) {
-        console.log(...str)
+        const outputArr = inputArr.map((input) => (typeof input === 'function' ? input() : input))
+        console.log(...outputArr)
     }
 }
 

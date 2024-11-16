@@ -1,5 +1,7 @@
 export const APP_NAME = 'EServer'
-export const DOWNLOAD_URL = 'http://dl.eserver.app'
+export const OFFICIAL_HOST = 'eserver.phpenv.cn'
+export const OFFICIAL_URL = `http://${OFFICIAL_HOST}`
+export const DOWNLOAD_URL = 'http://dl.eserver.phpenv.cn'
 
 export const colorConst = {
     light: {

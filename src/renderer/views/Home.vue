@@ -80,7 +80,6 @@
 </template>
 
 <script setup>
-import { EnumSoftwareType } from '@/shared/utils/enum'
 import { inject, onMounted, ref, watch} from 'vue'
 import { useMainStore } from '@/renderer/store'
 import GetPath from '@/shared/utils/GetPath'
@@ -91,17 +90,17 @@ import MessageBox from '@/renderer/utils/MessageBox'
 import { storeToRefs } from 'pinia/dist/pinia'
 import { APP_NAME } from '@/shared/utils/constant'
 import Native from '@/main/utils/Native'
-import { enumGetName, sleep } from '@/shared/utils/utils'
+import { sleep } from '@/shared/utils/utils'
 import Path from '@/main/utils/Path'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import Settings from '@/main/Settings'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import TcpProcess from '@/main/utils/TcpProcess'
-import { isWindows } from '@/main/utils/utils'
+import { devConsoleLog,isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
 
-var timestamp = new Date().getTime()
+const timestamp = new Date().getTime()
 
 const serverTableLoading = ref(false)
 const { serverReactive } = inject('GlobalProvide')
@@ -138,8 +137,7 @@ const store = useMainStore()
 const { serverList, afterOpenAppStartServerMark } = storeToRefs(store)
 
 onMounted(async () => {
-  var timestamp2 = new Date().getTime()
-  console.log('home onMounted', timestamp2 - timestamp)
+  devConsoleLog('Home onMounted ms:', () => (new Date().getTime()) - timestamp)
 
   if (serverList?.value?.length > 0) {
     serverTableLoading.value = { tip: `${t('RefreshingServer')}...` }
@@ -282,7 +280,7 @@ const startServerClick = async (item) => {
   item.btnLoading = false
 }
 
-async function restartServerClick(item) {
+async function restartServerClick(item, callback = null) {
   item.btnLoading = true
   try {
     await ServerControl.stop(item)

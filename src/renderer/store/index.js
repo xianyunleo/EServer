@@ -34,11 +34,11 @@ export const useMainStore = defineStore('main', {
                 return { ...item, Installed }
             }))
         },
-        async setSettings(key, callback = null) {
+        async setSettings(key, beforeFunc = null) {
             const originVal = Settings.get(key)
             try {
-                if (callback) {
-                    const res = await callback(originVal)
+                if (beforeFunc) {
+                    const res = await beforeFunc(originVal)
                     if (res === false) {
                         return
                     }

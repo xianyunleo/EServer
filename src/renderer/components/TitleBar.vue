@@ -30,12 +30,13 @@ import { ref } from 'vue'
 import Native from '@/main/utils/Native'
 import { t } from '@/renderer/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
+import { OFFICIAL_URL } from '@/shared/utils/constant'
 const call = window.api.call
 const isWindowMax = ref(false)
 const minimizeIsHover = ref(false)
 
 const clickUrl = () => {
-  Native.openUrl('http://www.eserver.app')
+  Native.openUrl(OFFICIAL_URL)
 }
 
 const minimizeClick = () => {
