@@ -44,6 +44,9 @@ export default class Extension {
                 name: 'imagick',
                 fileName: 'imagick.so',
                 needX64Brew: true
+            },{
+                name: 'xlswriter',
+                fileName: 'xlswriter.so'
             }
         ]
     }
@@ -67,6 +70,9 @@ export default class Extension {
                 name: 'xdebug',
                 fileName: 'php_xdebug.dll',
                 isZend: true
+            }, {
+                name: 'xlswriter',
+                fileName: 'php_xlswriter.dll'
             }
         ]
     }
@@ -133,6 +139,10 @@ export default class Extension {
                 } else {
                     return '3.3.2'
                 }
+            case 'xlswriter':
+                if (phpVersion >= 7.0){
+                    return '1.5.7'
+                }
         }
         return null
     }
@@ -178,7 +188,19 @@ export default class Extension {
                 } else {
                     return '3.3.2'
                 }
-
+            case 'xlswriter':
+                
+                if (phpVersion == 7.0){
+                    return '1.2.3'
+                }else if (phpVersion == 7.1){
+                    return '1.3.2'
+                }else if (phpVersion == 7.2){
+                    return '1.3.7'
+                }else if (phpVersion >= 7.3 && phpVersion < 8.0){
+                    return '1.5.1'
+                }else{
+                    return '1.5.7'
+                }
         }
         return null
     }
