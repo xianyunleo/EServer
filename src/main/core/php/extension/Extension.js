@@ -83,6 +83,7 @@ export default class Extension {
     }
 
     static getVersion(extName, phpVersion) {
+        //目前EServer，扩展最低匹配php5.6
         if (isWindows) {
             return this.getVersionForWindows(extName, phpVersion)
         }
@@ -148,6 +149,7 @@ export default class Extension {
     }
 
     static getVersionForWindows(extName, phpVersion) {
+        //目前EServer，扩展最低匹配php5.6，Windows扩展版本按 https://downloads.php.net/~windows/pecl/releases/
         phpVersion = Number(phpVersion)
         switch (extName) {
             case 'memcache':
@@ -189,17 +191,17 @@ export default class Extension {
                     return '3.3.2'
                 }
             case 'xlswriter':
-                
-                if (phpVersion == 7.0){
+                if (phpVersion == 5.6) {
+                    return null
+                }
+                if (phpVersion == 7.0) {
                     return '1.2.3'
-                }else if (phpVersion == 7.1){
+                } else if (phpVersion == 7.1) {
                     return '1.3.2'
-                }else if (phpVersion == 7.2){
-                    return '1.3.7'
-                }else if (phpVersion >= 7.3 && phpVersion < 8.0){
-                    return '1.5.1'
-                }else{
-                    return '1.5.7'
+                } else if (phpVersion <= 8.3) {
+                    return '1.5.8'
+                } else {
+                    return null
                 }
         }
         return null
