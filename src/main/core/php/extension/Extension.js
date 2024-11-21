@@ -159,8 +159,10 @@ export default class Extension {
                     return null
                 } else if (phpVersion >= 7.2 && phpVersion <= 7.4) { //todo 7.2的包改官方的 memcache扩展
                     return '4.0.5.2'
-                } else {
+                } else if (phpVersion <= 8.3) {
                     return '8.2'
+                } else {
+                    return null
                 }
             case 'redis':
                 if (phpVersion <= 5.6) {
@@ -169,8 +171,10 @@ export default class Extension {
                     return '4.2.0'
                 } else if (phpVersion <= 8.1) {
                     return '5.3.7'
-                } else {
+                } else if (phpVersion <= 8.3) {
                     return '6.0.2'
+                } else {
+                    return null
                 }
             case 'mongodb':
                 if (phpVersion <= 7.2) {
@@ -179,16 +183,20 @@ export default class Extension {
                     return '1.10.0'
                 } else if (phpVersion <= 8.1) {
                     return '1.13.0'
+                } else if (phpVersion <= 8.3) {
+                    return '1.19.4'
                 } else {
-                    return '1.19.3'
+                    return null
                 }
             case 'xdebug':
                 if (phpVersion <= 5.6) {
                     return '2.5.5'
                 } else if (phpVersion <= 7.4) {
                     return '2.9.8'
-                } else {
+                } else if (phpVersion <= 8.3) {
                     return '3.3.2'
+                } else {
+                    return null
                 }
             case 'xlswriter':
                 if (phpVersion == 5.6) {
