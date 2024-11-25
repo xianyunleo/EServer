@@ -213,7 +213,7 @@ const getNginxRequirePhpList = async () => {
 }
 
 const oneClickStart = async () => {
-  const oneClickServerList = (ref(Settings.get('OneClickServerList'))).value
+  const oneClickServerList = Settings.get('OneClickServerList')
   const websitePhpFpmSwitch = oneClickServerList.includes('PHP-FPM')
   const requirePhpList = await getNginxRequirePhpList()
   const doStartServerClick = async (item) => {
@@ -231,7 +231,7 @@ const oneClickStart = async () => {
 }
 
 const oneClickStop = async () => {
-  const oneClickServerList = (ref(Settings.get('OneClickServerList'))).value
+  const oneClickServerList = Settings.get('OneClickServerList')
   const websitePhpFpmSwitch = oneClickServerList.includes('PHP-FPM')
   const requirePhpList = await getNginxRequirePhpList()
   const doStopServerClick = async (item) => {
