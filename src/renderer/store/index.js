@@ -7,12 +7,13 @@ import SystemTheme from '@/main/utils/SystemTheme'
 import { theme } from 'ant-design-vue'
 import { setTwoToneColor } from '@ant-design/icons-vue'
 import { colorConst } from '@/shared/utils/constant'
+import { filterServerList } from '@/shared/utils/software'
 
 export const useMainStore = defineStore('main', {
     state: () => {
         return {
             softwareList: [], //软件列表
-            serverList: [], //已安装的服务列表
+            installedSoftwareList: [], //已安装的软件列表
             softwareTypeSelected: '',
             loading: false,
             loadingTip: 'Loading',
@@ -22,7 +23,12 @@ export const useMainStore = defineStore('main', {
             afterOpenAppStartServerMark: true,
         }
     },
-    getters: {},
+    getters: {
+        //已安装的服务列表
+        serverList(state) {
+            return filterServerList(state.installedSoftwareList)
+        }
+    },
     actions: {
         async init() {
             await this.refreshSoftwareList()
@@ -33,6 +39,10 @@ export const useMainStore = defineStore('main', {
                 const Installed = await Software.IsInstalled(item)
                 return { ...item, Installed }
             }))
+            this.refreshInstalledList()
+        },
+        async refreshInstalledList(){
+            this.installedSoftwareList = this.softwareList.filter(item => item.Installed)
         },
         async setSettings(key, beforeFunc = null) {
             const originVal = Settings.get(key)

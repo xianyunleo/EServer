@@ -229,6 +229,7 @@ window.api.onSoftInstStatus((name, status) => {
   if (status === InstStatus.Finish) {
     instMap[name] = null
     findItem(name).Installed = true
+    store.refreshInstalledList()
   }
 })
 
@@ -270,6 +271,7 @@ const uninstall = async (name) => {
     if (res) {
       item.Installed = false
       message.info(t('successfulOperation'))
+      store.refreshInstalledList()
     } else {
       MessageBox.error(t('failedOperation') + '\n' + t('softwareUninstallErrorTip', [item.DirName]))
     }
@@ -305,6 +307,7 @@ const localInstall = async () => {
     if (softwareTypeSelected.value === InstalledType) {
       setShowList(InstalledType)
     }
+    store.refreshInstalledList()
   } catch (error) {
     MessageBox.error(error.message ?? error)
   } finally {

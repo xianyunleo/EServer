@@ -39,10 +39,9 @@ import Settings from '@/main/Settings'
 import { t } from '@/renderer/utils/i18n'
 import { changeLanguageWrapper } from '@/renderer/utils/language'
 import SystemExtend from '@/main/utils/SystemExtend'
-import { enumGetName } from '@/shared/utils/utils'
-import { EnumSoftwareType } from '@/shared/utils/enum'
 
 const store = useMainStore()
+store.init()
 const userPwdModalShow = ref(false)
 const setLanguageShow = ref(false)
 
@@ -54,29 +53,12 @@ const settings = Settings.getAll()
 store.changeTheme(settings.ThemeMode, settings.ThemeColor)
 store.settings = settings
 
-watch(
-  () => store.softwareList,
-  () => {
-    store.serverList = getServerList(store.softwareList)
-  },
-  { deep: 2 }
-)
-
-function getServerList(softwareList) {
-  const phpTypeName = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)
-  const serverTypeName = enumGetName(EnumSoftwareType, EnumSoftwareType.Server)
-  const typeArr = [phpTypeName, serverTypeName]
-  return softwareList.filter(item => typeArr.includes(item.Type) && item.Installed)
-}
-
 onMounted(async () => {
   try {
     if ((await App.initFileExists()) && !isDev) {
       await App.checkInstall()
       await initOrUpdate()
     }
-
-    await store.init()
     await window.api.callStatic('TrayManage', 'init')
     await changeLanguageWrapper(store.settings.Language)
   } catch (error) {
