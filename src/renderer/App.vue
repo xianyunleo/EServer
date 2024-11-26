@@ -24,7 +24,7 @@ import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import TitleBar from './components/TitleBar.vue'
 import SideBar from './components/SideBar.vue'
 import App from '@/main/App'
-import { onMounted, provide, reactive, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import MessageBox from '@/renderer/utils/MessageBox'
 import UserPwdModal from '@/renderer/components/UserPwdModal.vue'
 import Software from '@/main/core/software/Software'
@@ -41,13 +41,15 @@ import { changeLanguageWrapper } from '@/renderer/utils/language'
 import SystemExtend from '@/main/utils/SystemExtend'
 
 const store = useMainStore()
-store.init()
+//操作softwareList和serverList等JS代码，都要等待init完成。
+store.init().then(async () => {
+  const AppService = await import('@/renderer/services/AppService')
+  AppService.default.storeInitThen()
+})
 const userPwdModalShow = ref(false)
 const setLanguageShow = ref(false)
 
-const serverReactive = reactive({ restartFn: undefined, isRunningFn: undefined })
 const call = window.api.call
-provide('GlobalProvide', { serverReactive })
 
 const settings = Settings.getAll()
 store.changeTheme(settings.ThemeMode, settings.ThemeColor)
@@ -59,8 +61,8 @@ onMounted(async () => {
       await App.checkInstall()
       await initOrUpdate()
     }
-    await window.api.callStatic('TrayManage', 'init')
-    await changeLanguageWrapper(store.settings.Language)
+    window.api.callStatic('TrayManage', 'init')
+    changeLanguageWrapper(store.settings.Language)
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]))
     await call('appExit')

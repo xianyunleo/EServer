@@ -69,10 +69,10 @@ import { throttle } from 'throttle-debounce'
 import SystemExtend from '@/main/utils/SystemExtend'
 import Settings from '@/main/Settings'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
+import ServerService from '@/renderer/services/ServerService'
 
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const props = defineProps({ show: Boolean, phpVersion: String })
-const { serverReactive } = inject('GlobalProvide')
 const emit = defineEmits(['update:show'])
 
 const visible = computed({
@@ -159,8 +159,8 @@ const install = async (item) => {
         const extension = Path.GetFileNameWithoutExt(item.fileName)
         await Php.addExtension(props.phpVersion, extension, item.isZend)
         const phpName = SoftwareExtend.getPhpName(props.phpVersion)
-        if (Settings.get('AutoStartAndRestartServer') && serverReactive.isRunningFn(phpName)) {
-          serverReactive.restartFn(phpName)
+        if (Settings.get('AutoStartAndRestartServer') && ServerService.isRunning(phpName)) {
+          ServerService.restart(phpName)
         }
       } else {
         result.value = '安装失败😣'

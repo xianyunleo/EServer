@@ -27,13 +27,13 @@
 </template>
 
 <script setup>
-import { setInterval } from 'timers'
-import { computed, watch, inject, onMounted } from 'vue'
+import { computed, watch } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import { storeToRefs } from 'pinia'
 import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
-import Settings from '@/main/Settings'
+import TimerService from '@/renderer/services/TimerService'
+import { isDev } from '@/main/utils/utils'
 
 function formatUnitLabel(seconds) {
   const timeUnits = [
@@ -52,6 +52,7 @@ function formatUnitLabel(seconds) {
 
 const intervalOptions = computed(() => {
   const intervals = [600, 1800, 3600, 7200, 10800, 43200, 86400, 172800, 259200, 604800]
+  if (isDev) intervals.unshift(10)
   return intervals.map((value) => ({
     value,
     label: formatUnitLabel(value)
@@ -61,7 +62,6 @@ const intervalOptions = computed(() => {
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const store = useMainStore()
 const { serverList } = storeToRefs(store)
-const { serverReactive } = inject('GlobalProvide')
 const timerServerOptions = computed(() => {
   const options = serverList.value.map((item) => {
     const name = item.Name
@@ -71,40 +71,10 @@ const timerServerOptions = computed(() => {
   return options
 })
 
-onMounted(async () => {
-  if (serverList?.value?.length > 0 && Settings.get('AutoTimerRestartServer') && Settings.get('AutoTimerServerList')) {
-    setRestartTimer()
-  }
-})
-
-const restartServer = async () => {
-  const initServerStatus = async (item) => {
-    const processList = Settings.get('AutoTimerServerList')
-    if (processList.length > 0 && processList.includes(item.Name)) serverReactive.restartFn(item.Name)
-  }
-
-  const promiseArray = serverList.value.map((item) => initServerStatus(item))
-  await Promise.all(promiseArray)
-}
-
-// 定时器管理
-let restartTimer = null
-
-const setRestartTimer = () => {
-  if (restartTimer) {
-    clearInterval(restartTimer)
-  }
-  if (store.settings.AutoTimerRestartServer && store.settings.AutoTimerInterval) {
-    restartTimer = setInterval(() => {
-      restartServer()
-    }, store.settings.AutoTimerInterval * 1000)
-  }
-}
-
 // 重设定重启间隔时自动更新定时器
-watch(() => store.settings.AutoTimerInterval, setRestartTimer)
+watch(() => store.settings.AutoTimerInterval, TimerService.setRestartTimer)
 
-watch(() => store.settings.AutoTimerRestartServer, setRestartTimer)
+watch(() => store.settings.AutoTimerRestartServer, TimerService.setRestartTimer)
 
 const AutoTimerServerChange = () => {
   store.setSettings('AutoTimerServerList')
@@ -116,7 +86,7 @@ const changeAutoTimerInterval = () => {
 
 const changeAutoTimerRestartServer = () => {
   store.setSettings('AutoTimerRestartServer')
-  setRestartTimer()
+  TimerService.setRestartTimer()
 }
 
 const disabledTextClass = () => !store.settings.AutoTimerRestartServer ? 'disabled-text' : ''

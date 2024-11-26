@@ -31,16 +31,16 @@ import SslSetting from '@/renderer/components/WebSite/EditWebSite/SslSetting.vue
 import Settings from '@/main/Settings'
 import { mt, t } from '@/renderer/utils/i18n'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
+import ServerService from '@/renderer/services/ServerService'
 
 const { serverName, port, editModalVisible: visible } = inject('WebsiteProvide')
 const defaultKey = 'basicSetting'
 const activeKey = ref(defaultKey)
-const { serverReactive } = inject('GlobalProvide')
 
 const editAfter = (phpVersion = '') => {
-  if (Settings.get('AutoStartAndRestartServer') && serverReactive.isRunningFn('Nginx')) {
-    serverReactive.restartFn('Nginx')
-    if (phpVersion) serverReactive.restartFn(SoftwareExtend.getPhpName(phpVersion))
+  if (Settings.get('AutoStartAndRestartServer') && ServerService.isRunning('Nginx')) {
+    ServerService.restart('Nginx')
+    if (phpVersion) ServerService.restart(SoftwareExtend.getPhpName(phpVersion))
   }
 }
 </script>

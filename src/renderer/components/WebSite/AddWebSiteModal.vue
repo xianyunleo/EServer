@@ -38,11 +38,11 @@ import Hosts from '@/main/utils/Hosts'
 import Settings from '@/main/Settings'
 import { mt, t } from '@/renderer/utils/i18n'
 import { useMainStore } from '@/renderer/store'
+import ServerService from '@/renderer/services/ServerService'
 const { search, addModalVisible: visible } = inject('WebsiteProvide')
 
 const wwwPath = GetPath.getWebsiteDir().replaceSlash()
 const formRef = ref()
-const { serverReactive } = inject('GlobalProvide')
 const store = useMainStore()
 const phpVersionList = ref([])
 const formData = reactive({
@@ -97,9 +97,9 @@ const addWeb = async (websiteInfo) => {
     }
   }
 
-  if (Settings.get('AutoStartAndRestartServer') && serverReactive.isRunningFn('Nginx')) {
-    serverReactive.restartFn('Nginx')
-    if (phpVersion) serverReactive.restartFn(SoftwareExtend.getPhpName(phpVersion))
+  if (Settings.get('AutoStartAndRestartServer') && ServerService.isRunning('Nginx')) {
+    ServerService.restart('Nginx')
+    if (phpVersion) ServerService.restart(SoftwareExtend.getPhpName(phpVersion))
   }
 }
 
