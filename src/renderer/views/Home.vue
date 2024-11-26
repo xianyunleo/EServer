@@ -178,28 +178,13 @@ const initServerListStatus = async () => {
   await Promise.all(promiseArray)
 }
 
-const corePathClick = () => {
-  Native.openDirectory(GetAppPath.getUserCoreDir())
-}
-const wwwPathClick = () => {
-  Native.openDirectory(GetPath.getWebsiteDir())
-}
+const corePathClick = () => Native.openDirectory(GetAppPath.getUserCoreDir())
+const wwwPathClick = () => Native.openDirectory(GetPath.getWebsiteDir())
+const openInstallDir = (item) => Native.openDirectory(Software.getPath(item))``
+const openConfFile = (item) => Native.openTextFile(Software.getConfPath(item))
+const openServerConfFile = (item) => Native.openTextFile(Software.getServerConfPath(item))
+const openExtraFile = (item, extraFile) => Native.openTextFile(Path.Join(Software.getPath(item), extraFile.Path))
 
-const openInstallDir = (item) => {
-  Native.openDirectory(Software.getPath(item))
-}
-
-const openConfFile = (item) => {
-  Native.openTextFile(Software.getConfPath(item))
-}
-
-const openServerConfFile = (item) => {
-  Native.openTextFile(Software.getServerConfPath(item))
-}
-
-const openExtraFile = (item, extraFile) => {
-  Native.openTextFile(Path.Join(Software.getPath(item), extraFile.Path))
-}
 </script>
 
 <style scoped lang="less">
