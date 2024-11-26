@@ -98,6 +98,7 @@ import { devConsoleLog,isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
 import { StoreInitializedEventName } from '@/renderer/utils/constant'
+import Settings from '@/main/Settings'
 
 const timestamp = new Date().getTime()
 
@@ -134,16 +135,29 @@ const { serverList } = storeToRefs(store)
 
 window.addEventListener(StoreInitializedEventName, async () => {
   console.log('Listened StoreInitializedEvent')
-  if (serverList?.value?.length > 0) {
-    serverTableLoading.value = { tip: `${t('RefreshingServer')}...` }
-    await initServerListStatus()
-    serverTableLoading.value = false
-  }
+
+  loadingHandle().then(() => {
+    store.Home.firstLoadingHandled = true
+    //“打开软件后，启动服务”功能，必须等待读取server列表状态。避免server真实状态是“启动”，重复启动软件。
+    if (Settings.get('AfterOpenAppStartServer')) {
+      HomeService.oneClickStart()
+    }
+  })
 })
 
 onMounted(async () => {
-  devConsoleLog('Home onMounted ms:', () => (new Date().getTime()) - timestamp)
+  console.log('Home onMounted ms:', (new Date().getTime()) - timestamp)
+  //devConsoleLog('Home onMounted ms:', () => (new Date().getTime()) - timestamp)
+  if (store.Home.firstLoadingHandled){
+    loadingHandle()
+  }
 })
+
+const loadingHandle = async () => {
+  serverTableLoading.value = { tip: `${t('RefreshingServer')}...` }
+  await initServerListStatus()
+  serverTableLoading.value = false
+}
 
 const getProcessList = async () => {
   let list
