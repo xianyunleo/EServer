@@ -225,5 +225,17 @@
         "CanDelete": true,
         "Icon": "phpmyadmin.png",
         "Desc": "MySQL management tool on the web"
+    },
+    {
+        "Name": "mailpit",
+        "DirName": "mailpit",
+        "ServerProcessPath": "mailpit",
+        "ServerPort": 8025,
+        "Type": "Server",
+        "ShellServerProcess": true,
+        "RemoteArchiveExt": ".tar.gz",
+        "CanDelete": false,
+        "Icon": "mailpit.png",
+        "Desc": "Mailpit - email & SMTP testing tool with API for developers"
     }
 ]
