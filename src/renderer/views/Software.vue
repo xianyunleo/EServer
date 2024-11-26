@@ -263,6 +263,7 @@ const openInstallPath = async (item) => {
 }
 
 const openConfFile = (item) => Native.openTextFile(Software.getConfPath(item))
+const openServerConfFile = (item) => Native.openTextFile(Software.getServerConfPath(item))
 
 const uninstall = async (name) => {
   const item = findItem(name)
