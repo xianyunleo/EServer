@@ -19,11 +19,6 @@ fi
 export HOMEBREW_NO_AUTO_UPDATE=1
 brew install pkg-config autoconf automake libtool
 
-x86_64_brewPath=/usr/local/homebrew/bin/brew
-
-prefix=$(arch -x86_64 $x86_64_brewPath --prefix)
-export CFLAGS=-I$prefix/include
-
 cd "xlswriter-$extVersion"
 $phpDir/bin/phpize
 ./configure --with-php-config=$phpDir/bin/php-config --enable-reader --with-zlib-dir=/Applications/EServer/Library/zlib

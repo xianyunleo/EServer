@@ -24,6 +24,9 @@ x86_64_brewPath=/usr/local/homebrew/bin/brew
 arch -x86_64 $x86_64_brewPath install ImageMagick
 prefix=$(arch -x86_64 $x86_64_brewPath --prefix)
 export CFLAGS=-I$prefix/include
+export CPPFLAGS=-I$prefix/include
+export LDFLAGS=-L$prefix/lib
+
 lib=$prefix/opt/imagemagick
 
 cd "imagick-$extVersion"
