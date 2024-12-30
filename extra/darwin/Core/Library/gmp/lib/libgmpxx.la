@@ -17,15 +17,15 @@ old_library='libgmpxx.a'
 inherited_linker_flags=' '
 
 # Libraries that this one depends upon.
-dependency_libs=' /Applications/EServer/Library/gmp/lib/libgmp.la'
+dependency_libs=' -L/usr/local/homebrew/lib /Applications/EServer/Library/gmp/lib/libgmp.la'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''
 
 # Version information for libgmpxx.
-current=11
-age=7
-revision=0
+current=10
+age=6
+revision=1
 
 # Is this an already installed library?
 installed=yes

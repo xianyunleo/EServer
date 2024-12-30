@@ -17,15 +17,15 @@ old_library='libgmp.a'
 inherited_linker_flags=' '
 
 # Libraries that this one depends upon.
-dependency_libs=''
+dependency_libs=' -L/usr/local/homebrew/lib'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''
 
 # Version information for libgmp.
-current=15
-age=5
-revision=0
+current=14
+age=4
+revision=1
 
 # Is this an already installed library?
 installed=yes
