@@ -94,8 +94,6 @@ export default class SoftwareInit {
             text = text.replace(/(?<=\n);?.?date.timezone\s*=.*/, 'date.timezone = Asia/Shanghai')
 
             if (isWindows) {
-                text = text.replace(/(?<=\n);?.?cgi.fix_pathinfo\s*=.*/, 'cgi.fix_pathinfo=1')
-
                 let i = 0
                 text = text.replace(/(?<=\n);?.?extension_dir\s*=.*/g, match => {
                     //仅替换第二个
