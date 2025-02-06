@@ -81,8 +81,8 @@ async function initOrUpdate() {
     await call('appExit')
   }
   //存在initFile文件的情况下，判断是第一次安装，还是覆盖安装
-  if (!(await Software.DirExists())) {
-    //目录不存在说明是第一次安装
+
+  if (!(await Software.DirExists())) { //目录不存在说明是，第一次安装
     if (isMacOS) {
       //调用设置（electron-store）会自动创建USER_CORE_DIR，为了捕捉创建失败的错误，先提前写好创建文件夹的代码。
       await macCreateUserCoreDir()
