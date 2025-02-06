@@ -32,8 +32,14 @@ export function enumGetName(enumObj, val) {
     }
 }
 
-export function parseTemplateStrings(str, argObj) {
-    return str.replace(/\${(.+?)}/g, (match, p1) => argObj[p1] ?? '');
+/**
+ * 将变量名字符串解析成变量值
+ * @param varStr {string} 变量名字符串，例如 ${ConfPath}
+ * @param argObj {object}
+ * @returns {string}
+ */
+export function parseTemplateStrings(varStr, argObj) {
+    return varStr.replace(/\${(.+?)}/g, (match, p1) => argObj[p1] ?? '')
 }
 
 export function sleep(ms) {
