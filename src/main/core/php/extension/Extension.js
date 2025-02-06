@@ -1,8 +1,8 @@
-import Path from '@/main/utils/Path'
+import path from 'path'
 import Php from '@/main/core/php/Php'
 import FileUtil from '@/main/utils/FileUtil'
 import { isWindows } from '@/main/utils/utils'
-import GetPath from '@/shared/utils/GetPath'
+import GetCorePath from '@/shared/utils/GetUserPath'
 
 export default class Extension {
     static async getList(phpVersion) {
@@ -12,7 +12,7 @@ export default class Extension {
 
         return await Promise.all(
             list.map(async (item) => {
-                let isInstalled = await FileUtil.Exists(Path.Join(extDir, item.fileName))
+                let isInstalled = await FileUtil.Exists(path.join(extDir, item.fileName))
                 return Object.assign({ isInstalled }, item)
             })
         )
@@ -222,9 +222,9 @@ export default class Extension {
      */
     static getInstallScriptPath(extName='') {
         if (isWindows) {
-            return Path.Join(GetPath.getScriptDir(), `php/common.ps1`)
+            return path.join(GetCorePath.getScriptDir(), `php/common.ps1`)
         } else {
-            return Path.Join(GetPath.getScriptDir(), `php/${extName}.sh`)
+            return path.join(GetCorePath.getScriptDir(), `php/${extName}.sh`)
         }
     }
 }

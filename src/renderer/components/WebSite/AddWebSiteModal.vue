@@ -31,7 +31,6 @@ import { ref, reactive, inject } from 'vue'
 import InputOpenDirDialog from '@/renderer/components/Input/InputOpenDirDialog.vue'
 import path from 'path'
 import Website from '@/main/core/website/Website'
-import GetPath from '@/shared/utils/GetPath'
 import MessageBox from '@/renderer/utils/MessageBox'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import Hosts from '@/main/utils/Hosts'
@@ -41,7 +40,7 @@ import { useMainStore } from '@/renderer/store'
 import ServerService from '@/renderer/services/ServerService'
 const { search, addModalVisible: visible } = inject('WebsiteProvide')
 
-const wwwPath = GetPath.getWebsiteDir().replaceSlash()
+const wwwPath = Settings.get('WebsiteDir')?.replaceSlash()
 const formRef = ref()
 const store = useMainStore()
 const phpVersionList = ref([])

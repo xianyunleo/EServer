@@ -1,111 +1,48 @@
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import path from 'path'
-import Software from '@/main/core/software/Software'
-import { MAC_USER_CORE_DIR, TEMP_DIR_NAME } from '@/main/utils/constant'
-import Settings from '@/main/Settings'
-import GetAppPath from '@/main/utils/GetAppPath'
+import { APP_NAME } from '@/shared/utils/constant'
 
 export default class GetPath {
-    static getBinDir() {
-        return path.join(GetAppPath.getUserCoreDir(), 'bin')
-    }
-
-    static geTempDir() {
-        return path.join(GetAppPath.getUserCoreDir(), TEMP_DIR_NAME)
-    }
-
-    static getDownloadsDir() {
-        return path.join(GetAppPath.getUserCoreDir(), 'downloads')
-    }
-
-    static getSoftwareDir() {
-        return path.join(GetAppPath.getUserCoreDir(), 'software')
-    }
-
-    static getPhpTypeDir() {
-        return path.join(this.getSoftwareDir(), 'php')
-    }
-
-    static getServerTypeDir() {
-        return path.join(this.getSoftwareDir(), 'server')
-    }
-
-    static getToolTypeDir() {
-        return path.join(this.getSoftwareDir(), 'tool')
-    }
-
-    static getNginxDir() {
-        return path.join(this.getServerTypeDir(), 'nginx')
-    }
-
-    static getNginxConfDir() {
-        return path.join(this.getNginxDir(), 'conf')
-    }
-
-    static getNginxVhostsDir() {
-        return path.join(this.getNginxConfDir(), 'vhosts')
-    }
-
-    static getNginxRewriteDir() {
-        return path.join(this.getNginxConfDir(), 'rewrite')
-    }
-
-    static getNginxVhostsRewriteDir() {
-        return path.join(this.getNginxVhostsDir(), 'rewrite')
-    }
-
-    static getNginxVhostsSslDir() {
-        return path.join(this.getNginxVhostsDir(), 'ssl')
-    }
-
-    static getNginxLogsDir() {
-        return path.join(this.getNginxDir(), 'logs')
-    }
-
-    static getDatabaseDir() {
-        return path.join(GetAppPath.getUserCoreDir(), 'database')
-    }
-
-    static getPhpDir(version) {
-        if (isMacOS && isDev) {
-            return path.join(MAC_USER_CORE_DIR, `software/php/php-${version}`)
+    static getDir() {
+        if (isDev) {
+            return process.cwd()
+        } else {
+            return path.dirname(this.getExePath())
         }
-        return path.join(this.getPhpTypeDir(), `php-${version}`)
     }
 
-    static getPhpExePath(version) {
-        if (isWindows) {
-            return path.join(this.getPhpDir(version), 'php.exe')
+    /**
+     * 返回可执行文件路径，Mac返回路径为 AppName.app/Contents/MacOS/AppName
+     * @returns {string}
+     */
+    static getExePath() {
+        if (process.type === 'renderer') {
+            if (isWindows){
+                return process.execPath
+            }else if(isMacOS){
+                //Applications/EServer.app/Contents/Frameworks/EServer Helper (Renderer).app/Contents/MacOS/EServer Helper (Renderer)
+                return path.join(process.execPath,`../../../../../MacOS/${APP_NAME}`)
+            }
+            return ''
+        } else {
+            const { app } = require('electron')
+            return app.getPath('exe')
         }
-        return path.join(this.getPhpDir(version), 'bin/php')
     }
 
-    static getComposerExePath() {
-        return path.join(this.getToolTypeDir(), 'Composer/composer.phar')
-    }
-
-    static getMysqlDir(version) {
-        return path.join(this.getServerTypeDir(), `mysql-${version}`)
-    }
-
-    static getMysqlDataDir(version) {
-        return path.join(this.getDatabaseDir(), `mysql-${version}-data`)
-    }
-
-    static getWebsiteDir() {
-        const websiteDir = Settings.get('WebsiteDir')
-        if (websiteDir) {
-            return websiteDir
+    /**
+     * 当系统是macOS时，返回App的Contents目录的路径
+     * @returns {string}
+     */
+    static getContentsDir() {
+        if (isMacOS) {
+            return path.join(this.getDir(), '..')
         }
-        return path.join(GetAppPath.getUserCoreDir(), 'www')
+        return ''
     }
 
-    static getScriptDir() {
-        return path.join(GetAppPath.getCoreDir(), 'script')
-    }
-
-    static getMysqlIconPath() {
-        return 'file://' + path.join(Software.getIconPath(), 'mysql.png')
+    static getDevPlatformDir() {
+        return path.join(this.getDir(), `extra/${process.platform}`)
     }
 
     static getHostsPath() {

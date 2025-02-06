@@ -1,7 +1,8 @@
-import Path from "@/main/utils/Path";
+import path from "path";
 import Software from "@/main/core/software/Software";
 import FileUtil from "@/main/utils/FileUtil";
 import CommonInstall from "@/main/core/software/CommonInstall";
+import PathExt from '@/shared/utils/PathExt'
 
 
 export default class LocalInstall {
@@ -35,9 +36,9 @@ export default class LocalInstall {
     };
 
     static getDirName(filePath) {
-        let dirName = Path.GetFileNameWithoutExt(filePath);
+        let dirName = PathExt.GetFileNameWithoutExt(filePath);
         if (dirName.endsWith('.tar')) {
-            dirName = Path.GetFileNameWithoutExt(dirName);
+            dirName = PathExt.GetFileNameWithoutExt(dirName);
         }
         return dirName;
     }

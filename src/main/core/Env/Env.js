@@ -1,6 +1,6 @@
 import FileUtil from "@/main/utils/FileUtil";
-import Path from "@/main/utils/Path";
-import GetPath from "@/shared/utils/GetPath";
+import nodePath from 'path'
+import GetUserPath from "@/shared/utils/GetUserPath";
 import EnvMacOS from "@/main/core/Env/EnvMacOS";
 import EnvWindows from "@/main/core/Env/EnvWindows";
 import { isWindows, isMacOS } from '@/main/utils/utils'
@@ -13,8 +13,8 @@ export default class Env {
      * @param binName
      */
     static async createBinFile(targetPath, binName) {
-        let binDirPath = GetPath.getBinDir();
-        let path = Path.Join(binDirPath, this.getBinFileName(binName));
+        let binDirPath = GetUserPath.getBinDir();
+        let path = nodePath.join(binDirPath, this.getBinFileName(binName));
         await this.deleteBinFile(binName);
         if (isWindows) {
             let text;
@@ -33,27 +33,27 @@ export default class Env {
     }
 
     static async createOtherBinFile(targetPath, targetOtherFileName, otherBinName) {
-        let binDirPath = GetPath.getBinDir();
-        let path = Path.Join(binDirPath, otherBinName);
-        let targetOtherFilePath = Path.Join(Path.GetDirName(targetPath), targetOtherFileName);
-        await FsUtil.CreateSymbolicLink(path, targetOtherFilePath);
+        let binDirPath = GetUserPath.getBinDir()
+        let path = nodePath.join(binDirPath, otherBinName)
+        let targetOtherFilePath = nodePath.join(nodePath.dirname(targetPath), targetOtherFileName)
+        await FsUtil.CreateSymbolicLink(path, targetOtherFilePath)
     }
 
     static async deleteBinFile(binName) {
-        let path = Path.Join(GetPath.getBinDir(), this.getBinFileName(binName));
-        if (await FileUtil.Exists(path)) {
-            await FileUtil.Delete(path);
+        let path = nodePath.join(GetUserPath.getBinDir(), this.getBinFileName(binName))
+        if (await FsUtil.Exists(path)) {
+            await FileUtil.Delete(path)
         }
         if (!isWindows) {
             if (binName === 'php') {
-                await this.deleteOtherBinFile('phpize');
+                await this.deleteOtherBinFile('phpize')
             }
         }
     }
 
     static async deleteOtherBinFile(otherBinName) {
-        let path = Path.Join(GetPath.getBinDir(), this.getBinFileName(otherBinName));
-        if (await FileUtil.Exists(path)) {
+        let path = nodePath.join(GetUserPath.getBinDir(), this.getBinFileName(otherBinName))
+        if (await FsUtil.Exists(path)) {
             await FileUtil.Delete(path);
         }
     }

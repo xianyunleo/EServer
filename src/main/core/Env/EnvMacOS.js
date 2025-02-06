@@ -1,16 +1,15 @@
 import FileUtil from "@/main/utils/FileUtil";
-import Path from "@/main/utils/Path";
+import path from "path";
 import OS from "@/main/utils/OS";
 import Shell from "@/main/utils/Shell";
 import {APP_NAME} from "@/shared/utils/constant";
-import GetPath from "@/shared/utils/GetPath";
 import FsUtil from '@/main/utils/FsUtil'
 
 export default class EnvMacOS {
     static _envFileName = '.zshrc';
 
     static getEnvFilePath() {
-        return Path.Join(OS.getHomeDir(), this._envFileName);
+        return path.join(OS.getHomeDir(), this._envFileName);
     }
 
     static async switch(enable) {
@@ -30,7 +29,7 @@ export default class EnvMacOS {
         text = await FileUtil.ReadAll(envFilePath);
 
         if (enable) {
-            let binPath  = GetPath.getBinDir();
+            let binPath  = GetUserPath.getBinDir();
             let appendText = `export PATH="${binPath}:$PATH"`;
 
             if (text.slice(-1) !== '\n') {

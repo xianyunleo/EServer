@@ -1,5 +1,8 @@
-export const WIN_CORE_PATH_NAME = 'core'
-export const MAC_CORE_PATH_NAME = 'Core'
+export const CoreDirNames = {
+    win32: 'core',
+    darwin: 'Core'
+}
+
 export const MAC_USER_CORE_DIR = '/Applications/EServer/'
 
 export const TEMP_DIR_NAME = 'temp'

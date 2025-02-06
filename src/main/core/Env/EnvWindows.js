@@ -1,5 +1,5 @@
 import Shell from "@/main/utils/Shell";
-import GetPath from "@/shared/utils/GetPath";
+import GetCorePath from "@/shared/utils/GetUserPath";
 import { PowerShell } from '@/main/utils/constant'
 
 export default class EnvWindows {
@@ -7,7 +7,7 @@ export default class EnvWindows {
 
     static async switch(enable) {
         //PATH的值超过1024，CDM setx命令会截断，所以用PowerShell，并且能指定范围Target
-        const binPath = GetPath.getBinDir()
+        const binPath = GetUserPath.getBinDir()
         const varVal = await this.getVarStr(this._pathVarName)
         const valArr =  varVal ? varVal.split(';').filter(v => !!v) : []
         if (enable) {

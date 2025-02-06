@@ -1,6 +1,7 @@
-import GetPath from '@/shared/utils/GetPath'
+import GetCorePath from '@/shared/utils/GetUserPath'
+import GetUserPath from '@/shared/utils/GetUserPath'
 import FileUtil from '@/main/utils/FileUtil'
-import Path from '@/main/utils/Path'
+import nodePath from 'path'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import DirUtil from '@/main/utils/DirUtil'
 import Php from '@/main/core/php/Php'
@@ -14,10 +15,10 @@ export default class SoftwareInit {
 
     static async initNginx() {
         try {
-            let path = Path.Join(GetPath.getNginxConfDir(), 'nginx.conf')
+            let path = nodePath.join(GetCorePath.getNginxConfDir(), 'nginx.conf')
             let text = await FileUtil.ReadAll(path)
             let pattern = /root.+/g
-            let wwwPath = Path.Join(GetPath.getNginxDir(), 'html').replaceSlash()
+            let wwwPath = nodePath.join(GetCorePath.getNginxDir(), 'html').replaceSlash()
             let replaceStr = `root ${wwwPath};`
             text = text.replaceAll(pattern, replaceStr)
 
@@ -31,11 +32,11 @@ export default class SoftwareInit {
     }
 
     static async initNginxLocalhostConf() {
-        let path = Path.Join(GetPath.getNginxVhostsDir(), 'localhost_80.conf')
+        let path = nodePath.join(GetCorePath.getNginxVhostsDir(), 'localhost_80.conf')
         if (await FileUtil.Exists(path)) {
             let text = await FileUtil.ReadAll(path)
             let pattern = /root.+/g
-            let rootPath = Path.Join(GetPath.getWebsiteDir(), 'localhost').replaceSlash()
+            let rootPath = nodePath.join(GetCorePath.getWebsiteDir(), 'localhost').replaceSlash()
             let replaceStr = `root ${rootPath};`
             text = text.replaceAll(pattern, replaceStr)
             await FileUtil.WriteAll(path, text)
@@ -43,11 +44,11 @@ export default class SoftwareInit {
     }
 
     static async initNginxPhpmyadminConf() {
-        let path = Path.Join(GetPath.getNginxVhostsDir(), 'localhost_888.conf')
+        let path = nodePath.join(GetCorePath.getNginxVhostsDir(), 'localhost_888.conf')
         if (await FileUtil.Exists(path)) {
             let text = await FileUtil.ReadAll(path)
             let pattern = /root.+/g
-            let rootPath = Path.Join(GetPath.getToolTypeDir(), 'phpMyAdmin').replaceSlash()
+            let rootPath = nodePath.join(GetCorePath.getToolTypeDir(), 'phpMyAdmin').replaceSlash()
             let replaceStr = `root ${rootPath};`
             text = text.replaceAll(pattern, replaceStr)
             await FileUtil.WriteAll(path, text)
@@ -69,8 +70,8 @@ export default class SoftwareInit {
     }
 
     static async createPHPFpmConf(version) {
-        let phpDirPath = GetPath.getPhpDir(version)
-        let confPath = Path.Join(phpDirPath, 'etc/php-fpm.conf')
+        let phpDirPath = GetCorePath.getPhpDir(version)
+        let confPath = nodePath.join(phpDirPath, 'etc/php-fpm.conf')
         if (!await FileUtil.Exists(confPath)) {
             await FileUtil.WriteAll(confPath, Php.getFpmConfTemplate(version))
         }
@@ -82,7 +83,7 @@ export default class SoftwareInit {
             const confPath = Php.getConfPath(version)
 
             if (!(await FileUtil.Exists(confPath))) {
-                await FileUtil.Copy(Path.Join(confDir, 'php.ini-development'), confPath)
+                await FileUtil.Copy(nodePath.join(confDir, 'php.ini-development'), confPath)
             }
 
             let text = await FileUtil.ReadAll(confPath)
@@ -132,7 +133,7 @@ export default class SoftwareInit {
                 }
             }
 
-            let phpTempPath = Path.Join(GetPath.geTempDir(), 'php')
+            let phpTempPath = nodePath.join(GetUserPath.geTempDir(), 'php')
             let uploadPattern = /(?<=\n);?.?upload_tmp_dir\s*=.*/g
             let replaceUploadStr = `upload_tmp_dir = "${phpTempPath.replaceSlash()}"`
             text = text.replaceAll(uploadPattern, replaceUploadStr)
@@ -160,7 +161,7 @@ export default class SoftwareInit {
      */
     static async initMySQL(version) {
         await this.initMySQLConf(version)
-        if (!await DirUtil.Exists(GetPath.getMysqlDataDir(version))) {
+        if (!await DirUtil.Exists(GetCorePath.getMysqlDataDir(version))) {
             //如果mysql data目录不存在，初始化生成data目录，并重置密码
             await Database.initMySQLData(version)
             await Database.resetMySQLPassword(version)
@@ -169,10 +170,10 @@ export default class SoftwareInit {
 
     static async initMySQLConf(version) {
         try {
-            let mysqlDir = GetPath.getMysqlDir(version)
-            let confPath = isWindows ? Path.Join(mysqlDir, 'my.ini') : Path.Join(mysqlDir, 'my.cnf')
+            let mysqlDir = GetCorePath.getMysqlDir(version)
+            let confPath = isWindows ? nodePath.join(mysqlDir, 'my.ini') : nodePath.join(mysqlDir, 'my.cnf')
             let text = await FileUtil.ReadAll(confPath)
-            let mysqlPath = GetPath.getMysqlDir(version)
+            let mysqlPath = GetCorePath.getMysqlDir(version)
 
             //(?<=\n)basedir\s*=\s*.+
             let basePattern = /(?<=\n)basedir\s*=\s*.+/g
@@ -181,13 +182,13 @@ export default class SoftwareInit {
 
             //(?<=\n)datadir\s*=\s*.+
             let dataPattern = /(?<=\n)datadir\s*=\s*.+/g
-            let dataPath = GetPath.getMysqlDataDir(version)
+            let dataPath = GetCorePath.getMysqlDataDir(version)
             let replaceDataStr = `datadir = "${dataPath.replaceSlash()}"`
             text = text.replaceAll(dataPattern, replaceDataStr)
 
             //(?<=\n)log-error\s*=\s*.+
             let logPattern = /(?<=\n)log-error\s*=\s*.+/g
-            let logPath = Path.Join(mysqlPath, 'logs', 'mysql.log')
+            let logPath = nodePath.join(mysqlPath, 'logs', 'mysql.log')
             let replaceLogStr = `log-error = "${logPath.replaceSlash()}"`
             text = text.replaceAll(logPattern, replaceLogStr)
 

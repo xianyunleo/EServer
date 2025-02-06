@@ -1,24 +1,24 @@
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import path from 'path'
 import { MAC_USER_CORE_DIR, InitFiles_DIR_NAME, TEMP_DIR_NAME } from '@/main/utils/constant'
+import GetPath from '@/shared/utils/GetPath'
+import GetCorePath from '@/shared/utils/GetCorePath'
+import GetUserPath from '@/shared/utils/GetUserPath'
 import DirUtil from '@/main/utils/DirUtil'
 import FileUtil from '@/main/utils/FileUtil'
-import Path from '@/main/utils/Path'
 import Software from '@/main/core/software/Software'
-import GetPath from '@/shared/utils/GetPath'
 import LocalInstall from '@/main/core/software/LocalInstall'
 import FsUtil from '@/main/utils/FsUtil'
-import GetAppPath from '@/main/utils/GetAppPath'
 import Shell from '@/main/utils/Shell'
 import { extractZip } from '@/main/utils/extract'
 
 export default class App {
     static async initFileExists() {
-        return await FileUtil.Exists(GetAppPath.getInitFilePath())
+        return await FileUtil.Exists(GetCorePath.getInitFilePath())
     }
 
     static async init() {
-        const initFile = GetAppPath.getInitFilePath()
+        const initFile = GetCorePath.getInitFilePath()
 
         if (!await FileUtil.Exists(initFile)) {
             return
@@ -37,7 +37,7 @@ export default class App {
         await this.createCoreSubDir(['software', 'database', 'bin', `${TEMP_DIR_NAME}/php`])
 
         if (!softwareDirExists) { //目录不存在说明是第一次安装，不是覆盖安装
-            const files = await DirUtil.GetFiles(GetPath.getDownloadsDir())
+            const files = await DirUtil.GetFiles(GetUserPath.getDownloadsDir())
             await LocalInstall.installMultiple(files)
         }
 
@@ -45,14 +45,14 @@ export default class App {
     }
 
     static async deleteInitFile() {
-        const initFile = GetAppPath.getInitFilePath()
+        const initFile = GetCorePath.getInitFilePath()
         if (await FileUtil.Exists(initFile)) {
             await FileUtil.Delete(initFile)
         }
     }
 
     static async checkInstall(){
-        const appPath = GetAppPath.getDir()
+        const appPath = GetPath.getDir()
         if (appPath.includes(' ')) {
             throw new Error('安装路径不能包含空格！')
         }
@@ -83,14 +83,14 @@ export default class App {
         }
         await this.moveInitFiles(['downloads', 'www', 'custom'])
 
-        //下面update逻辑，用于更新 UserCoreDir
-        const updateDir = Path.Join(GetAppPath.getCoreDir(), 'update')
+        //下面update逻辑，用于更新 UserDir
+        const updateDir = path.join(GetCorePath.getDir(), 'update')
         if (await DirUtil.Exists(updateDir)) {
-            const updateJson = await FileUtil.ReadAll(Path.Join(updateDir, 'update.json'))
+            const updateJson = await FileUtil.ReadAll(path.join(updateDir, 'update.json'))
             const updateObj = JSON.parse(updateJson)
-            const updateFile = Path.Join(updateDir, updateObj.archiveFile)
+            const updateFile = path.join(updateDir, updateObj.archiveFile)
             if (await FileUtil.Exists(updateFile)) {
-                extractZip(updateFile, Path.Join(GetAppPath.getUserCoreDir(), updateObj.targetDir))
+                extractZip(updateFile, path.join(GetUserPath.getDir(), updateObj.targetDir))
             }
         }
     }
@@ -100,13 +100,13 @@ export default class App {
      * @param dirs
      */
     static async updateMacCoreSubDir(dirs) {
-        let corePath = GetAppPath.getCoreDir()
+        let corePath = GetUserPath.getDir()
         for (const dir of dirs) {
-            let source = Path.Join(corePath, dir)
+            let source = path.join(corePath, dir)
             if (!await DirUtil.Exists(source)) {
                 continue
             }
-            let target = Path.Join(MAC_USER_CORE_DIR, dir)
+            let target = path.join(MAC_USER_CORE_DIR, dir)
             if (!await DirUtil.Exists(target)) {
                 await DirUtil.Create(target)
             }
@@ -121,7 +121,7 @@ export default class App {
      */
     static async createCoreSubDir(dirs) {
         for (const dir of dirs) {
-            let p = path.join(GetAppPath.getUserCoreDir(), dir)
+            let p = path.join(GetUserPath.getDir(), dir)
             if (!await DirUtil.Exists(p)) {
                 await DirUtil.Create(p)
             }
@@ -133,10 +133,10 @@ export default class App {
      * @param files
      */
     static async moveInitFiles(files = []) {
-        let initFilesPath = Path.Join(GetAppPath.getCoreDir(), InitFiles_DIR_NAME)
+        let initFilesPath = path.join(GetCorePath.getDir(), InitFiles_DIR_NAME)
         for (const file of files) {
-            const source = Path.Join(initFilesPath, file)
-            const target = Path.Join(GetAppPath.getUserCoreDir(), file)
+            const source = path.join(initFilesPath, file)
+            const target = path.join(GetUserPath.getDir(), file)
 
             if (await FsUtil.Exists(target)) {
                 FsUtil.Remove(source, { force: true, recursive: true }) //不捕捉错误

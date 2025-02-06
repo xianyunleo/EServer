@@ -1,12 +1,12 @@
-import path from "path";
-import GetPath from "@/shared/utils/GetPath";
+import nodePath from 'path'
+import GetCorePath from "@/shared/utils/GetUserPath";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
 import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
-import Path from "@/main/utils/Path";
 import { isWindows, replaceLineBreak } from '@/main/utils/utils'
 import { EOL } from 'os'
 import { CONF_INDENT } from '@/main/utils/constant'
+import PathExt from '@/shared/utils/PathExt'
 
 const N = EOL; //换行符
 const T = CONF_INDENT; //缩进符
@@ -18,7 +18,7 @@ export default class Nginx {
      * @returns {Promise<string[]>}
      */
     static async getWebsiteList(search = '') {
-        let vhostsPath = GetPath.getNginxVhostsDir();
+        let vhostsPath = GetCorePath.getNginxVhostsDir();
         if (!await DirUtil.Exists(vhostsPath)) {
             return [];
         }
@@ -32,7 +32,7 @@ export default class Nginx {
         })
 
         const mapFn = async (file) => {
-            let confName = Path.GetBaseName(file.path)
+            let confName = nodePath.basename(file.path)
             const website = new NginxWebsite(confName)
             await website.init()
             return website.getBasicInfo()
@@ -106,8 +106,8 @@ export default class Nginx {
         access_log off;
     }
 
-    access_log  logs/${Path.GetFileNameWithoutExt(confName)}.access.log;
-    error_log  logs/${Path.GetFileNameWithoutExt(confName)}.error.log;
+    access_log  logs/${PathExt.GetFileNameWithoutExt(confName)}.access.log;
+    error_log  logs/${PathExt.GetFileNameWithoutExt(confName)}.error.log;
 }`;
 
         confText = replaceLineBreak(confText)
@@ -140,7 +140,7 @@ export default class Nginx {
     }
 
     static async websiteExists(serverName, port = null) {
-        const vhostsPath = GetPath.getNginxVhostsDir()
+        const vhostsPath = GetCorePath.getNginxVhostsDir()
         const files = await DirUtil.GetFiles(vhostsPath)
         const filterFn = async (path) => {
             const confText = await FileUtil.ReadAll(path)
@@ -158,7 +158,7 @@ export default class Nginx {
     }
 
     static getWebsiteConfPath(confName) {
-        return path.join(GetPath.getNginxVhostsDir(), confName);
+        return nodePath.join(GetCorePath.getNginxVhostsDir(), confName);
     }
 
     static getWebsiteConfName(serverName, port) {
@@ -166,7 +166,7 @@ export default class Nginx {
     }
 
     static getWebsiteRewriteConfPath(confName) {
-        return path.join(GetPath.getNginxVhostsRewriteDir(), confName);
+        return nodePath.join(GetCorePath.getNginxVhostsRewriteDir(), confName);
     }
 
     static getAllServerName(text) {
@@ -184,13 +184,13 @@ export default class Nginx {
      * @returns {Promise<string[]>}
      */
     static async getRewriteRuleList() {
-        let rewritePath = GetPath.getNginxRewriteDir();
+        let rewritePath = GetCorePath.getNginxRewriteDir();
         if (!await DirUtil.Exists(rewritePath)) {
             return [];
         }
         let files = await DirUtil.GetFiles(rewritePath, '.conf');
         return files.map(name => {
-            return Path.GetFileNameWithoutExt(name);
+            return PathExt.GetFileNameWithoutExt(name)
         });
     }
 
@@ -200,7 +200,7 @@ export default class Nginx {
      * @returns {string}
      */
     static async getRewriteByRule(ruleName) {
-        let rewritePath = path.join(GetPath.getNginxRewriteDir(), `${ruleName}.conf`)
+        let rewritePath = nodePath.join(GetCorePath.getNginxRewriteDir(), `${ruleName}.conf`)
         if (!await FileUtil.Exists(rewritePath)) {
             return '';
         }
@@ -213,7 +213,7 @@ export default class Nginx {
      * @returns {number}
      */
     static getPortByConfPath(path){
-        return Number(Path.GetFileNameWithoutExt(path).split('_')[1])
+        return Number(PathExt.GetFileNameWithoutExt(path).split('_')[1])
     }
 
     static getErrorLogOffValue(){

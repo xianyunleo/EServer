@@ -2,9 +2,10 @@ import Nginx from "@/main/core/Nginx";
 import {EOL} from "os";
 import {CONF_INDENT} from "@/main/utils/constant";
 import FileUtil from "@/main/utils/FileUtil";
-import Path from "@/main/utils/Path";
-import GetPath from '@/shared/utils/GetPath'
+import path from "path";
+import GetCorePath from '@/shared/utils/GetUserPath'
 import DirUtil from '@/main/utils/DirUtil'
+import PathExt from '@/shared/utils/PathExt'
 
 const N = EOL; //换行符
 const T = CONF_INDENT; //缩进符
@@ -27,7 +28,7 @@ export default class NginxWebsite {
     }
 
     async init() {
-        this.serverName = Path.GetFileNameWithoutExt(this.confName).split('_')[0]
+        this.serverName = PathExt.GetFileNameWithoutExt(this.confName).split('_')[0]
         this.confPath = Nginx.getWebsiteConfPath(this.confName)
         this.confText = await FileUtil.ReadAll(this.confPath)
     }
@@ -111,15 +112,15 @@ export default class NginxWebsite {
 
     async setSsl(sslInfo) {
         let text = this.confText
-        const sslDir = GetPath.getNginxVhostsSslDir();
+        const sslDir = GetCorePath.getNginxVhostsSslDir();
         if(!await DirUtil.Exists(sslDir)) DirUtil.Create(sslDir)
 
-        const keyName = Path.GetBaseName(sslInfo.keyPath)
-        const keyPath = Path.Join(sslDir,keyName).replaceSlash()
+        const keyName = path.basename(sslInfo.keyPath)
+        const keyPath = path.join(sslDir,keyName).replaceSlash()
         await FileUtil.Copy(sslInfo.keyPath,keyPath)
 
-        const certName = Path.GetBaseName(sslInfo.certPath)
-        const certPath = Path.Join(sslDir, certName).replaceSlash()
+        const certName = path.basename(sslInfo.certPath)
+        const certPath = path.join(sslDir, certName).replaceSlash()
         await FileUtil.Copy(sslInfo.certPath, certPath)
 
         //增加listen 443，注意listen后面还有可能有 “default_server” 关键字

@@ -39,12 +39,10 @@ import { message } from 'ant-design-vue'
 import { FileTextTwoTone, FolderOpenTwoTone, DatabaseTwoTone } from '@ant-design/icons-vue'
 import MysqlResetPwdModal from '@/renderer/components/ToolPage/MysqlResetPwdModal.vue'
 import MessageBox from '@/renderer/utils/MessageBox'
-import GetPath from '@/shared/utils/GetPath'
+import GetCorePath from '@/shared/utils/GetCorePath'
 import { sleep } from '@/shared/utils/utils'
 import Native from '@/main/utils/Native'
 import TcpProcessListModal from '@/renderer/components/ToolPage/TcpProcessListModal.vue'
-import OS from '@/main/utils/OS'
-import { isWindows } from '@/main/utils/utils'
 
 const iconTypes = {
   dir: 'dir',
@@ -64,7 +62,7 @@ const toolItems = [
   },
   {
     key: 'mysqlResetPwd',
-    icon: GetPath.getMysqlIconPath(),
+    icon: GetCorePath.getMysqlIconPath(),
     title: t('mysqlResetRootAccountPwd'),
     desc: t('Modify or reset the password of the MySQL root account'),
     func: mysqlResetPwd

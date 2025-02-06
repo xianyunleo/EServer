@@ -1,6 +1,6 @@
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
-import Path from '@/main/utils/Path'
-import GetPath from '@/shared/utils/GetPath'
+import path from 'path'
+import GetCorePath from '@/shared/utils/GetUserPath'
 import child_process from 'child_process'
 import fsPromises from 'fs/promises'
 import DirUtil from '@/main/utils/DirUtil'
@@ -32,11 +32,11 @@ export default class Installer {
         }
 
         let commandStr;
-        let phpExtDlDir = Path.Join(GetPath.getDownloadsDir(), 'phpExt');
+        let phpExtDlDir = path.join(GetUserPath.getDownloadsDir(), 'phpExt');
         if (!await DirUtil.Exists(phpExtDlDir)) {
             await DirUtil.Create(phpExtDlDir);
         }
-        let phpDir = GetPath.getPhpDir(this.phpVersion);
+        let phpDir = GetCorePath.getPhpDir(this.phpVersion);
 
         const scriptPath = Extension.getInstallScriptPath(this.extName);
         if (isWindows) {

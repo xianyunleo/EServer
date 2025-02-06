@@ -1,15 +1,15 @@
-import Path from '@/main/utils/Path'
+import path from 'path'
 import {EnumSoftwareType} from "@/shared/utils/enum";
-import GetPath from "@/shared/utils/GetPath";
+import GetCorePath from "@/shared/utils/GetCorePath";
+import GetUserPath from "@/shared/utils/GetUserPath";
 import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
-import GetAppPath from '@/main/utils/GetAppPath'
 
 export default class Software {
     static #list;
 
     static async DirExists() {
-        return await DirUtil.Exists(GetPath.getSoftwareDir());
+        return await DirUtil.Exists(GetUserPath.getSoftwareDir());
     }
 
     /**
@@ -25,15 +25,15 @@ export default class Software {
     }
 
     static async initList() {
-        const softDir = Path.Join(GetAppPath.getCoreDir(), '/config/software')
-        const softConfigPath = Path.Join(softDir, 'software.json')
-        const softIconDir = 'file://' + Path.Join(softDir, '/icon')
+        const softDir = path.join(GetCorePath.getDir(), '/config/software')
+        const softConfigPath = path.join(softDir, 'software.json')
+        const softIconDir = 'file://' + path.join(softDir, '/icon')
 
         let list
         try {
             list = JSON.parse(await FileUtil.ReadAll(softConfigPath))
             list = await Promise.all(list.map(async item => {
-                const Icon = Path.Join(softIconDir, item.Icon)
+                const Icon = path.join(softIconDir, item.Icon)
                 return { ...item, Icon }
             }))
         } catch {
@@ -41,16 +41,16 @@ export default class Software {
         }
 
         //自定义software配置
-        const customSoftDir = Path.Join(GetAppPath.getUserCoreDir(), '/custom/software')
-        const customSoftConfigPath = Path.Join(customSoftDir, 'software.json')
-        const customSoftIconDir = 'file://' + Path.Join(customSoftDir, '/icon')
+        const customSoftDir = path.join(GetUserPath.getDir(), '/custom/software')
+        const customSoftConfigPath = path.join(customSoftDir, 'software.json')
+        const customSoftIconDir = 'file://' + path.join(customSoftDir, '/icon')
 
         let customList
         try {
             if (await FileUtil.Exists(customSoftConfigPath)) {
                 customList = JSON.parse(await FileUtil.ReadAll(customSoftConfigPath))
                 customList = await Promise.all(customList.map(async item => {
-                    const Icon = Path.Join(customSoftIconDir, item.Icon)
+                    const Icon = path.join(customSoftIconDir, item.Icon)
                     return { ...item, Icon }
                 }))
             } else {
@@ -84,7 +84,7 @@ export default class Software {
      */
     static getPath(item) {
         let typePath = Software.getTypePath(item.Type);
-        return Path.Join(typePath, item.DirName);
+        return path.join(typePath, item.DirName);
     }
 
     /**
@@ -97,7 +97,7 @@ export default class Software {
             throw new Error(`${item.Name} Conf Path 没有配置！`);
         }
         let softPath = Software.getPath(item);
-        return Path.Join(softPath, item.ConfPath);
+        return path.join(softPath, item.ConfPath);
     }
 
     /**
@@ -110,7 +110,7 @@ export default class Software {
             throw new Error(`${item.Name} Server Conf Path 没有配置！`);
         }
         let softPath = Software.getPath(item);
-        return Path.Join(softPath, item.ServerConfPath);
+        return path.join(softPath, item.ServerConfPath);
     }
 
     /**
@@ -123,7 +123,7 @@ export default class Software {
             throw new Error(`${item.Name} Server Process Path 没有配置！`);
         }
         let workPath = Software.getPath(item); //服务目录
-        return Path.Join(workPath, item.ServerProcessPath);  //服务的进程目录
+        return path.join(workPath, item.ServerProcessPath);  //服务的进程目录
     }
 
     /**
@@ -135,20 +135,19 @@ export default class Software {
         type = EnumSoftwareType[type];
         switch (type) {
             case EnumSoftwareType.PHP:
-                return GetPath.getPhpTypeDir();
+                return GetUserPath.getPhpTypeDir();
             case EnumSoftwareType.Server:
-                return GetPath.getServerTypeDir();
+                return GetUserPath.getServerTypeDir();
             case EnumSoftwareType.Tool:
-                return GetPath.getToolTypeDir();
+                return GetUserPath.getToolTypeDir();
             default:
                 return '';
         }
     }
 
     static getIconPath() {
-        let corePath = GetAppPath.getCoreDir();
-        let softPath = Path.Join(corePath, '/config/software');
-        return Path.Join(softPath, '/icon');
+        let softPath = path.join(GetCorePath.getDir(), '/config/software');
+        return path.join(softPath, '/icon');
     }
 
 }

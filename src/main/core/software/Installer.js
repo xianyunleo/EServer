@@ -3,14 +3,13 @@ import { EnumSoftwareInstallStatus } from '@/shared/utils/enum'
 import Software from '@/main/core/software/Software'
 import { DOWNLOAD_URL } from '@/shared/utils/constant'
 import DirUtil from '@/main/utils/DirUtil'
-import Path from '@/main/utils/Path'
+import path from 'path'
 import FileUtil from '@/main/utils/FileUtil'
-import GetPath from '@/shared/utils/GetPath'
 import { EventEmitter } from 'events'
 import { mt, t } from '@/renderer/utils/i18n'
 import CommonInstall from "@/main/core/software/CommonInstall";
-import GetAppPath from '@/main/utils/GetAppPath'
 import Downloader from 'electron-dl-downloader'
+import GetUserPath from '@/shared/utils/GetUserPath'
 
 export default class Installer extends EventEmitter {
     name;
@@ -35,11 +34,11 @@ export default class Installer extends EventEmitter {
     async install() {
         this.softItem = (await Software.getList()).find(item => item.Name === this.name)
         this.fileName = this.getFileName()
-        this.filePath = Path.Join(this.getDownloadsPath(), this.fileName)
+        this.filePath = path.join(this.getDownloadsPath(), this.fileName)
         this.tempFilePath = `${this.filePath}.dl`
         this.downloader = new Downloader({url:this.getDownloadUrl(), filePath:this.tempFilePath})
 
-        if (!await DirUtil.Exists(GetPath.getDownloadsDir())) await DirUtil.Create(GetPath.getDownloadsDir())
+        if (!await DirUtil.Exists(GetUserPath.getDownloadsDir())) await DirUtil.Create(GetUserPath.getDownloadsDir())
         if (await FileUtil.Exists(this.filePath)) await FileUtil.Delete(this.filePath)
         if (await FileUtil.Exists(this.tempFilePath)) await FileUtil.Delete(this.tempFilePath)
 
@@ -114,7 +113,7 @@ export default class Installer extends EventEmitter {
 
     async _extract() {
         this._changeStatus(EnumSoftwareInstallStatus.Extracting);
-        const filePath = Path.Join(this.getDownloadsPath(), this.fileName);
+        const filePath = path.join(this.getDownloadsPath(), this.fileName);
         const dest = Software.getTypePath(this.softItem.Type);
         await CommonInstall.extract(filePath, dest);
     }
@@ -151,6 +150,6 @@ export default class Installer extends EventEmitter {
     }
 
     getDownloadsPath() {
-        return Path.Join(GetAppPath.getUserCoreDir(), 'downloads');
+        return path.join(GetUserPath.getDir(), 'downloads');
     }
 }

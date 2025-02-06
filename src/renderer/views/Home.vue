@@ -63,10 +63,10 @@
                     {{ mt('Open', 'ws', 'Directory') }}
                   </a-menu-item>
                   <a-menu-item v-if="item.ConfPath" @click="openConfFile(item)" key="998">
-                    {{ mt('Open', 'ws') }}{{ Path.GetBaseName(item.ConfPath) }}
+                    {{ mt('Open', 'ws') }}{{ path.basename(item.ConfPath) }}
                   </a-menu-item>
                   <a-menu-item v-if="item.ServerConfPath" @click="openServerConfFile(item)" key="997">
-                    {{ mt('Open', 'ws') }}{{ Path.GetBaseName(item.ServerConfPath) }}
+                    {{ mt('Open', 'ws') }}{{ path.basename(item.ServerConfPath) }}
                   </a-menu-item>
                   <a-menu-item v-for="(item, i) in item.ExtraFiles" :key="i" @click="openExtraFile(item, item)">
                     {{ mt('Open', 'ws') }}{{ item.Name }}
@@ -85,13 +85,13 @@
 <script setup>
 import { onMounted, ref} from 'vue'
 import { useMainStore } from '@/renderer/store'
-import GetPath from '@/shared/utils/GetPath'
-import GetAppPath from '@/main/utils/GetAppPath'
+import GetCorePath from '@/shared/utils/GetCorePath'
+import GetUserPath from '@/shared/utils/GetUserPath'
 import Software from '@/main/core/software/Software'
 import { storeToRefs } from 'pinia/dist/pinia'
 import { APP_NAME } from '@/shared/utils/constant'
 import Native from '@/main/utils/Native'
-import Path from '@/main/utils/Path'
+import path from 'path'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import HomeService from '@/renderer/services/HomeService'
 import { devConsoleLog,isWindows } from '@/main/utils/utils'
@@ -161,7 +161,7 @@ const loadingHandle = async () => {
 
 const getProcessList = async () => {
   let list
-  const options = { directory: GetPath.getSoftwareDir() }
+  const options = { directory: GetUserPath.getSoftwareDir() }
   if (isWindows) {
     list = await window.api.callStatic('ProcessLibrary', 'getList', options)
   } else {
@@ -192,12 +192,12 @@ const initServerListStatus = async () => {
   await Promise.all(promiseArray)
 }
 
-const corePathClick = () => Native.openDirectory(GetAppPath.getUserCoreDir())
-const wwwPathClick = () => Native.openDirectory(GetPath.getWebsiteDir())
+const corePathClick = () => Native.openDirectory(GetCorePath.getDir())
+const wwwPathClick = () => Native.openDirectory(Settings.get('WebsiteDir'))
 const openInstallDir = (item) => Native.openDirectory(Software.getPath(item))``
 const openConfFile = (item) => Native.openTextFile(Software.getConfPath(item))
 const openServerConfFile = (item) => Native.openTextFile(Software.getServerConfPath(item))
-const openExtraFile = (item, extraFile) => Native.openTextFile(Path.Join(Software.getPath(item), extraFile.Path))
+const openExtraFile = (item, extraFile) => Native.openTextFile(path.join(Software.getPath(item), extraFile.Path))
 
 </script>
 

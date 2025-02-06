@@ -3,7 +3,7 @@ import ProcessExtend from "@/main/utils/ProcessExtend";
 import Software from "@/main/core/software/Software";
 import { parseTemplateStrings} from "@/shared/utils/utils";
 import child_process from "child_process";
-import Path from "@/main/utils/Path";
+import path from "path";
 import FileUtil from "@/main/utils/FileUtil";
 
 export default class ServerControl {
@@ -42,12 +42,12 @@ export default class ServerControl {
         })
 
         childProcess.on('close', (code) => {
-            devConsoleLog(`${Path.GetBaseName(ctrlProcessPath)},exit code ${code}`)
+            devConsoleLog(`${path.basename(ctrlProcessPath)},exit code ${code}`)
             item.isRunning = false
         })
 
         devConsoleLog('ServerControl start command:', `${ctrlProcessPath} ${args.join(' ')}`)
-        devConsoleLog(`${Path.GetBaseName(ctrlProcessPath)},pid ${childProcess.pid}`)
+        devConsoleLog(`${path.basename(ctrlProcessPath)},pid ${childProcess.pid}`)
 
         item.pid = childProcess.pid;
     }
@@ -55,9 +55,9 @@ export default class ServerControl {
     static getControlProcessPath(item) {
         const workPath = Software.getPath(item)
         if (item.ControlProcessPath) {
-            return Path.Join(workPath, item.ControlProcessPath) //控制进程的目录
+            return path.join(workPath, item.ControlProcessPath) //控制进程的目录
         } else {
-            return Path.Join(workPath, item.ServerProcessPath) //服务进程的目录
+            return path.join(workPath, item.ServerProcessPath) //服务进程的目录
         }
     }
 
@@ -92,10 +92,10 @@ export default class ServerControl {
         return args.map((arg) => {
             const argObj = {
                 WorkPath: workPath.replaceSlash(),
-                ServerProcessPath: Path.Join(workPath, item.ServerProcessPath).replaceSlash(),
-                ConfPath: item.ConfPath ? Path.Join(workPath, item.ConfPath).replaceSlash() : null,
-                ServerConfPath: item.ServerConfPath ? Path.Join(workPath, item.ServerConfPath).replaceSlash() : null,
-                ExtraProcessPath: item.ExtraProcessPath ? Path.Join(workPath, item.ExtraProcessPath).replaceSlash() : null
+                ServerProcessPath: path.join(workPath, item.ServerProcessPath).replaceSlash(),
+                ConfPath: item.ConfPath ? path.join(workPath, item.ConfPath).replaceSlash() : null,
+                ServerConfPath: item.ServerConfPath ? path.join(workPath, item.ServerConfPath).replaceSlash() : null,
+                ExtraProcessPath: item.ExtraProcessPath ? path.join(workPath, item.ExtraProcessPath).replaceSlash() : null
             }
             return parseTemplateStrings(arg, argObj)
         })

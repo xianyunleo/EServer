@@ -1,7 +1,7 @@
 import Shell from '@/main/utils/Shell'
 import MessageBox from '@/renderer/utils/MessageBox'
 import fixPath from 'fix-path'
-import GetPath from '@/shared/utils/GetPath'
+import GetCorePath from '@/shared/utils/GetUserPath'
 import FileUtil from '@/main/utils/FileUtil'
 import Settings from '@/main/Settings'
 import { isMacOS, isWindows } from '@/main/utils/utils'

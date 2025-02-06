@@ -59,8 +59,8 @@ import Extension from '@/main/core/php/extension/Extension'
 import Native from '@/main/utils/Native'
 import Php from '@/main/core/php/Php'
 import MessageBox from '@/renderer/utils/MessageBox'
-import Path from '@/main/utils/Path'
-import GetPath from '@/shared/utils/GetPath'
+import path from 'path'
+import GetCorePath from '@/shared/utils/GetUserPath'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
@@ -70,6 +70,7 @@ import SystemExtend from '@/main/utils/SystemExtend'
 import Settings from '@/main/Settings'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
 import ServerService from '@/renderer/services/ServerService'
+import PathExt from '@/shared/utils/PathExt'
 
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const props = defineProps({ show: Boolean, phpVersion: String })
@@ -124,7 +125,7 @@ const install = async (item) => {
   }
 
   if (isMacOS && Extension.isNeedX64Brew(item.name) && !(await SystemExtend.isInstalledX64Brew())) {
-    const scriptFilePath = Path.Join(GetPath.getScriptDir(), `x86_64-brew-install.sh`)
+    const scriptFilePath = path.join(GetCorePath.getScriptDir(), `x86_64-brew-install.sh`)
     await fsPromises.chmod(scriptFilePath, '0755')
     MessageBox.error(`安装${item.name}扩展需要先安装 -x86_64 的 Homebrew！\n请复制命令到终端执行安装\n${scriptFilePath}`)
     return
@@ -156,7 +157,7 @@ const install = async (item) => {
       resultCode.value = code
       if (code === 0) {
         result.value = '安装成功😀'
-        const extension = Path.GetFileNameWithoutExt(item.fileName)
+        const extension = PathExt.GetFileNameWithoutExt(item.fileName)
         await Php.addExtension(props.phpVersion, extension, item.isZend)
         const phpName = SoftwareExtend.getPhpName(props.phpVersion)
         if (Settings.get('AutoStartAndRestartServer') && ServerService.isRunning(phpName)) {

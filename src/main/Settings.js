@@ -1,9 +1,8 @@
 import Store from 'electron-store'
 import { SETTINGS_FILE_NAME } from '@/main/utils/constant'
-import Path from '@/main/utils/Path'
-import GetPath from '@/shared/utils/GetPath'
+import path from 'path'
 import { isMacOS, isWindows } from '@/main/utils/utils'
-import GetAppPath from '@/main/utils/GetAppPath'
+import GetUserPath from '@/shared/utils/GetUserPath'
 
 export default class Settings {
     static #_instance
@@ -59,7 +58,7 @@ export default class Settings {
             PhpCliVersion: '',
             EnableComposer: false,
             TextEditor: this.#_getDefaultTextEditorPath(),
-            WebsiteDir: Path.Join(GetAppPath.getUserCoreDir(), 'www'),
+            WebsiteDir: path.join(GetUserPath.getWebsiteDir(), 'www'),
             OneClickServerList: ['Nginx', 'PHP-FPM', 'MySQL-5.7'],
             AutoStartAndRestartServer: true,
             AfterOpenAppStartServer: false
@@ -67,16 +66,16 @@ export default class Settings {
     }
 
     static #_getDefaultTextEditorPath() {
-        let toolTypePath = GetPath.getToolTypeDir()
+        let toolTypePath = GetUserPath.getToolTypeDir()
         if (isMacOS) {
-            return Path.Join(toolTypePath, 'Notepad--.app')
+            return path.join(toolTypePath, 'Notepad--.app')
         } else if (isWindows) {
-            return Path.Join(toolTypePath, 'Notepad3/Notepad3.exe')
+            return path.join(toolTypePath, 'Notepad3/Notepad3.exe')
         }
     }
 
     static getDir() {
-        return GetAppPath.getSettingsDir()
+        return GetUserPath.getDir()
     }
 
     /**
@@ -84,6 +83,6 @@ export default class Settings {
      * @returns {string}
      */
     static getFilePath() {
-        return Path.Join(this.getDir(), `${this.#_fileName}.${this.#_fileExtension}`)
+        return path.join(this.getDir(), `${this.#_fileName}.${this.#_fileExtension}`)
     }
 }

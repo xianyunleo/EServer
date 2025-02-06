@@ -73,8 +73,8 @@ import { mt, t } from '@/renderer/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
-import GetPath from '@/shared/utils/GetPath'
-import Path from '@/main/utils/Path'
+import GetUserPath from '@/shared/utils/GetUserPath'
+import path from 'path'
 
 const store = useMainStore()
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
@@ -233,12 +233,12 @@ const openRootPath = (item) => {
 }
 
 const openAccessLog = (item) => {
-  const filePath = Path.Join(GetPath.getNginxLogsDir(), `${item.serverName}_${item.port}.access.log`)
+  const filePath = path.join(GetUserPath.getNginxLogsDir(), `${item.serverName}_${item.port}.access.log`)
   Native.openTextFile(filePath)
 }
 
 const openErrorLog = (item) => {
-  const filePath = Path.Join(GetPath.getNginxLogsDir(), `${item.serverName}_${item.port}.error.log`)
+  const filePath = path.join(GetUserPath.getNginxLogsDir(), `${item.serverName}_${item.port}.error.log`)
   Native.openTextFile(filePath)
 }
 </script>

@@ -1,8 +1,7 @@
-import GetPath from "@/shared/utils/GetPath";
+import GetCorePath from "@/shared/utils/GetUserPath";
 import DirUtil from "@/main/utils/DirUtil";
-import Path from "@/main/utils/Path";
+import nodePath from 'path'
 import FileUtil from "@/main/utils/FileUtil";
-
 
 export default class SoftwareExtend {
     /**
@@ -10,7 +9,7 @@ export default class SoftwareExtend {
      * @returns {Promise<string[]|*[]>}
      */
     static async getNginxRequirePhpList() {
-        let nginxVhostsPath = GetPath.getNginxVhostsDir();
+        let nginxVhostsPath = GetCorePath.getNginxVhostsDir();
         let vhosts = await DirUtil.GetFiles(nginxVhostsPath, '.conf');
         if (!vhosts || vhosts.length === 0) {
             return [];
@@ -28,28 +27,28 @@ export default class SoftwareExtend {
     }
 
     static async getPHPList() {
-        let path = GetPath.getPhpTypeDir();
+        let path = GetCorePath.getPhpTypeDir();
         if (!await DirUtil.Exists(path)) {
             return [];
         }
         let list = await DirUtil.GetDirectories(path, 'php-');
 
         return list.map(path => {
-            let name = Path.GetBaseName(path);
+            let name = nodePath.basename(path);
             let version = SoftwareExtend.getPHPVersion(name);
             return { version, name };
         });
     }
 
     static async getMySQLList() {
-        let path = GetPath.getServerTypeDir();
+        let path = GetCorePath.getServerTypeDir();
         if (!await DirUtil.Exists(path)) {
             return [];
         }
         let list = await DirUtil.GetDirectories(path, 'mysql-');
 
         return list.map(path => {
-            let name = Path.GetBaseName(path);
+            let name = nodePath.basename(path);
             let version = SoftwareExtend.getMysqlVersion(name);
             return { version, name };
         });
