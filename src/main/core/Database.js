@@ -1,5 +1,5 @@
 import path from "path";
-import GetCorePath from "@/shared/utils/GetUserPath";
+import GetUserPath from "@/shared/utils/GetUserPath";
 import Shell from "@/main/utils/Shell";
 import ProcessExtend from "@/main/utils/ProcessExtend";
 import {sleep} from "@/shared/utils/utils";
@@ -15,7 +15,7 @@ export default class Database {
      * @returns {Promise<void>}
      */
     static async initMySQLData(version) {
-        let mysqlPath = GetCorePath.getMysqlDir(version);
+        let mysqlPath = GetUserPath.getMysqlDir(version);
         let command = `${this.getMySQLDFilePath(version)} --defaults-file=${this.getMySQLConfFilePath(version)} --initialize`;
         await Shell.exec(command, {cwd: mysqlPath});
     }
@@ -38,7 +38,7 @@ export default class Database {
                 break;
             default:
         }
-        let mysqlPath = GetCorePath.getMysqlDir(version);
+        let mysqlPath = GetUserPath.getMysqlDir(version);
         let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
         await FileUtil.WriteAll(resetPwdPath, resetCommand);
 
@@ -72,13 +72,13 @@ export default class Database {
     }
 
     static getMySQLConfFilePath(version) {
-        let mysqlPath = GetCorePath.getMysqlDir(version);
+        let mysqlPath = GetUserPath.getMysqlDir(version);
         let name = isWindows ? 'my.ini' : 'my.cnf';
         return path.join(mysqlPath, name);
     }
 
     static getMySQLDFilePath(version) {
-        let mysqlPath = GetCorePath.getMysqlDir(version);
+        let mysqlPath = GetUserPath.getMysqlDir(version);
         let name = isWindows ? 'mysqld.exe' : 'mysqld';
         return path.join(mysqlPath, 'bin', name);
     }

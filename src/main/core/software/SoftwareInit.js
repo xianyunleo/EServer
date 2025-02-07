@@ -1,4 +1,3 @@
-import GetCorePath from '@/shared/utils/GetUserPath'
 import GetUserPath from '@/shared/utils/GetUserPath'
 import FileUtil from '@/main/utils/FileUtil'
 import nodePath from 'path'
@@ -15,10 +14,10 @@ export default class SoftwareInit {
 
     static async initNginx() {
         try {
-            let path = nodePath.join(GetCorePath.getNginxConfDir(), 'nginx.conf')
+            let path = nodePath.join(GetUserPath.getNginxConfDir(), 'nginx.conf')
             let text = await FileUtil.ReadAll(path)
             let pattern = /root.+/g
-            let wwwPath = nodePath.join(GetCorePath.getNginxDir(), 'html').replaceSlash()
+            let wwwPath = nodePath.join(GetUserPath.getNginxDir(), 'html').replaceSlash()
             let replaceStr = `root ${wwwPath};`
             text = text.replaceAll(pattern, replaceStr)
 
@@ -32,11 +31,11 @@ export default class SoftwareInit {
     }
 
     static async initNginxLocalhostConf() {
-        let path = nodePath.join(GetCorePath.getNginxVhostsDir(), 'localhost_80.conf')
+        let path = nodePath.join(GetUserPath.getNginxVhostsDir(), 'localhost_80.conf')
         if (await FileUtil.Exists(path)) {
             let text = await FileUtil.ReadAll(path)
             let pattern = /root.+/g
-            let rootPath = nodePath.join(GetCorePath.getWebsiteDir(), 'localhost').replaceSlash()
+            let rootPath = nodePath.join(GetUserPath.getWebsiteDir(), 'localhost').replaceSlash()
             let replaceStr = `root ${rootPath};`
             text = text.replaceAll(pattern, replaceStr)
             await FileUtil.WriteAll(path, text)
@@ -44,11 +43,11 @@ export default class SoftwareInit {
     }
 
     static async initNginxPhpmyadminConf() {
-        let path = nodePath.join(GetCorePath.getNginxVhostsDir(), 'localhost_888.conf')
+        let path = nodePath.join(GetUserPath.getNginxVhostsDir(), 'localhost_888.conf')
         if (await FileUtil.Exists(path)) {
             let text = await FileUtil.ReadAll(path)
             let pattern = /root.+/g
-            let rootPath = nodePath.join(GetCorePath.getToolTypeDir(), 'phpMyAdmin').replaceSlash()
+            let rootPath = nodePath.join(GetUserPath.getToolTypeDir(), 'phpMyAdmin').replaceSlash()
             let replaceStr = `root ${rootPath};`
             text = text.replaceAll(pattern, replaceStr)
             await FileUtil.WriteAll(path, text)
@@ -70,7 +69,7 @@ export default class SoftwareInit {
     }
 
     static async createPHPFpmConf(version) {
-        let phpDirPath = GetCorePath.getPhpDir(version)
+        let phpDirPath = GetUserPath.getPhpDir(version)
         let confPath = nodePath.join(phpDirPath, 'etc/php-fpm.conf')
         if (!await FileUtil.Exists(confPath)) {
             await FileUtil.WriteAll(confPath, Php.getFpmConfTemplate(version))
@@ -161,7 +160,7 @@ export default class SoftwareInit {
      */
     static async initMySQL(version) {
         await this.initMySQLConf(version)
-        if (!await DirUtil.Exists(GetCorePath.getMysqlDataDir(version))) {
+        if (!await DirUtil.Exists(GetUserPath.getMysqlDataDir(version))) {
             //如果mysql data目录不存在，初始化生成data目录，并重置密码
             await Database.initMySQLData(version)
             await Database.resetMySQLPassword(version)
@@ -170,10 +169,10 @@ export default class SoftwareInit {
 
     static async initMySQLConf(version) {
         try {
-            let mysqlDir = GetCorePath.getMysqlDir(version)
+            let mysqlDir = GetUserPath.getMysqlDir(version)
             let confPath = isWindows ? nodePath.join(mysqlDir, 'my.ini') : nodePath.join(mysqlDir, 'my.cnf')
             let text = await FileUtil.ReadAll(confPath)
-            let mysqlPath = GetCorePath.getMysqlDir(version)
+            let mysqlPath = GetUserPath.getMysqlDir(version)
 
             //(?<=\n)basedir\s*=\s*.+
             let basePattern = /(?<=\n)basedir\s*=\s*.+/g
@@ -182,7 +181,7 @@ export default class SoftwareInit {
 
             //(?<=\n)datadir\s*=\s*.+
             let dataPattern = /(?<=\n)datadir\s*=\s*.+/g
-            let dataPath = GetCorePath.getMysqlDataDir(version)
+            let dataPath = GetUserPath.getMysqlDataDir(version)
             let replaceDataStr = `datadir = "${dataPath.replaceSlash()}"`
             text = text.replaceAll(dataPattern, replaceDataStr)
 

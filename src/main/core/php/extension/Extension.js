@@ -2,7 +2,7 @@ import path from 'path'
 import Php from '@/main/core/php/Php'
 import FileUtil from '@/main/utils/FileUtil'
 import { isWindows } from '@/main/utils/utils'
-import GetCorePath from '@/shared/utils/GetUserPath'
+import GetCorePath from '@/shared/utils/GetCorePath'
 
 export default class Extension {
     static async getList(phpVersion) {

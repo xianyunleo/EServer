@@ -1,7 +1,6 @@
 import path from 'path'
 import { MAC_USER_CORE_DIR, TEMP_DIR_NAME } from '@/main/utils/constant'
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
-import Settings from '@/main/Settings'
 import GetCorePath from '@/shared/utils/GetCorePath'
 
 /**
@@ -15,65 +14,37 @@ export default class GetUserPath {
         return GetCorePath.getDir()
     }
 
-    static getBinDir() {
-        return path.join(this.getDir(), 'bin')
-    }
+    static getBinDir = () => path.join(this.getDir(), 'bin')
 
-    static geTempDir() {
-        return path.join(this.getDir(), TEMP_DIR_NAME)
-    }
+    static geTempDir = () => path.join(this.getDir(), TEMP_DIR_NAME)
 
-    static getDownloadsDir() {
-        return path.join(this.getDir(), 'downloads')
-    }
+    static getDownloadsDir = () => path.join(this.getDir(), 'downloads')
 
-    static getSoftwareDir() {
-        return path.join(this.getDir(), 'software')
-    }
 
-    static getPhpTypeDir() {
-        return path.join(this.getSoftwareDir(), 'php')
-    }
+    static getSoftwareDir = () => path.join(this.getDir(), 'software')
 
-    static getServerTypeDir() {
-        return path.join(this.getSoftwareDir(), 'server')
-    }
+    static getPhpTypeDir = () => path.join(this.getSoftwareDir(), 'php')
 
-    static getToolTypeDir() {
-        return path.join(this.getSoftwareDir(), 'tool')
-    }
 
-    static getNginxDir() {
-        return path.join(this.getServerTypeDir(), 'nginx')
-    }
+    static getServerTypeDir = () => path.join(this.getSoftwareDir(), 'server')
 
-    static getNginxConfDir() {
-        return path.join(this.getNginxDir(), 'conf')
-    }
+    static getToolTypeDir = () => path.join(this.getSoftwareDir(), 'tool')
 
-    static getNginxVhostsDir() {
-        return path.join(this.getNginxConfDir(), 'vhosts')
-    }
+    static getNginxDir = () => path.join(this.getServerTypeDir(), 'nginx')
 
-    static getNginxRewriteDir() {
-        return path.join(this.getNginxConfDir(), 'rewrite')
-    }
+    static getNginxConfDir = () => path.join(this.getNginxDir(), 'conf')
 
-    static getNginxVhostsRewriteDir() {
-        return path.join(this.getNginxVhostsDir(), 'rewrite')
-    }
+    static getNginxVhostsDir = () => path.join(this.getNginxConfDir(), 'vhosts')
 
-    static getNginxVhostsSslDir() {
-        return path.join(this.getNginxVhostsDir(), 'ssl')
-    }
+    static getNginxRewriteDir = () => path.join(this.getNginxConfDir(), 'rewrite')
 
-    static getNginxLogsDir() {
-        return path.join(this.getNginxDir(), 'logs')
-    }
+    static getNginxVhostsRewriteDir = () => path.join(this.getNginxVhostsDir(), 'rewrite')
 
-    static getDatabaseDir() {
-        return path.join(this.getDir(), 'database')
-    }
+    static getNginxVhostsSslDir = () => path.join(this.getNginxVhostsDir(), 'ssl')
+
+    static getNginxLogsDir = () => path.join(this.getNginxDir(), 'logs')
+
+    static getDatabaseDir = () => path.join(this.getDir(), 'database')
 
     static getPhpDir(version) {
         if (isMacOS && isDev) {
@@ -89,19 +60,11 @@ export default class GetUserPath {
         return path.join(this.getPhpDir(version), 'bin/php')
     }
 
-    static getComposerExePath() {
-        return path.join(this.getToolTypeDir(), 'Composer/composer.phar')
-    }
+    static getComposerExePath = () => path.join(this.getToolTypeDir(), 'Composer/composer.phar')
 
-    static getMysqlDir(version) {
-        return path.join(this.getServerTypeDir(), `mysql-${version}`)
-    }
+    static getMysqlDir = (version) => path.join(this.getServerTypeDir(), `mysql-${version}`)
 
-    static getMysqlDataDir(version) {
-        return path.join(this.getDatabaseDir(), `mysql-${version}-data`)
-    }
+    static getMysqlDataDir = (version) => path.join(this.getDatabaseDir(), `mysql-${version}-data`)
 
-    static getWebsiteDir() {
-        return path.join(this.getDir(), 'www')
-    }
+    static getWebsiteDir = () => path.join(this.getDir(), 'www')
 }
