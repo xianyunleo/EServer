@@ -18,7 +18,7 @@
 
 <script setup>
 import { APP_NAME, OFFICIAL_HOST, OFFICIAL_URL } from '@/shared/utils/constant'
-import Native from '@/main/utils/Native'
+import Native from '@/renderer/utils/Native'
 import { t } from '@/renderer/utils/i18n'
 import {onMounted, ref} from 'vue'
 

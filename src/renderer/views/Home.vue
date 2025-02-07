@@ -90,7 +90,7 @@ import GetUserPath from '@/shared/utils/GetUserPath'
 import Software from '@/main/core/software/Software'
 import { storeToRefs } from 'pinia/dist/pinia'
 import { APP_NAME } from '@/shared/utils/constant'
-import Native from '@/main/utils/Native'
+import Native from '@/renderer/utils/Native'
 import path from 'path'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import HomeService from '@/renderer/services/HomeService'
@@ -194,7 +194,7 @@ const initServerListStatus = async () => {
 
 const corePathClick = () => Native.openDirectory(GetCorePath.getDir())
 const wwwPathClick = () => Native.openDirectory(Settings.get('WebsiteDir'))
-const openInstallDir = (item) => Native.openDirectory(Software.getPath(item))``
+const openInstallDir = (item) => Native.openDirectory(Software.getPath(item))
 const openConfFile = (item) => Native.openTextFile(Software.getConfPath(item))
 const openServerConfFile = (item) => Native.openTextFile(Software.getServerConfPath(item))
 const openExtraFile = (item, extraFile) => Native.openTextFile(path.join(Software.getPath(item), extraFile.Path))

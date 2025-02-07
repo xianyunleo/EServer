@@ -1,12 +1,11 @@
 import Shell from '@/main/utils/Shell'
-import MessageBox from '@/renderer/utils/MessageBox'
 import fixPath from 'fix-path'
-import GetCorePath from '@/shared/utils/GetUserPath'
 import FileUtil from '@/main/utils/FileUtil'
 import Settings from '@/main/Settings'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import FsUtil from '@/main/utils/FsUtil'
 import { t } from '@/renderer/utils/i18n'
+import GetPath from '@/shared/utils/GetPath'
 const { shell } = require('electron')
 
 export default class Native {
@@ -17,13 +16,14 @@ export default class Native {
      */
     static async openApp(path) {
         if (isWindows) {
-            Native.openExternal(path)
+            await Native.openExternal(path)
         } else if (isMacOS) {
             await Shell.exec(`open -a "${path}"`)
         } else {
             throw new Error(`todo`)
         }
     }
+
     /**
      *
      * @param filePath {string}
@@ -51,8 +51,7 @@ export default class Native {
             }
             await Shell.exec(command)
         } catch (error) {
-            //todo渲染进程捕捉错误
-            MessageBox.error(error.message ?? error, t('Error opening file!'))
+            throw new Error(error.message ?? error, t('Error opening file!'))
         }
     }
 
@@ -80,10 +79,14 @@ export default class Native {
     }
 
     static async openHosts() {
-        let path = GetPath.getHostsPath()
-        if ((await FileUtil.Exists(path)) && !(await FsUtil.CanReadWrite(path))) {
-            await FsUtil.ChmodReadWrite(path)
+        try {
+            let path = GetPath.getHostsPath()
+            if ((await FileUtil.Exists(path)) && !(await FsUtil.CanReadWrite(path))) {
+                await FsUtil.ChmodReadWrite(path)
+            }
+            await Native.openTextFile(path)
+        } catch (error) {
+            throw new Error(error.message ?? error, t('Error opening hosts file!'))
         }
-        await Native.openTextFile(path)
     }
 }

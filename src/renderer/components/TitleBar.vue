@@ -27,7 +27,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import Native from '@/main/utils/Native'
+import Native from '@/renderer/utils/Native'
 import { t } from '@/renderer/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
 import { OFFICIAL_URL } from '@/shared/utils/constant'

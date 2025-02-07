@@ -1,5 +1,5 @@
 import Shell from "@/main/utils/Shell";
-import GetCorePath from "@/shared/utils/GetUserPath";
+import GetUserPath from "@/shared/utils/GetUserPath";
 import { PowerShell } from '@/main/utils/constant'
 
 export default class EnvWindows {
