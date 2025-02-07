@@ -1,7 +1,9 @@
 <template>
   <div class='title-bar draggable' @dblclick="dblclick">
-    <div class='notify color-text'>
-      {{ t('notice') }}：<a class='non-draggable color-text' @click='clickUrl'>🎉{{ t('none') }}</a>
+    <div class='notice color-text'>
+      <span class="notice-icon">📢</span>：
+      <a class='non-draggable color-text' @click='clickUrl(store.noticeList?.[0]?.url)'>
+        {{ store.noticeList?.[0]?.title }}</a>
     </div>
     <div class='window-controls-container non-draggable color-text' v-if='isWindows'>
       <div class='window-icon codicon codicon-chrome-minimize '
@@ -28,16 +30,15 @@
 <script setup>
 import { ref } from 'vue'
 import Native from '@/renderer/utils/Native'
-import { t } from '@/renderer/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
-import { OFFICIAL_URL } from '@/shared/utils/constant'
+import { useMainStore } from '@/renderer/store'
 const call = window.api.call
 const isWindowMax = ref(false)
 const minimizeIsHover = ref(false)
 
-const clickUrl = () => {
-  Native.openUrl(OFFICIAL_URL)
-}
+const store = useMainStore()
+
+const clickUrl = (url) => Native.openUrl(url)
 
 const minimizeClick = () => {
   call('windowMinimize')
@@ -66,7 +67,9 @@ window.api.onMainWindowUnmaximize(() => {
 </script>
 
 <style scoped lang="less">
-.notify {
+.notice {
+  display: flex;
+  place-items: center;
   margin-left: 10px;
   font-size: 14px;
   flex: 1;
@@ -78,6 +81,21 @@ window.api.onMainWindowUnmaximize(() => {
     &:hover {
       color: #1890ff;
       cursor: pointer;
+    }
+  }
+  .notice-icon{
+    width: 24px;
+    animation: textSizeChange 1s infinite;
+    @keyframes textSizeChange {
+      0% {
+        font-size: 14px;
+      }
+      50% {
+        font-size: 16px;
+      }
+      100% {
+        font-size: 14px;
+      }
     }
   }
 }

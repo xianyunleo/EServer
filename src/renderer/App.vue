@@ -39,6 +39,7 @@ import Settings from '@/main/Settings'
 import { t } from '@/renderer/utils/i18n'
 import { changeLanguageWrapper } from '@/renderer/utils/language'
 import SystemExtend from '@/main/utils/SystemExtend'
+import { OFFICIAL_URL } from '@/shared/utils/constant'
 
 const store = useMainStore()
 //操作softwareList和serverList等JS代码，都要等待init完成。
@@ -71,6 +72,7 @@ onMounted(async () => {
   if (isWindows) {
     stopIIS()
   }
+  parseAppNotice()
 })
 
 async function initOrUpdate() {
@@ -143,6 +145,19 @@ async function stopIIS() {
   if (await Service.isRunning(IISServiceName)) {
     await Service.stop(IISServiceName)
     message.info('')
+  }
+}
+
+/**
+ * 解析远程通知和广告
+ * @returns {Promise<void>}
+ */
+async function parseAppNotice() {
+  try {
+    const response = await fetch(`${OFFICIAL_URL}/AppAdES.json`)
+    store.noticeList = await response.json()
+  } catch {
+    /* empty */
   }
 }
 </script>
