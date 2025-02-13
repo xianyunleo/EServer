@@ -3,7 +3,7 @@ export const CoreDirNames = {
     darwin: 'Core'
 }
 
-export const MAC_USER_CORE_DIR = '/Applications/EServer/'
+export const MAC_DATA_DIR = '/Applications/EServer/'
 
 export const TEMP_DIR_NAME = 'temp'
 export const INIT_FILE_NAME = 'init.txt'

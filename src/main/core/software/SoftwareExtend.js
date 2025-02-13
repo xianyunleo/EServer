@@ -1,4 +1,4 @@
-import GetUserPath from "@/shared/utils/GetUserPath";
+import GetDataPath from "@/shared/utils/GetDataPath";
 import DirUtil from "@/main/utils/DirUtil";
 import nodePath from 'path'
 import FileUtil from "@/main/utils/FileUtil";
@@ -9,7 +9,7 @@ export default class SoftwareExtend {
      * @returns {Promise<string[]|*[]>}
      */
     static async getNginxRequirePhpList() {
-        let nginxVhostsPath = GetUserPath.getNginxVhostsDir()
+        let nginxVhostsPath = GetDataPath.getNginxVhostsDir()
         let vhosts = await DirUtil.GetFiles(nginxVhostsPath, '.conf');
         if (!vhosts || vhosts.length === 0) {
             return [];
@@ -27,7 +27,7 @@ export default class SoftwareExtend {
     }
 
     static async getPHPList() {
-        let path = GetUserPath.getPhpTypeDir()
+        let path = GetDataPath.getPhpTypeDir()
         if (!await DirUtil.Exists(path)) {
             return [];
         }
@@ -41,7 +41,7 @@ export default class SoftwareExtend {
     }
 
     static async getMySQLList() {
-        let path = GetUserPath.getServerTypeDir()
+        let path = GetDataPath.getServerTypeDir()
         if (!await DirUtil.Exists(path)) {
             return [];
         }

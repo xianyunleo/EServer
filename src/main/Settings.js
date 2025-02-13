@@ -2,7 +2,7 @@ import Store from 'electron-store'
 import { SETTINGS_FILE_NAME } from '@/main/utils/constant'
 import path from 'path'
 import { isMacOS, isWindows } from '@/main/utils/utils'
-import GetUserPath from '@/shared/utils/GetUserPath'
+import GetDataPath from '@/shared/utils/GetDataPath'
 
 export default class Settings {
     static #_instance
@@ -58,7 +58,7 @@ export default class Settings {
             PhpCliVersion: '',
             EnableComposer: false,
             TextEditor: this.#_getDefaultTextEditorPath(),
-            WebsiteDir: path.join(GetUserPath.getWebsiteDir(), 'www'),
+            WebsiteDir: path.join(GetDataPath.getWebsiteDir(), 'www'),
             OneClickServerList: ['Nginx', 'PHP-FPM', 'MySQL-5.7'],
             AutoStartAndRestartServer: true,
             AfterOpenAppStartServer: false
@@ -66,7 +66,7 @@ export default class Settings {
     }
 
     static #_getDefaultTextEditorPath() {
-        let toolTypePath = GetUserPath.getToolTypeDir()
+        let toolTypePath = GetDataPath.getToolTypeDir()
         if (isMacOS) {
             return path.join(toolTypePath, 'Notepad--.app')
         } else if (isWindows) {
@@ -75,7 +75,7 @@ export default class Settings {
     }
 
     static getDir() {
-        return GetUserPath.getDir()
+        return GetDataPath.getDir()
     }
 
     /**

@@ -1,15 +1,15 @@
 import path from 'path'
-import { MAC_USER_CORE_DIR, TEMP_DIR_NAME } from '@/main/utils/constant'
+import { MAC_DATA_DIR, TEMP_DIR_NAME } from '@/main/utils/constant'
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import GetCorePath from '@/shared/utils/GetCorePath'
 
 /**
- * 用户（数据）目录
+ * （此程序）数据目录
  */
-export default class GetUserPath {
+export default class GetDataPath {
     static getDir() {
         if (isMacOS && !isDev) {
-            return MAC_USER_CORE_DIR
+            return MAC_DATA_DIR
         }
         return GetCorePath.getDir()
     }
@@ -52,7 +52,7 @@ export default class GetUserPath {
 
     static getPhpDir(version) {
         if (isMacOS && isDev) {
-            return path.join(MAC_USER_CORE_DIR, `software/php/php-${version}`)
+            return path.join(MAC_DATA_DIR, `software/php/php-${version}`)
         }
         return path.join(this.getPhpTypeDir(), `php-${version}`)
     }

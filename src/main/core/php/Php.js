@@ -1,6 +1,6 @@
 import DirUtil from '@/main/utils/DirUtil'
 import path from 'path'
-import GetUserPath from '@/shared/utils/GetUserPath'
+import GetDataPath from '@/shared/utils/GetDataPath'
 import { APP_NAME } from '@/shared/utils/constant'
 import { isWindows } from '@/main/utils/utils'
 import { EOL } from 'os'
@@ -21,7 +21,7 @@ export default class Php {
     }
 
     static getConfDir(version) {
-        return path.join(GetUserPath.getEtcDir(), `php-${version}`)
+        return path.join(GetDataPath.getEtcDir(), `php-${version}`)
     }
 
     static getConfPath(version) {
@@ -105,10 +105,10 @@ export default class Php {
      */
     static async getExtensionDir(phpVersion) {
         if (isWindows) {
-            let phpDir = GetUserPath.getPhpDir(phpVersion)
+            let phpDir = GetDataPath.getPhpDir(phpVersion)
             return `${path.join(phpDir, 'ext')}`
         } else {
-            let phpDir = GetUserPath.getPhpDir(phpVersion)
+            let phpDir = GetDataPath.getPhpDir(phpVersion)
             let dirs = await DirUtil.GetDirectories(`${path.join(phpDir, 'lib/php/extensions')}`, 'no-debug-non-zts')
             return dirs[0]
         }

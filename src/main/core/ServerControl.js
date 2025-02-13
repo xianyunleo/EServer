@@ -5,7 +5,7 @@ import { parseTemplateStrings} from "@/shared/utils/utils";
 import child_process from "child_process";
 import path from "path";
 import FileUtil from "@/main/utils/FileUtil";
-import GetUserPath from '@/shared/utils/GetUserPath'
+import GetDataPath from '@/shared/utils/GetDataPath'
 
 export default class ServerControl {
     /**
@@ -90,7 +90,7 @@ export default class ServerControl {
      */
     static parseServerArgs(item, args) {
         const workDir = Software.getDir(item)
-        const etcDir = GetUserPath.getEtcDir()
+        const etcDir = GetDataPath.getEtcDir()
         return args.map((varStr) => {
             //将所有平台的路径分隔符改成正斜杠 /
             const varMap = {

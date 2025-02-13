@@ -1,6 +1,6 @@
 import FileUtil from "@/main/utils/FileUtil";
 import nodePath from 'path'
-import GetUserPath from "@/shared/utils/GetUserPath";
+import GetDataPath from "@/shared/utils/GetDataPath";
 import EnvMacOS from "@/main/core/Env/EnvMacOS";
 import EnvWindows from "@/main/core/Env/EnvWindows";
 import { isWindows, isMacOS } from '@/main/utils/utils'
@@ -13,7 +13,7 @@ export default class Env {
      * @param binName
      */
     static async createBinFile(targetPath, binName) {
-        let binDirPath = GetUserPath.getBinDir();
+        let binDirPath = GetDataPath.getBinDir();
         let path = nodePath.join(binDirPath, this.getBinFileName(binName));
         await this.deleteBinFile(binName);
         if (isWindows) {
@@ -33,14 +33,14 @@ export default class Env {
     }
 
     static async createOtherBinFile(targetPath, targetOtherFileName, otherBinName) {
-        let binDirPath = GetUserPath.getBinDir()
+        let binDirPath = GetDataPath.getBinDir()
         let path = nodePath.join(binDirPath, otherBinName)
         let targetOtherFilePath = nodePath.join(nodePath.dirname(targetPath), targetOtherFileName)
         await FsUtil.CreateSymbolicLink(path, targetOtherFilePath)
     }
 
     static async deleteBinFile(binName) {
-        let path = nodePath.join(GetUserPath.getBinDir(), this.getBinFileName(binName))
+        let path = nodePath.join(GetDataPath.getBinDir(), this.getBinFileName(binName))
         if (await FsUtil.Exists(path)) {
             await FileUtil.Delete(path)
         }
@@ -52,7 +52,7 @@ export default class Env {
     }
 
     static async deleteOtherBinFile(otherBinName) {
-        let path = nodePath.join(GetUserPath.getBinDir(), this.getBinFileName(otherBinName))
+        let path = nodePath.join(GetDataPath.getBinDir(), this.getBinFileName(otherBinName))
         if (await FsUtil.Exists(path)) {
             await FileUtil.Delete(path);
         }

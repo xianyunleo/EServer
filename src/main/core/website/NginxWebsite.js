@@ -3,7 +3,7 @@ import {EOL} from "os";
 import {CONF_INDENT} from "@/main/utils/constant";
 import FileUtil from "@/main/utils/FileUtil";
 import path from "path";
-import GetUserPath from '@/shared/utils/GetUserPath'
+import GetDataPath from '@/shared/utils/GetDataPath'
 import DirUtil from '@/main/utils/DirUtil'
 import PathExt from '@/shared/utils/PathExt'
 
@@ -112,7 +112,7 @@ export default class NginxWebsite {
 
     async setSsl(sslInfo) {
         let text = this.confText
-        const sslDir = GetUserPath.getNginxVhostsSslDir();
+        const sslDir = GetDataPath.getNginxVhostsSslDir();
         if(!await DirUtil.Exists(sslDir)) DirUtil.Create(sslDir)
 
         const keyName = path.basename(sslInfo.keyPath)

@@ -30,7 +30,7 @@ import { computed, ref } from 'vue'
 import Env from '@/main/core/Env/Env'
 import { message } from 'ant-design-vue'
 import SoftwareExtend from '@/main/core/software/SoftwareExtend'
-import GetUserPath from '@/shared/utils/GetUserPath'
+import GetDataPath from '@/shared/utils/GetDataPath'
 import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
@@ -60,7 +60,7 @@ const phpVersionList = computed(() => {
 const phpCliVersionChange = () => {
   store.setSettings('PhpCliVersion', async (originVal) => {
     if (store.settings.PhpCliVersion) {
-      let path = GetUserPath.getPhpExePath(store.settings.PhpCliVersion)
+      let path = GetDataPath.getPhpExePath(store.settings.PhpCliVersion)
       await Env.createBinFile(path, 'php')
     } else {
       await Env.deleteBinFile('php')
@@ -72,7 +72,7 @@ const phpCliVersionChange = () => {
 const changeEnableComposer = async () => {
   store.setSettings('EnableComposer', async (originVal) => {
     if (store.settings.EnableComposer) {
-      let path = GetUserPath.getComposerExePath()
+      let path = GetDataPath.getComposerExePath()
       await Env.createBinFile(path, 'composer')
     } else {
       await Env.deleteBinFile('composer')

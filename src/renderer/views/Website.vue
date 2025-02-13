@@ -73,7 +73,7 @@ import { mt, t } from '@/renderer/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
-import GetUserPath from '@/shared/utils/GetUserPath'
+import GetDataPath from '@/shared/utils/GetDataPath'
 import path from 'path'
 
 const store = useMainStore()
@@ -233,12 +233,12 @@ const openRootPath = (item) => {
 }
 
 const openAccessLog = (item) => {
-  const filePath = path.join(GetUserPath.getNginxLogsDir(), `${item.serverName}_${item.port}.access.log`)
+  const filePath = path.join(GetDataPath.getNginxLogsDir(), `${item.serverName}_${item.port}.access.log`)
   Native.openTextFile(filePath)
 }
 
 const openErrorLog = (item) => {
-  const filePath = path.join(GetUserPath.getNginxLogsDir(), `${item.serverName}_${item.port}.error.log`)
+  const filePath = path.join(GetDataPath.getNginxLogsDir(), `${item.serverName}_${item.port}.error.log`)
   Native.openTextFile(filePath)
 }
 </script>

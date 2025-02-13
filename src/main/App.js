@@ -1,9 +1,9 @@
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import path from 'path'
-import { MAC_USER_CORE_DIR, InitFiles_DIR_NAME, TEMP_DIR_NAME } from '@/main/utils/constant'
+import { MAC_DATA_DIR, InitFiles_DIR_NAME, TEMP_DIR_NAME } from '@/main/utils/constant'
 import GetPath from '@/shared/utils/GetPath'
 import GetCorePath from '@/shared/utils/GetCorePath'
-import GetUserPath from '@/shared/utils/GetUserPath'
+import GetDataPath from '@/shared/utils/GetDataPath'
 import DirUtil from '@/main/utils/DirUtil'
 import FileUtil from '@/main/utils/FileUtil'
 import Software from '@/main/core/software/Software'
@@ -28,8 +28,8 @@ export default class App {
         const softwareDirExists = await Software.DirExists()
 
         if (isMacOS && !isDev) {
-            if (!await DirUtil.Exists(MAC_USER_CORE_DIR)) {
-                await DirUtil.Create(MAC_USER_CORE_DIR)
+            if (!await DirUtil.Exists(MAC_DATA_DIR)) {
+                await DirUtil.Create(MAC_DATA_DIR)
             }
             await this.updateMacCoreSubDir(['Library'])
         }
@@ -38,7 +38,7 @@ export default class App {
         await this.createUserSubDir(['etc', 'software', 'database', 'bin', `${TEMP_DIR_NAME}/php`])
 
         if (!softwareDirExists) { //目录不存在说明是第一次安装，不是覆盖安装
-            const files = await DirUtil.GetFiles(GetUserPath.getDownloadsDir())
+            const files = await DirUtil.GetFiles(GetDataPath.getDownloadsDir())
             await LocalInstall.installMultiple(files)
         }
 
@@ -96,7 +96,7 @@ export default class App {
             const updateObj = JSON.parse(updateJson)
             const updateFile = path.join(updateDir, updateObj.archiveFile)
             if (await FileUtil.Exists(updateFile)) {
-                extractZip(updateFile, path.join(GetUserPath.getDir(), updateObj.targetDir))
+                extractZip(updateFile, path.join(GetDataPath.getDir(), updateObj.targetDir))
             }
         }
     }
@@ -106,13 +106,13 @@ export default class App {
      * @param dirs
      */
     static async updateMacCoreSubDir(dirs) {
-        let corePath = GetUserPath.getDir()
+        let corePath = GetDataPath.getDir()
         for (const dir of dirs) {
             let source = path.join(corePath, dir)
             if (!await DirUtil.Exists(source)) {
                 continue
             }
-            let target = path.join(MAC_USER_CORE_DIR, dir)
+            let target = path.join(MAC_DATA_DIR, dir)
             if (!await DirUtil.Exists(target)) {
                 await DirUtil.Create(target)
             }
@@ -127,7 +127,7 @@ export default class App {
      */
     static async createUserSubDir(dirs) {
         for (const dir of dirs) {
-            let p = path.join(GetUserPath.getDir(), dir)
+            let p = path.join(GetDataPath.getDir(), dir)
             if (!await DirUtil.Exists(p)) {
                 await DirUtil.Create(p)
             }
@@ -142,7 +142,7 @@ export default class App {
         let initFilesPath = path.join(GetCorePath.getDir(), InitFiles_DIR_NAME)
         for (const file of files) {
             const source = path.join(initFilesPath, file)
-            const target = path.join(GetUserPath.getDir(), file)
+            const target = path.join(GetDataPath.getDir(), file)
 
             if (await FsUtil.Exists(target)) {
                 FsUtil.Remove(source, { force: true, recursive: true }) //不捕捉错误

@@ -9,7 +9,7 @@ import { EventEmitter } from 'events'
 import { mt, t } from '@/renderer/utils/i18n'
 import CommonInstall from "@/main/core/software/CommonInstall";
 import Downloader from 'electron-dl-downloader'
-import GetUserPath from '@/shared/utils/GetUserPath'
+import GetDataPath from '@/shared/utils/GetDataPath'
 
 export default class Installer extends EventEmitter {
     name;
@@ -38,7 +38,7 @@ export default class Installer extends EventEmitter {
         this.tempFilePath = `${this.filePath}.dl`
         this.downloader = new Downloader({url:this.getDownloadUrl(), filePath:this.tempFilePath})
 
-        if (!await DirUtil.Exists(GetUserPath.getDownloadsDir())) await DirUtil.Create(GetUserPath.getDownloadsDir())
+        if (!await DirUtil.Exists(GetDataPath.getDownloadsDir())) await DirUtil.Create(GetDataPath.getDownloadsDir())
         if (await FileUtil.Exists(this.filePath)) await FileUtil.Delete(this.filePath)
         if (await FileUtil.Exists(this.tempFilePath)) await FileUtil.Delete(this.tempFilePath)
 
@@ -150,6 +150,6 @@ export default class Installer extends EventEmitter {
     }
 
     getDownloadsPath() {
-        return path.join(GetUserPath.getDir(), 'downloads');
+        return path.join(GetDataPath.getDir(), 'downloads');
     }
 }

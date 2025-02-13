@@ -29,7 +29,7 @@ export default class EnvMacOS {
         text = await FileUtil.ReadAll(envFilePath);
 
         if (enable) {
-            let binPath  = GetUserPath.getBinDir();
+            let binPath  = GetDataPath.getBinDir();
             let appendText = `export PATH="${binPath}:$PATH"`;
 
             if (text.slice(-1) !== '\n') {

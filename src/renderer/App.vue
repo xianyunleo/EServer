@@ -31,7 +31,7 @@ import Software from '@/main/core/software/Software'
 import Service from '@/main/utils/Service'
 import { message } from 'ant-design-vue'
 import DirUtil from '@/main/utils/DirUtil'
-import { MAC_USER_CORE_DIR } from '@/main/utils/constant'
+import { MAC_DATA_DIR } from '@/main/utils/constant'
 import ConfigProvider from '@/renderer/components/Theme/ConfigProvider.vue'
 import SetLanguage from '@/renderer/components/SetLanguage.vue'
 import { useMainStore } from '@/renderer/store'
@@ -119,8 +119,8 @@ async function winInit() {
 
 async function macCreateUserCoreDir() {
   try {
-    if (!(await DirUtil.Exists(MAC_USER_CORE_DIR))) {
-      await DirUtil.Create(MAC_USER_CORE_DIR)
+    if (!(await DirUtil.Exists(MAC_DATA_DIR))) {
+      await DirUtil.Create(MAC_DATA_DIR)
     }
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]))

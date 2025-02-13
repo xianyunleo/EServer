@@ -1,7 +1,7 @@
 import path from 'path'
 import {EnumSoftwareType} from "@/shared/utils/enum";
 import GetCorePath from "@/shared/utils/GetCorePath";
-import GetUserPath from "@/shared/utils/GetUserPath";
+import GetDataPath from "@/shared/utils/GetDataPath";
 import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
 import { parseTemplateStrings } from '@/shared/utils/utils'
@@ -10,7 +10,7 @@ export default class Software {
     static #list;
 
     static async DirExists() {
-        return await DirUtil.Exists(GetUserPath.getSoftwareDir());
+        return await DirUtil.Exists(GetDataPath.getSoftwareDir());
     }
 
     /**
@@ -42,7 +42,7 @@ export default class Software {
         }
 
         //自定义software配置
-        const customSoftDir = path.join(GetUserPath.getDir(), '/custom/software')
+        const customSoftDir = path.join(GetDataPath.getDir(), '/custom/software')
         const customSoftConfigPath = path.join(customSoftDir, 'software.json')
         const customSoftIconDir = 'file://' + path.join(customSoftDir, '/icon')
 
@@ -101,7 +101,7 @@ export default class Software {
         if (item.ConfPath == null) {
             throw new Error(`${item.Name} Conf Path 没有配置！`);
         }
-        const etcDir = path.join(GetUserPath.getEtcDir(), item.DirName)
+        const etcDir = path.join(GetDataPath.getEtcDir(), item.DirName)
         const varMap = { EtcDir: etcDir}
         return path.normalize(parseTemplateStrings(item.ConfPath, varMap))
     }
@@ -115,7 +115,7 @@ export default class Software {
         if (item.ServerConfPath == null) {
             throw new Error(`${item.Name} Server Conf Path 没有配置！`);
         }
-        const etcDir = path.join(GetUserPath.getEtcDir(), item.DirName)
+        const etcDir = path.join(GetDataPath.getEtcDir(), item.DirName)
         const varMap = { EtcDir: etcDir}
         return path.normalize(parseTemplateStrings(item.ServerConfPath, varMap))
     }
@@ -142,11 +142,11 @@ export default class Software {
         type = EnumSoftwareType[type];
         switch (type) {
             case EnumSoftwareType.PHP:
-                return GetUserPath.getPhpTypeDir();
+                return GetDataPath.getPhpTypeDir();
             case EnumSoftwareType.Server:
-                return GetUserPath.getServerTypeDir();
+                return GetDataPath.getServerTypeDir();
             case EnumSoftwareType.Tool:
-                return GetUserPath.getToolTypeDir();
+                return GetDataPath.getToolTypeDir();
             default:
                 return '';
         }

@@ -1,5 +1,5 @@
 import nodePath from 'path'
-import GetUserPath from "@/shared/utils/GetUserPath";
+import GetDataPath from "@/shared/utils/GetDataPath";
 import NginxWebsite from "@/main/core/website/NginxWebsite";
 import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
@@ -18,7 +18,7 @@ export default class Nginx {
      * @returns {Promise<string[]>}
      */
     static async getWebsiteList(search = '') {
-        let vhostsPath = GetUserPath.getNginxVhostsDir()
+        let vhostsPath = GetDataPath.getNginxVhostsDir()
         if (!await DirUtil.Exists(vhostsPath)) {
             return [];
         }
@@ -140,7 +140,7 @@ export default class Nginx {
     }
 
     static async websiteExists(serverName, port = null) {
-        const vhostsPath = GetUserPath.getNginxVhostsDir()
+        const vhostsPath = GetDataPath.getNginxVhostsDir()
         const files = await DirUtil.GetFiles(vhostsPath)
         const filterFn = async (path) => {
             const confText = await FileUtil.ReadAll(path)
@@ -158,7 +158,7 @@ export default class Nginx {
     }
 
     static getWebsiteConfPath(confName) {
-        return nodePath.join(GetUserPath.getNginxVhostsDir(), confName)
+        return nodePath.join(GetDataPath.getNginxVhostsDir(), confName)
     }
 
     static getWebsiteConfName(serverName, port) {
@@ -166,7 +166,7 @@ export default class Nginx {
     }
 
     static getWebsiteRewriteConfPath(confName) {
-        return nodePath.join(GetUserPath.getNginxVhostsRewriteDir(), confName)
+        return nodePath.join(GetDataPath.getNginxVhostsRewriteDir(), confName)
     }
 
     static getAllServerName(text) {
@@ -184,7 +184,7 @@ export default class Nginx {
      * @returns {Promise<string[]>}
      */
     static async getRewriteRuleList() {
-        let rewritePath = GetUserPath.getNginxRewriteDir()
+        let rewritePath = GetDataPath.getNginxRewriteDir()
         if (!await DirUtil.Exists(rewritePath)) {
             return [];
         }
@@ -200,7 +200,7 @@ export default class Nginx {
      * @returns {string}
      */
     static async getRewriteByRule(ruleName) {
-        let rewritePath = nodePath.join(GetUserPath.getNginxRewriteDir(), `${ruleName}.conf`)
+        let rewritePath = nodePath.join(GetDataPath.getNginxRewriteDir(), `${ruleName}.conf`)
         if (!await FileUtil.Exists(rewritePath)) {
             return '';
         }

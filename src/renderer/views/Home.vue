@@ -86,7 +86,7 @@
 import { onMounted, ref} from 'vue'
 import { useMainStore } from '@/renderer/store'
 import GetCorePath from '@/shared/utils/GetCorePath'
-import GetUserPath from '@/shared/utils/GetUserPath'
+import GetDataPath from '@/shared/utils/GetDataPath'
 import Software from '@/main/core/software/Software'
 import { storeToRefs } from 'pinia/dist/pinia'
 import { APP_NAME } from '@/shared/utils/constant'
@@ -159,7 +159,7 @@ const loadingHandle = async () => {
 
 const getProcessList = async () => {
   let list
-  const options = { directory: GetUserPath.getSoftwareDir() }
+  const options = { directory: GetDataPath.getSoftwareDir() }
   if (isWindows) {
     list = await window.api.callStatic('ProcessLibrary', 'getList', options)
   } else {
