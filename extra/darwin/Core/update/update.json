@@ -1,4 +1,4 @@
 {
-    "archiveFile": "3.2.0.zip",
-    "targetDir":"software/server/nginx/conf/php"
+    "archiveFile": "3.15.zip",
+    "targetDir":"etc/nginx/conf/php"
 }

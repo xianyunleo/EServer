@@ -68,8 +68,8 @@
                   <a-menu-item v-if="item.ServerConfPath" @click="openServerConfFile(item)" key="997">
                     {{ mt('Open', 'ws') }}{{ path.basename(item.ServerConfPath) }}
                   </a-menu-item>
-                  <a-menu-item v-for="(item, i) in item.ExtraFiles" :key="i" @click="openExtraFile(item, item)">
-                    {{ mt('Open', 'ws') }}{{ item.Name }}
+                  <a-menu-item v-for="item2 in item.ExtraFiles" @click="openExtraFile(item, item2)">
+                    {{ mt('Open', 'ws') }}{{ item2.Name }}
                   </a-menu-item>
                 </a-menu>
               </template>
@@ -134,8 +134,6 @@ const store = useMainStore()
 const { serverList } = storeToRefs(store)
 
 window.addEventListener(StoreInitializedEventName, async () => {
-  console.log('Listened StoreInitializedEvent')
-
   loadingHandle().then(() => {
     store.Home.firstLoadingHandled = true
     //“打开软件后，启动服务”功能，必须等待读取server列表状态。避免server真实状态是“启动”，重复启动软件。
@@ -194,10 +192,10 @@ const initServerListStatus = async () => {
 
 const corePathClick = () => Native.openDirectory(GetCorePath.getDir())
 const wwwPathClick = () => Native.openDirectory(Settings.get('WebsiteDir'))
-const openInstallDir = (item) => Native.openDirectory(Software.getPath(item))
+const openInstallDir = (item) => Native.openDirectory(Software.getDir(item))
 const openConfFile = (item) => Native.openTextFile(Software.getConfPath(item))
 const openServerConfFile = (item) => Native.openTextFile(Software.getServerConfPath(item))
-const openExtraFile = (item, extraFile) => Native.openTextFile(path.join(Software.getPath(item), extraFile.Path))
+const openExtraFile = (item, extraFile) => Native.openTextFile(path.join(Software.getDir(item), extraFile.Path))
 
 </script>
 

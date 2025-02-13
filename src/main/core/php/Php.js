@@ -21,8 +21,7 @@ export default class Php {
     }
 
     static getConfDir(version) {
-        const phpDir = GetUserPath.getPhpDir(version)
-        return isWindows ? phpDir : path.join(phpDir, 'etc')
+        return path.join(GetUserPath.getEtcDir(), `php-${version}`)
     }
 
     static getConfPath(version) {

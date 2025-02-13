@@ -5,6 +5,7 @@ import { parseTemplateStrings} from "@/shared/utils/utils";
 import child_process from "child_process";
 import path from "path";
 import FileUtil from "@/main/utils/FileUtil";
+import GetUserPath from '@/shared/utils/GetUserPath'
 
 export default class ServerControl {
     /**
@@ -13,7 +14,7 @@ export default class ServerControl {
      * @returns {Promise<void>}
      */
     static async start(item) {
-        const workPath = Software.getPath(item) //服务目录
+        const workPath = Software.getDir(item) //服务目录
         const ctrlProcessPath = this.getControlProcessPath(item)
         const options = { cwd: workPath, detached: true }
 
@@ -53,7 +54,7 @@ export default class ServerControl {
     }
 
     static getControlProcessPath(item) {
-        const workPath = Software.getPath(item)
+        const workPath = Software.getDir(item)
         if (item.ControlProcessPath) {
             return path.join(workPath, item.ControlProcessPath) //控制进程的目录
         } else {
@@ -67,7 +68,7 @@ export default class ServerControl {
      * @returns {Promise<void>}
      */
     static async stop(item) {
-        const workPath = Software.getPath(item)
+        const workPath = Software.getDir(item)
         const options = { cwd: workPath, detached: true }
         if (item.StopServerArgs) {
             const args = this.parseServerArgs(item, item.StopServerArgs)
@@ -88,16 +89,23 @@ export default class ServerControl {
      * @param args{array}
      */
     static parseServerArgs(item, args) {
-        const workPath = Software.getPath(item)
-        return args.map((arg) => {
-            const argObj = {
-                WorkPath: workPath.replaceSlash(),
-                ServerProcessPath: path.join(workPath, item.ServerProcessPath).replaceSlash(),
-                ConfPath: item.ConfPath ? path.join(workPath, item.ConfPath).replaceSlash() : null,
-                ServerConfPath: item.ServerConfPath ? path.join(workPath, item.ServerConfPath).replaceSlash() : null,
-                ExtraProcessPath: item.ExtraProcessPath ? path.join(workPath, item.ExtraProcessPath).replaceSlash() : null
+        const workDir = Software.getDir(item)
+        const etcDir = GetUserPath.getEtcDir()
+        return args.map((varStr) => {
+            //将所有平台的路径分隔符改成正斜杠 /
+            const varMap = {
+                WorkDir: workDir.replaceSlash(),
+                WorkPath: workDir.replaceSlash(),
+                EtcDir: path.join(etcDir, item.DirName).replaceSlash(),
+                ServerProcessPath: path.join(workDir, item.ServerProcessPath).replaceSlash(),
+                ConfPath: item.ConfPath ? item.ConfPath.replaceSlash() : null,
+                ServerConfPath: item.ServerConfPath ? item.ServerConfPath.replaceSlash() : null,
+                ExtraProcessPath: item.ExtraProcessPath ? path.join(workDir, item.ExtraProcessPath).replaceSlash() : null
             }
-            return parseTemplateStrings(arg, argObj)
+            for (let i = 0; i < 3; i++) { //最多解析嵌套的层数为3层
+                varStr = parseTemplateStrings(varStr, varMap)
+            }
+            return varStr
         })
     }
 }

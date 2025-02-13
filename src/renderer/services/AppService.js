@@ -4,7 +4,6 @@ import { StoreInitializedEventName } from '@/renderer/utils/constant'
 
 export default class AppService {
     static storeInitThen() {
-        console.log('Call storeInitThen')
         const storeInitializedEvent = new Event(StoreInitializedEventName)
         window.dispatchEvent(storeInitializedEvent)
 

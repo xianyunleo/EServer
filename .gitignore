@@ -14,6 +14,7 @@ extra/win32/core/temp
 extra/win32/core/downloads
 extra/win32/core/database
 extra/win32/core/bin
+extra/win32/core/etc
 
 extra/darwin/Core/settings.json
 extra/darwin/Core/software
@@ -22,3 +23,4 @@ extra/darwin/Core/temp
 extra/darwin/Core/downloads
 extra/darwin/Core/database
 extra/darwin/Core/bin
+extra/darwin/Core/etc

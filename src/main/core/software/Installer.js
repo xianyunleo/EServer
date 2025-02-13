@@ -83,7 +83,7 @@ export default class Installer extends EventEmitter {
 
     async _configure() {
         this._changeStatus(EnumSoftwareInstallStatus.Configuring);
-        await CommonInstall.configure(this.softItem.DirName);
+        await CommonInstall.configure(this.softItem);
     }
 
     /**
@@ -114,7 +114,7 @@ export default class Installer extends EventEmitter {
     async _extract() {
         this._changeStatus(EnumSoftwareInstallStatus.Extracting);
         const filePath = path.join(this.getDownloadsPath(), this.fileName);
-        const dest = Software.getTypePath(this.softItem.Type);
+        const dest = Software.getTypeDir(this.softItem.Type);
         await CommonInstall.extract(filePath, dest);
     }
 
@@ -124,7 +124,7 @@ export default class Installer extends EventEmitter {
      * @returns {Promise<boolean>}
      */
     static async uninstall(name) {
-        const path = Software.getPath(await Software.findItem(name))
+        const path = Software.getDir(await Software.getItem(name))
         await DirUtil.Delete(path)
         return !await DirUtil.Exists(path)
     }

@@ -4,6 +4,7 @@ import GetCorePath from "@/shared/utils/GetCorePath";
 import GetUserPath from "@/shared/utils/GetUserPath";
 import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
+import { parseTemplateStrings } from '@/shared/utils/utils'
 
 export default class Software {
     static #list;
@@ -63,8 +64,12 @@ export default class Software {
         Software.#list = list.concat(customList)
     }
 
-    static async findItem(name) {
+    static async getItem(name) {
         return (await Software.getList()).find((item) => item.Name === name)
+    }
+
+    static async getItemByDirName(dirName) {
+        return (await Software.getList()).find((item) => item.DirName === dirName)
     }
 
     /**
@@ -73,7 +78,7 @@ export default class Software {
      * @returns {boolean}
      */
     static async IsInstalled(item) {
-        let path = Software.getPath(item);
+        let path = Software.getDir(item);
         return await DirUtil.Exists(path);
     }
 
@@ -82,13 +87,13 @@ export default class Software {
      * @param item {SoftwareItem}
      * @returns {string}
      */
-    static getPath(item) {
-        let typePath = Software.getTypePath(item.Type);
+    static getDir(item) {
+        let typePath = Software.getTypeDir(item.Type);
         return path.join(typePath, item.DirName);
     }
 
     /**
-     * 获取软件配置文件所在的目录
+     * 获取软件配置文件的路径
      * @param item {SoftwareItem}
      * @returns {string}
      */
@@ -96,12 +101,13 @@ export default class Software {
         if (item.ConfPath == null) {
             throw new Error(`${item.Name} Conf Path 没有配置！`);
         }
-        let softPath = Software.getPath(item);
-        return path.join(softPath, item.ConfPath);
+        const etcDir = path.join(GetUserPath.getEtcDir(), item.DirName)
+        const varMap = { EtcDir: etcDir}
+        return path.normalize(parseTemplateStrings(item.ConfPath, varMap))
     }
 
     /**
-     * 获取软件服务配置文件所在的目录
+     * 获取软件Server配置文件的路径
      * @param item {SoftwareItem}
      * @returns {string}
      */
@@ -109,12 +115,13 @@ export default class Software {
         if (item.ServerConfPath == null) {
             throw new Error(`${item.Name} Server Conf Path 没有配置！`);
         }
-        let softPath = Software.getPath(item);
-        return path.join(softPath, item.ServerConfPath);
+        const etcDir = path.join(GetUserPath.getEtcDir(), item.DirName)
+        const varMap = { EtcDir: etcDir}
+        return path.normalize(parseTemplateStrings(item.ServerConfPath, varMap))
     }
 
     /**
-     * 获取软件服务进程绝对路径
+     * 获取软件Server进程的路径
      * @param item {SoftwareItem}
      * @returns {string}
      */
@@ -122,16 +129,16 @@ export default class Software {
         if (item.ServerProcessPath == null) {
             throw new Error(`${item.Name} Server Process Path 没有配置！`);
         }
-        let workPath = Software.getPath(item); //服务目录
+        let workPath = Software.getDir(item); //服务目录
         return path.join(workPath, item.ServerProcessPath);  //服务的进程目录
     }
 
     /**
-     * 根据软件类型，获取软件的类型目录
+     * 根据软件类型，获取软件的类型的目录
      * @param type {SoftwareItem.Type}
      * @returns {string}
      */
-    static getTypePath(type) {
+    static getTypeDir(type) {
         type = EnumSoftwareType[type];
         switch (type) {
             case EnumSoftwareType.PHP:

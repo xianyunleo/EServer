@@ -3,6 +3,7 @@ export default class SoftwareItem {
     Name;
     ServerName;
     DirName;
+    EtcList;
     ServerProcessPath;
     ConfPath;
     ServerConfPath;

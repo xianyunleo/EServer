@@ -14,6 +14,9 @@ export default class GetUserPath {
         return GetCorePath.getDir()
     }
 
+    static getEtcDir = () => path.join(this.getDir(), 'etc') //所有software的配置的父目录
+    static getOwnEtcDir = (dirName) => path.join(this.getEtcDir(), dirName)
+
     static getBinDir = () => path.join(this.getDir(), 'bin')
 
     static geTempDir = () => path.join(this.getDir(), TEMP_DIR_NAME)
@@ -25,14 +28,15 @@ export default class GetUserPath {
 
     static getPhpTypeDir = () => path.join(this.getSoftwareDir(), 'php')
 
-
     static getServerTypeDir = () => path.join(this.getSoftwareDir(), 'server')
 
     static getToolTypeDir = () => path.join(this.getSoftwareDir(), 'tool')
 
     static getNginxDir = () => path.join(this.getServerTypeDir(), 'nginx')
 
-    static getNginxConfDir = () => path.join(this.getNginxDir(), 'conf')
+    static getEtcNginxDir = () => path.join(this.getEtcDir(), 'nginx')
+
+    static getNginxConfDir = () => path.join(this.getEtcNginxDir(), 'conf')
 
     static getNginxVhostsDir = () => path.join(this.getNginxConfDir(), 'vhosts')
 

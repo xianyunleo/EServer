@@ -6,10 +6,32 @@ import DirUtil from '@/main/utils/DirUtil'
 import Php from '@/main/core/php/Php'
 import Database from '@/main/core/Database'
 import { isWindows } from '@/main/utils/utils'
+import Software from '@/main/core/software/Software'
+import path from 'path'
+import FsUtil from '@/main/utils/FsUtil'
 
 export default class SoftwareInit {
     static async initAll() {
         await Promise.all([this.initNginx(), this.initAllPHP(), this.initAllMySQL()])
+    }
+
+    static async initEtc(softItem) {
+        const etcList = softItem.EtcList
+        if (!etcList) return
+        const ownSoftDir = Software.getDir(softItem)
+        const ownEctDir = GetUserPath.getOwnEtcDir(softItem.DirName)
+        for (const etcName of etcList) {
+            const source = path.join(ownSoftDir, etcName)
+            if (!await FsUtil.Exists(source)) {
+                continue //源文件不存在，跳过
+            }
+            const etcPath = path.join(ownEctDir, etcName)
+            if (await FsUtil.Exists(etcPath)) {
+                continue //已有ect文件，跳过
+            }
+            await DirUtil.Create(nodePath.dirname(etcPath))
+            await FsUtil.Copy(source, etcPath, { recursive: true })
+        }
     }
 
     static async initNginx() {

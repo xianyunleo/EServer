@@ -11,6 +11,7 @@ import LocalInstall from '@/main/core/software/LocalInstall'
 import FsUtil from '@/main/utils/FsUtil'
 import Shell from '@/main/utils/Shell'
 import { extractZip } from '@/main/utils/extract'
+import CommonInstall from '@/main/core/software/CommonInstall'
 
 export default class App {
     static async initFileExists() {
@@ -34,7 +35,7 @@ export default class App {
         }
 
         await this.moveInitFiles(['downloads', 'www', 'custom'])
-        await this.createCoreSubDir(['software', 'database', 'bin', `${TEMP_DIR_NAME}/php`])
+        await this.createUserSubDir(['etc', 'software', 'database', 'bin', `${TEMP_DIR_NAME}/php`])
 
         if (!softwareDirExists) { //目录不存在说明是第一次安装，不是覆盖安装
             const files = await DirUtil.GetFiles(GetUserPath.getDownloadsDir())
@@ -83,7 +84,12 @@ export default class App {
         }
         await this.moveInitFiles(['downloads', 'www', 'custom'])
 
-        //下面update逻辑，用于更新 UserDir
+        //迁移配置文件到etc目录，并初始化
+        const list = Software.getList()
+        for (const item of list) {
+            await CommonInstall.configure(item)
+        }
+        //update包更新逻辑
         const updateDir = path.join(GetCorePath.getDir(), 'update')
         if (await DirUtil.Exists(updateDir)) {
             const updateJson = await FileUtil.ReadAll(path.join(updateDir, 'update.json'))
@@ -119,7 +125,7 @@ export default class App {
      * 创建目录，如果目录不存在的情况下
      * @param dirs
      */
-    static async createCoreSubDir(dirs) {
+    static async createUserSubDir(dirs) {
         for (const dir of dirs) {
             let p = path.join(GetUserPath.getDir(), dir)
             if (!await DirUtil.Exists(p)) {
@@ -129,7 +135,7 @@ export default class App {
     }
 
     /**
-     * 将initFiles目录下的文件（文件夹）移动到用户操作的核心目录，如果已存在，不会覆盖。
+     * 将initFiles目录下的文件（和目录）移动到用户的目录，如果已存在，则跳过。
      * @param files
      */
     static async moveInitFiles(files = []) {

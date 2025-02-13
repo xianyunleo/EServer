@@ -250,15 +250,15 @@ const clickStop = (name) => {
 const openApp = (item) => {
   let appPath = ''
   if (isWindows) {
-    appPath = path.join(Software.getPath(item), item.WinExePath)
+    appPath = path.join(Software.getDir(item), item.WinExePath)
   } else if (isMacOS) {
-    appPath = Software.getPath(item)
+    appPath = Software.getDir(item)
   }
   Native.openApp(appPath)
 }
 
 const openInstallPath = async (item) => {
-  let path = item.IsMacApp ? Software.getTypePath(item.Type) : Software.getPath(item)
+  let path = item.IsMacApp ? Software.getTypeDir(item.Type) : Software.getDir(item)
   Native.openDirectory(path)
 }
 
