@@ -85,9 +85,11 @@ export default class App {
         await this.moveInitFiles(['downloads', 'www', 'custom'])
 
         //迁移配置文件到etc目录，并初始化
-        const list = Software.getList()
+        const list = await Software.getList()
         for (const item of list) {
-            await CommonInstall.configure(item)
+            if (await DirUtil.Exists(Software.getDir(item))) {
+                await CommonInstall.configure(item)
+            }
         }
         //update包更新逻辑
         const updateDir = path.join(GetCorePath.getDir(), 'update')
