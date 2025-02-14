@@ -18,7 +18,7 @@ export default class CommonInstall {
     }
 
     static async configure(softItem) {
-        await SoftwareInit.initEtc(softItem)
+        await SoftwareInit.initEtcDir(softItem)
         const dirName = softItem.DirName
         if (dirName.match(/^mysql-[.\d]+$/)) {
             const version = SoftwareExtend.getMysqlVersion(dirName)

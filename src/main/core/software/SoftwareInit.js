@@ -15,7 +15,7 @@ export default class SoftwareInit {
         await Promise.all([this.initNginx(), this.initAllPHP(), this.initAllMySQL()])
     }
 
-    static async initEtc(softItem) {
+    static async initEtcDir(softItem) {
         const etcList = softItem.EtcList
         if (!etcList) return
         const ownSoftDir = Software.getDir(softItem)
