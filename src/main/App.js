@@ -31,7 +31,7 @@ export default class App {
             if (!await DirUtil.Exists(MAC_DATA_DIR)) {
                 await DirUtil.Create(MAC_DATA_DIR)
             }
-            await this.updateMacCoreSubDir(['Library'])
+            await this.updateMacDataSubDir(['Library'])
         }
 
         await this.moveInitFiles(['downloads', 'www', 'custom'])
@@ -80,7 +80,7 @@ export default class App {
         }
 
         if (isMacOS) {
-            await this.updateMacCoreSubDir(['Library'])
+            await this.updateMacDataSubDir(['Library'])
         }
         await this.moveInitFiles(['downloads', 'www', 'custom'])
 
@@ -104,13 +104,13 @@ export default class App {
     }
 
     /**
-     *  Mac更新User Core目录下的文件
+     *  Mac更新data目录下的文件
      * @param dirs
      */
-    static async updateMacCoreSubDir(dirs) {
-        let corePath = GetDataPath.getDir()
+    static async updateMacDataSubDir(dirs) {
+        const coreDir = GetCorePath.getDir()
         for (const dir of dirs) {
-            let source = path.join(corePath, dir)
+            let source = path.join(coreDir, dir)
             if (!await DirUtil.Exists(source)) {
                 continue
             }
