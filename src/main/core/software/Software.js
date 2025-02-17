@@ -134,7 +134,7 @@ export default class Software {
     }
 
     /**
-     * 根据软件类型，获取软件的类型的目录
+     * 根据软件类型，获取软件类型的目录
      * @param type {SoftwareItem.Type}
      * @returns {string}
      */
