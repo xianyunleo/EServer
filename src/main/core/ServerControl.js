@@ -16,26 +16,22 @@ export default class ServerControl {
     static async start(item) {
         const workPath = Software.getDir(item) //服务目录
         const ctrlProcessPath = this.getControlProcessPath(item)
-        const options = { cwd: workPath, detached: true }
-
-        if (item.ShellServerProcess) {
-            options.detached = false
-            options.shell = true //使用shell，childProcess返回的pid是shell的pid
-        }
 
         if (!await FileUtil.Exists(ctrlProcessPath)) {
-            throw new Error(`${ctrlProcessPath} 文件不存在！`);
+            throw new Error(`${ctrlProcessPath} 文件不存在！`)
         }
 
-        let args = []
-        if (item.StartServerArgs) {
-            args = this.parseServerArgs(item, item.StartServerArgs)
+        let args
+        args = Array.isArray(item.StartServerArgs) ? item.StartServerArgs.join(' ') : item.StartServerArgs
+        if (args) {
+            args = this.parseServerArgs(item, args)
         }
 
         item.isRunning = true
         item.errMsg = ''
-
-        const childProcess = child_process.spawn(ctrlProcessPath, args, options);
+        const command = `${ctrlProcessPath} ${args}`
+        const options = { cwd: workPath, shell: true } //使用shell，childProcess返回的pid是shell的pid
+        const childProcess = child_process.spawn(command, [], options)
 
         childProcess.stderr.on('data', (data) => {
             devConsoleLog('stderr data', data?.toString())
@@ -47,10 +43,10 @@ export default class ServerControl {
             item.isRunning = false
         })
 
-        devConsoleLog('ServerControl start command:', `${ctrlProcessPath} ${args.join(' ')}`)
+        devConsoleLog('ServerControl start command:', command)
         devConsoleLog(`${path.basename(ctrlProcessPath)},pid ${childProcess.pid}`)
 
-        item.pid = childProcess.pid;
+        item.pid = childProcess.pid
     }
 
     static getControlProcessPath(item) {
@@ -68,16 +64,15 @@ export default class ServerControl {
      * @returns {Promise<void>}
      */
     static async stop(item) {
-        const workPath = Software.getDir(item)
-        const options = { cwd: workPath, detached: true }
-        if (item.StopServerArgs) {
-            const args = this.parseServerArgs(item, item.StopServerArgs)
-            if (item.ShellServerProcess) {
-                options.detached = false
-                options.shell = true //使用shell，childProcess返回的pid是shell的pid
-            }
+        let args
+        args = Array.isArray(item.StopServerArgs) ? item.StopServerArgs.join(' ') : item.StopServerArgs
+        if (args) {
+            args = this.parseServerArgs(item, args)
             const ctrlProcessPath = this.getControlProcessPath(item)
-            child_process.spawn(ctrlProcessPath, args, options)
+            const command = `${ctrlProcessPath} ${args}`
+            const workPath = Software.getDir(item)
+            const options = { cwd: workPath, shell: true }
+            child_process.spawn(command, args, options)
         } else {
             await ProcessExtend.kill(item.pid)
         }
@@ -86,26 +81,24 @@ export default class ServerControl {
     /**
      *
      * @param item{SoftwareItem}
-     * @param args{array}
+     * @param args{string}
      */
     static parseServerArgs(item, args) {
         const workDir = Software.getDir(item)
         const etcDir = GetDataPath.getEtcDir()
-        return args.map((varStr) => {
-            //将所有平台的路径分隔符改成正斜杠 /
-            const varMap = {
-                WorkDir: workDir.replaceSlash(),
-                WorkPath: workDir.replaceSlash(),
-                EtcDir: path.join(etcDir, item.DirName).replaceSlash(),
-                ServerProcessPath: path.join(workDir, item.ServerProcessPath).replaceSlash(),
-                ConfPath: item.ConfPath ? item.ConfPath.replaceSlash() : null,
-                ServerConfPath: item.ServerConfPath ? item.ServerConfPath.replaceSlash() : null,
-                ExtraProcessPath: item.ExtraProcessPath ? path.join(workDir, item.ExtraProcessPath).replaceSlash() : null
-            }
-            for (let i = 0; i < 3; i++) { //最多解析嵌套的层数为3层
-                varStr = parseTemplateStrings(varStr, varMap)
-            }
-            return varStr
-        })
+
+        const varMap = {
+            WorkDir: workDir.replaceSlash(),
+            WorkPath: workDir.replaceSlash(),
+            EtcDir: path.join(etcDir, item.DirName).replaceSlash(),
+            ServerProcessPath: path.join(workDir, item.ServerProcessPath).replaceSlash(),
+            ConfPath: item.ConfPath ? item.ConfPath.replaceSlash() : null,
+            ServerConfPath: item.ServerConfPath ? item.ServerConfPath.replaceSlash() : null,
+            ExtraProcessPath: item.ExtraProcessPath ? path.join(workDir, item.ExtraProcessPath).replaceSlash() : null
+        }
+        for (let i = 0; i < 3; i++) { //最多解析嵌套的层数为3层
+            args = parseTemplateStrings(args, varMap)
+        }
+        return args
     }
 }
