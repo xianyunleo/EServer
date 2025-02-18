@@ -73,10 +73,11 @@ export default class ServerControl {
     static parseServerFields(item) {
         const workDir = Software.getDir(item)
         const etcDir = GetDataPath.getEtcDir()
-        const fields = ['ConfPath', 'ServerConfPath', 'ServerProcessPath', 'ControlProcessPath', 'StartServerArgs', 'StopServerArgs', 'ExtraProcessPath','ServerPort']
+        const fields = ['ConfPath', 'ServerConfPath', 'ServerProcessPath', 'ControlProcessPath', 'StartServerArgs', 'StopServerArgs', 'ExtraProcessPath']
         const varMap = {
             WorkDir: workDir.replaceSlash(),
-            EtcDir: path.join(etcDir, item.DirName).replaceSlash()
+            EtcDir: path.join(etcDir, item.DirName).replaceSlash(),
+            ServerPort: item.ServerPort
         }
         const itemMap = {}
         for (const field of fields) {
