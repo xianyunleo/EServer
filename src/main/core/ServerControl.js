@@ -14,23 +14,18 @@ export default class ServerControl {
      * @returns {Promise<void>}
      */
     static async start(item) {
-        const workPath = Software.getDir(item) //服务目录
-        const ctrlProcessPath = this.getControlProcessPath(item)
+        const workDir = Software.getDir(item) //服务目录
+
+        const itemMap = this.parseServerFields(item)
+        const ctrlProcessPath = this.getControlProcessPath(itemMap)
 
         if (!await FileUtil.Exists(ctrlProcessPath)) {
             throw new Error(`${ctrlProcessPath} 文件不存在！`)
         }
-
-        let args
-        args = Array.isArray(item.StartServerArgs) ? item.StartServerArgs.join(' ') : item.StartServerArgs
-        if (args) {
-            args = this.parseServerArgs(item, args)
-        }
-
         item.isRunning = true
         item.errMsg = ''
-        const command = `${ctrlProcessPath} ${args}`
-        const options = { cwd: workPath, shell: true } //使用shell，childProcess返回的pid是shell的pid
+        const command = `${ctrlProcessPath} ${itemMap.StartServerArgs}`
+        const options = { cwd: workDir, shell: true } //使用shell，childProcess返回的pid是shell的pid
         const childProcess = child_process.spawn(command, [], options)
 
         childProcess.stderr.on('data', (data) => {
@@ -49,56 +44,51 @@ export default class ServerControl {
         item.pid = childProcess.pid
     }
 
-    static getControlProcessPath(item) {
-        const workPath = Software.getDir(item)
-        if (item.ControlProcessPath) {
-            return path.join(workPath, item.ControlProcessPath) //控制进程的目录
-        } else {
-            return path.join(workPath, item.ServerProcessPath) //服务进程的目录
-        }
-    }
-
     /**
      *
      * @param item{SoftwareItem}
      * @returns {Promise<void>}
      */
     static async stop(item) {
-        let args
-        args = Array.isArray(item.StopServerArgs) ? item.StopServerArgs.join(' ') : item.StopServerArgs
-        if (args) {
-            args = this.parseServerArgs(item, args)
-            const ctrlProcessPath = this.getControlProcessPath(item)
-            const command = `${ctrlProcessPath} ${args}`
-            const workPath = Software.getDir(item)
-            const options = { cwd: workPath, shell: true }
-            child_process.spawn(command, args, options)
+        if (item.StopServerArgs) {
+            const itemMap =  = this.parseServerFields(item)
+            const ctrlProcessPath = this.getControlProcessPath(itemMap)
+            const command = `${ctrlProcessPath} ${itemMap.StopServerArgs}`
+            const workDir = Software.getDir(item)
+            const options = { cwd: workDir, shell: true }
+            child_process.spawn(command, [], options)
         } else {
             await ProcessExtend.kill(item.pid)
         }
     }
 
+    static getControlProcessPath(itemMap) {
+        return itemMap.ControlProcessPath ? itemMap.ControlProcessPath : itemMap.ServerProcessPath
+    }
+
     /**
-     *
+     * 解析字段里的变量字符串
      * @param item{SoftwareItem}
-     * @param args{string}
      */
-    static parseServerArgs(item, args) {
+    static parseServerFields(item) {
         const workDir = Software.getDir(item)
         const etcDir = GetDataPath.getEtcDir()
-
+        const fields = ['ConfPath', 'ServerConfPath', 'ServerProcessPath', 'ControlProcessPath', 'StartServerArgs', 'StopServerArgs', 'ExtraProcessPath','ServerPort']
         const varMap = {
             WorkDir: workDir.replaceSlash(),
-            WorkPath: workDir.replaceSlash(),
-            EtcDir: path.join(etcDir, item.DirName).replaceSlash(),
-            ServerProcessPath: path.join(workDir, item.ServerProcessPath).replaceSlash(),
-            ConfPath: item.ConfPath ? item.ConfPath.replaceSlash() : null,
-            ServerConfPath: item.ServerConfPath ? item.ServerConfPath.replaceSlash() : null,
-            ExtraProcessPath: item.ExtraProcessPath ? path.join(workDir, item.ExtraProcessPath).replaceSlash() : null
+            EtcDir: path.join(etcDir, item.DirName).replaceSlash()
         }
+        const itemMap = {}
+        for (const field of fields) {
+            if (Object.hasOwn(item, field)) itemMap[field] = item[field]
+        }
+
         for (let i = 0; i < 3; i++) { //最多解析嵌套的层数为3层
-            args = parseTemplateStrings(args, varMap)
+            for (const field in itemMap) {
+                itemMap[field] = parseTemplateStrings(itemMap[field], { ...itemMap, ...varMap })
+            }
         }
-        return args
+
+        return itemMap
     }
 }
