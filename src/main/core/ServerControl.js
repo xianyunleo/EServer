@@ -51,7 +51,7 @@ export default class ServerControl {
      */
     static async stop(item) {
         if (item.StopServerArgs) {
-            const itemMap =  = this.parseServerFields(item)
+            const itemMap = this.parseServerFields(item)
             const ctrlProcessPath = this.getControlProcessPath(itemMap)
             const command = `${ctrlProcessPath} ${itemMap.StopServerArgs}`
             const workDir = Software.getDir(item)
