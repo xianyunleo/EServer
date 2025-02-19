@@ -1,8 +1,10 @@
 export default {
     ws: '', //Word Separator
     //Uppercase
-    Application: '应用软件',
+    Appearance: '外观',
+    App: '应用',
     Add: '添加',
+    Custom: '自定义',
     Delete: '删除',
     Modify: '修改',
     Access: '访问',
@@ -21,7 +23,7 @@ export default {
     Home: '首页',
     Website: '网站',
     Tools: '工具箱',
-    AppStore: '软件商店',
+    AppStore: '应用商店',
     Settings: '设置',
     Auto: '自动',
     About: '关于',

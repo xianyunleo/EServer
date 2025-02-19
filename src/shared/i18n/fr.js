@@ -1,8 +1,10 @@
 export default {
     ws: ' ', // Word Separator
     // Uppercase
-    Application: 'Application',
+    Appearance: 'Apparence',
+    App: 'App',
     Add: 'Ajouter',
+    Custom: 'Sur mesure',
     Delete: 'Supprimer',
     Modify: 'Modifier',
     Access: 'Accès',
