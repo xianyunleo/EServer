@@ -15,7 +15,7 @@
         <a-menu-item key="/tool">
           <template #icon><tool-two-tone /> </template>{{$t("Tools")}}
         </a-menu-item>
-        <a-menu-item key="/software">
+        <a-menu-item key="/appStore">
           <template #icon><appstore-two-tone /> </template>{{$t("AppStore")}}
         </a-menu-item>
       </div>
