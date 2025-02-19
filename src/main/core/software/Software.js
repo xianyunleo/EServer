@@ -14,7 +14,7 @@ export default class Software {
     }
 
     /**
-     * 获取软件列表
+     * 获取子应用列表
      * @returns {Promise<SoftwareItem[]>}
      */
     static async getList() {
@@ -26,39 +26,39 @@ export default class Software {
     }
 
     static async initList() {
-        const softDir = path.join(GetCorePath.getDir(), '/config/software')
-        const softConfigPath = path.join(softDir, 'software.json')
-        const softIconDir = 'file://' + path.join(softDir, '/icon')
+        const appDir = path.join(GetCorePath.getDir(), '/config/childApp')
+        const appConfigPath = path.join(appDir, 'childApp.json')
+        const appIconDir = 'file://' + path.join(appDir, '/icon')
 
         let list
         try {
-            list = JSON.parse(await FileUtil.ReadAll(softConfigPath))
+            list = JSON.parse(await FileUtil.ReadAll(appConfigPath))
             list = await Promise.all(list.map(async item => {
-                const Icon = path.join(softIconDir, item.Icon)
+                const Icon = path.join(appIconDir, item.Icon)
                 return { ...item, Icon }
             }))
         } catch {
-            throw new Error(`${softConfigPath} 配置文件错误！`)
+            throw new Error(`${appConfigPath} 配置文件错误！`)
         }
 
-        //自定义software配置
-        const customSoftDir = path.join(GetDataPath.getDir(), '/custom/software')
-        const customSoftConfigPath = path.join(customSoftDir, 'software.json')
-        const customSoftIconDir = 'file://' + path.join(customSoftDir, '/icon')
+        //自定义子应用配置
+        const customAppDir = path.join(GetDataPath.getDir(), '/custom/childApp')
+        const customAppConfigPath = path.join(customAppDir, 'childApp.json')
+        const customAppIconDir = 'file://' + path.join(customAppDir, '/icon')
 
         let customList
         try {
-            if (await FileUtil.Exists(customSoftConfigPath)) {
-                customList = JSON.parse(await FileUtil.ReadAll(customSoftConfigPath))
+            if (await FileUtil.Exists(customAppConfigPath)) {
+                customList = JSON.parse(await FileUtil.ReadAll(customAppConfigPath))
                 customList = await Promise.all(customList.map(async item => {
-                    const Icon = path.join(customSoftIconDir, item.Icon)
+                    const Icon = path.join(customAppIconDir, item.Icon)
                     return { ...item, Icon }
                 }))
             } else {
                 customList = []
             }
         } catch {
-            throw new Error(`${customSoftConfigPath} 配置文件错误！`)
+            throw new Error(`${customAppConfigPath} 配置文件错误！`)
         }
 
         Software.#list = list.concat(customList)
@@ -73,7 +73,7 @@ export default class Software {
     }
 
     /**
-     * 判断软件是否安装
+     * 判断子应用是否安装
      * @param item {SoftwareItem}
      * @returns {boolean}
      */
@@ -83,7 +83,7 @@ export default class Software {
     }
 
     /**
-     * 获取软件所在的目录
+     * 获取子应用所在的目录
      * @param item {SoftwareItem}
      * @returns {string}
      */
@@ -93,7 +93,7 @@ export default class Software {
     }
 
     /**
-     * 获取软件配置文件的路径
+     * 获取子应用配置文件的路径
      * @param item {SoftwareItem}
      * @returns {string}
      */
@@ -107,7 +107,7 @@ export default class Software {
     }
 
     /**
-     * 获取软件Server配置文件的路径
+     * 获取子应用Server配置文件的路径
      * @param item {SoftwareItem}
      * @returns {string}
      */
@@ -121,7 +121,7 @@ export default class Software {
     }
 
     /**
-     * 获取软件Server进程的路径
+     * 获取子应用Server进程的路径
      * @param item {SoftwareItem}
      * @returns {string}
      */
@@ -135,7 +135,7 @@ export default class Software {
     }
 
     /**
-     * 根据软件类型，获取软件类型的目录
+     * 根据子应用类型，获取子应用类型的目录
      * @param type {SoftwareItem.Type}
      * @returns {string}
      */
