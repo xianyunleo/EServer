@@ -1,5 +1,5 @@
-import SoftwareExtend from "@/main/core/software/SoftwareExtend";
-import SoftwareInit from "@/main/core/software/SoftwareInit";
+import ChildAppExtend from "@/main/core/childApp/ChildAppExtend";
+import ChildAppInit from "@/main/core/childApp/ChildAppInit";
 import DirUtil from "@/main/utils/DirUtil";
 import { extract7z, extractTar, extractZip } from '@/main/utils/extract'
 
@@ -17,17 +17,17 @@ export default class CommonInstall {
         }
     }
 
-    static async configure(softItem) {
-        await SoftwareInit.initEtcDir(softItem)
-        const dirName = softItem.DirName
+    static async configure(appItem) {
+        await ChildAppInit.initEtcDir(appItem)
+        const dirName = appItem.DirName
         if (dirName.match(/^mysql-[.\d]+$/)) {
-            const version = SoftwareExtend.getMysqlVersion(dirName)
-            await SoftwareInit.initMySQL(version)
+            const version = ChildAppExtend.getMysqlVersion(dirName)
+            await ChildAppInit.initMySQL(version)
         } else if (dirName.match(/^php-[.\d]+$/)) {
-            const version = SoftwareExtend.getPHPVersion(dirName)
-            await SoftwareInit.initPHP(version)
+            const version = ChildAppExtend.getPHPVersion(dirName)
+            await ChildAppInit.initPHP(version)
         } else if (dirName.match(/^nginx$/)) {
-            await SoftwareInit.initNginx()
+            await ChildAppInit.initNginx()
         }
     }
 }

@@ -11,9 +11,9 @@ const api = {
     },
     onMainWindowMaximize: (callback) => ipcRenderer.on('mainWindowMaximize', (_event, ...args) => callback(...args)),
     onMainWindowUnmaximize: (callback) => ipcRenderer.on('mainWindowUnmaximize', (_event, ...args) => callback(...args)),
-    onSoftDlProgress: (callback) => ipcRenderer.on('software-downloadProgress', (_event, ...args) => callback(...args)),
-    onSoftDlCancelled: (callback) => ipcRenderer.on('software-downloadCancelled', (_event, ...args) => callback(...args)),
-    onSoftInstStatus: (callback) => ipcRenderer.on('software-installStatus', (_event, ...args) => callback(...args))
+    onAppDlProgress: (callback) => ipcRenderer.on('childApp-downloadProgress', (_event, ...args) => callback(...args)),
+    onAppDlCancelled: (callback) => ipcRenderer.on('childApp-downloadCancelled', (_event, ...args) => callback(...args)),
+    onAppInstStatus: (callback) => ipcRenderer.on('childApp-installStatus', (_event, ...args) => callback(...args))
 }
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

@@ -29,7 +29,7 @@
 import { computed, ref } from 'vue'
 import Env from '@/main/core/Env/Env'
 import { message } from 'ant-design-vue'
-import SoftwareExtend from '@/main/core/software/SoftwareExtend'
+import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
 import GetDataPath from '@/shared/utils/GetDataPath'
 import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
@@ -51,7 +51,7 @@ const phpVersionList = computed(() => {
 })
 
 ;(async () => {
-  const list = await SoftwareExtend.getPHPList()
+  const list = await ChildAppExtend.getPHPList()
   phpVersionListTemp.value = list.map((item) => {
     return { value: item.version, label: item.name }
   })

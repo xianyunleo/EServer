@@ -142,7 +142,7 @@ export default {
     thisPwdIsUsedForSudoCommands: '这个密码用于 sudo 命令',
     pathCannotContainSpaces: '路径不能包含空格',
     installPackageDownloadUrl: '安装包下载地址',
-    softwareUninstallErrorTip: '请打开文件管理器，手动删除{0}目录',
+    childAppUninstallErrorTip: '请打开文件管理器，手动删除{0}目录',
     mysqlResetRootAccountPwd: 'MySQL 重置 root 账户的密码',
     afterOpenAppStartServer: '打开软件后，启动服务',
     pleaseChoose: '请选择',

@@ -1,6 +1,6 @@
 import { app, ipcMain } from 'electron'
 import { callStatic } from '@/main/common/call'
-import Installer from '@/main/core/software/Installer'
+import Installer from '@/main/core/childApp/Installer'
 import Downloader from 'electron-dl-downloader'
 
 ipcMain.handle('call', async (event, funName, ...args) => {
@@ -17,6 +17,9 @@ const functions = {
     },
     appExit: async () => {
         return app.exit()
+    },
+    appRestart: async () => {
+        return app.relaunch()
     },
     fileGetIcon: async (event, path, options) => {
         return await app.getFileIcon(path, options)
@@ -35,33 +38,33 @@ const functions = {
     windowClose: async (event) => {
         event.sender.getOwnerBrowserWindow().close()
     },
-    softwareInstall: async (event, name) => {
+    childAppInstall: async (event, name) => {
         const installer = new Installer(name)
         installer.on('status', (status) => {
-            event.sender.send('software-installStatus', name, status)
+            event.sender.send('childApp-installStatus', name, status)
         })
 
         const dlItem = await installer.install()
         dlItem.on('updated', (event2, state) => {
             if (state === Downloader.STATES.progressing) {
                 const progress = { receivedBytes: dlItem.getReceivedBytes(), totalBytes: dlItem.getTotalBytes() }
-                event.sender.send('software-downloadProgress', name, progress)
+                event.sender.send('childApp-downloadProgress', name, progress)
             } else {
-                event.sender.send('software-downloadCancelled', name)
+                event.sender.send('childApp-downloadCancelled', name)
             }
         })
         dlItem.once('done', (event2, state) => {
             if (state !== 'completed') {
-                event.sender.send('software-downloadCancelled', name)
+                event.sender.send('childApp-downloadCancelled', name)
             }
         })
         await installer.whenDone()
     },
-    softwareStopInstall: async (event, name) => {
+    childAppStopInstall: async (event, name) => {
         const dlItem = Installer.DownloadItemMap.get(name)
         dlItem?.cancel()
     },
-    softwareUninstall: async (event, name) => {
+    childAppUninstall: async (event, name) => {
         return await Installer.uninstall(name)
     }
 }

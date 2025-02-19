@@ -9,6 +9,7 @@ package-lock.json
 
 extra/win32/core/settings.json
 extra/win32/core/software
+extra/win32/core/childApp
 extra/win32/core/www
 extra/win32/core/temp
 extra/win32/core/downloads
@@ -18,6 +19,7 @@ extra/win32/core/etc
 
 extra/darwin/Core/settings.json
 extra/darwin/Core/software
+extra/darwin/Core/childApp
 extra/darwin/Core/www
 extra/darwin/Core/temp
 extra/darwin/Core/downloads

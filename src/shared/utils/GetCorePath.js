@@ -1,6 +1,6 @@
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import path from 'path'
-import Software from '@/main/core/software/Software'
+import ChildApp from '@/main/core/childApp/ChildApp'
 import { INIT_FILE_NAME, CoreDirNames } from '@/main/utils/constant'
 import GetPath from '@/shared/utils/GetPath'
 import process from 'process'
@@ -27,6 +27,6 @@ export default class GetCorePath {
     }
 
     static getMysqlIconPath() {
-        return 'file://' + path.join(Software.getIconPath(), 'mysql.png')
+        return 'file://' + path.join(ChildApp.getIconPath(), 'mysql.png')
     }
 }

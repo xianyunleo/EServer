@@ -8,7 +8,7 @@ import Settings from '@/main/Settings'
 import { watch } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import { storeToRefs } from 'pinia'
-import SoftwareExtend from '@/main/core/software/SoftwareExtend'
+import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
 
 const store = useMainStore()
 const { serverList } = storeToRefs(store)
@@ -128,7 +128,7 @@ export default class HomeService {
     }
 
     static async getNginxRequirePhpList() {
-        const list = await SoftwareExtend.getNginxRequirePhpList()
+        const list = await ChildAppExtend.getNginxRequirePhpList()
         return list.map((item) => `PHP-${item}`)
     }
 }

@@ -14,7 +14,7 @@ export default class GetDataPath {
         return GetCorePath.getDir()
     }
 
-    static getEtcDir = () => path.join(this.getDir(), 'etc') //所有software的配置的父目录
+    static getEtcDir = () => path.join(this.getDir(), 'etc') //所有childApp的配置的父目录
     static getOwnEtcDir = (dirName) => path.join(this.getEtcDir(), dirName)
 
     static getBinDir = () => path.join(this.getDir(), 'bin')
@@ -23,14 +23,14 @@ export default class GetDataPath {
 
     static getDownloadsDir = () => path.join(this.getDir(), 'downloads')
 
+    static getSoftwareDir = () => path.join(this.getDir(), 'software') // old
+    static getChildAppDir = () => path.join(this.getDir(), 'childApp')
 
-    static getSoftwareDir = () => path.join(this.getDir(), 'software')
+    static getPhpTypeDir = () => path.join(this.getChildAppDir(), 'php')
 
-    static getPhpTypeDir = () => path.join(this.getSoftwareDir(), 'php')
+    static getServerTypeDir = () => path.join(this.getChildAppDir(), 'server')
 
-    static getServerTypeDir = () => path.join(this.getSoftwareDir(), 'server')
-
-    static getToolTypeDir = () => path.join(this.getSoftwareDir(), 'tool')
+    static getToolTypeDir = () => path.join(this.getChildAppDir(), 'tool')
 
     static getNginxDir = () => path.join(this.getServerTypeDir(), 'nginx')
 
@@ -52,7 +52,7 @@ export default class GetDataPath {
 
     static getPhpDir(version) {
         if (isMacOS && isDev) {
-            return path.join(MAC_DATA_DIR, `software/php/php-${version}`)
+            return path.join(MAC_DATA_DIR, `childApp/php/php-${version}`)
         }
         return path.join(this.getPhpTypeDir(), `php-${version}`)
     }

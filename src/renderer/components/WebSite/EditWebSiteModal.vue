@@ -30,7 +30,7 @@ import RewriteSetting from '@/renderer/components/WebSite/EditWebSite/RewriteSet
 import SslSetting from '@/renderer/components/WebSite/EditWebSite/SslSetting.vue'
 import Settings from '@/main/Settings'
 import { mt, t } from '@/renderer/utils/i18n'
-import SoftwareExtend from '@/main/core/software/SoftwareExtend'
+import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
 import ServerService from '@/renderer/services/ServerService'
 
 const { serverName, port, editModalVisible: visible } = inject('WebsiteProvide')
@@ -40,7 +40,7 @@ const activeKey = ref(defaultKey)
 const editAfter = (phpVersion = '') => {
   if (Settings.get('AutoStartAndRestartServer') && ServerService.isRunning('Nginx')) {
     ServerService.restart('Nginx')
-    if (phpVersion) ServerService.restart(SoftwareExtend.getPhpName(phpVersion))
+    if (phpVersion) ServerService.restart(ChildAppExtend.getPhpName(phpVersion))
   }
 }
 </script>

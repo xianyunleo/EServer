@@ -87,7 +87,7 @@ import { onMounted, ref} from 'vue'
 import { useMainStore } from '@/renderer/store'
 import GetCorePath from '@/shared/utils/GetCorePath'
 import GetDataPath from '@/shared/utils/GetDataPath'
-import Software from '@/main/core/software/Software'
+import ChildApp from '@/main/core/childApp/ChildApp'
 import { storeToRefs } from 'pinia/dist/pinia'
 import { APP_NAME } from '@/shared/utils/constant'
 import Native from '@/renderer/utils/Native'
@@ -159,7 +159,7 @@ const loadingHandle = async () => {
 
 const getProcessList = async () => {
   let list
-  const options = { directory: GetDataPath.getSoftwareDir() }
+  const options = { directory: GetDataPath.getChildAppDir() }
   if (isWindows) {
     list = await window.api.callStatic('ProcessLibrary', 'getList', options)
   } else {
@@ -180,7 +180,7 @@ const initServerListStatus = async () => {
   const processMap = new Map(processList)
 
   const initServerStatus = async (item) => {
-    const itemProcessPath = Software.getServerProcessPath(item)
+    const itemProcessPath = ChildApp.getServerProcessPath(item)
     const pid = processMap.get(itemProcessPath)
     item.isRunning = !!pid
     item.pid = pid ?? null
@@ -192,10 +192,10 @@ const initServerListStatus = async () => {
 
 const corePathClick = () => Native.openDirectory(GetCorePath.getDir())
 const wwwPathClick = () => Native.openDirectory(Settings.get('WebsiteDir'))
-const openInstallDir = (item) => Native.openDirectory(Software.getDir(item))
-const openConfFile = (item) => Native.openTextFile(Software.getConfPath(item))
-const openServerConfFile = (item) => Native.openTextFile(Software.getServerConfPath(item))
-const openExtraFile = (item, extraFile) => Native.openTextFile(path.join(Software.getDir(item), extraFile.Path))
+const openInstallDir = (item) => Native.openDirectory(ChildApp.getDir(item))
+const openConfFile = (item) => Native.openTextFile(ChildApp.getConfPath(item))
+const openServerConfFile = (item) => Native.openTextFile(ChildApp.getServerConfPath(item))
+const openExtraFile = (item, extraFile) => Native.openTextFile(path.join(ChildApp.getDir(item), extraFile.Path))
 
 </script>
 

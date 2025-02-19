@@ -1,28 +1,28 @@
 import path from 'path'
-import {EnumSoftwareType} from "@/shared/utils/enum";
+import {EnumChildAppType} from "@/shared/utils/enum";
 import GetCorePath from "@/shared/utils/GetCorePath";
 import GetDataPath from "@/shared/utils/GetDataPath";
 import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
 import { parseTemplateStrings } from '@/shared/utils/utils'
 
-export default class Software {
+export default class ChildApp {
     static #list;
 
     static async DirExists() {
-        return await DirUtil.Exists(GetDataPath.getSoftwareDir());
+        return await DirUtil.Exists(GetDataPath.getChildAppDir());
     }
 
     /**
      * 获取子应用列表
-     * @returns {Promise<SoftwareItem[]>}
+     * @returns {Promise<ChildAppItem[]>}
      */
     static async getList() {
-        if (Software.#list && Software.#list.length > 0) {
-            return Software.#list
+        if (ChildApp.#list && ChildApp.#list.length > 0) {
+            return ChildApp.#list
         }
         await this.initList()
-        return Software.#list
+        return ChildApp.#list
     }
 
     static async initList() {
@@ -61,40 +61,40 @@ export default class Software {
             throw new Error(`${customAppConfigPath} 配置文件错误！`)
         }
 
-        Software.#list = list.concat(customList)
+        ChildApp.#list = list.concat(customList)
     }
 
     static async getItem(name) {
-        return (await Software.getList()).find((item) => item.Name === name)
+        return (await ChildApp.getList()).find((item) => item.Name === name)
     }
 
     static async getItemByDirName(dirName) {
-        return (await Software.getList()).find((item) => item.DirName === dirName)
+        return (await ChildApp.getList()).find((item) => item.DirName === dirName)
     }
 
     /**
      * 判断子应用是否安装
-     * @param item {SoftwareItem}
+     * @param item {ChildAppItem}
      * @returns {boolean}
      */
     static async IsInstalled(item) {
-        let path = Software.getDir(item);
+        let path = ChildApp.getDir(item);
         return await DirUtil.Exists(path);
     }
 
     /**
      * 获取子应用所在的目录
-     * @param item {SoftwareItem}
+     * @param item {ChildAppItem}
      * @returns {string}
      */
     static getDir(item) {
-        let typePath = Software.getTypeDir(item.Type);
+        let typePath = ChildApp.getTypeDir(item.Type);
         return path.join(typePath, item.DirName);
     }
 
     /**
      * 获取子应用配置文件的路径
-     * @param item {SoftwareItem}
+     * @param item {ChildAppItem}
      * @returns {string}
      */
     static getConfPath(item) {
@@ -108,7 +108,7 @@ export default class Software {
 
     /**
      * 获取子应用Server配置文件的路径
-     * @param item {SoftwareItem}
+     * @param item {ChildAppItem}
      * @returns {string}
      */
     static getServerConfPath(item) {
@@ -122,31 +122,31 @@ export default class Software {
 
     /**
      * 获取子应用Server进程的路径
-     * @param item {SoftwareItem}
+     * @param item {ChildAppItem}
      * @returns {string}
      */
     static getServerProcessPath(item) {
         if (item.ServerProcessPath == null) {
             throw new Error(`${item.Name} Server Process Path 没有配置！`);
         }
-        const workDir = Software.getDir(item);
+        const workDir = ChildApp.getDir(item);
         const varMap = { WorkDir: workDir}
         return path.normalize(parseTemplateStrings(item.ServerProcessPath, varMap))
     }
 
     /**
      * 根据子应用类型，获取子应用类型的目录
-     * @param type {SoftwareItem.Type}
+     * @param type {ChildAppItem.Type}
      * @returns {string}
      */
     static getTypeDir(type) {
-        type = EnumSoftwareType[type];
+        type = EnumChildAppType[type];
         switch (type) {
-            case EnumSoftwareType.PHP:
+            case EnumChildAppType.PHP:
                 return GetDataPath.getPhpTypeDir();
-            case EnumSoftwareType.Server:
+            case EnumChildAppType.Server:
                 return GetDataPath.getServerTypeDir();
-            case EnumSoftwareType.Tool:
+            case EnumChildAppType.Tool:
                 return GetDataPath.getToolTypeDir();
             default:
                 return '';
@@ -154,8 +154,8 @@ export default class Software {
     }
 
     static getIconPath() {
-        let softPath = path.join(GetCorePath.getDir(), '/config/software');
-        return path.join(softPath, '/icon');
+        let appPath = path.join(GetCorePath.getDir(), '/config/childApp');
+        return path.join(appPath, '/icon');
     }
 
 }

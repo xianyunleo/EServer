@@ -1,39 +1,39 @@
 <template>
   <div class="content-container">
     <div class="category">
-      <a-radio-group v-model:value="softwareTypeSelected" button-style="solid" @change="radioGroupChange">
+      <a-radio-group v-model:value="childAppTypeSelected" button-style="solid" @change="radioGroupChange">
         <a-radio-button :value="InstalledType">{{ t('Installed') }}</a-radio-button>
-        <a-radio-button :value="enumGetName(EnumSoftwareType, EnumSoftwareType.Server)">{{ t('Server') }}
+        <a-radio-button :value="enumGetName(EnumChildAppType, EnumChildAppType.Server)">{{ t('Server') }}
         </a-radio-button>
-        <a-radio-button :value="enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)">PHP</a-radio-button>
-        <a-radio-button :value="enumGetName(EnumSoftwareType, EnumSoftwareType.Tool)">{{ t('Tool') }}</a-radio-button>
+        <a-radio-button :value="enumGetName(EnumChildAppType, EnumChildAppType.PHP)">PHP</a-radio-button>
+        <a-radio-button :value="enumGetName(EnumChildAppType, EnumChildAppType.Tool)">{{ t('Tool') }}</a-radio-button>
       </a-radio-group>
     </div>
 
-    <div class="soft-list piece">
-      <div class="soft-head">
-        <div class="soft-item">
-          <div class="soft-item-content">
-            <div class="soft-item-avatar">
+    <div class="app-list piece">
+      <div class="app-head">
+        <div class="app-item">
+          <div class="app-item-content">
+            <div class="app-item-avatar">
               <span></span>
             </div>
-            <div class="soft-item-title">{{ t('Name') }}</div>
-            <div class="soft-item-desc">{{ t('Desc') }}</div>
-            <div class="soft-item-operate">{{ t('Operation') }}</div>
+            <div class="app-item-title">{{ t('Name') }}</div>
+            <div class="app-item-desc">{{ t('Desc') }}</div>
+            <div class="app-item-operate">{{ t('Operation') }}</div>
           </div>
         </div>
       </div>
 
-      <div class="soft-body">
-        <template v-for="item in softwareList" :key="item.Name">
-          <div v-if="item.show" class="soft-item">
-            <div class="soft-item-content">
-              <div class="soft-item-avatar">
+      <div class="app-body">
+        <template v-for="item in childAppList" :key="item.Name">
+          <div v-if="item.show" class="app-item">
+            <div class="app-item-content">
+              <div class="app-item-avatar">
                 <img :src="item.Icon" />
               </div>
-              <div class="soft-item-title">{{ item.Name }}</div>
-              <div class="soft-item-desc">{{ t(item.Desc) }}</div>
-              <div class="soft-item-operate">
+              <div class="app-item-title">{{ item.Name }}</div>
+              <div class="app-item-desc">{{ t(item.Desc) }}</div>
+              <div class="app-item-operate">
                 <template v-if="item.Installed">
                   <a-button type="primary" danger style="margin-right: 5px" :disabled="item.CanDelete === false"
                             @click="uninstall(item.Name)">{{ t('Uninstall') }}
@@ -75,7 +75,7 @@
               </div>
             </div>
             <!-- 安装下载-->
-            <div v-if="instMap[item.Name]" class="soft-item-progress">
+            <div v-if="instMap[item.Name]" class="app-item-progress">
               <a-progress :percent="instMap[item.Name]?.percent" :show-info="false" status="active" />
               <div class="progress-info">
                 <div v-if="instMap[item.Name]?.errMsg" class="status-text-error">
@@ -127,18 +127,18 @@ import { h, reactive, ref } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import { storeToRefs } from 'pinia'
 import { message } from 'ant-design-vue'
-import { EnumSoftwareInstallStatus, EnumSoftwareType } from '@/shared/utils/enum'
+import { EnumChildAppInstallStatus, EnumChildAppType } from '@/shared/utils/enum'
 import { AppstoreAddOutlined, DownOutlined } from '@ant-design/icons-vue'
-import Software from '@/main/core/software/Software'
+import ChildApp from '@/main/core/childApp/ChildApp'
 import MessageBox from '@/renderer/utils/MessageBox'
 import { enumGetName, getFileSizeText, getIpcError } from '@/shared/utils/utils'
 import Native from '@/renderer/utils/Native'
-import PhpExtManager from '@/renderer/components/Software/PhpExtManager.vue'
-import SoftwareExtend from '@/main/core/software/SoftwareExtend'
+import PhpExtManager from '@/renderer/components/ChildApp/PhpExtManager.vue'
+import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
 import path from 'path'
 import { mt, t } from '@/renderer/utils/i18n'
 import { isMacOS, isWindows } from '@/main/utils/utils'
-import LocalInstall from '@/main/core/software/LocalInstall'
+import LocalInstall from '@/main/core/childApp/LocalInstall'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import SystemExtend from '@/main/utils/SystemExtend'
 const callStatic = window.api.callStatic
@@ -147,18 +147,18 @@ const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
 
 const store = useMainStore()
-const { softwareList, softwareTypeSelected } = storeToRefs(store)
-const phpTypeValue = enumGetName(EnumSoftwareType, EnumSoftwareType.PHP)
+const { childAppList, childAppTypeSelected } = storeToRefs(store)
+const phpTypeValue = enumGetName(EnumChildAppType, EnumChildAppType.PHP)
 const phpExtManagerShow = ref(false)
 const phpVersion = ref('')
-const InstStatus = EnumSoftwareInstallStatus
+const InstStatus = EnumChildAppInstallStatus
 
-if (!softwareTypeSelected.value) {
-  softwareTypeSelected.value = InstalledType
+if (!childAppTypeSelected.value) {
+  childAppTypeSelected.value = InstalledType
 }
 
 const setShowList = (type) => {
-  for (const item of softwareList.value) {
+  for (const item of childAppList.value) {
     if (type === InstalledType) {
       item.show = item.Installed === true
     } else {
@@ -169,10 +169,10 @@ const setShowList = (type) => {
 
 const instMap = reactive({})
 
-setShowList(softwareTypeSelected.value)
+setShowList(childAppTypeSelected.value)
 
 const radioGroupChange = () => {
-  setShowList(softwareTypeSelected.value)
+  setShowList(childAppTypeSelected.value)
 }
 
 const getStatusText = (status) => {
@@ -190,7 +190,7 @@ const getStatusText = (status) => {
   }
 }
 
-const findItem = (name) => softwareList.value.find((item) => item.Name === name)
+const findItem = (name) => childAppList.value.find((item) => item.Name === name)
 
 const clickInstall = async (name) => {
   instMap[name] = {}
@@ -202,14 +202,14 @@ const clickInstall = async (name) => {
   }, 1000)
 
   try {
-    await window.api.call('softwareInstall', name)
+    await window.api.call('childAppInstall', name)
   } catch (e) {
     clearInterval(instMap[name].dlIntervalId)
     instMap[name].errMsg = getIpcError(e).message
   }
 }
 
-window.api.onSoftDlProgress((name, progress) => {
+window.api.onAppDlProgress((name, progress) => {
   instMap[name] = {
     ...instMap[name],
     receivedBytes: progress.receivedBytes,
@@ -219,7 +219,7 @@ window.api.onSoftDlProgress((name, progress) => {
   }
 })
 
-window.api.onSoftInstStatus((name, status) => {
+window.api.onAppInstStatus((name, status) => {
   if (status === InstStatus.Downloaded) {
     clearInterval(instMap[name].dlIntervalId)
   }
@@ -233,7 +233,7 @@ window.api.onSoftInstStatus((name, status) => {
   }
 })
 
-window.api.onSoftDlCancelled((name) => {
+window.api.onAppDlCancelled((name) => {
   //如果不是点击clickStop的取消
   if (instMap[name]) {
     clearInterval(instMap[name].dlIntervalId)
@@ -244,37 +244,37 @@ window.api.onSoftDlCancelled((name) => {
 const clickStop = (name) => {
   clearInterval(instMap[name].dlIntervalId)
   instMap[name] = null
-  window.api.call('softwareStopInstall', name)
+  window.api.call('childAppStopInstall', name)
 }
 
 const openApp = (item) => {
   let appPath = ''
   if (isWindows) {
-    appPath = path.join(Software.getDir(item), item.WinExePath)
+    appPath = path.join(ChildApp.getDir(item), item.WinExePath)
   } else if (isMacOS) {
-    appPath = Software.getDir(item)
+    appPath = ChildApp.getDir(item)
   }
   Native.openApp(appPath)
 }
 
 const openInstallPath = async (item) => {
-  let path = item.IsMacApp ? Software.getTypeDir(item.Type) : Software.getDir(item)
+  let path = item.IsMacApp ? ChildApp.getTypeDir(item.Type) : ChildApp.getDir(item)
   Native.openDirectory(path)
 }
 
-const openConfFile = (item) => Native.openTextFile(Software.getConfPath(item))
-const openServerConfFile = (item) => Native.openTextFile(Software.getServerConfPath(item))
+const openConfFile = (item) => Native.openTextFile(ChildApp.getConfPath(item))
+const openServerConfFile = (item) => Native.openTextFile(ChildApp.getServerConfPath(item))
 
 const uninstall = async (name) => {
   const item = findItem(name)
   try {
-    const res = await window.api.call('softwareUninstall', name)
+    const res = await window.api.call('childAppUninstall', name)
     if (res) {
       item.Installed = false
       message.info(t('successfulOperation'))
       store.refreshInstalledList()
     } else {
-      MessageBox.error(t('failedOperation') + '\n' + t('softwareUninstallErrorTip', [item.DirName]))
+      MessageBox.error(t('failedOperation') + '\n' + t('childAppUninstallErrorTip', [item.DirName]))
     }
   } catch (e) {
     MessageBox.error(getIpcError(e).message, t('errorOccurredDuring', [mt('uninstall', 'ws') + item.Name]))
@@ -292,7 +292,7 @@ const localInstall = async () => {
       MessageBox.warning(mt('Not', 'ws', 'Support', 'ws') + 'nginx')
       return
     }
-    const item = softwareList.value.find((item) => item.DirName === dirName)
+    const item = childAppList.value.find((item) => item.DirName === dirName)
     if (!item) {
       MessageBox.error(mt('Not', 'ws', 'Match'))
       return
@@ -305,7 +305,7 @@ const localInstall = async () => {
     store.loadingTip = t('Installing')
     await LocalInstall.install(path)
     item.Installed = true
-    if (softwareTypeSelected.value === InstalledType) {
+    if (childAppTypeSelected.value === InstalledType) {
       setShowList(InstalledType)
     }
     store.refreshInstalledList()
@@ -321,7 +321,7 @@ const showPhpExtManager = async (item) => {
     MessageBox.error(`Homebrew未安装！\n请复制命令到终端执行安装\n/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`)
     return
   }
-  phpVersion.value = SoftwareExtend.getPHPVersion(item.DirName)
+  phpVersion.value = ChildAppExtend.getPHPVersion(item.DirName)
   phpExtManagerShow.value = true
 }
 
@@ -344,7 +344,7 @@ const openUrl = (url) => {
   }
 }
 
-.soft-list {
+.app-list {
   color: @colorText;
   display: flex;
   flex-direction: column;
@@ -354,33 +354,33 @@ const openUrl = (url) => {
   flex: 1;
 }
 
-.soft-item {
+.app-item {
   padding: 12px 0;
   border-bottom: 1px solid @colorBorderSecondary;
 
-  .soft-item-content {
+  .app-item-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 }
 
-.soft-body {
+.app-body {
   flex: 1;
   overflow: auto;
 
-  .soft-item-content {
+  .app-item-content {
     height: calc(@controlHeight * 1px);
   }
 
-  .soft-item {
+  .app-item {
     &:hover {
       background: @colorBgTextHover;
     }
   }
 }
 
-.soft-item-avatar {
+.app-item-avatar {
   margin-left: 16px;
   margin-right: 16px;
   display: flex;
@@ -395,15 +395,15 @@ const openUrl = (url) => {
   }
 }
 
-.soft-item-title {
+.app-item-title {
   width: 150px;
 }
 
-.soft-item-desc {
+.app-item-desc {
   flex: 2;
 }
 
-.soft-item-progress {
+.app-item-progress {
   color: #666;
   padding: 10px 20px 0 20px;
 
@@ -436,7 +436,7 @@ const openUrl = (url) => {
   }
 }
 
-.soft-item-operate {
+.app-item-operate {
   flex: 1;
   justify-content: flex-start;
   display: flex;

@@ -141,7 +141,7 @@ export default {
     thisPwdIsUsedForSudoCommands: 'Ce mot de passe est utilisé pour les commandes sudo.',
     pathCannotContainSpaces: "Le chemin ne peut pas contenir d'espaces.",
     installPackageDownloadUrl: "URL de téléchargement du package d'installation.",
-    softwareUninstallErrorTip: 'Veuillez ouvrir le gestionnaire de fichiers et supprimer manuellement le répertoire {0}.',
+    childAppUninstallErrorTip: 'Veuillez ouvrir le gestionnaire de fichiers et supprimer manuellement le répertoire {0}.',
     mysqlResetRootAccountPwd: 'Réinitialiser le mot de passe du compte root MySQL.',
     afterOpenAppStartServer: "Démarrez le service après avoir ouvert l'application.",
     pleaseChoose: "Choisissez s'il vous plaît",

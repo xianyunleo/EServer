@@ -1,6 +1,6 @@
-import Software from "@/main/core/software/Software";
+import ChildApp from "@/main/core/childApp/ChildApp";
 import FileUtil from "@/main/utils/FileUtil";
-import CommonInstall from "@/main/core/software/CommonInstall";
+import CommonInstall from "@/main/core/childApp/CommonInstall";
 import PathExt from '@/shared/utils/PathExt'
 
 
@@ -13,14 +13,14 @@ export default class LocalInstall {
      */
     static async install(filePath, deleteSrc = false) {
         const dirName = this.getDirName(filePath)
-        const softItem = await Software.getItemByDirName(dirName)
-        const dest = softItem ? Software.getTypeDir(softItem.Type) : null
+        const appItem = await ChildApp.getItemByDirName(dirName)
+        const dest = appItem ? ChildApp.getTypeDir(appItem.Type) : null
         if (!dest) return
         await CommonInstall.extract(filePath, dest)
         if (deleteSrc){
             await FileUtil.Delete(filePath)
         }
-        await CommonInstall.configure(softItem)
+        await CommonInstall.configure(appItem)
     }
 
     static async installMultiple(files) {

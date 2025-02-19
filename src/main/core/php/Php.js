@@ -117,8 +117,8 @@ export default class Php {
 
     static getFpmConfTemplate(version) {
         return `[global]
-pid = /Applications/${APP_NAME}/software/php/php-${version}/var/run/php-fpm.pid
-error_log = /Applications/${APP_NAME}/software/php/php-${version}/var/log/php-fpm.log
+pid = /Applications/${APP_NAME}/childApp/php/php-${version}/var/run/php-fpm.pid
+error_log = /Applications/${APP_NAME}/childApp/php/php-${version}/var/log/php-fpm.log
 log_level = notice
 
 [www]

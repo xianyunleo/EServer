@@ -6,12 +6,12 @@ import GetCorePath from '@/shared/utils/GetCorePath'
 import GetDataPath from '@/shared/utils/GetDataPath'
 import DirUtil from '@/main/utils/DirUtil'
 import FileUtil from '@/main/utils/FileUtil'
-import Software from '@/main/core/software/Software'
-import LocalInstall from '@/main/core/software/LocalInstall'
+import ChildApp from '@/main/core/childApp/ChildApp'
+import LocalInstall from '@/main/core/childApp/LocalInstall'
 import FsUtil from '@/main/utils/FsUtil'
 import Shell from '@/main/utils/Shell'
 import { extractZip } from '@/main/utils/extract'
-import CommonInstall from '@/main/core/software/CommonInstall'
+import CommonInstall from '@/main/core/childApp/CommonInstall'
 
 export default class App {
     static async initFileExists() {
@@ -24,8 +24,8 @@ export default class App {
         if (!await FileUtil.Exists(initFile)) {
             return
         }
-
-        const softwareDirExists = await Software.DirExists()
+        //SoftwareDir为老的结构
+        const childAppDirExists = await ChildApp.DirExists() ||  await DirUtil.Exists(GetDataPath.getSoftwareDir())
 
         if (isMacOS && !isDev) {
             if (!await DirUtil.Exists(MAC_DATA_DIR)) {
@@ -35,9 +35,9 @@ export default class App {
         }
 
         await this.moveInitFiles(['downloads', 'www', 'custom'])
-        await this.createUserSubDir(['etc', 'software', 'database', 'bin', `${TEMP_DIR_NAME}/php`])
+        await this.createUserSubDir(['etc', 'childApp', 'database', 'bin', `${TEMP_DIR_NAME}/php`])
 
-        if (!softwareDirExists) { //目录不存在说明是第一次安装，不是覆盖安装
+        if (!childAppDirExists) { //目录不存在说明是第一次安装，不是覆盖安装
             const files = await DirUtil.GetFiles(GetDataPath.getDownloadsDir())
             await LocalInstall.installMultiple(files)
         }
@@ -73,21 +73,31 @@ export default class App {
         }
     }
 
-    //覆盖安装，执行update
+    /**
+     * 覆盖安装，执行update，返回 needRestart
+     * @returns {Promise<boolean>}
+     */
     static async update() {
         if (isDev) {
             return
         }
-
+        let needRestart = false
         if (isMacOS) {
             await this.updateMacDataSubDir(['Library'])
         }
         await this.moveInitFiles(['downloads', 'www', 'custom'])
 
+        //目录childApp改名为childApp
+        if (!await ChildApp.DirExists()) {
+            needRestart = true
+            await FsUtil.Copy(GetDataPath.getSoftwareDir(), GetDataPath.getChildAppDir(), { recursive: true })
+            FsUtil.Remove(GetDataPath.getSoftwareDir())
+        }
+
         //迁移配置文件到etc目录，并初始化
-        const list = await Software.getList()
+        const list = await ChildApp.getList()
         for (const item of list) {
-            if (await DirUtil.Exists(Software.getDir(item))) {
+            if (await DirUtil.Exists(ChildApp.getDir(item))) {
                 await CommonInstall.configure(item)
             }
         }
@@ -101,6 +111,7 @@ export default class App {
                 extractZip(updateFile, path.join(GetDataPath.getDir(), updateObj.targetDir))
             }
         }
+        return needRestart
     }
 
     /**

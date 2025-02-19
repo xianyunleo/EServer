@@ -25,7 +25,7 @@
 
 <script setup>
 import MessageBox from '@/renderer/utils/MessageBox'
-import SoftwareInit from '@/main/core/software/SoftwareInit'
+import ChildAppInit from '@/main/core/childApp/ChildAppInit'
 import { message } from 'ant-design-vue'
 import { mt, t } from '@/renderer/utils/i18n'
 import { APP_NAME } from '@/shared/utils/constant'
@@ -71,7 +71,7 @@ const init = async () => {
       cancelText: t('Cancel')
     }
     if (await MessageBox.confirm(options)) {
-      await SoftwareInit.initAll()
+      await ChildAppInit.initAll()
       message.success(t('Initialization successful'))
     }
   } catch (error) {

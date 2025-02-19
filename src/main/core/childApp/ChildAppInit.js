@@ -1,27 +1,27 @@
 import GetDataPath from '@/shared/utils/GetDataPath'
 import FileUtil from '@/main/utils/FileUtil'
 import nodePath from 'path'
-import SoftwareExtend from '@/main/core/software/SoftwareExtend'
+import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
 import DirUtil from '@/main/utils/DirUtil'
 import Php from '@/main/core/php/Php'
 import Database from '@/main/core/Database'
 import { isWindows } from '@/main/utils/utils'
-import Software from '@/main/core/software/Software'
+import ChildApp from '@/main/core/childApp/ChildApp'
 import path from 'path'
 import FsUtil from '@/main/utils/FsUtil'
 
-export default class SoftwareInit {
+export default class ChildAppInit {
     static async initAll() {
         await Promise.all([this.initNginx(), this.initAllPHP(), this.initAllMySQL()])
     }
 
-    static async initEtcDir(softItem) {
-        const etcList = softItem.EtcList
+    static async initEtcDir(appItem) {
+        const etcList = appItem.EtcList
         if (!etcList) return
-        const ownSoftDir = Software.getDir(softItem)
-        const ownEctDir = GetDataPath.getOwnEtcDir(softItem.DirName)
+        const ownAppDir = ChildApp.getDir(appItem)
+        const ownEctDir = GetDataPath.getOwnEtcDir(appItem.DirName)
         for (const etcName of etcList) {
-            const source = path.join(ownSoftDir, etcName)
+            const source = path.join(ownAppDir, etcName)
             if (!await FsUtil.Exists(source)) {
                 continue //源文件不存在，跳过
             }
@@ -77,7 +77,7 @@ export default class SoftwareInit {
     }
 
     static async initAllPHP() {
-        const phpList = await SoftwareExtend.getPHPList()
+        const phpList = await ChildAppExtend.getPHPList()
         for (const item of phpList) {
             await this.initPHP(item.version)
         }
@@ -170,7 +170,7 @@ export default class SoftwareInit {
     }
 
     static async initAllMySQL() {
-        const mysqlList = await SoftwareExtend.getMySQLList()
+        const mysqlList = await ChildAppExtend.getMySQLList()
         for (const item of mysqlList) {
             await this.initMySQL(item.version)
         }

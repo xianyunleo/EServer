@@ -27,7 +27,7 @@ import App from '@/main/App'
 import { onMounted, ref, watch } from 'vue'
 import MessageBox from '@/renderer/utils/MessageBox'
 import UserPwdModal from '@/renderer/components/UserPwdModal.vue'
-import Software from '@/main/core/software/Software'
+import ChildApp from '@/main/core/childApp/ChildApp'
 import Service from '@/main/utils/Service'
 import { message } from 'ant-design-vue'
 import DirUtil from '@/main/utils/DirUtil'
@@ -40,9 +40,10 @@ import { t } from '@/renderer/utils/i18n'
 import { changeLanguageWrapper } from '@/renderer/utils/language'
 import SystemExtend from '@/main/utils/SystemExtend'
 import { OFFICIAL_URL } from '@/shared/utils/constant'
+import GetDataPath from '@/shared/utils/GetDataPath'
 
 const store = useMainStore()
-//操作softwareList和serverList等JS代码，都要等待init完成。
+//操作childAppList和serverList等JS代码，都要等待init完成。
 store.init().then(async () => {
   const AppService = await import('@/renderer/services/AppService')
   AppService.default.storeInitThen()
@@ -79,12 +80,11 @@ async function initOrUpdate() {
   store.loadingTip = t('Initializing')
 
   if (isMacOS && process.arch === 'arm64' && !(await SystemExtend.isInstallRosetta())) {
-    await MessageBox.error(`需要Rosetta支持，请复制命令到终端执行安装\nsoftwareupdate --install-rosetta`)
+    await MessageBox.error(`需要Rosetta支持，请复制命令到终端执行安装\nchildAppupdate --install-rosetta`)
     await call('appExit')
   }
   //存在initFile文件的情况下，判断是第一次安装，还是覆盖安装
-
-  if (!(await Software.DirExists())) { //目录不存在说明是，第一次安装
+  if (!await ChildApp.DirExists() &&  ! await DirUtil.Exists(GetDataPath.getSoftwareDir())) { //目录不存在说明是，第一次安装
     if (isMacOS) {
       //调用设置（electron-store）会自动创建USER_CORE_DIR，为了捕捉创建失败的错误，先提前写好创建文件夹的代码。
       await macCreateUserCoreDir()
@@ -109,7 +109,7 @@ async function winInit() {
   try {
     store.loading = true
     await App.init()
-    await store.refreshSoftwareList()
+    await store.refreshChildAppList()
     store.loading = false
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]))
@@ -131,8 +131,9 @@ async function macCreateUserCoreDir() {
 async function update() {
   try {
     store.loading = true
-    await App.update()
+    const needRestart = await App.update()
     await App.deleteInitFile()
+    if(needRestart) await window.api.call('appRestart')
     store.loading = false
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('update')]))

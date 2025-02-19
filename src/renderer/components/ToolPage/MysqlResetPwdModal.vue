@@ -32,7 +32,7 @@
 
 <script setup>
 import {ref,computed} from "vue";
-import SoftwareExtend from "@/main/core/software/SoftwareExtend";
+import ChildAppExtend from "@/main/core/childApp/ChildAppExtend";
 import Database from "@/main/core/Database";
 import MessageBox from "@/renderer/utils/MessageBox";
 import { t,mt } from '@/renderer/utils/i18n'
@@ -55,7 +55,7 @@ const mysqlVersionList = ref([])
 const okButtonLoading = ref(false)
 
 ;(async () => {
-  const list = await SoftwareExtend.getMySQLList()
+  const list = await ChildAppExtend.getMySQLList()
   mysqlVersionList.value = list.map(item => {
     return { value: item.version, label: item.name }
   })

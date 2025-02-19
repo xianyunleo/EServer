@@ -3,7 +3,7 @@ import DirUtil from "@/main/utils/DirUtil";
 import nodePath from 'path'
 import FileUtil from "@/main/utils/FileUtil";
 
-export default class SoftwareExtend {
+export default class ChildAppExtend {
     /**
      * 获取Nginx网站配置的PHP版本号列表，如['7.4','8.0']
      * @returns {Promise<string[]|*[]>}
@@ -35,7 +35,7 @@ export default class SoftwareExtend {
 
         return list.map(path => {
             let name = nodePath.basename(path);
-            let version = SoftwareExtend.getPHPVersion(name);
+            let version = ChildAppExtend.getPHPVersion(name);
             return { version, name };
         });
     }
@@ -49,7 +49,7 @@ export default class SoftwareExtend {
 
         return list.map(path => {
             let name = nodePath.basename(path);
-            let version = SoftwareExtend.getMysqlVersion(name);
+            let version = ChildAppExtend.getMysqlVersion(name);
             return { version, name };
         });
     }

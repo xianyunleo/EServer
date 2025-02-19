@@ -1,19 +1,19 @@
 import { devConsoleLog, isWindows } from '@/main/utils/utils'
-import { EnumSoftwareInstallStatus } from '@/shared/utils/enum'
-import Software from '@/main/core/software/Software'
+import { EnumChildAppInstallStatus } from '@/shared/utils/enum'
+import ChildApp from '@/main/core/childApp/ChildApp'
 import { DOWNLOAD_URL } from '@/shared/utils/constant'
 import DirUtil from '@/main/utils/DirUtil'
 import path from 'path'
 import FileUtil from '@/main/utils/FileUtil'
 import { EventEmitter } from 'events'
 import { mt, t } from '@/renderer/utils/i18n'
-import CommonInstall from "@/main/core/software/CommonInstall";
+import CommonInstall from "@/main/core/childApp/CommonInstall";
 import Downloader from 'electron-dl-downloader'
 import GetDataPath from '@/shared/utils/GetDataPath'
 
 export default class Installer extends EventEmitter {
     name;
-    softItem;
+    appItem;
     fileName;
     filePath; //下载文件路径
     tempFilePath; //临时下载文件路径
@@ -32,7 +32,7 @@ export default class Installer extends EventEmitter {
      * @returns {Promise<DownloadItem>}
      */
     async install() {
-        this.softItem = (await Software.getList()).find(item => item.Name === this.name)
+        this.appItem = (await ChildApp.getList()).find(item => item.Name === this.name)
         this.fileName = this.getFileName()
         this.filePath = path.join(this.getDownloadsPath(), this.fileName)
         this.tempFilePath = `${this.filePath}.dl`
@@ -48,7 +48,7 @@ export default class Installer extends EventEmitter {
             if (error.name === 'AbortError') {
                 devConsoleLog('下载已取消！')
             } else {
-                this._changeStatus(EnumSoftwareInstallStatus.DownloadError)
+                this._changeStatus(EnumChildAppInstallStatus.DownloadError)
                 throw new Error(`${t('errorOccurredDuring', [t('download')])}，${mt('Network', 'ws', 'Error')}\n${error.message}`)
             }
         }
@@ -66,9 +66,9 @@ export default class Installer extends EventEmitter {
 
         try {
             await this._extract();
-            this._changeStatus(EnumSoftwareInstallStatus.Extracted);
+            this._changeStatus(EnumChildAppInstallStatus.Extracted);
         } catch (error) {
-            this._changeStatus(EnumSoftwareInstallStatus.ExtractError);
+            this._changeStatus(EnumChildAppInstallStatus.ExtractError);
             throw new Error(`${t('errorOccurredDuring', [t('uncompress')])}，${error.message}`);
         }
 
@@ -78,12 +78,12 @@ export default class Installer extends EventEmitter {
             throw new Error(`${t('errorOccurredDuring', [t('configure')])}，${error.message}`);
         }
 
-        this._changeStatus(EnumSoftwareInstallStatus.Finish);
+        this._changeStatus(EnumChildAppInstallStatus.Finish);
     }
 
     async _configure() {
-        this._changeStatus(EnumSoftwareInstallStatus.Configuring);
-        await CommonInstall.configure(this.softItem);
+        this._changeStatus(EnumChildAppInstallStatus.Configuring);
+        await CommonInstall.configure(this.appItem);
     }
 
     /**
@@ -91,7 +91,7 @@ export default class Installer extends EventEmitter {
      * @returns {Promise<DownloadItem>}
      */
     async _download() {
-        this._changeStatus(EnumSoftwareInstallStatus.Downloading)
+        this._changeStatus(EnumChildAppInstallStatus.Downloading)
         const downloadItem = await this.downloader.download()
         Installer.DownloadItemMap.set(this.name, downloadItem)
         return downloadItem
@@ -99,7 +99,7 @@ export default class Installer extends EventEmitter {
 
     async _moveDownloadedFile() {
          await FileUtil.Move(this.tempFilePath, this.filePath);
-         this._changeStatus(EnumSoftwareInstallStatus.Downloaded);
+         this._changeStatus(EnumChildAppInstallStatus.Downloaded);
     }
 
     stopDownload() {
@@ -112,9 +112,9 @@ export default class Installer extends EventEmitter {
     }
 
     async _extract() {
-        this._changeStatus(EnumSoftwareInstallStatus.Extracting);
+        this._changeStatus(EnumChildAppInstallStatus.Extracting);
         const filePath = path.join(this.getDownloadsPath(), this.fileName);
-        const dest = Software.getTypeDir(this.softItem.Type);
+        const dest = ChildApp.getTypeDir(this.appItem.Type);
         await CommonInstall.extract(filePath, dest);
     }
 
@@ -124,19 +124,19 @@ export default class Installer extends EventEmitter {
      * @returns {Promise<boolean>}
      */
     static async uninstall(name) {
-        const path = Software.getDir(await Software.getItem(name))
+        const path = ChildApp.getDir(await ChildApp.getItem(name))
         await DirUtil.Delete(path)
         return !await DirUtil.Exists(path)
     }
 
     getFileName() {
-        const ext = this.softItem.RemoteArchiveExt ?? '.zip'
-        return `${this.softItem.DirName}${ext}`
+        const ext = this.appItem.RemoteArchiveExt ?? '.zip'
+        return `${this.appItem.DirName}${ext}`
     }
 
     getDownloadUrl() {
-        let url = `${DOWNLOAD_URL}/software`
-        if (this.softItem.RemoteIsCommonPlatform) {
+        let url = `${DOWNLOAD_URL}/childApp`
+        if (this.appItem.RemoteIsCommonPlatform) {
             url = `${url}/common`;
         } else {
             if (isWindows) {

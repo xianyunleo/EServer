@@ -43,7 +43,7 @@ import InputOpenDirDialog from '@/renderer/components/Input/InputOpenDirDialog.v
 import Website from '@/main/core/website/Website'
 import { message } from 'ant-design-vue'
 import MessageBox from '@/renderer/utils/MessageBox'
-import SoftwareExtend from '@/main/core/software/SoftwareExtend'
+import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
 import Hosts from '@/main/utils/Hosts'
 import { mt, t } from '@/renderer/utils/i18n'
 import { useMainStore } from '@/renderer/store'
@@ -62,7 +62,7 @@ let websiteInfo
   websiteInfo = await Website.getBasicInfo(confName.value)
   Object.assign(formData, websiteInfo)
 
-  const list = await SoftwareExtend.getPHPList()
+  const list = await ChildAppExtend.getPHPList()
   phpVersionList.value = list.map(item => {
     return { value: item.version, label: item.name }
   })

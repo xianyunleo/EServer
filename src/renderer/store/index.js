@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import Software from '@/main/core/software/Software'
+import ChildApp from '@/main/core/childApp/ChildApp'
 import Settings from '@/main/Settings'
 import MessageBox from '@/renderer/utils/MessageBox'
 import { t } from '@/renderer/utils/i18n'
@@ -7,14 +7,14 @@ import SystemTheme from '@/main/utils/SystemTheme'
 import { theme } from 'ant-design-vue'
 import { setTwoToneColor } from '@ant-design/icons-vue'
 import { colorConst } from '@/shared/utils/constant'
-import { filterServerList } from '@/shared/utils/software'
+import { filterServerList } from '@/shared/utils/childApp'
 
 export const useMainStore = defineStore('main', {
     state: () => {
         return {
-            softwareList: [], //软件列表
-            installedSoftwareList: [], //已安装的软件列表
-            softwareTypeSelected: '',
+            childAppList: [], //软件列表
+            installedChildAppList: [], //已安装的软件列表
+            childAppTypeSelected: '',
             loading: false,
             loadingTip: 'Loading',
             settings: {},
@@ -29,23 +29,23 @@ export const useMainStore = defineStore('main', {
     getters: {
         //已安装的服务列表
         serverList(state) {
-            return filterServerList(state.installedSoftwareList)
+            return filterServerList(state.installedChildAppList)
         }
     },
     actions: {
         async init() {
-            await this.refreshSoftwareList()
+            await this.refreshChildAppList()
         },
-        async refreshSoftwareList() {
-            const list = await Software.getList()
-            this.softwareList = await Promise.all(list.map(async item => {
-                const Installed = await Software.IsInstalled(item)
+        async refreshChildAppList() {
+            const list = await ChildApp.getList()
+            this.childAppList = await Promise.all(list.map(async item => {
+                const Installed = await ChildApp.IsInstalled(item)
                 return { ...item, Installed }
             }))
             this.refreshInstalledList()
         },
         async refreshInstalledList(){
-            this.installedSoftwareList = this.softwareList.filter(item => item.Installed)
+            this.installedChildAppList = this.childAppList.filter(item => item.Installed)
         },
         async setSettings(key, beforeFunc = null) {
             const originVal = Settings.get(key)

@@ -32,7 +32,7 @@ import InputOpenDirDialog from '@/renderer/components/Input/InputOpenDirDialog.v
 import path from 'path'
 import Website from '@/main/core/website/Website'
 import MessageBox from '@/renderer/utils/MessageBox'
-import SoftwareExtend from '@/main/core/software/SoftwareExtend'
+import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
 import Hosts from '@/main/utils/Hosts'
 import Settings from '@/main/Settings'
 import { mt, t } from '@/renderer/utils/i18n'
@@ -56,7 +56,7 @@ const labelColSpan = store.settings.Language === 'zh' ? 6 : 8
 const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 16
 
 ;(async () => {
-  const list = await SoftwareExtend.getPHPList()
+  const list = await ChildAppExtend.getPHPList()
   phpVersionList.value = list.map((item) => {
     return { value: item.version, label: item.name }
   })
@@ -98,7 +98,7 @@ const addWeb = async (websiteInfo) => {
 
   if (Settings.get('AutoStartAndRestartServer') && ServerService.isRunning('Nginx')) {
     ServerService.restart('Nginx')
-    if (phpVersion) ServerService.restart(SoftwareExtend.getPhpName(phpVersion))
+    if (phpVersion) ServerService.restart(ChildAppExtend.getPhpName(phpVersion))
   }
 }
 
