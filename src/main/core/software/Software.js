@@ -129,8 +129,9 @@ export default class Software {
         if (item.ServerProcessPath == null) {
             throw new Error(`${item.Name} Server Process Path 没有配置！`);
         }
-        let workPath = Software.getDir(item); //服务目录
-        return path.join(workPath, item.ServerProcessPath);  //服务的进程目录
+        const workDir = Software.getDir(item);
+        const varMap = { WorkDir: workDir}
+        return path.normalize(parseTemplateStrings(item.ServerProcessPath, varMap))
     }
 
     /**
