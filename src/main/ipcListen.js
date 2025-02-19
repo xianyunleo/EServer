@@ -19,7 +19,8 @@ const functions = {
         return app.exit()
     },
     appRestart: async () => {
-        return app.relaunch()
+        app.relaunch()
+        app.exit(0)
     },
     fileGetIcon: async (event, path, options) => {
         return await app.getFileIcon(path, options)
