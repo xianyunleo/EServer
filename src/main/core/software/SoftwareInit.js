@@ -91,8 +91,8 @@ export default class SoftwareInit {
     }
 
     static async createPHPFpmConf(version) {
-        let phpDirPath = GetDataPath.getPhpDir(version)
-        let confPath = nodePath.join(phpDirPath, 'etc/php-fpm.conf')
+        const etcDir = GetDataPath.getOwnEtcDir(`php-${version}`)
+        let confPath = nodePath.join(etcDir, 'etc/php-fpm.conf')
         if (!await FileUtil.Exists(confPath)) {
             await FileUtil.WriteAll(confPath, Php.getFpmConfTemplate(version))
         }
@@ -191,14 +191,13 @@ export default class SoftwareInit {
 
     static async initMySQLConf(version) {
         try {
-            let mysqlDir = GetDataPath.getMysqlDir(version)
-            let confPath = isWindows ? nodePath.join(mysqlDir, 'my.ini') : nodePath.join(mysqlDir, 'my.cnf')
+            const confPath = Database.getMySQLConfFilePath(version)
             let text = await FileUtil.ReadAll(confPath)
-            let mysqlPath = GetDataPath.getMysqlDir(version)
+            let mysqlDir = GetDataPath.getMysqlDir(version)
 
             //(?<=\n)basedir\s*=\s*.+
             let basePattern = /(?<=\n)basedir\s*=\s*.+/g
-            let replaceBaseStr = `basedir = "${mysqlPath.replaceSlash()}"`
+            let replaceBaseStr = `basedir = "${mysqlDir.replaceSlash()}"`
             text = text.replaceAll(basePattern, replaceBaseStr)
 
             //(?<=\n)datadir\s*=\s*.+
@@ -209,7 +208,7 @@ export default class SoftwareInit {
 
             //(?<=\n)log-error\s*=\s*.+
             let logPattern = /(?<=\n)log-error\s*=\s*.+/g
-            let logPath = nodePath.join(mysqlPath, 'logs', 'mysql.log')
+            let logPath = nodePath.join(mysqlDir, 'logs', 'mysql.log')
             let replaceLogStr = `log-error = "${logPath.replaceSlash()}"`
             text = text.replaceAll(logPattern, replaceLogStr)
 
