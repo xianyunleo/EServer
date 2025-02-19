@@ -1,10 +1,10 @@
 export default {
     ws: ' ', //Word Separator
     //Uppercase
-    Appearance: '外观',
-    App: '应用',
+    Appearance: 'Appearance',
+    App: 'App',
     Add: 'Add',
-    Custom: '自定义',
+    Custom: 'Custom',
     Delete: 'Delete',
     Modify: 'Modify',
     Access: 'Access',
