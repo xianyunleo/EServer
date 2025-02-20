@@ -8,7 +8,7 @@
         <a-button type="primary" @click="HomeService.oneClickStop" :disabled="!!serverTableLoading">
           {{ mt('OneClick', 'ws', 'Stop') }}
         </a-button>
-        <a-button type="primary" @click="corePathClick"> {{ APP_NAME }} {{ mt('ws', 'Directory') }}</a-button>
+        <a-button type="primary" @click="dataDirClick"> {{ APP_NAME }} {{ mt('ws', 'Directory') }}</a-button>
         <a-button type="primary" @click="wwwPathClick">{{ mt('Website', 'ws', 'Directory') }}</a-button>
       </div>
     </a-card>
@@ -85,7 +85,6 @@
 <script setup>
 import { onMounted, ref} from 'vue'
 import { useMainStore } from '@/renderer/store'
-import GetCorePath from '@/shared/utils/GetCorePath'
 import GetDataPath from '@/shared/utils/GetDataPath'
 import ChildApp from '@/main/core/childApp/ChildApp'
 import { storeToRefs } from 'pinia/dist/pinia'
@@ -190,7 +189,7 @@ const initServerListStatus = async () => {
   await Promise.all(promiseArray)
 }
 
-const corePathClick = () => Native.openDirectory(GetCorePath.getDir())
+const dataDirClick = () => Native.openDirectory(GetDataPath.getDir())
 const wwwPathClick = () => Native.openDirectory(Settings.get('WebsiteDir'))
 const openInstallDir = (item) => Native.openDirectory(ChildApp.getDir(item))
 const openConfFile = (item) => Native.openTextFile(ChildApp.getConfPath(item))
