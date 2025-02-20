@@ -91,7 +91,8 @@ export default class App {
         if (!await ChildApp.DirExists()) {
             needRestart = true
             await FsUtil.Copy(GetDataPath.getSoftwareDir(), GetDataPath.getChildAppDir(), { recursive: true })
-            FsUtil.Remove(GetDataPath.getSoftwareDir())
+        }else {
+            FsUtil.Remove(GetDataPath.getSoftwareDir({ force: true, recursive: true }))  //删除旧的Software目录
         }
 
         //迁移配置文件到etc目录，并初始化
