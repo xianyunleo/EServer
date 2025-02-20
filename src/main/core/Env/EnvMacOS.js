@@ -4,6 +4,7 @@ import OS from "@/main/utils/OS";
 import Shell from "@/main/utils/Shell";
 import {APP_NAME} from "@/shared/utils/constant";
 import FsUtil from '@/main/utils/FsUtil'
+import GetDataPath from "@/shared/utils/GetDataPath";
 
 export default class EnvMacOS {
     static _envFileName = '.zshrc';
