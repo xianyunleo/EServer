@@ -58,7 +58,7 @@ export default class Settings {
             PhpCliVersion: '',
             EnableComposer: false,
             TextEditor: this.#_getDefaultTextEditorPath(),
-            WebsiteDir: path.join(GetDataPath.getWebsiteDir(), 'www'),
+            WebsiteDir: GetDataPath.getWebsiteDir(),
             OneClickServerList: ['Nginx', 'PHP-FPM', 'MySQL-5.7'],
             AutoStartAndRestartServer: true,
             AfterOpenAppStartServer: false
