@@ -8,8 +8,8 @@
         "StartServerArgs": "-p ${WorkDir} -c ${ServerConfPath} -g \"daemon off;\"",
         "ServerPort": 80,
         "ExtraFiles": [
-            { "Name": "access.log", "Path": "logs/access.log" },
-            { "Name": "error.log", "Path": "logs/error.log" }
+            { "Name": "access.log", "Path": "${WorkDir}/logs/access.log" },
+            { "Name": "error.log", "Path": "${WorkDir}/logs/error.log" }
         ],
         "Type": "Server",
         "RemoteArchiveExt": ".tar.xz",
@@ -191,7 +191,7 @@
         "ServerConfPath": "${EtcDir}/my.cnf",
         "StartServerArgs": "--defaults-file=${ServerConfPath}",
         "ServerPort": 3306,
-        "ExtraFiles": [{ "Name": "mysql.log", "Path": "logs/mysql.log" }],
+        "ExtraFiles": [{ "Name": "mysql.log", "Path": "${WorkDir}/logs/mysql.log" }],
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "mysql.png",
@@ -206,7 +206,7 @@
         "ServerConfPath": "${EtcDir}/my.cnf",
         "StartServerArgs": "--defaults-file=${ServerConfPath}",
         "ServerPort": 3306,
-        "ExtraFiles": [{ "Name": "mysql.log", "Path": "logs/mysql.log" }],
+        "ExtraFiles": [{ "Name": "mysql.log", "Path": "${WorkDir}/logs/mysql.log" }],
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "mysql.png",
