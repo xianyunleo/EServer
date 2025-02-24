@@ -2,7 +2,7 @@
   <a-input v-model:value='val' class='with-btn' readonly>
     <template #suffix>
       <span class='icon-wrapper' @click='selectPath'>
-         <folder-open-filled class='icon' />
+         <FolderOpenFilled class='icon' />
       </span>
     </template>
   </a-input>

@@ -13,7 +13,7 @@ export default class Extension {
         return await Promise.all(
             list.map(async (item) => {
                 let isInstalled = await FileUtil.Exists(path.join(extDir, item.fileName))
-                return Object.assign({ isInstalled }, item)
+                return { ...item, isInstalled }
             })
         )
     }
