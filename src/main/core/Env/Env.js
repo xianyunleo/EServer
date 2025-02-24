@@ -20,7 +20,7 @@ export default class Env {
         await this.deleteBinFile(binName)
         let text
         if (binName === 'php') {
-            text = `"${targetPath}" ${args}*`
+            text = `"${targetPath}" ${args}`
         }
 
         if (isWindows) {

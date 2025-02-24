@@ -12,6 +12,9 @@ import FsUtil from '@/main/utils/FsUtil'
 import Shell from '@/main/utils/Shell'
 import { extractZip } from '@/main/utils/extract'
 import CommonInstall from '@/main/core/childApp/CommonInstall'
+import Php from '@/main/core/php/Php'
+import Env from '@/main/core/Env/Env'
+import Settings from '@/main/Settings'
 
 export default class App {
     static async initFileExists() {
@@ -112,6 +115,13 @@ export default class App {
                 extractZip(updateFile, path.join(GetDataPath.getDir(), updateObj.targetDir))
             }
         }
+
+        if (Settings.get('PhpCliVersion')) {
+            const confPath = Php.getConfPath(Settings.get('PhpCliVersion'))
+            const exePath = GetDataPath.getPhpExePath(Settings.get('PhpCliVersion'))
+            await Env.createBinFile(exePath, 'php', `-c "${confPath}"`)
+        }
+
         return needRestart
     }
 

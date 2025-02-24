@@ -61,9 +61,9 @@ const phpVersionList = computed(() => {
 const phpCliVersionChange = () => {
   store.setSettings('PhpCliVersion', async (originVal) => {
     if (store.settings.PhpCliVersion) {
-      let path = GetDataPath.getPhpExePath(store.settings.PhpCliVersion)
+      const exePath = GetDataPath.getPhpExePath(store.settings.PhpCliVersion)
       const confPath = Php.getConfPath(store.settings.PhpCliVersion)
-      await Env.createBinFile(path, 'php', `-c "${confPath}"`)
+      await Env.createBinFile(exePath, 'php', `-c "${confPath}"`)
     } else {
       await Env.deleteBinFile('php')
     }
@@ -74,8 +74,8 @@ const phpCliVersionChange = () => {
 const changeEnableComposer = async () => {
   store.setSettings('EnableComposer', async (originVal) => {
     if (store.settings.EnableComposer) {
-      let path = GetDataPath.getComposerExePath()
-      await Env.createBinFile(path, 'composer')
+      const exePath = GetDataPath.getComposerExePath()
+      await Env.createBinFile(exePath, 'composer')
     } else {
       await Env.deleteBinFile('composer')
     }
