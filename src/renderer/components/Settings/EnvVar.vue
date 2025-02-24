@@ -34,6 +34,7 @@ import GetDataPath from '@/shared/utils/GetDataPath'
 import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
+import Php from '@/main/core/php/Php'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const store = useMainStore()
@@ -61,7 +62,8 @@ const phpCliVersionChange = () => {
   store.setSettings('PhpCliVersion', async (originVal) => {
     if (store.settings.PhpCliVersion) {
       let path = GetDataPath.getPhpExePath(store.settings.PhpCliVersion)
-      await Env.createBinFile(path, 'php')
+      const confPath = Php.getConfPath(store.settings.PhpCliVersion)
+      await Env.createBinFile(path, 'php', `-c "${confPath}"`)
     } else {
       await Env.deleteBinFile('php')
     }

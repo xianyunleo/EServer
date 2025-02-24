@@ -1,35 +1,43 @@
-import FileUtil from "@/main/utils/FileUtil";
+import FileUtil from '@/main/utils/FileUtil'
 import nodePath from 'path'
-import GetDataPath from "@/shared/utils/GetDataPath";
-import EnvMacOS from "@/main/core/Env/EnvMacOS";
-import EnvWindows from "@/main/core/Env/EnvWindows";
+import GetDataPath from '@/shared/utils/GetDataPath'
+import EnvMacOS from '@/main/core/Env/EnvMacOS'
+import EnvWindows from '@/main/core/Env/EnvWindows'
 import { isWindows, isMacOS } from '@/main/utils/utils'
 import FsUtil from '@/main/utils/FsUtil'
+import Shell from '@/main/utils/Shell'
 
 export default class Env {
     /**
      * 创建符号链接或者.bat文件的到bin目录
      * @param targetPath
      * @param binName
+     * @param args
      */
-    static async createBinFile(targetPath, binName) {
-        let binDirPath = GetDataPath.getBinDir();
-        let path = nodePath.join(binDirPath, this.getBinFileName(binName));
-        await this.deleteBinFile(binName);
+    static async createBinFile(targetPath, binName, args = '') {
+        let binDirPath = GetDataPath.getBinDir()
+        let path = nodePath.join(binDirPath, this.getBinFileName(binName))
+        await this.deleteBinFile(binName)
+        let text
+        if (binName === 'php') {
+            text = `"${targetPath}" ${args}*`
+        }
+
         if (isWindows) {
-            let text;
             if (binName === 'composer') {
-                text = `@echo off\r\nphp "${targetPath}" %*`;
+                text = `@echo off\r\nphp ${text} %*`
             } else {
-                text = `@echo off\r\n"${targetPath}" %*`
+                text = `@echo off\r\n${text} %*`
             }
-            await FileUtil.WriteAll(path, text);
         } else {
+            text = `#!/bin/bash\n${text} $@`
             if (binName === 'php') {
                 await this.createOtherBinFile(targetPath, 'phpize', 'phpize');
             }
             await FsUtil.CreateSymbolicLink(path, targetPath);
         }
+        await FileUtil.WriteAll(path, text)
+        if (!isWindows) await Shell.sudoExec(`chmod +x ${path}`)
     }
 
     static async createOtherBinFile(targetPath, targetOtherFileName, otherBinName) {
@@ -59,7 +67,7 @@ export default class Env {
     }
 
     static getBinFileName(binName) {
-        return isWindows ? `${binName}.bat` : binName;
+        return isWindows ? `${binName}.bat` : binName
     }
 
     static async switch(enable) {
