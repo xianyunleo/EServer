@@ -2,7 +2,7 @@ import { enumGetName } from '@/shared/utils/utils'
 import { EnumChildAppType } from '@/shared/utils/enum'
 
 /**
- * 根据列表，获取Server列表
+ * 根据子应用列表的Type字段判断，筛选出Server列表
  * @param childAppList
  * @returns {*}
  */

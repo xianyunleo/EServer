@@ -15,7 +15,11 @@
         </a-form-item>
 
         <a-form-item :label="'PHP' + mt('ws', 'Version')" name="phpVersion">
-          <a-select style="width: 120px" v-model:value="formData.phpVersion" :options="phpVersionList" />
+          <a-select style="width: 180px;" v-model:value="formData.phpVersion" :options="phpVersionList" />
+          <a-tooltip title="Open the nginx php config directory">
+            <span class='icon-wrapper' @click='openWebPhpConfigDir'><FolderOpenFilled class='icon' /></span>
+          </a-tooltip>
+
         </a-form-item>
 
         <a-form-item :label="mt('Sync', 'ws') + 'hosts'" name="syncHosts">
@@ -38,6 +42,9 @@ import Settings from '@/main/Settings'
 import { mt, t } from '@/renderer/utils/i18n'
 import { useMainStore } from '@/renderer/store'
 import ServerService from '@/renderer/services/ServerService'
+import { FolderOpenFilled } from '@ant-design/icons-vue'
+import Native from '@/renderer/utils/Native'
+import GetDataPath from '@/shared/utils/GetDataPath'
 const { search, addModalVisible: visible } = inject('WebsiteProvide')
 
 const wwwPath = Settings.get('WebsiteDir')?.replaceSlash()
@@ -113,6 +120,8 @@ const rootPathRules = [
     }
   }
 ]
+
+const openWebPhpConfigDir = () => Native.openDirectory(path.join(GetDataPath.getNginxConfDir(), 'php'))
 </script>
 
 <style scoped>

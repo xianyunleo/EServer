@@ -15,4 +15,5 @@ export default class ChildAppItem {
     Icon;
     Desc;
     Installed;
+    IsCustom;  //是否为自定义子应用
 }

@@ -8,12 +8,14 @@ import { theme } from 'ant-design-vue'
 import { setTwoToneColor } from '@ant-design/icons-vue'
 import { colorConst } from '@/shared/utils/constant'
 import { filterServerList } from '@/shared/utils/childApp'
+import CustomChildApp from '@/main/core/childApp/CustomChildApp'
 
 export const useMainStore = defineStore('main', {
     state: () => {
         return {
-            childAppList: [], //软件列表
-            installedChildAppList: [], //已安装的软件列表
+            childAppList: [], //子应用列表，不包含自定义的
+            customChildAppList: [], //自定义子应用列表
+            installedChildAppList: [], //已安装的子应用列表，不包含自定义的
             childAppTypeSelected: '',
             loading: false,
             loadingTip: 'Loading',
@@ -27,14 +29,15 @@ export const useMainStore = defineStore('main', {
         }
     },
     getters: {
-        //已安装的服务列表
+        //server列表，包含自定义的
         serverList(state) {
-            return filterServerList(state.installedChildAppList)
+            return filterServerList(state.installedChildAppList.concat(this.customChildAppList))
         }
     },
     actions: {
         async init() {
             await this.refreshChildAppList()
+            this.customChildAppList = await CustomChildApp.getList() //自定义子应用，不判断是否已安装
         },
         async refreshChildAppList() {
             const list = await ChildApp.getList()

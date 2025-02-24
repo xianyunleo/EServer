@@ -59,7 +59,7 @@
             <a-dropdown :trigger="['click']">
               <template #overlay>
                 <a-menu>
-                  <a-menu-item @click="openInstallDir(item)" key="999">
+                  <a-menu-item v-if="!item.IsCustom" @click="openInstallDir(item)" key="999">
                     {{ mt('Open', 'ws', 'Directory') }}
                   </a-menu-item>
                   <a-menu-item v-if="item.ConfPath" @click="openConfFile(item)" key="998">
@@ -158,7 +158,9 @@ const loadingHandle = async () => {
 
 const getProcessList = async () => {
   let list
-  const options = { directory: GetDataPath.getChildAppDir() }
+  const customChildAppNum = store.customChildAppList.length
+  //有自定义软件，不增加过滤条件
+  const options = customChildAppNum > 0 ? {} : { directory: GetDataPath.getChildAppDir() }
   if (isWindows) {
     list = await window.api.callStatic('ProcessLibrary', 'getList', options)
   } else {
@@ -179,8 +181,8 @@ const initServerListStatus = async () => {
   const processMap = new Map(processList)
 
   const initServerStatus = async (item) => {
-    const itemProcessPath = ChildApp.getServerProcessPath(item)
-    const pid = processMap.get(itemProcessPath)
+    const processPath = item.IsCustom ? item.ServerProcessPath : ChildApp.getServerProcessPath(item)
+    const pid = processMap.get(processPath)
     item.isRunning = !!pid
     item.pid = pid ?? null
   }
@@ -192,10 +194,19 @@ const initServerListStatus = async () => {
 const dataDirClick = () => Native.openDirectory(GetDataPath.getDir())
 const wwwPathClick = () => Native.openDirectory(Settings.get('WebsiteDir'))
 const openInstallDir = (item) => Native.openDirectory(ChildApp.getDir(item))
-const openConfFile = (item) => Native.openTextFile(ChildApp.getConfPath(item))
-const openServerConfFile = (item) => Native.openTextFile(ChildApp.getServerConfPath(item))
-const openExtraFile = (item, extraFile) => Native.openTextFile(path.join(ChildApp.getDir(item), extraFile.Path))
 
+const openConfFile = (item) => {
+  const p = item.IsCustom ? item.ConfPath : ChildApp.getConfPath(item)
+  Native.openTextFile(p)
+}
+const openServerConfFile = (item) => {
+  const p = item.IsCustom ? item.ServerConfPath : ChildApp.getServerConfPath(item)
+  Native.openTextFile(p)
+}
+const openExtraFile = (item, extraFile) => {
+  const p = item.IsCustom ? extraFile.Path : ChildApp.getCommonPath(item, extraFile.Path)
+  Native.openTextFile(p)
+}
 </script>
 
 <style scoped lang="less">

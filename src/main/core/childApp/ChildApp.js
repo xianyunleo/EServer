@@ -41,27 +41,7 @@ export default class ChildApp {
             throw new Error(`${appConfigPath} 配置文件错误！`)
         }
 
-        //自定义子应用配置
-        const customAppDir = path.join(GetDataPath.getDir(), '/custom/childApp')
-        const customAppConfigPath = path.join(customAppDir, 'childApp.json')
-        const customAppIconDir = 'file://' + path.join(customAppDir, '/icon')
-
-        let customList
-        try {
-            if (await FileUtil.Exists(customAppConfigPath)) {
-                customList = JSON.parse(await FileUtil.ReadAll(customAppConfigPath))
-                customList = await Promise.all(customList.map(async item => {
-                    const Icon = path.join(customAppIconDir, item.Icon)
-                    return { ...item, Icon }
-                }))
-            } else {
-                customList = []
-            }
-        } catch {
-            throw new Error(`${customAppConfigPath} 配置文件错误！`)
-        }
-
-        ChildApp.#list = list.concat(customList)
+        ChildApp.#list = list
     }
 
     static async getItem(name) {
@@ -78,8 +58,7 @@ export default class ChildApp {
      * @returns {boolean}
      */
     static async IsInstalled(item) {
-        let path = ChildApp.getDir(item);
-        return await DirUtil.Exists(path);
+        return await DirUtil.Exists(ChildApp.getDir(item));
     }
 
     /**
@@ -99,7 +78,7 @@ export default class ChildApp {
      */
     static getConfPath(item) {
         if (item.ConfPath == null) {
-            throw new Error(`${item.Name} Conf Path 没有配置！`);
+            return item.ConfPath
         }
         const etcDir = path.join(GetDataPath.getEtcDir(), item.DirName)
         const varMap = { EtcDir: etcDir}
@@ -113,7 +92,7 @@ export default class ChildApp {
      */
     static getServerConfPath(item) {
         if (item.ServerConfPath == null) {
-            throw new Error(`${item.Name} Server Conf Path 没有配置！`);
+            return item.ServerConfPath
         }
         const etcDir = path.join(GetDataPath.getEtcDir(), item.DirName)
         const varMap = { EtcDir: etcDir}
@@ -127,11 +106,20 @@ export default class ChildApp {
      */
     static getServerProcessPath(item) {
         if (item.ServerProcessPath == null) {
-            throw new Error(`${item.Name} Server Process Path 没有配置！`);
+            return item.ServerProcessPath
         }
         const workDir = ChildApp.getDir(item);
         const varMap = { WorkDir: workDir}
         return path.normalize(parseTemplateStrings(item.ServerProcessPath, varMap))
+    }
+
+    static getCommonPath(item, cpath) {
+        if (cpath == null) {
+            return cpath
+        }
+        const workDir = ChildApp.getDir(item)
+        const varMap = { WorkDir: workDir, EtcDir: etcDir }
+        return path.normalize(parseTemplateStrings(cpath, varMap))
     }
 
     /**
