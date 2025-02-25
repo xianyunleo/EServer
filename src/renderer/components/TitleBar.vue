@@ -77,13 +77,7 @@ window.api.onMainWindowUnmaximize(() => {
   overflow: hidden;
   text-overflow: ellipsis;
 
-  a {
-    &:hover {
-      color: #1890ff;
-      cursor: pointer;
-    }
-  }
-  .notice-icon{
+  .notice-icon {
     width: 24px;
     animation: textSizeChange 1s infinite;
     @keyframes textSizeChange {
