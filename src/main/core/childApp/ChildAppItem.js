@@ -4,6 +4,7 @@ export default class ChildAppItem {
     ServerName;
     DirName;
     EtcList;
+    ProcessPath;
     ServerProcessPath;
     ConfPath;
     ServerConfPath;

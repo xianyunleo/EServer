@@ -42,12 +42,8 @@
                   <a-dropdown :trigger="['click']">
                     <template #overlay>
                       <a-menu>
-                        <a-menu-item v-if="item.IsMacApp || item.WinExePath" @click="openApp(item)">
-                          {{ t('Open') }}
-                        </a-menu-item>
-                        <a-menu-item @click="openInstallPath(item)">
-                          {{ mt('Open', 'ws', 'Directory') }}
-                        </a-menu-item>
+                        <a-menu-item v-if="item.CanOpen" @click="openApp(item)">{{ t('Open') }}</a-menu-item>
+                        <a-menu-item @click="openInstallPath(item)">{{ mt('Open', 'ws', 'Directory') }}</a-menu-item>
                         <a-menu-item v-if="item.ConfPath" @click="openConfFile(item)" key="998">
                           {{ mt('Open', 'ws') }}{{ path.basename(item.ConfPath) }}
                         </a-menu-item>
@@ -248,9 +244,9 @@ const clickStop = (name) => {
 }
 
 const openApp = (item) => {
-  let appPath = ''
+  let appPath
   if (isWindows) {
-    appPath = path.join(ChildApp.getDir(item), item.WinExePath)
+    appPath = ChildApp.getCommonPath(item, item.ProcessPath)
   } else if (isMacOS) {
     appPath = ChildApp.getDir(item)
   }
