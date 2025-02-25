@@ -13,7 +13,7 @@ import { computed } from 'vue'
 import { FolderOpenFilled } from '@ant-design/icons-vue'
 const callStatic = window.api.callStatic
 
-const props = defineProps({ value: String, toForwardSlash: Boolean, filters: Array })
+const props = defineProps({ method: String, value: String, toForwardSlash: Boolean, filters: Array })
 const emit = defineEmits(['update:value'])
 
 const val = computed({
@@ -24,10 +24,10 @@ const val = computed({
     emit('update:value', value)
   }
 })
-
+const method = props.method ? props.method : 'showOpenFile'
 const selectPath = async () => {
   const filters = props.filters ?? []
-  let path = await callStatic('FileDialog', 'showOpenFile', val.value, filters)
+  let path = await callStatic('FileDialog', method, val.value, filters)
   if (path) {
     if (props.toForwardSlash) {
       path = path.replaceSlash()
