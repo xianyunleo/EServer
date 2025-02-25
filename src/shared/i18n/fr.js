@@ -4,6 +4,7 @@ export default {
     Appearance: 'Apparence',
     App: 'App',
     Add: 'Ajouter',
+    All: 'Tous',
     Custom: 'Sur mesure',
     Delete: 'Supprimer',
     Modify: 'Modifier',

@@ -4,6 +4,7 @@ export default {
     Appearance: '外观',
     App: '应用',
     Add: '添加',
+    All: '全部',
     Custom: '自定义',
     Delete: '删除',
     Modify: '修改',
