@@ -118,6 +118,7 @@ export default class ChildApp {
             return cpath
         }
         const workDir = ChildApp.getDir(item)
+        const etcDir = path.join(GetDataPath.getEtcDir(), item.DirName)
         const varMap = { WorkDir: workDir, EtcDir: etcDir }
         return path.normalize(parseTemplateStrings(cpath, varMap))
     }
