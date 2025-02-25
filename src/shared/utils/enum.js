@@ -8,6 +8,6 @@ export const EnumChildAppInstallStatus = {
     Extracted: 6,
     ExtractError: 7,
     Configuring: 8,
-    Abort:100,
-    Finish: 200,
+    Abort: 100,
+    Finish: 200
 }
