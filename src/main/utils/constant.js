@@ -12,3 +12,9 @@ export const SETTINGS_FILE_NAME = 'settings'
 export const CONF_INDENT = '    '
 
 export const PowerShell = 'powershell'
+
+export const ChildAppTypes = {
+    PHP: 'PHP',
+    Server: 'Server',
+    Tool: 'Tool'
+}
