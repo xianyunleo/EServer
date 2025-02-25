@@ -2,7 +2,7 @@
   <a-input v-model:value='val' class='with-btn' readonly>
     <template #suffix>
       <span class='icon-wrapper' @click='selectPath'>
-         <FolderOpenFilled class='icon' />
+        <FolderOpenFilled class="icon" />
       </span>
     </template>
   </a-input>
@@ -14,6 +14,7 @@ import { FolderOpenFilled } from '@ant-design/icons-vue'
 
 const props = defineProps({ value: String, toForwardSlash: Boolean })
 const emit = defineEmits(['update:value'])
+const callStatic = window.api.callStatic
 
 const val = computed({
   get() {
@@ -25,7 +26,7 @@ const val = computed({
 })
 
 const selectPath = async () => {
-  let path = await window.api.callStatic('FileDialog', 'showOpenDirectory')
+  let path = await callStatic('FileDialog', 'showOpenDirectory')
   if (path) {
     if (props.toForwardSlash) {
       path = path.replaceSlash()
