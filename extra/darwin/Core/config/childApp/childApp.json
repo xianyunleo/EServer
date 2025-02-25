@@ -239,7 +239,7 @@
         "Name": "Notepad--",
         "DirName": "Notepad--.app",
         "Type": "Tool",
-        "IsMacApp": true,
+        "CanOpen": true,
         "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "Notepad--.png",
