@@ -19,7 +19,7 @@
     <a-table :scroll="{ y: 'calc(100vh - 220px)' }" :columns="columns" :data-source="list" class="content-table web-table scroller" :pagination="pagination" size="middle">
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'serverName'">
-          <a class="non-draggable color-text" @click="openUrl(record)">{{ text }}</a>
+          <a class="non-draggable" @click="openUrl(record)">{{ text }}</a>
         </template>
         <template v-if="column.dataIndex === 'rootPath'">
           <a class="non-draggable color-text" @click="openRootPath(record)">{{ text }}</a>
