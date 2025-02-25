@@ -72,7 +72,7 @@ export default {
     Kill: 'Kill',
     Doc: 'Doc',
     OfficialSite: 'Official Site',
-    Desc: 'Desc',
+    Desc: 'Description',
     List: 'List',
     Process: 'Process',
     Mode: 'Mode',
