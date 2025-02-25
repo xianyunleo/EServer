@@ -1,10 +1,10 @@
 import path from 'path'
-import {EnumChildAppType} from "@/shared/utils/enum";
 import GetCorePath from "@/shared/utils/GetCorePath";
 import GetDataPath from "@/shared/utils/GetDataPath";
 import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
 import { parseTemplateStrings } from '@/shared/utils/utils'
+import { ChildAppTypes } from '@/main/utils/constant'
 
 export default class ChildApp {
     static #list;
@@ -128,13 +128,12 @@ export default class ChildApp {
      * @returns {string}
      */
     static getTypeDir(type) {
-        type = EnumChildAppType[type];
         switch (type) {
-            case EnumChildAppType.PHP:
+            case ChildAppTypes.PHP:
                 return GetDataPath.getPhpTypeDir();
-            case EnumChildAppType.Server:
+            case ChildAppTypes.Server:
                 return GetDataPath.getServerTypeDir();
-            case EnumChildAppType.Tool:
+            case ChildAppTypes.Tool:
                 return GetDataPath.getToolTypeDir();
             default:
                 return '';

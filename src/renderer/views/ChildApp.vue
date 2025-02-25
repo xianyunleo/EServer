@@ -3,10 +3,10 @@
     <div class="category">
       <a-radio-group v-model:value="childAppTypeSelected" button-style="solid" @change="radioGroupChange">
         <a-radio-button :value="InstalledType">{{ t('Installed') }}</a-radio-button>
-        <a-radio-button :value="enumGetName(EnumChildAppType, EnumChildAppType.Server)">{{ t('Server') }}
+        <a-radio-button :value="ChildAppTypes.Server">{{ t('Server') }}
         </a-radio-button>
-        <a-radio-button :value="enumGetName(EnumChildAppType, EnumChildAppType.PHP)">PHP</a-radio-button>
-        <a-radio-button :value="enumGetName(EnumChildAppType, EnumChildAppType.Tool)">{{ t('Tool') }}</a-radio-button>
+        <a-radio-button :value="ChildAppTypes.PHP">PHP</a-radio-button>
+        <a-radio-button :value="ChildAppTypes.Tool">{{ t('Tool') }}</a-radio-button>
       </a-radio-group>
     </div>
 
@@ -54,7 +54,7 @@
                         <a-menu-item v-if="item.ServerConfPath" @click="openServerConfFile(item)" key="997">
                           {{ mt('Open', 'ws') }}{{ path.basename(item.ServerConfPath) }}
                         </a-menu-item>
-                        <a-menu-item v-if="item.Type === phpTypeValue" @click="showPhpExtManager(item)">
+                        <a-menu-item v-if="item.Type === ChildAppTypes.PHP" @click="showPhpExtManager(item)">
                           {{ mt('Install', 'ws', 'Extension') }}
                         </a-menu-item>
                       </a-menu>
@@ -127,11 +127,11 @@ import { h, reactive, ref } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import { storeToRefs } from 'pinia'
 import { message } from 'ant-design-vue'
-import { EnumChildAppInstallStatus, EnumChildAppType } from '@/shared/utils/enum'
+import { EnumChildAppInstallStatus } from '@/shared/utils/enum'
 import { AppstoreAddOutlined, DownOutlined } from '@ant-design/icons-vue'
 import ChildApp from '@/main/core/childApp/ChildApp'
 import MessageBox from '@/renderer/utils/MessageBox'
-import { enumGetName, getFileSizeText, getIpcError } from '@/shared/utils/utils'
+import { getFileSizeText, getIpcError } from '@/shared/utils/utils'
 import Native from '@/renderer/utils/Native'
 import PhpExtManager from '@/renderer/components/ChildApp/PhpExtManager.vue'
 import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
@@ -141,6 +141,7 @@ import { isMacOS, isWindows } from '@/main/utils/utils'
 import LocalInstall from '@/main/core/childApp/LocalInstall'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import SystemExtend from '@/main/utils/SystemExtend'
+import { ChildAppTypes } from '@/main/utils/constant'
 const callStatic = window.api.callStatic
 const InstalledType = 'InstalledType'
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
@@ -148,7 +149,6 @@ const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
 
 const store = useMainStore()
 const { childAppList, childAppTypeSelected } = storeToRefs(store)
-const phpTypeValue = enumGetName(EnumChildAppType, EnumChildAppType.PHP)
 const phpExtManagerShow = ref(false)
 const phpVersion = ref('')
 const InstStatus = EnumChildAppInstallStatus

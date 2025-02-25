@@ -11,9 +11,3 @@ export const EnumChildAppInstallStatus = {
     Abort:100,
     Finish: 200,
 }
-
-export const EnumChildAppType = {
-    PHP: 0,
-    Server: 1,
-    Tool: 2,
-}
