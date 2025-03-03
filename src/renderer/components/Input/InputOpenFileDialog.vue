@@ -1,5 +1,5 @@
 <template>
-  <a-input v-model:value='val' class='with-btn' readonly>
+  <a-input v-model:value='val' class='with-btn' :readonly="props.readonly">
     <template #suffix>
       <span class='icon-wrapper' @click='selectPath'>
         <FolderOpenFilled class="icon" />
@@ -13,7 +13,7 @@ import { computed } from 'vue'
 import { FolderOpenFilled } from '@ant-design/icons-vue'
 const callStatic = window.api.callStatic
 
-const props = defineProps({ method: String, value: String, toForwardSlash: Boolean, filters: Array })
+const props = defineProps({ method: String, value: String, toForwardSlash: Boolean, filters: Array, readonly: Boolean })
 const emit = defineEmits(['update:value'])
 
 const val = computed({
