@@ -37,6 +37,7 @@ export default class GetDataPath {
     static getEtcNginxDir = () => path.join(this.getEtcDir(), 'nginx')
 
     static getNginxConfDir = () => path.join(this.getEtcNginxDir(), 'conf')
+    static getNginxPhpConfDir = () => path.join(this.getNginxConfDir(), 'php')
 
     static getNginxVhostsDir = () => path.join(this.getNginxConfDir(), 'vhosts')
 
