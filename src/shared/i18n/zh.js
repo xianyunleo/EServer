@@ -6,6 +6,7 @@ export default {
     Add: '添加',
     All: '全部',
     Custom: '自定义',
+    Config: '配置',
     Delete: '删除',
     Modify: '修改',
     Access: '访问',

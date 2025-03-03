@@ -6,6 +6,7 @@ export default {
     Add: 'Add',
     All: 'All',
     Custom: 'Custom',
+    Config: 'Config',
     Delete: 'Delete',
     Modify: 'Modify',
     Access: 'Access',
