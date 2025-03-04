@@ -18,6 +18,9 @@
         <a-menu-item key="/appStore">
           <template #icon><appstore-two-tone /> </template>{{$t("AppStore")}}
         </a-menu-item>
+        <a-menu-item key="/customApp">
+          <template #icon><appstore-two-tone /> </template>{{mt('Custom','ws','App')}}
+        </a-menu-item>
       </div>
       <div style="margin-bottom: 25px;" class="non-draggable">
         <a-menu-item key="/settings">
@@ -47,6 +50,7 @@ const call = window.api.call
 const router = useRouter();
 const selectedKeys = ref(['/']);
 import { isWindows ,isMacOS} from '@/main/utils/utils'
+import { mt } from '../utils/i18n'
 
 const dblclick = () => {
   if (!isWindows) call('switchMax')

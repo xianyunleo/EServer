@@ -9,7 +9,7 @@
           {{ mt('OneClick', 'ws', 'Stop') }}
         </a-button>
         <a-button type="primary" @click="dataDirClick"> {{ APP_NAME }} {{ mt('ws', 'Directory') }}</a-button>
-        <a-button type="primary" @click="wwwPathClick">{{ mt('Website', 'ws', 'Directory') }}</a-button>
+        <a-button type="primary" @click="cfgPathClick">{{ mt('Config', 'ws', 'Directory') }}</a-button>
       </div>
     </a-card>
 
@@ -24,7 +24,9 @@
     >
       <template #bodyCell="{ column, record : item }">
         <template v-if="column.dataIndex === 'name'">
-          <div>{{ item.ServerName ? item.ServerName : item.Name }}</div>
+          <div>{{ item.ServerName ? item.ServerName : item.Name }}
+            <a-tag v-if="item.IsCustom">{{t('Custom')}}</a-tag>
+          </div>
         </template>
         <template v-if="column.dataIndex === 'status'">
           <div style="font-size: 20px">
@@ -59,7 +61,7 @@
             <a-dropdown :trigger="['click']">
               <template #overlay>
                 <a-menu>
-                  <a-menu-item v-if="!item.IsCustom" @click="openInstallDir(item)" key="999">
+                  <a-menu-item @click="openWorkDir(item)" key="999">
                     {{ mt('Open', 'ws', 'Directory') }}
                   </a-menu-item>
                   <a-menu-item v-if="item.ConfPath" @click="openConfFile(item)" key="998">
@@ -98,6 +100,7 @@ import { createAsyncComponent } from '@/renderer/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
 import { StoreInitializedEventName } from '@/renderer/utils/constant'
 import Settings from '@/main/Settings'
+import CustomChildApp from '@/main/core/childApp/CustomChildApp'
 
 const timestamp = new Date().getTime()
 
@@ -158,15 +161,13 @@ const loadingHandle = async () => {
 
 const getProcessList = async () => {
   let list
-  const customChildAppNum = store.customChildAppList.length
-  //有自定义软件，不增加过滤条件
-  const options = customChildAppNum > 0 ? {} : { directory: GetDataPath.getChildAppDir() }
+  const options = { directory: GetDataPath.getChildAppDir(), pathList: await CustomChildApp.getServerProcessPathList() }
   if (isWindows) {
     list = await window.api.callStatic('ProcessLibrary', 'getList', options)
   } else {
     list = await ProcessExtend.getList(options)
   }
-  //过滤掉子进程，剔除子进程
+  //过滤掉子进程。防止先匹配到子进程后， 子进程停止整个服务失败。
   let newList = []
   for (const item of list) {
     if (!list.find((item2) => item2.pid === item.ppid)) {
@@ -179,10 +180,9 @@ const getProcessList = async () => {
 const initServerListStatus = async () => {
   const processList = await getProcessList()
   const processMap = new Map(processList)
-
   const initServerStatus = async (item) => {
     const processPath = item.IsCustom ? item.ServerProcessPath : ChildApp.getServerProcessPath(item)
-    const pid = processMap.get(processPath)
+    const pid = processMap.get(path.normalize(processPath))
     item.isRunning = !!pid
     item.pid = pid ?? null
   }
@@ -192,8 +192,11 @@ const initServerListStatus = async () => {
 }
 
 const dataDirClick = () => Native.openDirectory(GetDataPath.getDir())
-const wwwPathClick = () => Native.openDirectory(Settings.get('WebsiteDir'))
-const openInstallDir = (item) => Native.openDirectory(ChildApp.getDir(item))
+const cfgPathClick = () => Native.openDirectory(GetDataPath.getEtcDir())
+const openWorkDir = (item) => {
+  const p = item.IsCustom ?  path.dirname(item.ServerProcessPath) :ChildApp.getDir(item)
+  Native.openDirectory(p)
+}
 
 const openConfFile = (item) => {
   const p = item.IsCustom ? item.ConfPath : ChildApp.getConfPath(item)

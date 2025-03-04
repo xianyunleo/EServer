@@ -31,13 +31,13 @@ export const useMainStore = defineStore('main', {
     getters: {
         //server列表，包含自定义的
         serverList(state) {
-            return filterServerList(state.installedChildAppList.concat(this.customChildAppList))
+            return filterServerList([...state.installedChildAppList,...state.customChildAppList])
         }
     },
     actions: {
         async init() {
             await this.refreshChildAppList()
-            this.customChildAppList = await CustomChildApp.getList() //自定义子应用，不判断是否已安装
+            await this.refreshCustomChildAppList()
         },
         async refreshChildAppList() {
             const list = await ChildApp.getList()
@@ -49,6 +49,11 @@ export const useMainStore = defineStore('main', {
         },
         async refreshInstalledList(){
             this.installedChildAppList = this.childAppList.filter(item => item.Installed)
+        },
+        async refreshCustomChildAppList() {
+            let customChildAppList = await CustomChildApp.getList() //自定义子应用，不判断是否已安装
+            customChildAppList = customChildAppList.map(item => ({ ...item, IsCustom: true }))
+            this.customChildAppList = customChildAppList
         },
         async setSettings(key, beforeFunc = null) {
             const originVal = Settings.get(key)

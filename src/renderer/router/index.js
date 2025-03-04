@@ -7,6 +7,7 @@ const routes = [
     {path:'/appStore', component:()=>import('@/renderer/views/ChildApp.vue'),},
     {path:'/settings', component:()=>import('@/renderer/views/Settings.vue'),},
     {path:'/about', component:()=>import('@/renderer/views/About.vue'),},
+    {path:'/customApp', component:()=>import('@/renderer/views/CustomChildApp.vue'),},
 ]
 const router = createRouter({
     history: createWebHashHistory(),

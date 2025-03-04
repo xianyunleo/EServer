@@ -17,6 +17,9 @@
         <a-button @click="exitApp" type="primary">{{ t('Exit') }} {{ APP_NAME }}</a-button>
       </a-col>
       <a-col :span="6" class="flex-vertical-center">
+        <a-button @click="restartApp" type="primary">{{ t('Restart') }} {{ APP_NAME }}</a-button>
+      </a-col>
+      <a-col :span="6" class="flex-vertical-center">
         <a-button @click="init" type="primary">{{ t('Initialize') }}</a-button>
       </a-col>
     </a-row>
@@ -59,9 +62,8 @@ const changeWebsiteDir = () => {
   })
 }
 
-const exitApp = () => {
-  call('appExit')
-}
+const exitApp = () => call('appExit')
+const restartApp = () => call('appRestart')
 
 const init = async () => {
   try {

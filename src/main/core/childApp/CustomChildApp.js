@@ -1,6 +1,7 @@
 import path from 'path'
 import FileUtil from "@/main/utils/FileUtil";
 import GetDataPath from '@/shared/utils/GetDataPath'
+import { isRealServer } from '@/shared/utils/childApp'
 
 
 /**
@@ -24,20 +25,57 @@ export default class CustomChildApp {
     static async initList() {
         //自定义子应用配置
         const customAppDir = path.join(GetDataPath.getDir(), '/custom/childApp')
-        const customAppConfigPath = path.join(customAppDir, 'childApp.json')
+        const configPath = path.join(customAppDir, 'childApp.json')
 
         let list
         try {
-            if (await FileUtil.Exists(customAppConfigPath)) {
-                list = JSON.parse(await FileUtil.ReadAll(customAppConfigPath))
+            if (await FileUtil.Exists(configPath)) {
+                list = JSON.parse(await FileUtil.ReadAll(configPath))
             } else {
                 list = []
             }
         } catch {
-            throw new Error(`${customAppConfigPath} 配置文件错误！`)
+            throw new Error(`${configPath} 配置文件错误！`)
         }
-        list = list.map(item => ({ ...item, IsCustom: true }))
         CustomChildApp.#list = list
+    }
+
+    static async add(newItem) {
+        CustomChildApp.#list.push(newItem)
+        const configPath = CustomChildApp.getConfigPath()
+        await FileUtil.WriteAll(configPath, JSON.stringify(CustomChildApp.#list, null, 4))
+    }
+
+    static async modify(name, newItem) {
+        for (const item of CustomChildApp.#list) {
+            if (item.Name === name) {
+                Object.assign(item, newItem)
+            }
+        }
+        const configPath = CustomChildApp.getConfigPath()
+        await FileUtil.WriteAll(configPath, JSON.stringify(CustomChildApp.#list, null, 4))
+    }
+
+    static async del(name) {
+        const list = CustomChildApp.#list.filter(item => item.Name !== name)
+        const configPath = CustomChildApp.getConfigPath()
+        await FileUtil.WriteAll(configPath, JSON.stringify(list, null, 4))
+        CustomChildApp.#list = list;
+    }
+
+    static getConfigPath(){
+        return path.join(path.join(GetDataPath.getDir(), '/custom/childApp'), 'childApp.json')
+    }
+
+
+    static async getServerProcessPathList() {
+        const list = []
+        for (const item of CustomChildApp.#list) {
+            if (isRealServer(item.Type)) {
+                list.push(path.normalize(item.ServerProcessPath))
+            }
+        }
+        return list
     }
 
 }
