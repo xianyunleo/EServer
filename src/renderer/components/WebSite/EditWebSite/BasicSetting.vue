@@ -18,7 +18,7 @@
     </a-form-item>
 
     <a-form-item :label="'PHP'+mt('ws','Version')" name='phpVersion'>
-      <a-select style='width: 120px' v-model:value='formData.phpVersion' :options='phpVersionList'>
+      <a-select style='width: 120px' v-model:value='formData.phpVersion' :options='phpOptions'>
       </a-select>
     </a-form-item>
 
@@ -38,36 +38,31 @@
 </template>
 
 <script setup>
-import { ref, inject, reactive } from 'vue'
+import { ref, inject, reactive, onMounted } from 'vue'
 import InputOpenDirDialog from '@/renderer/components/Input/InputOpenDirDialog.vue'
 import Website from '@/main/core/website/Website'
 import { message } from 'ant-design-vue'
 import MessageBox from '@/renderer/utils/MessageBox'
-import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
 import Hosts from '@/main/utils/Hosts'
 import { mt, t } from '@/renderer/utils/i18n'
 import { useMainStore } from '@/renderer/store'
+import WebsiteService from '@/renderer/services/WebsiteService'
 
 const { confName, search } = inject('WebsiteProvide')
 const store = useMainStore()
-const formRef = ref();
+const formRef = ref()
 const formData = reactive({})
 const emits = defineEmits(['editAfter'])
-const phpVersionList = ref([])
+const phpOptions = WebsiteService.getPhpOptions()
 const labelColSpan = store.settings.Language === 'zh' ? 6 : 10;
 const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 14;
 
 let websiteInfo
-;(async () => {
+
+onMounted(async () => {
   websiteInfo = await Website.getBasicInfo(confName.value)
   Object.assign(formData, websiteInfo)
-
-  const list = await ChildAppExtend.getPHPList()
-  phpVersionList.value = list.map(item => {
-    return { value: item.version, label: item.name }
-  })
-  phpVersionList.value.push({ value: '', label: t('Static') })
-})()
+})
 
 const save = async () => {
   try {
@@ -77,6 +72,7 @@ const save = async () => {
     return
   }
   try {
+    if (formData.phpVersion) await WebsiteService.checkCustomPhpConf(formData.phpVersion, phpOptions)
     await Website.saveBasicInfo(confName.value, formData)
     message.info(t('successfulOperation'))
     search()

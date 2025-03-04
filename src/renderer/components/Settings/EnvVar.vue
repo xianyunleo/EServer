@@ -10,7 +10,7 @@
     <a-row type="flex" justify="space-around" align="middle" class="settings-card-row">
       <a-col :span="12" class="flex-vertical-center">
         <span :class="!store.settings.EnableEnv ? 'disabled-text' : ''"> PHP-CLI {{ t('Version') }}： </span>
-        <a-select style="width: 120px" :options="phpVersionList" :disabled="!store.settings.EnableEnv" v-model:value="store.settings.PhpCliVersion" @change="phpCliVersionChange" />
+        <a-select style="width: 120px" :options="phpOptions" :disabled="!store.settings.EnableEnv" v-model:value="store.settings.PhpCliVersion" @change="phpCliVersionChange" />
       </a-col>
       <a-col :span="12" class="flex-vertical-center">
         <a-switch
@@ -29,12 +29,12 @@
 import { computed, ref } from 'vue'
 import Env from '@/main/core/Env/Env'
 import { message } from 'ant-design-vue'
-import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
 import GetDataPath from '@/shared/utils/GetDataPath'
 import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
 import Php from '@/main/core/php/Php'
+import ChildAppService from '@/renderer/services/ChildAppService'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const store = useMainStore()
@@ -45,18 +45,9 @@ const changeEnableEnv = async () => {
   })
 }
 
-const phpVersionListTemp = ref([])
-
-const phpVersionList = computed(() => {
-  return [...phpVersionListTemp.value, { value: '', label: mt('Not', 'ws', 'Set') }]
+const phpOptions = computed(() => {
+  return [...ChildAppService.getPhpOptions(), { value: '', label: mt('Not', 'ws', 'Set') }]
 })
-
-;(async () => {
-  const list = await ChildAppExtend.getPHPList()
-  phpVersionListTemp.value = list.map((item) => {
-    return { value: item.version, label: item.name }
-  })
-})()
 
 const phpCliVersionChange = () => {
   store.setSettings('PhpCliVersion', async (originVal) => {

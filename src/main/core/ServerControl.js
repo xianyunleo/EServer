@@ -74,7 +74,7 @@ export default class ServerControl {
         const fields = ['ConfPath', 'ServerConfPath', 'ServerProcessPath', 'ControlProcessPath', 'StartServerArgs', 'StopServerArgs']
         const varMap = {
             WorkDir: workDir.replaceSlash(),
-            EtcDir: path.join(etcDir, item.DirName).replaceSlash(),
+            EtcDir: path.join(etcDir, item.DirName??'').replaceSlash(),
             ServerPort: item.ServerPort
         }
         const itemMap = {}

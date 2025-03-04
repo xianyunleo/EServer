@@ -18,7 +18,7 @@
           autocomplete="off">
         <a-form-item :label="`MySQL ${mt('Version')}`" name="version"
                      :rules="[{ required: true, message: mt('Please','ws','Select')}]">
-          <a-select style="width: 150px" v-model:value="formData.version" :options="mysqlVersionList">
+          <a-select style="width: 150px" v-model:value="formData.version" :options="mysqlOptions">
           </a-select>
         </a-form-item>
         <a-form-item :label="mt('New','ws','Pwd')"  name="newPwd"
@@ -32,11 +32,11 @@
 
 <script setup>
 import {ref,computed} from "vue";
-import ChildAppExtend from "@/main/core/childApp/ChildAppExtend";
 import Database from "@/main/core/Database";
 import MessageBox from "@/renderer/utils/MessageBox";
 import { t,mt } from '@/renderer/utils/i18n'
 import { message } from 'ant-design-vue'
+import ChildAppService from '@/renderer/services/ChildAppService'
 
 const props = defineProps({ show: Boolean })
 const emit = defineEmits(['update:show'])
@@ -51,15 +51,8 @@ const visible = computed({
 })
 const formRef = ref()
 const formData = ref({})
-const mysqlVersionList = ref([])
+const mysqlOptions = ChildAppService.getMysqlOptions()
 const okButtonLoading = ref(false)
-
-;(async () => {
-  const list = await ChildAppExtend.getMySQLList()
-  mysqlVersionList.value = list.map(item => {
-    return { value: item.version, label: item.name }
-  })
-})()
 
 const resetClick = async () => {
   try {

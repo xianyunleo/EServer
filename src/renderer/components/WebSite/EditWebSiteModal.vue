@@ -32,6 +32,7 @@ import Settings from '@/main/Settings'
 import { mt, t } from '@/renderer/utils/i18n'
 import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
 import ServerService from '@/renderer/services/ServerService'
+import WebsiteService from '@/renderer/services/WebsiteService'
 
 const { serverName, port, editModalVisible: visible } = inject('WebsiteProvide')
 const defaultKey = 'basicSetting'
@@ -40,7 +41,12 @@ const activeKey = ref(defaultKey)
 const editAfter = (phpVersion = '') => {
   if (Settings.get('AutoStartAndRestartServer') && ServerService.isRunning('Nginx')) {
     ServerService.restart('Nginx')
-    if (phpVersion) ServerService.restart(ChildAppExtend.getPhpName(phpVersion))
+    if (phpVersion) {
+      const phpOptions = WebsiteService.getPhpOptions()
+      const option = phpOptions.find(item => item.value === phpVersion)
+      const phpName = option.isCustom ? option.label : ChildAppExtend.getPhpName(phpVersion)
+      ServerService.restart(phpName)
+    }
   }
 }
 </script>

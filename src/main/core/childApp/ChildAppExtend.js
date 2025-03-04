@@ -56,22 +56,22 @@ export default class ChildAppExtend {
 
     /**
      *
-     * @param dirName {string}
+     * @param name {string}
      * @returns {string|null}
      */
-    static getPHPVersion(dirName) {
-        let matches = dirName.match(/php-(.+)/);
-        return matches ? matches[1] : null;
+    static getPHPVersion(name) {
+        let matches = name.match(/php-([\d.]+)/i)
+        return matches ? matches[1] : null
     }
 
     /**
      *
-     * @param dirName {string}
+     * @param name {string}
      * @returns {string|null}
      */
-    static getMysqlVersion(dirName) {
-        let matches = dirName.match(/mysql-(.+)/);
-        return matches ? matches[1] : null;
+    static getMysqlVersion(name) {
+        let matches = name.match(/mysql-([\d.]+)/i)
+        return matches ? matches[1] : null
     }
 
     static getPhpName(phpVersion) {

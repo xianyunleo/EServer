@@ -15,7 +15,7 @@
         </a-form-item>
 
         <a-form-item :label="'PHP' + mt('ws', 'Version')" name="phpVersion">
-          <a-select style="width: 180px;" v-model:value="formData.phpVersion" :options="phpVersionList" />
+          <a-select style="width: 180px;" v-model:value="formData.phpVersion" :options="phpOptions"/>
           <a-tooltip title="Open the nginx php config directory">
             <span class='icon-wrapper' @click='openWebPhpConfigDir'><FolderOpenFilled class='icon' /></span>
           </a-tooltip>
@@ -45,12 +45,13 @@ import ServerService from '@/renderer/services/ServerService'
 import { FolderOpenFilled } from '@ant-design/icons-vue'
 import Native from '@/renderer/utils/Native'
 import GetDataPath from '@/shared/utils/GetDataPath'
+import WebsiteService from '@/renderer/services/WebsiteService'
 const { search, addModalVisible: visible } = inject('WebsiteProvide')
 
 const wwwPath = Settings.get('WebsiteDir')?.replaceSlash()
 const formRef = ref()
 const store = useMainStore()
-const phpVersionList = ref([])
+const phpOptions = WebsiteService.getPhpOptions()
 const formData = reactive({
   serverName: '',
   port: 80,
@@ -62,14 +63,6 @@ const formData = reactive({
 const labelColSpan = store.settings.Language === 'zh' ? 6 : 8
 const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 16
 
-;(async () => {
-  const list = await ChildAppExtend.getPHPList()
-  phpVersionList.value = list.map((item) => {
-    return { value: item.version, label: item.name }
-  })
-  phpVersionList.value.push({ value: '', label: t('Static') })
-})()
-
 const serverNameChange = () => {
   formData.serverName = formData.serverName?.trim().replaceAll(/[^-a-zA-Z0-9.]/g, '')
   formData.rootPath = path.join(wwwPath, formData.serverName).replaceSlash()
@@ -77,7 +70,7 @@ const serverNameChange = () => {
 
 const addWebClick = async () => {
   try {
-    let values = await formRef.value.validateFields()
+    let values = await formRef.value.validate()
     await addWeb(values)
     search()
   } catch (errorInfo) {
@@ -88,6 +81,7 @@ const addWebClick = async () => {
 const addWeb = async (websiteInfo) => {
   const { serverName, phpVersion, syncHosts } = websiteInfo
   try {
+    if(websiteInfo.phpVersion) await WebsiteService.checkCustomPhpConf(formData.phpVersion, phpOptions)
     await Website.add(websiteInfo)
   } catch (error) {
     MessageBox.error(error.message ?? error, t('Error adding website!'))
@@ -105,7 +99,11 @@ const addWeb = async (websiteInfo) => {
 
   if (Settings.get('AutoStartAndRestartServer') && ServerService.isRunning('Nginx')) {
     ServerService.restart('Nginx')
-    if (phpVersion) ServerService.restart(ChildAppExtend.getPhpName(phpVersion))
+    if (phpVersion) {
+      const option = phpOptions.find(item => item.value === phpVersion)
+      const phpName = option.isCustom ? option.label : ChildAppExtend.getPhpName(phpVersion)
+      ServerService.restart(phpName)
+    }
   }
 }
 
@@ -121,7 +119,7 @@ const rootPathRules = [
   }
 ]
 
-const openWebPhpConfigDir = () => Native.openDirectory(path.join(GetDataPath.getNginxConfDir(), 'php'))
+const openWebPhpConfigDir = () => Native.openDirectory(GetDataPath.getNginxPhpConfDir())
 </script>
 
 <style scoped>
