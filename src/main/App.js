@@ -88,7 +88,7 @@ export default class App {
         if (isMacOS) {
             await this.updateMacDataSubDir(['Library'])
         }
-        await this.moveInitFiles(['downloads', 'www', 'custom'])
+        await this.moveInitFiles(['downloads', 'www', 'custom', 'custom/childApp'])
 
         //目录childApp改名为childApp
         if (!await ChildApp.DirExists()) {
