@@ -104,7 +104,7 @@ export default class Extension {
                 } else if (phpVersion < 7.2) {
                     return '5.3.7'
                 } else {
-                    return '6.0.2'
+                    return '6.1.0'
                 }
             case 'swoole':
                 if (phpVersion < 5.5) {
@@ -171,8 +171,8 @@ export default class Extension {
                     return '4.2.0'
                 } else if (phpVersion <= 8.1) {
                     return '5.3.7'
-                } else if (phpVersion <= 8.3) {
-                    return '6.0.2'
+                } else if (phpVersion <= 8.4) {
+                    return '6.1.0'
                 } else {
                     return null
                 }
