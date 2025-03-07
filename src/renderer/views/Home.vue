@@ -181,8 +181,8 @@ const initServerListStatus = async () => {
   const processList = await getProcessList()
   const processMap = new Map(processList)
   const initServerStatus = async (item) => {
-    const processPath = item.IsCustom ? item.ServerProcessPath : ChildApp.getServerProcessPath(item)
-    const pid = processMap.get(path.normalize(processPath))
+    const processPath = item.IsCustom ? path.normalize(item.ServerProcessPath) : ChildApp.getServerProcessPath(item)
+    const pid = processMap.get(processPath)
     item.isRunning = !!pid
     item.pid = pid ?? null
   }
