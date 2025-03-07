@@ -164,6 +164,9 @@ export default class ChildAppInit {
             text = text.replaceAll(sessionPattern, replaceSessionStr)
 
             await FileUtil.WriteAll(confPath, text)
+            const originConf =  path.join(GetDataPath.getPhpDir(version), 'php.ini')
+            await FileUtil.Delete(originConf)
+            await FsUtil.CreateSymbolicLink(originConf, confPath)
         } catch (error) {
             throw new Error(`初始化PHP配置失败！${error.message}`)
         }
