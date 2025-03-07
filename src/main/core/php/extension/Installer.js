@@ -81,6 +81,8 @@ export default class Installer {
 
     getVcStringVersion() {
         switch (this.phpVersion) {
+            case '8.4':
+                return 'vs17';
             case '8.3':
             case '8.2':
             case '8.1':
