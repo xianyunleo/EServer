@@ -1,4 +1,4 @@
-import { devConsoleLog } from '@/main/utils/utils'
+import { debugLog } from '@/main/utils/utils'
 import ProcessExtend from "@/main/utils/ProcessExtend";
 import ChildApp from "@/main/core/childApp/ChildApp";
 import { parseTemplateStrings} from "@/shared/utils/utils";
@@ -27,17 +27,17 @@ export default class ServerControl {
         const childProcess = child_process.spawn(command, [], options)
 
         childProcess.stderr.on('data', (data) => {
-            devConsoleLog('stderr data', data?.toString())
+            debugLog('stderr data', data?.toString())
             item.errMsg = data?.toString()
         })
 
         childProcess.on('close', (code) => {
-            devConsoleLog(`${path.basename(ctrlProcessPath)},exit code ${code}`)
+            debugLog(`${path.basename(ctrlProcessPath)},exit code ${code}`)
             item.isRunning = false
         })
 
-        devConsoleLog('ServerControl start command:', command)
-        devConsoleLog(`${path.basename(ctrlProcessPath)},pid ${childProcess.pid}`)
+        debugLog('ServerControl start command:', command)
+        debugLog(`${path.basename(ctrlProcessPath)},pid ${childProcess.pid}`)
 
         item.pid = childProcess.pid
     }
