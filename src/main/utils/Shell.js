@@ -1,4 +1,4 @@
-import { isDev, isWindows } from '@/main/utils/utils'
+import { debugLog, isDev, isWindows } from '@/main/utils/utils'
 import child_process from 'child_process'
 import SettingsExtend from '@/main/core/SettingsExtend'
 import util from 'util'
@@ -37,7 +37,7 @@ export default class Shell {
         if (isWindows) {
             throw new Error(`Cannot be executed on Windows!`)
         }
-        if (isDev) console.log('Shell.sudoExec command', command)
+        debugLog('Shell.sudoExec command', command)
 
         command = `echo '${SettingsExtend.getUserPwd()}' | sudo -S ${command}`
 
