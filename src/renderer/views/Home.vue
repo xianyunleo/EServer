@@ -165,7 +165,7 @@ const getProcessList = async () => {
   if (isWindows) {
     list = await window.api.callStatic('ProcessLibrary', 'getList', options)
   } else {
-    list = await ProcessExtend.getList()
+    list = await ProcessExtend.getList(options)
   }
   //过滤掉子进程。防止先匹配到子进程后， 子进程停止整个服务失败。
   let newList = []
