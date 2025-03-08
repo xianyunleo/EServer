@@ -39,6 +39,18 @@ export default class FsUtil {
         return await fsPromises.symlink(pathToTarget, path)
     }
 
+    static async ParseSymbolicLink(path) {
+        if (!await FsUtil.Exists(path)) {
+            return path
+        }
+        const stats = await fsPromises.lstat(path)
+        if (stats.isSymbolicLink()) {
+            return await fsPromises.readlink(path)
+        } else {
+            return path
+        }
+    }
+
     /**
      *
      * @param path {string}
