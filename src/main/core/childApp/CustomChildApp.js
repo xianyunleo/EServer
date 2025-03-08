@@ -41,18 +41,12 @@ export default class CustomChildApp {
     }
 
     static async add(newItem) {
-        if(newItem.ServerProcessPath){
-            newItem.ServerProcessPath = FileUtil.ParseSymbolicLink(newItem.ServerProcessPath)
-        }
         CustomChildApp.#list.push(newItem)
         const configPath = CustomChildApp.getConfigPath()
         await FileUtil.WriteAll(configPath, JSON.stringify(CustomChildApp.#list, null, 4))
     }
 
     static async modify(name, newItem) {
-        if(newItem.ServerProcessPath){
-            newItem.ServerProcessPath = FileUtil.ParseSymbolicLink(newItem.ServerProcessPath)
-        }
         for (const item of CustomChildApp.#list) {
             if (item.Name === name) {
                 Object.assign(item, newItem)
