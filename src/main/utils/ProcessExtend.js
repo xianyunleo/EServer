@@ -99,16 +99,22 @@ export default class ProcessExtend {
         return [];
     }
 
-    static async getListForMacOS(options={}) {
-        let command = 'lsof -w -R -d txt';
+    static async getListForMacOS(options = {}) {
+        let command = 'lsof -w -R -d txt'
         if (options) {
-            if(options.directory){
-                command += `|grep ${options.directory}`;  //这里不能使用lsof的+D参数，会有exit code，且性能不好
+            command += `|grep -F` //这里不能使用lsof的+D参数，会有exit code，且性能不好
+            if (options.directory) {
+                command += ` -e '${options.directory}'`
+            }
+            if (options.pathList) {
+                for (const p of options.pathList) {
+                    command += ` -e '${p}'`
+                }
             }
         }
-        command += "|grep -v .dylib|awk '{print $1,$2,$3,$10}'";
+        command += `|grep -F -v '.dylib'|awk '{print $1,$2,$3,$10}'`
         try {
-            let str =  await Shell.sudoExec(command);
+            let str = await Shell.sudoExec(command)
             str = str.trim();
             if(!str){
                 return [];
