@@ -31,7 +31,6 @@ export default class Env {
             if (binName === 'php') {
                 await this.createOtherBinFile(targetPath, 'phpize', 'phpize');
             }
-            await FsUtil.CreateSymbolicLink(path, targetPath);
         }
         await FileUtil.WriteAll(path, text)
         if (!isWindows) await Shell.sudoExec(`chmod +x ${path}`)
