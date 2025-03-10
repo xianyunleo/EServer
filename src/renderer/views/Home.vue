@@ -162,7 +162,9 @@ const loadingHandle = async () => {
 
 const getProcessList = async () => {
   let list
-  const options = { directory: GetDataPath.getChildAppDir(), pathList: await CustomChildApp.getServerProcessPathList() }
+  let pathList = CustomChildApp.getServerProcessPathList()
+  pathList = await Promise.all(pathList.map(async p => await FsUtil.ParseSymbolicLink(p)))
+  const options = {directory: GetDataPath.getChildAppDir(), pathList}
   if (isWindows) {
     list = await window.api.callStatic('ProcessLibrary', 'getList', options)
   } else {

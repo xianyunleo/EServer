@@ -68,7 +68,7 @@ export default class CustomChildApp {
     }
 
 
-    static async getServerProcessPathList() {
+    static getServerProcessPathList() {
         const list = []
         for (const item of CustomChildApp.#list) {
             if (isRealServer(item.Type)) {

@@ -1,6 +1,7 @@
 import fsPromises, { constants } from 'fs/promises'
 import { isWindows } from '@/main/utils/utils'
 import Shell from '@/main/utils/Shell'
+import nodePath from 'path'
 
 export default class FsUtil {
     /**
@@ -45,7 +46,11 @@ export default class FsUtil {
         }
         const stats = await fsPromises.lstat(path)
         if (stats.isSymbolicLink()) {
-            return await fsPromises.readlink(path)
+            const target = await fsPromises.readlink(path)
+            if (nodePath.isAbsolute(target)) {
+                return target
+            }
+            return nodePath.resolve(nodePath.dirname(path), target)
         } else {
             return path
         }

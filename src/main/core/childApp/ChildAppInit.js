@@ -7,8 +7,8 @@ import Php from '@/main/core/php/Php'
 import Database from '@/main/core/Database'
 import { isWindows } from '@/main/utils/utils'
 import ChildApp from '@/main/core/childApp/ChildApp'
-import path from 'path'
 import FsUtil from '@/main/utils/FsUtil'
+import {MAC_DATA_DIR} from "@/main/utils/constant";
 
 export default class ChildAppInit {
     static async initAll() {
@@ -21,11 +21,11 @@ export default class ChildAppInit {
         const ownAppDir = ChildApp.getDir(appItem)
         const ownEctDir = GetDataPath.getOwnEtcDir(appItem.DirName)
         for (const etcName of etcList) {
-            const source = path.join(ownAppDir, etcName)
+            const source = nodePath.join(ownAppDir, etcName)
             if (!await FsUtil.Exists(source)) {
                 continue //源文件不存在，跳过
             }
-            const etcPath = path.join(ownEctDir, etcName)
+            const etcPath = nodePath.join(ownEctDir, etcName)
             if (await FsUtil.Exists(etcPath)) {
                 continue //已有ect文件，跳过
             }
@@ -87,7 +87,21 @@ export default class ChildAppInit {
         await this.initPHPConf(version)
         if (!isWindows) {
             await this.createPHPFpmConf(version)
+            await this.fixPhpBin(version)
         }
+    }
+
+    static async fixPhpBin(ver) {
+        const dir = GetDataPath.getPhpDir(ver)
+        const phpConfigBin = nodePath.join(dir, 'bin/php-config')
+        let text = await FileUtil.ReadAll(phpConfigBin)
+        text = text.replaceAll(MAC_DATA_DIR+'software',MAC_DATA_DIR+'childApp')
+        await FileUtil.WriteAll(phpConfigBin,text)
+
+        const phpizeBin = nodePath.join(dir, 'bin/phpize')
+        text = await FileUtil.ReadAll(phpizeBin)
+        text = text.replaceAll(MAC_DATA_DIR+'software',MAC_DATA_DIR+'childApp')
+        await FileUtil.WriteAll(phpizeBin,text)
     }
 
     static async createPHPFpmConf(version) {
@@ -164,7 +178,7 @@ export default class ChildAppInit {
             text = text.replaceAll(sessionPattern, replaceSessionStr)
 
             await FileUtil.WriteAll(confPath, text)
-            const originConf =  path.join(GetDataPath.getPhpDir(version), 'php.ini')
+            const originConf =  nodePath.join(GetDataPath.getPhpDir(version), 'php.ini')
             await FileUtil.Delete(originConf)
             await FsUtil.CreateSymbolicLink(originConf, confPath)
         } catch (error) {
