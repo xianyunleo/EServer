@@ -15,6 +15,8 @@ import CommonInstall from '@/main/core/childApp/CommonInstall'
 import Php from '@/main/core/php/Php'
 import Env from '@/main/core/Env/Env'
 import Settings from '@/main/Settings'
+import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
+import ChildAppInit from '@/main/core/childApp/ChildAppInit'
 
 export default class App {
     static async initFileExists() {
@@ -119,7 +121,12 @@ export default class App {
         if (Settings.get('PhpCliVersion')) {
             const confPath = Php.getConfPath(Settings.get('PhpCliVersion'))
             const exePath = GetDataPath.getPhpExePath(Settings.get('PhpCliVersion'))
-            await Env.createBinFile(exePath, 'php', `-c "${confPath}"`)
+            Env.createBinFile(exePath, 'php', `-c "${confPath}"`)
+        }
+
+        const phpList = await ChildAppExtend.getPHPList()
+        for (const item of phpList) {
+            ChildAppInit.fixPhpBin(item.version)
         }
 
         return needRestart
