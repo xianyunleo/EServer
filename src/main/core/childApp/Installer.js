@@ -1,4 +1,4 @@
-import { devConsoleLog, isWindows } from '@/main/utils/utils'
+import { debugLog, isWindows } from '@/main/utils/utils'
 import { EnumChildAppInstallStatus } from '@/shared/utils/enum'
 import ChildApp from '@/main/core/childApp/ChildApp'
 import { DOWNLOAD_URL } from '@/shared/utils/constant'
@@ -46,7 +46,7 @@ export default class Installer extends EventEmitter {
             return await this._download()
         } catch (error) {
             if (error.name === 'AbortError') {
-                devConsoleLog('下载已取消！')
+                debugLog('下载已取消！')
             } else {
                 this._changeStatus(EnumChildAppInstallStatus.DownloadError)
                 throw new Error(`${t('errorOccurredDuring', [t('download')])}，${mt('Network', 'ws', 'Error')}\n${error.message}`)

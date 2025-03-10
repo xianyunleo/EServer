@@ -148,6 +148,7 @@ export default class Extension {
         return null
     }
 
+    //！！！每新增一个php版本，还需要在getVcStringVersion 方法里添加定义！！！
     static getVersionForWindows(extName, phpVersion) {
         //目前EServer，扩展最低匹配php5.6，Windows扩展版本按 https://downloads.php.net/~windows/pecl/releases/
         phpVersion = Number(phpVersion)

@@ -51,6 +51,7 @@ export default class Settings {
      */
     static #_getDefault() {
         return {
+            Debug: false,
             Language: 'zh',
             ThemeMode: 'system',
             ThemeColor: '#1890FF',

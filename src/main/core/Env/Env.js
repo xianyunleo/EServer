@@ -18,10 +18,7 @@ export default class Env {
         let binDirPath = GetDataPath.getBinDir()
         let path = nodePath.join(binDirPath, this.getBinFileName(binName))
         await this.deleteBinFile(binName)
-        let text
-        if (binName === 'php') {
-            text = `"${targetPath}" ${args}`
-        }
+        let text = `"${targetPath}" ${args}`
 
         if (isWindows) {
             if (binName === 'composer') {
@@ -34,7 +31,6 @@ export default class Env {
             if (binName === 'php') {
                 await this.createOtherBinFile(targetPath, 'phpize', 'phpize');
             }
-            await FsUtil.CreateSymbolicLink(path, targetPath);
         }
         await FileUtil.WriteAll(path, text)
         if (!isWindows) await Shell.sudoExec(`chmod +x ${path}`)

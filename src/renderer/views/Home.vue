@@ -95,12 +95,13 @@ import Native from '@/renderer/utils/Native'
 import path from 'path'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import HomeService from '@/renderer/services/HomeService'
-import { devConsoleLog,isWindows } from '@/main/utils/utils'
+import { isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
 import { StoreInitializedEventName } from '@/renderer/utils/constant'
 import Settings from '@/main/Settings'
 import CustomChildApp from '@/main/core/childApp/CustomChildApp'
+import FsUtil from '@/main/utils/FsUtil'
 
 const timestamp = new Date().getTime()
 
@@ -165,7 +166,7 @@ const getProcessList = async () => {
   if (isWindows) {
     list = await window.api.callStatic('ProcessLibrary', 'getList', options)
   } else {
-    list = await ProcessExtend.getList()
+    list = await ProcessExtend.getList(options)
   }
   //过滤掉子进程。防止先匹配到子进程后， 子进程停止整个服务失败。
   let newList = []
@@ -181,8 +182,8 @@ const initServerListStatus = async () => {
   const processList = await getProcessList()
   const processMap = new Map(processList)
   const initServerStatus = async (item) => {
-    const processPath = item.IsCustom ? path.normalize(item.ServerProcessPath) : ChildApp.getServerProcessPath(item)
-    const pid = processMap.get(processPath)
+    const servPath = item.IsCustom ? await FsUtil.ParseSymbolicLink(path.normalize(item.ServerProcessPath)) : ChildApp.getServerProcessPath(item)
+    const pid = processMap.get(servPath)
     item.isRunning = !!pid
     item.pid = pid ?? null
   }

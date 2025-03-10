@@ -51,12 +51,7 @@ export default class GetDataPath {
 
     static getDatabaseDir = () => path.join(this.getDir(), 'database')
 
-    static getPhpDir(version) {
-        if (isMacOS && isDev) {
-            return path.join(MAC_DATA_DIR, `childApp/php/php-${version}`)
-        }
-        return path.join(this.getPhpTypeDir(), `php-${version}`)
-    }
+    static getPhpDir = (version) => path.join(this.getPhpTypeDir(), `php-${version}`)
 
     static getPhpExePath(version) {
         if (isWindows) {
