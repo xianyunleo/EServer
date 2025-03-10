@@ -35,13 +35,13 @@ export default class HomeService {
                     () => item.errMsg,
                     (errMsg) => {
                         if (errMsg) {
-                            MessageBox.error(errMsg, t('Error starting service!'))
+                            MessageBox.error(errMsg, t('Error starting server!'))
                         }
                     }
                 )
             }
         } catch (error) {
-            MessageBox.error(error.message ?? error, t('Error starting service!'))
+            MessageBox.error(error.message ?? error, t('Error starting server!'))
         }
         item.btnLoading = false
     }
@@ -62,7 +62,7 @@ export default class HomeService {
                 item.isRunning = ProcessExtend.pidIsRunning(item.pid)
             }
         } catch (error) {
-            MessageBox.error(error.message ?? error, t('Error stopping service!'))
+            MessageBox.error(error.message ?? error, t('Error stopping server!'))
         }
         item.btnLoading = false
     }
@@ -81,12 +81,12 @@ export default class HomeService {
             }
 
             if (item.isRunning) {
-                throw new Error(t('The service was not stopped successfully!'))
+                throw new Error(t('The server was not stopped successfully!'))
             }
 
             await ServerControl.start(item)
         } catch (error) {
-            MessageBox.error(error.message ?? error, t('Error starting service!'))
+            MessageBox.error(error.message ?? error, t('Error starting server!'))
         }
         item.btnLoading = false
     }
