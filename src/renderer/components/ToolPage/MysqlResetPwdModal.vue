@@ -18,7 +18,7 @@
           autocomplete="off">
         <a-form-item :label="`MySQL ${mt('Version')}`" name="version"
                      :rules="[{ required: true, message: mt('Please','ws','Select')}]">
-          <a-select style="width: 150px" v-model:value="formData.version" :options="mysqlOptions">
+          <a-select style="width: 150px" v-model:value="formData.version" :options="mysqlOpts">
           </a-select>
         </a-form-item>
         <a-form-item :label="mt('New','ws','Pwd')"  name="newPwd"
@@ -51,7 +51,7 @@ const visible = computed({
 })
 const formRef = ref()
 const formData = ref({})
-const mysqlOptions = ChildAppService.getMysqlOptions()
+const mysqlOpts = ChildAppService.getMysqlOptions()
 const okButtonLoading = ref(false)
 
 const resetClick = async () => {

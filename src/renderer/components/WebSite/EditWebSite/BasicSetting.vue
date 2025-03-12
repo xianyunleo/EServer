@@ -18,7 +18,7 @@
     </a-form-item>
 
     <a-form-item :label="'PHP'+mt('ws','Version')" name='phpVersion'>
-      <a-select style='width: 120px' v-model:value='formData.phpVersion' :options='phpOptions'>
+      <a-select style='width: 120px' v-model:value='formData.phpVersion' :options='phpOpts'>
       </a-select>
     </a-form-item>
 
@@ -53,7 +53,7 @@ const store = useMainStore()
 const formRef = ref()
 const formData = reactive({})
 const emits = defineEmits(['editAfter'])
-const phpOptions = WebsiteService.getPhpOptions()
+const phpOpts = WebsiteService.getPhpOptions()
 const labelColSpan = store.settings.Language === 'zh' ? 6 : 10;
 const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 14;
 
@@ -72,7 +72,7 @@ const save = async () => {
     return
   }
   try {
-    if (formData.phpVersion) await WebsiteService.checkCustomPhpConf(formData.phpVersion, phpOptions)
+    if (formData.phpVersion) await WebsiteService.checkCustomPhpConf(formData.phpVersion, phpOpts)
     await Website.saveBasicInfo(confName.value, formData)
     message.info(t('successfulOperation'))
     search()

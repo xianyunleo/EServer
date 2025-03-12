@@ -15,7 +15,7 @@
         </a-form-item>
 
         <a-form-item :label="'PHP' + mt('ws', 'Version')" name="phpVersion">
-          <a-select style="width: 180px;" v-model:value="formData.phpVersion" :options="phpOptions"/>
+          <a-select style="width: 180px;" v-model:value="formData.phpVersion" :options="phpOpts"/>
           <a-tooltip title="Open the nginx php config directory">
             <span class='icon-wrapper' @click='openWebPhpConfigDir'><FolderOpenFilled class='icon' /></span>
           </a-tooltip>
@@ -51,7 +51,7 @@ const { search, addModalVisible: visible } = inject('WebsiteProvide')
 const wwwPath = Settings.get('WebsiteDir')?.replaceSlash()
 const formRef = ref()
 const store = useMainStore()
-const phpOptions = WebsiteService.getPhpOptions()
+const phpOpts = WebsiteService.getPhpOptions()
 const formData = reactive({
   serverName: '',
   port: 80,
@@ -81,7 +81,7 @@ const addWebClick = async () => {
 const addWeb = async (websiteInfo) => {
   const { serverName, phpVersion, syncHosts } = websiteInfo
   try {
-    if(websiteInfo.phpVersion) await WebsiteService.checkCustomPhpConf(formData.phpVersion, phpOptions)
+    if(websiteInfo.phpVersion) await WebsiteService.checkCustomPhpConf(formData.phpVersion, phpOpts)
     await Website.add(websiteInfo)
   } catch (error) {
     MessageBox.error(error.message ?? error, t('Error adding website!'))
@@ -100,7 +100,7 @@ const addWeb = async (websiteInfo) => {
   if (Settings.get('AutoStartAndRestartServer') && ServerService.isRunning('Nginx')) {
     ServerService.restart('Nginx')
     if (phpVersion) {
-      const option = phpOptions.find(item => item.value === phpVersion)
+      const option = phpOpts.find(item => item.value === phpVersion)
       const phpName = option.isCustom ? option.label : ChildAppExtend.getPhpName(phpVersion)
       ServerService.restart(phpName)
     }
