@@ -46,11 +46,12 @@ import {
 } from "@ant-design/icons-vue";
 import { defineAsyncComponent, onMounted, ref } from 'vue'
 import {useRouter} from "vue-router";
-const call = window.api.call
+const call = Ipc.call
 const router = useRouter();
 const selectedKeys = ref(['/']);
 import { isWindows ,isMacOS} from '@/main/utils/utils'
 import { mt } from '../utils/i18n'
+import Ipc from '@/renderer/utils/Ipc'
 
 const dblclick = () => {
   if (!isWindows) call('switchMax')

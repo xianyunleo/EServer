@@ -34,8 +34,9 @@ import { mt, t } from '@/renderer/utils/i18n'
 import { APP_NAME } from '@/shared/utils/constant'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
-const call = window.api.call
-const callStatic = window.api.callStatic
+import Ipc from '@/renderer/utils/Ipc'
+const call = Ipc.call
+const callStatic = Ipc.callStatic
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const store = useMainStore()
 

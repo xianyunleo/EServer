@@ -102,6 +102,7 @@ import { StoreInitializedEventName } from '@/renderer/utils/constant'
 import Settings from '@/main/Settings'
 import CustomChildApp from '@/main/core/childApp/CustomChildApp'
 import FsUtil from '@/main/utils/FsUtil'
+import Ipc from '@/renderer/utils/Ipc'
 
 const timestamp = new Date().getTime()
 
@@ -166,7 +167,7 @@ const getProcessList = async () => {
   pathList = await Promise.all(pathList.map(async p => await FsUtil.ParseSymbolicLink(p)))
   const options = {directory: GetDataPath.getChildAppDir(), pathList}
   if (isWindows) {
-    list = await window.api.callStatic('ProcessLibrary', 'getList', options)
+    list = await Ipc.callStatic('ProcessLibrary', 'getList', options)
   } else {
     list = await ProcessExtend.getList(options)
   }

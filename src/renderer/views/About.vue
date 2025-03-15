@@ -21,10 +21,11 @@ import { APP_NAME, OFFICIAL_HOST, OFFICIAL_URL } from '@/shared/utils/constant'
 import Native from '@/renderer/utils/Native'
 import { t } from '@/renderer/utils/i18n'
 import {onMounted, ref} from 'vue'
+import Ipc from '@/renderer/utils/Ipc'
 
 const version = ref('')
 onMounted(async () => {
-  version.value = await window.api.call('appGetVersion')
+  version.value = await Ipc.call('appGetVersion')
 })
 
 const openUrl = (url) => {

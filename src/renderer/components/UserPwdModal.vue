@@ -25,7 +25,8 @@ import SystemExtend from '@/main/utils/SystemExtend'
 import MessageBox from '@/renderer/utils/MessageBox'
 import { useMainStore } from '@/renderer/store'
 import { mt, t } from '@/renderer/utils/i18n'
-const call = window.api.call
+import Ipc from '@/renderer/utils/Ipc'
+const call = Ipc.call
 const store = useMainStore()
 
 const props = defineProps({ show: Boolean, rightPwd: String, cancelIsExit: Boolean })

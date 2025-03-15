@@ -11,7 +11,8 @@
 <script setup>
 import { computed } from 'vue'
 import { FolderOpenFilled } from '@ant-design/icons-vue'
-const callStatic = window.api.callStatic
+import Ipc from '@/renderer/utils/Ipc'
+const callStatic = Ipc.callStatic
 
 const props = defineProps({ method: String, value: String, toForwardSlash: Boolean, filters: Array, readonly: Boolean })
 const emit = defineEmits(['update:value'])

@@ -32,7 +32,8 @@ import { ref } from 'vue'
 import Native from '@/renderer/utils/Native'
 import { isWindows } from '@/main/utils/utils'
 import { useMainStore } from '@/renderer/store'
-const call = window.api.call
+import Ipc from '@/renderer/utils/Ipc'
+const call = Ipc.call
 const isWindowMax = ref(false)
 const minimizeIsHover = ref(false)
 
@@ -57,11 +58,11 @@ const closeClick = () => {
   call('windowClose')
 }
 
-window.api.onMainWindowMaximize(() => {
+Ipc.on('mainWindowMaximize',() => {
   isWindowMax.value = true
 })
 
-window.api.onMainWindowUnmaximize(() => {
+Ipc.on('mainWindowUnmaximize',() => {
   isWindowMax.value = false
 })
 </script>
