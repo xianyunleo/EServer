@@ -3,8 +3,7 @@
     <div class="category">
       <a-radio-group v-model:value="childAppTypeSelected" button-style="solid" @change="radioGroupChange">
         <a-radio-button :value="InstalledType">{{ t('Installed') }}</a-radio-button>
-        <a-radio-button :value="ChildAppTypes.Server">{{ t('Server') }}
-        </a-radio-button>
+        <a-radio-button :value="ChildAppTypes.Server">{{ t('Server') }} </a-radio-button>
         <a-radio-button :value="ChildAppTypes.PHP">PHP</a-radio-button>
         <a-radio-button :value="ChildAppTypes.Tool">{{ t('Tool') }}</a-radio-button>
       </a-radio-group>
@@ -35,18 +34,14 @@
               <div class="app-item-desc">{{ t(item.Desc) }}</div>
               <div class="app-item-operate">
                 <template v-if="item.Installed">
-                  <a-button type="primary" danger style="margin-right: 5px" :disabled="item.CanDelete === false"
-                            @click="uninstall(item.Name)">{{ t('Uninstall') }}
-                  </a-button>
+                  <a-button type="primary" danger style="margin-right: 5px" :disabled="item.CanDelete === false" @click="uninstall(item.Name)">{{ t('Uninstall') }} </a-button>
 
                   <a-dropdown :trigger="['click']">
                     <template #overlay>
                       <a-menu>
                         <a-menu-item v-if="item.CanOpen" @click="openApp(item)">{{ t('Open') }}</a-menu-item>
                         <a-menu-item @click="openInstallPath(item)">{{ mt('Open', 'ws', 'Directory') }}</a-menu-item>
-                        <a-menu-item v-if="item.ConfPath" @click="openConfFile(item)" key="998">
-                          {{ mt('Open', 'ws') }}{{ path.basename(item.ConfPath) }}
-                        </a-menu-item>
+                        <a-menu-item v-if="item.ConfPath" @click="openConfFile(item)" key="998"> {{ mt('Open', 'ws') }}{{ path.basename(item.ConfPath) }} </a-menu-item>
                         <a-menu-item v-if="item.ServerConfPath" @click="openServerConfFile(item)" key="997">
                           {{ mt('Open', 'ws') }}{{ path.basename(item.ServerConfPath) }}
                         </a-menu-item>
@@ -55,18 +50,12 @@
                         </a-menu-item>
                       </a-menu>
                     </template>
-                    <a-button>{{ t('Manage') }}
-                      <DownOutlined />
-                    </a-button>
+                    <a-button>{{ t('Manage') }}<DownOutlined /></a-button>
                   </a-dropdown>
                 </template>
                 <template v-else>
-                  <a-button v-if="instMap[item.Name] && !instMap[item.Name].errMsg" type="primary"
-                            @click="clickStop(item.Name)">{{ t('Stop') }}
-                  </a-button>
-                  <a-button v-else type="primary" @click="clickInstall(item.Name)">
-                    {{ t('Install') }}
-                  </a-button>
+                  <a-button v-if="instMap[item.Name] && !instMap[item.Name].errMsg" type="primary" @click="clickStop(item.Name)">{{ t('Stop') }} </a-button>
+                  <a-button v-else type="primary" @click="clickInstall(item.Name)">{{ t('Install') }}</a-button>
                 </template>
               </div>
             </div>
@@ -82,14 +71,10 @@
                 </div>
                 <template v-else>
                   <div class="progress-info-left">
-                    <span v-if="instMap[item.Name]?.status === InstStatus.Downloading">
-                      {{ instMap[item.Name]?.receivedSizeText }}/{{ instMap[item.Name]?.totalSizeText }}
-                    </span>
+                    <span v-if="instMap[item.Name]?.status === InstStatus.Downloading"> {{ instMap[item.Name]?.receivedSizeText }}/{{ instMap[item.Name]?.totalSizeText }} </span>
                   </div>
                   <div class="progress-info-right">
-                    <span v-if="instMap[item.Name]?.status === InstStatus.Downloading">
-                      ↓ {{ instMap[item.Name]?.perSecondText }}/S
-                    </span>
+                    <span v-if="instMap[item.Name]?.status === InstStatus.Downloading"> ↓ {{ instMap[item.Name]?.perSecondText }}/S </span>
                     <span v-else>{{ instMap[item.Name]?.statusText }}</span>
                   </div>
                 </template>
@@ -136,7 +121,8 @@ import LocalInstall from '@/main/core/childApp/LocalInstall'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import SystemExtend from '@/main/utils/SystemExtend'
 import { ChildAppTypes } from '@/main/utils/constant'
-const callStatic = window.api.callStatic
+import Ipc from '@/renderer/utils/Ipc'
+const callStatic = Ipc.callStatic
 const InstalledType = 'InstalledType'
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
@@ -187,58 +173,49 @@ const getStatusText = (status) => {
 const findItem = (name) => childAppList.value.find((item) => item.Name === name)
 
 const clickInstall = async (name) => {
-  instMap[name] = {}
-  let beforeCompletedSize = 0
-  instMap[name].dlIntervalId = setInterval(() => {
-    const receivedBytes = instMap[name].receivedBytes
-    instMap[name].perSecondText = getFileSizeText(receivedBytes - beforeCompletedSize)
-    beforeCompletedSize = receivedBytes
-  }, 1000)
-
-  try {
-    await window.api.call('childAppInstall', name)
-  } catch (e) {
-    clearInterval(instMap[name].dlIntervalId)
-    instMap[name].errMsg = getIpcError(e).message
-  }
+  instMap[name] = reactive({})
+  Ipc.call('childAppInstall', name).catch(() => {})
 }
 
-window.api.onAppDlProgress((name, progress) => {
-  instMap[name] = {
-    ...instMap[name],
+Ipc.on('childApp-downloadProgress', (name, progress) => {
+  instMap[name] = instMap[name] ?? reactive({})
+  instMap[name] = Object.assign(instMap[name], {
+    status: InstStatus.Downloading,
     receivedBytes: progress.receivedBytes,
     receivedSizeText: getFileSizeText(progress.receivedBytes),
     totalSizeText: getFileSizeText(progress.totalBytes),
-    percent: parseInt(progress.receivedBytes / progress.totalBytes * 100)
-  }
+    perSecondText: getFileSizeText(progress.perSecondBytes),
+    percent: parseInt((progress.receivedBytes / progress.totalBytes) * 100)
+  })
 })
 
-window.api.onAppInstStatus((name, status) => {
-  if (status === InstStatus.Downloaded) {
-    clearInterval(instMap[name].dlIntervalId)
-  }
+Ipc.on('childApp-installStatus', (name, status) => {
+  instMap[name] = instMap[name] ?? reactive({})
   const statusText = getStatusText(status)
-  instMap[name] = { ...instMap[name], status, statusText }
-
-  if (status === InstStatus.Finish) {
+  instMap[name] = Object.assign(instMap[name], { status, statusText })
+  if (status === InstStatus.Downloaded) {
+    instMap[name].percent = 100
+  } else if (status === InstStatus.Finish) {
     instMap[name] = null
     findItem(name).Installed = true
     store.refreshInstalledList()
   }
 })
 
-window.api.onAppDlCancelled((name) => {
+Ipc.on('childApp-downloadCancelled', (name) => {
   //如果不是点击clickStop的取消
-  if (instMap[name]) {
-    clearInterval(instMap[name].dlIntervalId)
-    instMap[name].errMsg = `${t('errorOccurredDuring', [t('download')])}，${mt('Network', 'ws', 'Error')}`
-  }
+  instMap[name] = instMap[name] ?? reactive({})
+  instMap[name].errMsg = `${t('errorOccurredDuring', [t('download')])}，${mt('Network', 'ws', 'Error')}`
+})
+
+Ipc.on('childApp-installError', (name, errMsg) => {
+  instMap[name] = instMap[name] ?? reactive({})
+  instMap[name].errMsg = errMsg
 })
 
 const clickStop = (name) => {
-  clearInterval(instMap[name].dlIntervalId)
   instMap[name] = null
-  window.api.call('childAppStopInstall', name)
+  Ipc.call('childAppStopInstall', name)
 }
 
 const openApp = (item) => {
@@ -262,7 +239,7 @@ const openServerConfFile = (item) => Native.openTextFile(ChildApp.getServerConfP
 const uninstall = async (name) => {
   const item = findItem(name)
   try {
-    const res = await window.api.call('childAppUninstall', name)
+    const res = await Ipc.call('childAppUninstall', name)
     if (res) {
       item.Installed = false
       message.info(t('successfulOperation'))
