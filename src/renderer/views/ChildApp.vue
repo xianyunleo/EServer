@@ -101,15 +101,13 @@
     </div>
 
     <a-card size="small">
-      <div style="display: flex; justify-content: space-between">
+      <div class="local-install">
         <a-button type="primary" :icon="h(AppstoreAddOutlined)" @click="localInstall">
           {{ mt('Local', 'ws', 'Install') }}
         </a-button>
-        <div style="display: flex; align-items: center">
-          {{ t('installPackageDownloadUrl') }}:
-          <a style="margin: 0 10px" @click="openUrl('http://github.com/xianyunleo/EServerAppStore')">Github</a>
-          <a @click="openUrl('https://gitee.com/xianyunleo/EServerAppStore')">Gitee</a>
-        </div>
+        <span>{{ t('installPackageDownloadUrl') }}:</span>
+        <a @click="openUrl('http://github.com/xianyunleo/EServerAppStore')">Github</a>
+        <a @click="openUrl('https://gitee.com/xianyunleo/EServerAppStore')">Gitee</a>
       </div>
     </a-card>
   </div>
@@ -438,5 +436,14 @@ const openUrl = (url) => {
   display: flex;
   align-items: center;
   padding-right: 5px;
+}
+
+.local-install {
+  display: flex;
+  align-items: center;
+
+  > * {
+    margin-right: 10px;
+  }
 }
 </style>

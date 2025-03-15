@@ -4,7 +4,7 @@
       <span> {{ t('Language') }} (Language)：</span>
       <a-select
         v-model:value="store.settings.Language"
-        :options="languageOptions"
+        :options="languageOpts"
         @change="languageChange"
         placeholder="请选择"
         style="width: 200px"
@@ -35,7 +35,7 @@ const visible = computed({
     emit('update:show', value)
   }
 })
-const languageOptions = [
+const languageOpts = [
   { label: '中文', value: 'zh' },
   { label: 'English', value: 'en' },
   { label: 'Français', value: 'fr' }
