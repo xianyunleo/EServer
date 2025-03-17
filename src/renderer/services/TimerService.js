@@ -22,7 +22,6 @@ export default class TimerService {
     }
 
     static async restartServer() {
-        console.log('Timer restartServer')
         const initServerStatus = async (item) => {
             const processList = Settings.get('AutoTimerServerList')
             if (processList.length > 0 && processList.includes(item.Name)) ServerService.restart(item.Name)
