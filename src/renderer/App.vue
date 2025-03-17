@@ -80,7 +80,7 @@ async function initOrUpdate() {
 
   if (isMacOS && process.arch === 'arm64' && !(await SystemExtend.isInstallRosetta())) {
     await MessageBox.error(`需要Rosetta支持，请复制命令到终端执行安装\nchildAppupdate --install-rosetta`)
-    await call('appExit')
+    await Ipc.call('appExit')
   }
   //存在initFile文件的情况下，判断是第一次安装，还是覆盖安装
   if (!await ChildApp.DirExists() &&  ! await DirUtil.Exists(GetDataPath.getSoftwareDir())) { //目录不存在说明是，第一次安装
