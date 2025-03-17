@@ -1,7 +1,7 @@
 <template>
   <div class="content-container">
     <div class="category">
-      <a-radio-group v-model:value="childAppTypeSelected" button-style="solid" @change="radioGroupChange">
+      <a-radio-group v-model:value="proxyObj.selectedType" button-style="solid" @change="radioGroupChange">
         <a-radio-button :value="InstalledType">{{ t('Installed') }}</a-radio-button>
         <a-radio-button :value="ChildAppTypes.Server">{{ t('Server') }} </a-radio-button>
         <a-radio-button :value="ChildAppTypes.PHP">PHP</a-radio-button>
@@ -128,17 +128,20 @@ const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
 
 const store = useMainStore()
-const { childAppList, childAppTypeSelected } = storeToRefs(store)
 const phpExtManagerShow = ref(false)
 const phpVersion = ref('')
 const InstStatus = EnumChildAppInstallStatus
 
-if (!childAppTypeSelected.value) {
-  childAppTypeSelected.value = InstalledType
+const childAppList = store.childAppList
+const proxyObj = store.ChildApp
+const instMap = proxyObj.installInfoMap
+
+if (!proxyObj.selectedType) {
+  proxyObj.selectedType = InstalledType
 }
 
 const setShowList = (type) => {
-  for (const item of childAppList.value) {
+  for (const item of childAppList) {
     if (type === InstalledType) {
       item.show = item.Installed === true
     } else {
@@ -147,12 +150,10 @@ const setShowList = (type) => {
   }
 }
 
-const instMap = reactive({})
-
-setShowList(childAppTypeSelected.value)
+setShowList(proxyObj.selectedType)
 
 const radioGroupChange = () => {
-  setShowList(childAppTypeSelected.value)
+  setShowList(proxyObj.selectedType)
 }
 
 const getStatusText = (status) => {
@@ -170,7 +171,7 @@ const getStatusText = (status) => {
   }
 }
 
-const findItem = (name) => childAppList.value.find((item) => item.Name === name)
+const findItem = (name) => childAppList.find((item) => item.Name === name)
 
 const clickInstall = async (name) => {
   instMap[name] = reactive({})
@@ -178,7 +179,6 @@ const clickInstall = async (name) => {
 }
 
 Ipc.on('childApp-downloadProgress', (name, progress) => {
-  instMap[name] = instMap[name] ?? reactive({})
   instMap[name] = Object.assign(instMap[name], {
     status: InstStatus.Downloading,
     receivedBytes: progress.receivedBytes,
@@ -189,29 +189,31 @@ Ipc.on('childApp-downloadProgress', (name, progress) => {
   })
 })
 
-Ipc.on('childApp-installStatus', (name, status) => {
-  instMap[name] = instMap[name] ?? reactive({})
-  const statusText = getStatusText(status)
-  instMap[name] = Object.assign(instMap[name], { status, statusText })
-  if (status === InstStatus.Downloaded) {
-    instMap[name].percent = 100
-  } else if (status === InstStatus.Finish) {
-    instMap[name] = null
-    findItem(name).Installed = true
-    store.refreshInstalledList()
-  }
-})
+if (!proxyObj.listened) {
+  proxyObj.listened = true
+  Ipc.onGlobal('childApp-installStatus', (name, status) => {
+    const statusText = getStatusText(status)
+    instMap[name] = Object.assign(instMap[name], { status, statusText })
+    if (status === InstStatus.Downloaded) {
+      instMap[name].percent = 100
+    } else if (status === InstStatus.Finish) {
+      instMap[name] = null
+      findItem(name).Installed = true
+      store.refreshInstalledList()
+    }
+  })
 
-Ipc.on('childApp-downloadCancelled', (name) => {
-  //如果不是点击clickStop的取消
-  instMap[name] = instMap[name] ?? reactive({})
-  instMap[name].errMsg = `${t('errorOccurredDuring', [t('download')])}，${mt('Network', 'ws', 'Error')}`
-})
+  Ipc.onGlobal('childApp-downloadCancelled', (name) => {
+    //如果不是点击clickStop的取消
+    if (instMap[name]) {
+      instMap[name].errMsg = `${t('errorOccurredDuring', [t('download')])}，${mt('Network', 'ws', 'Error')}`
+    }
+  })
 
-Ipc.on('childApp-installError', (name, errMsg) => {
-  instMap[name] = instMap[name] ?? reactive({})
-  instMap[name].errMsg = errMsg
-})
+  Ipc.onGlobal('childApp-installError', (name, errMsg) => {
+    instMap[name].errMsg = errMsg
+  })
+}
 
 const clickStop = (name) => {
   instMap[name] = null
@@ -263,7 +265,7 @@ const localInstall = async () => {
       MessageBox.warning(mt('Not', 'ws', 'Support', 'ws') + 'nginx')
       return
     }
-    const item = childAppList.value.find((item) => item.DirName === dirName)
+    const item = childAppList.find((item) => item.DirName === dirName)
     if (!item) {
       MessageBox.error(mt('Not', 'ws', 'Match'))
       return
@@ -276,7 +278,7 @@ const localInstall = async () => {
     store.loadingTip = t('Installing')
     await LocalInstall.install(path)
     item.Installed = true
-    if (childAppTypeSelected.value === InstalledType) {
+    if (proxyObj.selectedType === InstalledType) {
       setShowList(InstalledType)
     }
     store.refreshInstalledList()

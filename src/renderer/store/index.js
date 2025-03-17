@@ -25,6 +25,11 @@ export const useMainStore = defineStore('main', {
             Home: {
                 firstLoadingHandled: false
             },
+            ChildApp: {
+                installInfoMap: {},
+                selectedType: '',
+                listened: false
+            },
             noticeList:[]
         }
     },
