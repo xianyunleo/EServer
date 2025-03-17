@@ -9,11 +9,16 @@ export default class Ipc {
         return await window.electron.ipcRenderer.invoke('callStatic', className, methodName, ...args)
     }
 
-    static async on(channel, callback) {
+    static on(channel, callback) {
         const listener = (_event, ...args) => callback(...args)
         onUnmounted(() => {
             window.electron.ipcRenderer.removeListener(channel, listener)
         })
+        return window.electron.ipcRenderer.on(channel, listener)
+    }
+
+    static onGlobal(channel, callback) {
+        const listener = (_event, ...args) => callback(...args)
         return window.electron.ipcRenderer.on(channel, listener)
     }
 }
