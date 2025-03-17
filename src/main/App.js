@@ -124,9 +124,11 @@ export default class App {
             Env.createBinFile(exePath, 'php', `-c "${confPath}"`)
         }
 
-        const phpList = await ChildAppExtend.getPHPList()
-        for (const item of phpList) {
-            ChildAppInit.fixPhpBin(item.version)
+        if (!isWindows) {
+            const phpList = await ChildAppExtend.getPHPList()
+            for (const item of phpList) {
+                ChildAppInit.fixPhpBin(item.version)
+            }
         }
 
         return needRestart
