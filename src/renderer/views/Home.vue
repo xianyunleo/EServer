@@ -171,14 +171,8 @@ const getProcessList = async () => {
   } else {
     list = await ProcessExtend.getList(options)
   }
-  //过滤掉子进程。防止先匹配到子进程后， 子进程停止整个服务失败。
-  let newList = []
-  for (const item of list) {
-    if (!list.find((item2) => item2.pid === item.ppid)) {
-      newList.push([item.path, item.pid])
-    }
-  }
-  return newList
+
+  return list.map(item => [item.path, item.pid])
 }
 
 const initServerListStatus = async () => {

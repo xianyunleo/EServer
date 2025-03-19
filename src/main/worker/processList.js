@@ -19,10 +19,12 @@ async function getList(options) {
         list = [...list1, ...list2]
     }
 
-    return await Promise.all(
-        list.map(async (item) => {
-            const ppid = HMC.getProcessParentProcessID(item.pid)
-            return { ...item, ppid }
-        })
-    )
+    return list
+
+    // return await Promise.all(
+    //     list.map(async (item) => {
+    //         const ppid = HMC.getProcessParentProcessID(item.pid)
+    //         return { ...item, ppid }
+    //     })
+    // )
 }

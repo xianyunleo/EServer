@@ -56,7 +56,7 @@ export default class ServerControl {
             const options = { cwd: workDir, shell: true }
             child_process.spawn(command, [], options)
         } else {
-            await ProcessExtend.kill(item.pid)
+            await ProcessExtend.kill(item.pid, true)
         }
     }
 

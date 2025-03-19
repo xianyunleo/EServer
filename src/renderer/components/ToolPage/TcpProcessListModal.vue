@@ -146,7 +146,7 @@ const kill = async (item) => {
       return
     }
   }
-  await ProcessExtend.kill(item.pid)
+  await ProcessExtend.kill(item.pid, true)
   await search()
 }
 

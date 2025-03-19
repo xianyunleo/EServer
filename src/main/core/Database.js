@@ -49,7 +49,7 @@ export default class Database {
 
         let oldPid = await TcpProcess.getPidByPort(port);
         if (oldPid) {
-            await ProcessExtend.kill(oldPid);
+            await ProcessExtend.kill(oldPid, true)
         }
 
         await sleep(100);

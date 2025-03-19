@@ -21,12 +21,8 @@ export default class HomeService {
         item.btnLoading = true
         try {
             if (item.ServerPort) {
-                if (item.ServerPort == 80) {
-                    await ProcessExtend.killWebServer()
-                } else {
-                    const pid = await TcpProcess.getPidByPort(item.ServerPort)
-                    if (pid) await ProcessExtend.kill(pid)
-                }
+                const pid = await TcpProcess.getPidByPort(item.ServerPort)
+                if (pid) await ProcessExtend.kill(pid, true)
             }
 
             await ServerControl.start(item)
