@@ -6,20 +6,44 @@ export default class ProcessExtend {
     /**
      *  杀死进程和子进程
      * @param pid {number}
+     * @param killParent {boolean} 判断父进程是否同路径。如果是，那么杀死父进程
      * @returns {Promise<*>}
      */
-    static async kill(pid) {
+    static async kill(pid, killParent = false) {
         try {
+            if (killParent) {
+                const ppid = await ProcessExtend.getParentPid(pid)
+                if (ppid) {
+                    const p1 = await ProcessExtend.getPathByPid(pid)
+                    const p2 = await ProcessExtend.getPathByPid(ppid)
+                    pid = p2 === p1 && p1 != null ? ppid : pid
+                }
+            }
             if (isWindows) {
                 //taskkill杀不存在的进程会有标准错误，从而引发异常
                 await Shell.exec(`taskkill /f /t /pid ${pid}`);
             } else {
-                //pkill杀不存在的进程会有标准错误，从而引发异常
                 await Shell.sudoExec(`kill ${pid}`);
             }
             // eslint-disable-next-line no-empty
         } catch {
 
+        }
+    }
+
+    static async getParentPid(pid) {
+        try {
+            if (isWindows) {
+                const hmc = require('hmc-win32')
+                return hmc.getProcessParentProcessID(pid)
+            } else {
+                const commandStr = `ps -o ppid= -p ${pid}`
+                const resStr = await Shell.exec(commandStr)
+                let ppid = resStr.trim().split('\n')[0]
+                return ppid ? ppid : null
+            }
+        } catch {
+            return null
         }
     }
 
@@ -72,17 +96,6 @@ export default class ProcessExtend {
         } catch {
             return null
         }
-    }
-
-    /**
-     *
-     * @returns {Promise<Awaited<*>[]>}
-     */
-    static async killWebServer() {
-        return await Promise.all([
-            this.killByName('httpd'),
-            this.killByName('nginx'),
-        ]);
     }
 
     /**
