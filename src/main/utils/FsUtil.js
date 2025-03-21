@@ -34,10 +34,11 @@ export default class FsUtil {
      * 创建符号链接。Windows需要管理员权限
      * @param path {string} 符号链接的路径
      * @param pathToTarget {string} 符号链接指向的目标的路径
+     * @param type
      * @returns {undefined}
      */
-    static async CreateSymbolicLink(path, pathToTarget) {
-        return await fsPromises.symlink(pathToTarget, path)
+    static async CreateSymbolicLink(path, pathToTarget, type = 'file') {
+        return await fsPromises.symlink(pathToTarget, path, type)
     }
 
     static async ParseSymbolicLink(path) {
