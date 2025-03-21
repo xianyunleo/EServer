@@ -9,13 +9,14 @@ import { isWindows } from '@/main/utils/utils'
 import ChildApp from '@/main/core/childApp/ChildApp'
 import FsUtil from '@/main/utils/FsUtil'
 import {MAC_DATA_DIR} from "@/main/utils/constant";
+import fsPromises from 'fs/promises'
 
 export default class ChildAppInit {
     static async initAll() {
         await Promise.all([this.initNginx(), this.initAllPHP(), this.initAllMySQL()])
     }
 
-    static async initEtcDir(appItem) {
+    static async initEtcFiles(appItem) {
         const etcList = appItem.EtcList
         if (!etcList) return
         const ownAppDir = ChildApp.getDir(appItem)
@@ -25,12 +26,18 @@ export default class ChildAppInit {
             if (!await FsUtil.Exists(source)) {
                 continue //源文件不存在，跳过
             }
+
+            const stats = await fsPromises.stat(source)
+            const type = stats.isDirectory() ? 'dir' : 'file'
+
             const etcPath = nodePath.join(ownEctDir, etcName)
-            if (await FsUtil.Exists(etcPath)) {
-                continue //已有ect文件，跳过
+            if (await FsUtil.Exists(etcPath)) { //已有ect文件
+                await FsUtil.Remove(source,{ force: true, recursive: true })
+            } else {
+                await DirUtil.Create(nodePath.dirname(etcPath))
+                await FsUtil.Rename(source, etcPath) //将配置文件移动到etc目录
             }
-            await DirUtil.Create(nodePath.dirname(etcPath))
-            await FsUtil.Copy(source, etcPath, { recursive: true })
+            await FsUtil.CreateSymbolicLink(source, etcPath, type) //在app目录创建符号链接指向etc目录
         }
     }
 
@@ -178,9 +185,6 @@ export default class ChildAppInit {
             text = text.replaceAll(sessionPattern, replaceSessionStr)
 
             await FileUtil.WriteAll(confPath, text)
-            const originConf =  nodePath.join(GetDataPath.getPhpDir(version), 'php.ini')
-            await FileUtil.Delete(originConf)
-            await FsUtil.CreateSymbolicLink(originConf, confPath)
         } catch (error) {
             throw new Error(`初始化PHP配置失败！${error.message}`)
         }

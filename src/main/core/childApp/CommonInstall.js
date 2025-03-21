@@ -18,7 +18,7 @@ export default class CommonInstall {
     }
 
     static async configure(appItem) {
-        await ChildAppInit.initEtcDir(appItem)
+        await ChildAppInit.initEtcFiles(appItem)
         const dirName = appItem.DirName
         if (dirName.match(/^mysql-[.\d]+$/)) {
             const version = ChildAppExtend.getMysqlVersion(dirName)
