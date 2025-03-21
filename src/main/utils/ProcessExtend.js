@@ -14,9 +14,9 @@ export default class ProcessExtend {
             if (killParent) {
                 const ppid = await ProcessExtend.getParentPid(pid)
                 if (ppid) {
-                    const p1 = await ProcessExtend.getPathByPid(pid)
-                    const p2 = await ProcessExtend.getPathByPid(ppid)
-                    pid = p2 === p1 && p1 != null ? ppid : pid
+                    const p1 = await ProcessExtend.getPathByPid(pid, true)
+                    const p2 = await ProcessExtend.getPathByPid(ppid, true)
+                    pid = p2 === p1 && !!p1 ? ppid : pid
                 }
             }
             if (isWindows) {
@@ -76,16 +76,28 @@ export default class ProcessExtend {
         }
     }
 
-    static async getPathByPid(pid) {
+    /**
+     * 根据pid，获取进程路径。Windows下，winShell=false，不支持并发，但是速度快。winShell=true，支持并发，但是速度慢。
+     * @param pid {number}
+     * @param winShell {boolean}
+     * @returns {Promise<*|null>}
+     */
+    static async getPathByPid(pid, winShell = false) {
         try {
             pid = parseInt(pid)
             let path
 
             if (isWindows) {
-                const hmc = require('hmc-win32')
-                path = await hmc.getProcessFilePath2(pid)
-                path = path ?? ''
-                path = path.startsWith('\\Device\\HarddiskVolume') ? '' : path //过滤掉 getProcessFilePath2 错误的path
+                if (winShell) {
+                    const commandStr = `(Get-Process -Id ${pid}).MainModule.FileName`
+                    const resStr = await Shell.exec(commandStr, { shell: PowerShell })
+                    path = resStr.trim().split('\n')[0]
+                } else {
+                    const hmc = require('hmc-win32')
+                    path = await hmc.getProcessFilePath2(pid) //getProcessFilePath2暂不支持并发
+                    path = path ?? ''
+                    path = path.startsWith('\\Device\\HarddiskVolume') ? '' : path //过滤掉 getProcessFilePath2 错误的path
+                }
             } else {
                 const commandStr = `lsof -p ${pid} -a -w -d txt -Fn|awk 'NR==3{print}'|sed "s/n//"`
                 const resStr = await Shell.exec(commandStr)
