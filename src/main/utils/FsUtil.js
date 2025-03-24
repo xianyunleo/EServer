@@ -34,10 +34,16 @@ export default class FsUtil {
      * 创建符号链接。Windows需要管理员权限
      * @param path {string} 符号链接的路径
      * @param pathToTarget {string} 符号链接指向的目标的路径
-     * @param type
      * @returns {undefined}
      */
-    static async CreateSymbolicLink(path, pathToTarget, type = 'file') {
+    static async CreateSymbolicLink(path, pathToTarget) {
+        if (!isWindows) { //Linux symlink 路径哪怕是目录，结尾也不能带/。否则创建规则变了
+            path = path?.replace(/\/$/, '')
+        }
+
+        const stats = await fsPromises.stat(pathToTarget)
+        const type = stats.isDirectory() ? 'dir' : 'file'
+
         return await fsPromises.symlink(pathToTarget, path, type)
     }
 
