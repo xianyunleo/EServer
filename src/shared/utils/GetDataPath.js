@@ -8,8 +8,8 @@ import GetCorePath from '@/shared/utils/GetCorePath'
  */
 export default class GetDataPath {
     static getDir() {
-        if (isMacOS && !isDev) {
-            return MAC_DATA_DIR
+        if (isMacOS) {
+            return MAC_DATA_DIR //dev也是这个目录
         }
         return GetCorePath.getDir()
     }
