@@ -96,8 +96,6 @@ export default class App {
         if (!await ChildApp.DirExists()) {
             needRestart = true
             await FsUtil.Copy(GetDataPath.getSoftwareDir(), GetDataPath.getChildAppDir(), { recursive: true })
-        }else {
-            FsUtil.Remove(GetDataPath.getSoftwareDir({ force: true, recursive: true }))  //删除旧的Software目录
         }
 
         //迁移配置文件到etc目录，并初始化
@@ -178,7 +176,7 @@ export default class App {
             const target = path.join(GetDataPath.getDir(), file)
 
             if (await FsUtil.Exists(target)) {
-                FsUtil.Remove(source, { force: true, recursive: true }) //不捕捉错误
+                FsUtil.Delete(source) //不捕捉错误
             } else {
                 await FsUtil.Rename(source, target)
             }

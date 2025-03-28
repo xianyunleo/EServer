@@ -9,7 +9,6 @@ import { isWindows } from '@/main/utils/utils'
 import ChildApp from '@/main/core/childApp/ChildApp'
 import FsUtil from '@/main/utils/FsUtil'
 import {MAC_DATA_DIR} from "@/main/utils/constant";
-import fsPromises from 'fs/promises'
 
 export default class ChildAppInit {
     static async initAll() {
@@ -27,17 +26,14 @@ export default class ChildAppInit {
                 continue //源文件不存在，跳过
             }
 
-            const stats = await fsPromises.stat(source)
-            const type = stats.isDirectory() ? 'dir' : 'file'
-
             const etcPath = nodePath.join(ownEctDir, etcName)
             if (await FsUtil.Exists(etcPath)) { //已有ect文件
-                await FsUtil.Remove(source,{ force: true, recursive: true })
+                await FsUtil.Delete(source)
             } else {
                 await DirUtil.Create(nodePath.dirname(etcPath))
                 await FsUtil.Rename(source, etcPath) //将配置文件移动到etc目录
             }
-            await FsUtil.CreateSymbolicLink(source, etcPath, type) //在app目录创建符号链接指向etc目录
+            await FsUtil.CreateSymbolicLink(source, etcPath) //在app目录创建符号链接指向etc目录
         }
     }
 
