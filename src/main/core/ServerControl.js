@@ -14,8 +14,8 @@ export default class ServerControl {
      * @returns {Promise<void>}
      */
     static async start(item) {
-        const itemMap = this.parseServerFields(item)
-        const ctrlProcessPath = this.getControlProcessPath(itemMap)
+        const itemMap = ServerControl.parseServerFields(item)
+        const ctrlProcessPath = ServerControl.getControlProcessPath(itemMap)
         const workDir = item.IsCustom ? path.dirname(ctrlProcessPath) : ChildApp.getDir(item)
         if (!await FileUtil.Exists(ctrlProcessPath)) {
             throw new Error(`${ctrlProcessPath} 文件不存在！`)
@@ -49,8 +49,8 @@ export default class ServerControl {
      */
     static async stop(item) {
         if (item.StopServerArgs) {
-            const itemMap = this.parseServerFields(item)
-            const ctrlProcessPath = this.getControlProcessPath(itemMap)
+            const itemMap = ServerControl.parseServerFields(item)
+            const ctrlProcessPath = ServerControl.getControlProcessPath(itemMap)
             const command = `${ctrlProcessPath} ${itemMap.StopServerArgs}`
             const workDir = item.IsCustom ? path.dirname(ctrlProcessPath) : ChildApp.getDir(item)
             const options = { cwd: workDir, shell: true }
