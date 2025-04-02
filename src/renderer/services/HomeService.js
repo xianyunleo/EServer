@@ -4,11 +4,10 @@ import TcpProcess from '@/main/utils/TcpProcess'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import { t } from '@/renderer/utils/i18n'
 import MessageBox from '@/renderer/utils/MessageBox'
-import Settings from '@/main/Settings'
 import { watch } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import { storeToRefs } from 'pinia'
-import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
+import OneClick from '@/shared/utils/OneClick'
 
 const store = useMainStore()
 const { serverList } = storeToRefs(store)
@@ -87,44 +86,11 @@ export default class HomeService {
         item.btnLoading = false
     }
 
-    static async oneClickStart() {
-        const oneClickServerList = Settings.get('OneClickServerList')
-        const websitePhpFpmSwitch = oneClickServerList.includes('PHP-FPM')
-        const requirePhpList = await HomeService.getNginxRequirePhpList()
-        const doStartServerClick = async (item) => {
-            if (oneClickServerList.includes(item.Name)) {
-                HomeService.startServerClick(item)
-            } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && websitePhpFpmSwitch) {
-                //自动判断网站列表的PHP-FPM
-                HomeService.startServerClick(item)
-            }
-        }
-
-        for (const item of serverList.value) {
-            doStartServerClick(item)
-        }
+    static oneClickStart() {
+        OneClick.start(serverList.value, HomeService.startServerClick)
     }
 
-    static async oneClickStop() {
-        const oneClickServerList = Settings.get('OneClickServerList')
-        const websitePhpFpmSwitch = oneClickServerList.includes('PHP-FPM')
-        const requirePhpList = await HomeService.getNginxRequirePhpList()
-        const doStopServerClick = async (item) => {
-            if (oneClickServerList.includes(item.Name)) {
-                HomeService.stopServerClick(item)
-            } else if (item.Name.match(/^PHP-[.\d]+$/) && requirePhpList.includes(item.Name) && websitePhpFpmSwitch) {
-                //自动判断网站列表的PHP-FPM
-                HomeService.stopServerClick(item)
-            }
-        }
-
-        for (const item of serverList.value) {
-            doStopServerClick(item)
-        }
-    }
-
-    static async getNginxRequirePhpList() {
-        const list = await ChildAppExtend.getNginxRequirePhpList()
-        return list.map((item) => `PHP-${item}`)
+    static oneClickStop() {
+        OneClick.start(serverList.value, HomeService.stopServerClick)
     }
 }
