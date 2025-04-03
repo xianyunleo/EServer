@@ -124,7 +124,7 @@ import { ChildAppTypes } from '@/main/utils/constant'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import InputOpenFileDialog from '@/renderer/components/Input/InputOpenFileDialog.vue'
 import Native from '@/renderer/utils/Native'
-import CustomChildApp from '@/main/core/childApp/CustomChildApp'
+import CustomChildApp from '@/main/services/childApp/CustomChildApp'
 import { message } from 'ant-design-vue'
 import { APP_NAME } from '@/shared/utils/constant'
 

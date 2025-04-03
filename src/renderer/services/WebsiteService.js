@@ -4,7 +4,7 @@ import GetDataPath from '@/shared/utils/GetDataPath'
 import FileUtil from '@/main/utils/FileUtil'
 import { useMainStore } from '@/renderer/store'
 import { ChildAppTypes as ChildAppType } from '@/main/utils/constant'
-import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
+import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 
 const store = useMainStore()
 

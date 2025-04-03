@@ -1,5 +1,5 @@
-import Nginx from "@/main/core/Nginx";
-import NginxWebsite from "@/main/core/website/NginxWebsite";
+import Nginx from "@/main/services/Nginx";
+import NginxWebsite from "@/main/services/website/NginxWebsite";
 import FileUtil from "@/main/utils/FileUtil";
 import DirUtil from "@/main/utils/DirUtil";
 

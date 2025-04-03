@@ -27,13 +27,13 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import Env from '@/main/core/Env/Env'
+import Env from '@/main/services/Env/Env'
 import { message } from 'ant-design-vue'
 import GetDataPath from '@/shared/utils/GetDataPath'
 import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
-import Php from '@/main/core/php/Php'
+import Php from '@/main/services/php/Php'
 import ChildAppService from '@/renderer/services/ChildAppService'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')

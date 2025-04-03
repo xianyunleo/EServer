@@ -6,7 +6,7 @@ import fsPromises from 'fs/promises'
 import DirUtil from '@/main/utils/DirUtil'
 import fixPath from 'fix-path'
 import Extension from './Extension'
-import Php from '@/main/core/php/Php'
+import Php from '@/main/services/php/Php'
 
 export default class Installer {
     extName; //扩展名

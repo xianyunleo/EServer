@@ -1,6 +1,6 @@
 import { debugLog } from '@/main/utils/utils'
 import ProcessExtend from "@/main/utils/ProcessExtend";
-import ChildApp from "@/main/core/childApp/ChildApp";
+import ChildApp from "@/main/services/childApp/ChildApp";
 import { parseTemplateStrings} from "@/shared/utils/utils";
 import child_process from "child_process";
 import path from "path";

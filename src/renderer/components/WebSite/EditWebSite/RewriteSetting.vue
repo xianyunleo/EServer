@@ -26,7 +26,7 @@
 
 <script setup>
 import { ref, inject } from 'vue'
-import Website from "@/main/core/website/Website";
+import Website from "@/main/services/website/Website";
 import MessageBox from "@/renderer/utils/MessageBox";
 import {message} from "ant-design-vue";
 import {  t } from '@/renderer/utils/i18n'

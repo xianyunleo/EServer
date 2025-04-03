@@ -1,6 +1,6 @@
 import nodePath from 'path'
 import GetDataPath from "@/shared/utils/GetDataPath";
-import NginxWebsite from "@/main/core/website/NginxWebsite";
+import NginxWebsite from "@/main/services/website/NginxWebsite";
 import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
 import { isWindows, replaceLineBreak } from '@/main/utils/utils'

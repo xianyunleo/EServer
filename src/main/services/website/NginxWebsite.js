@@ -1,4 +1,4 @@
-import Nginx from "@/main/core/Nginx";
+import Nginx from "@/main/services/Nginx";
 import {EOL} from "os";
 import {CONF_INDENT} from "@/main/utils/constant";
 import FileUtil from "@/main/utils/FileUtil";

@@ -1,5 +1,5 @@
-import ChildAppExtend from "@/main/core/childApp/ChildAppExtend";
-import ChildAppInit from "@/main/core/childApp/ChildAppInit";
+import ChildAppExtend from "@/main/services/childApp/ChildAppExtend";
+import ChildAppInit from "@/main/services/childApp/ChildAppInit";
 import DirUtil from "@/main/utils/DirUtil";
 import { extract7z, extractTar, extractZip } from '@/main/utils/extract'
 

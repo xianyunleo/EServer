@@ -1,6 +1,6 @@
 import { app, ipcMain } from 'electron'
 import { callStatic } from '@/main/common/call'
-import Installer from '@/main/core/childApp/Installer'
+import Installer from '@/main/services/childApp/Installer'
 import Downloader from 'electron-dl-downloader'
 
 ipcMain.handle('call', async (event, funName, ...args) => {

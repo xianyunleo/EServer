@@ -30,7 +30,7 @@ import RewriteSetting from '@/renderer/components/WebSite/EditWebSite/RewriteSet
 import SslSetting from '@/renderer/components/WebSite/EditWebSite/SslSetting.vue'
 import Settings from '@/main/Settings'
 import { mt, t } from '@/renderer/utils/i18n'
-import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
+import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 import ServerService from '@/renderer/services/ServerService'
 import WebsiteService from '@/renderer/services/WebsiteService'
 

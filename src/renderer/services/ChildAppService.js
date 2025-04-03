@@ -1,5 +1,5 @@
 import { ChildAppTypes as ChildAppType } from '@/main/utils/constant'
-import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
+import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 import { useMainStore } from '@/renderer/store'
 
 const store = useMainStore()

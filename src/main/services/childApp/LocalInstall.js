@@ -1,6 +1,6 @@
-import ChildApp from "@/main/core/childApp/ChildApp";
+import ChildApp from "@/main/services/childApp/ChildApp";
 import FileUtil from "@/main/utils/FileUtil";
-import CommonInstall from "@/main/core/childApp/CommonInstall";
+import CommonInstall from "@/main/services/childApp/CommonInstall";
 import PathExt from '@/shared/utils/PathExt'
 
 

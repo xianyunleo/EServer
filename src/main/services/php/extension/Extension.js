@@ -1,5 +1,5 @@
 import path from 'path'
-import Php from '@/main/core/php/Php'
+import Php from '@/main/services/php/Php'
 import FileUtil from '@/main/utils/FileUtil'
 import { isWindows } from '@/main/utils/utils'
 import GetCorePath from '@/shared/utils/GetCorePath'

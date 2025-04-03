@@ -32,7 +32,7 @@
 
 <script setup>
 import {ref,computed} from "vue";
-import Database from "@/main/core/Database";
+import Database from "@/main/services/Database";
 import MessageBox from "@/renderer/utils/MessageBox";
 import { t,mt } from '@/renderer/utils/i18n'
 import { message } from 'ant-design-vue'

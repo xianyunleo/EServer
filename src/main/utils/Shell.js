@@ -1,6 +1,6 @@
 import { debugLog, isDev, isWindows } from '@/main/utils/utils'
 import child_process from 'child_process'
-import SettingsExtend from '@/main/core/SettingsExtend'
+import SettingsExtend from '@/main/services/SettingsExtend'
 import util from 'util'
 // import { PowerShell } from '@/main/utils/constant'
 

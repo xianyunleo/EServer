@@ -1,12 +1,12 @@
 import GetDataPath from '@/shared/utils/GetDataPath'
 import FileUtil from '@/main/utils/FileUtil'
 import nodePath from 'path'
-import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
+import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 import DirUtil from '@/main/utils/DirUtil'
-import Php from '@/main/core/php/Php'
-import Database from '@/main/core/Database'
+import Php from '@/main/services/php/Php'
+import Database from '@/main/services/Database'
 import { isWindows } from '@/main/utils/utils'
-import ChildApp from '@/main/core/childApp/ChildApp'
+import ChildApp from '@/main/services/childApp/ChildApp'
 import FsUtil from '@/main/utils/FsUtil'
 import {MAC_DATA_DIR} from "@/main/utils/constant";
 

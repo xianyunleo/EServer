@@ -40,7 +40,7 @@
 <script setup>
 import { ref, inject, reactive, onMounted } from 'vue'
 import InputOpenDirDialog from '@/renderer/components/Input/InputOpenDirDialog.vue'
-import Website from '@/main/core/website/Website'
+import Website from '@/main/services/website/Website'
 import { message } from 'ant-design-vue'
 import MessageBox from '@/renderer/utils/MessageBox'
 import Hosts from '@/main/utils/Hosts'

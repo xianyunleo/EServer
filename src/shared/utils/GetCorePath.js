@@ -1,6 +1,6 @@
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import path from 'path'
-import ChildApp from '@/main/core/childApp/ChildApp'
+import ChildApp from '@/main/services/childApp/ChildApp'
 import { INIT_FILE_NAME, CoreDirNames } from '@/main/utils/constant'
 import GetPath from '@/shared/utils/GetPath'
 import process from 'process'

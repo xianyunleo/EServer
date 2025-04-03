@@ -28,7 +28,7 @@
 
 <script setup>
 import MessageBox from '@/renderer/utils/MessageBox'
-import ChildAppInit from '@/main/core/childApp/ChildAppInit'
+import ChildAppInit from '@/main/services/childApp/ChildAppInit'
 import { message } from 'ant-design-vue'
 import { mt, t } from '@/renderer/utils/i18n'
 import { APP_NAME } from '@/shared/utils/constant'

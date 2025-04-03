@@ -1,5 +1,5 @@
 import Settings from '@/main/Settings'
-import ChildAppExtend from '@/main/core/childApp/ChildAppExtend'
+import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 
 export default class OneClick {
     /**

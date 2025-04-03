@@ -1,4 +1,4 @@
-import ServerControl from '@/main/core/ServerControl'
+import ServerControl from '@/main/services/ServerControl'
 import { sleep } from '@/shared/utils/utils'
 import TcpProcess from '@/main/utils/TcpProcess'
 import ProcessExtend from '@/main/utils/ProcessExtend'

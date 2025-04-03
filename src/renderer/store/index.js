@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import ChildApp from '@/main/core/childApp/ChildApp'
+import ChildApp from '@/main/services/childApp/ChildApp'
 import Settings from '@/main/Settings'
 import MessageBox from '@/renderer/utils/MessageBox'
 import { t } from '@/renderer/utils/i18n'
@@ -8,7 +8,7 @@ import { theme } from 'ant-design-vue'
 import { setTwoToneColor } from '@ant-design/icons-vue'
 import { colorConst } from '@/shared/utils/constant'
 import { filterServerList } from '@/shared/utils/childApp'
-import CustomChildApp from '@/main/core/childApp/CustomChildApp'
+import CustomChildApp from '@/main/services/childApp/CustomChildApp'
 
 export const useMainStore = defineStore('main', {
     state: () => {
