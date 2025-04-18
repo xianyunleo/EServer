@@ -115,8 +115,10 @@ export default class Extension {
                     return '4.5.11'
                 } else if (phpVersion < 8.0) {
                     return '4.8.13'
+                } else if (phpVersion < 8.4) {
+                    return '5.1.7'
                 } else {
-                    return '5.1.3'
+                    return '6.0.2'
                 }
             case 'mongodb':
                 if (phpVersion <= 7.1) {
@@ -138,7 +140,7 @@ export default class Extension {
                 } else if (phpVersion <= 7.4) {
                     return '2.9.8'
                 } else {
-                    return '3.3.2'
+                    return '3.4.2'
                 }
             case 'xlswriter':
                 if (phpVersion >= 7.0){
