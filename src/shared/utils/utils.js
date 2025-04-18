@@ -1,5 +1,9 @@
 //通用且与项目无关的方法
 
+export function isASCII(str) {
+    return /^[\x00-\x7F]*$/.test(str)
+}
+
 export function extendPrototype() {
     /**
      * 将反斜杠替换成正斜杠
