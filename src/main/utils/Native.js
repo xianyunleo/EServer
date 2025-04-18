@@ -6,6 +6,7 @@ import { isMacOS, isWindows } from '@/main/utils/utils'
 import FsUtil from '@/main/utils/FsUtil'
 import { t } from '@/renderer/utils/i18n'
 import GetPath from '@/shared/utils/GetPath'
+import { isASCII } from '@/shared/utils/utils'
 const { shell } = require('electron')
 
 export default class Native {
@@ -69,7 +70,11 @@ export default class Native {
 
     static async openDirectory(path) {
         if (isWindows) {
-            return await shell.openExternal(path)
+            if (isASCII(path)) {
+                return await shell.openExternal(path) //openExternal在Windows上打开explorer效果更好
+            } else {
+                return await shell.openPath(path)
+            }
         }
         return await shell.openPath(path)
     }
