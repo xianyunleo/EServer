@@ -89,9 +89,10 @@ export default class ProcessExtend {
 
             if (isWindows) {
                 if (winShell) {
-                    const commandStr = `(Get-Process -Id ${pid}).MainModule.FileName`
-                    const resStr = await Shell.exec(commandStr, { shell: PowerShell })
-                    path = resStr.trim().split('\n')[0]
+                    const commandStr = `wmic process where processid=${pid} get executablepath`
+                    const resStr = await Shell.exec(commandStr)
+                    path = resStr.trim().split('\n')[1]
+                    console.log('getPathByPid', resStr, path)
                 } else {
                     const hmc = require('hmc-win32')
                     path = await hmc.getProcessFilePath2(pid) //getProcessFilePath2暂不支持并发
