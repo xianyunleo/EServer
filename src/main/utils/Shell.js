@@ -1,4 +1,4 @@
-import { debugLog, isDev, isWindows } from '@/main/utils/utils'
+import { debugLog, isWindows } from '@/main/utils/utils'
 import child_process from 'child_process'
 import SettingsExtend from '@/main/services/SettingsExtend'
 import util from 'util'
@@ -12,7 +12,7 @@ export default class Shell {
      * @returns {Promise<string>}
      */
     static async exec(command, options = {}) {
-        if (isDev) console.log('Shell.exec command', command)
+        debugLog('Shell.exec command', command)
 
         if (!options.encoding) {
             options.encoding = 'utf8'
