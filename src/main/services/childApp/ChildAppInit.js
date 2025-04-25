@@ -27,13 +27,17 @@ export default class ChildAppInit {
             }
 
             const etcPath = nodePath.join(ownEctDir, etcName)
-            if (await FsUtil.Exists(etcPath)) { //已有ect文件
-                await FsUtil.Delete(source)
-            } else {
+            if (await FsUtil.Exists(etcPath)) { //已有etc文件
+                if(!await FsUtil.IsSymbolicLink(source)){
+                    await FsUtil.Delete(source) //如果不是符号链接，就删除
+                }
+            } else { //没有etc文件
                 await DirUtil.Create(nodePath.dirname(etcPath))
                 await FsUtil.Rename(source, etcPath) //将配置文件移动到etc目录
             }
-            await FsUtil.CreateSymbolicLink(source, etcPath) //在app目录创建符号链接指向etc目录
+            if(!await FsUtil.Exists(source)){
+                await FsUtil.CreateSymbolicLink(source, etcPath) //在app目录创建符号链接指向etc目录
+            }
         }
     }
 
