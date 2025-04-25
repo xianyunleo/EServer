@@ -34,6 +34,14 @@ export default class FsUtil {
         return await fsPromises.rm(path, options)
     }
 
+    static FixSymbolicLinkPath(path) {
+        if (!isWindows) {
+            //Linux symlink 路径哪怕是目录，结尾也不能带/。否则创建符号链接规则变了 或 无法解析获得目标路径
+            path = path?.replace(/\/$/, '')
+        }
+        return path;
+    }
+
     /**
      * 创建符号链接。Windows需要管理员权限
      * @param path {string} 符号链接的路径
@@ -41,22 +49,24 @@ export default class FsUtil {
      * @returns {undefined}
      */
     static async CreateSymbolicLink(path, pathToTarget) {
-        if (!isWindows) { //Linux symlink 路径哪怕是目录，结尾也不能带/。否则创建规则变了
-            path = path?.replace(/\/$/, '')
-        }
+        path = FsUtil.FixSymbolicLinkPath(path)
 
         const stats = await fsPromises.stat(pathToTarget)
         const type = stats.isDirectory() ? 'dir' : 'file'
-
         return await fsPromises.symlink(pathToTarget, path, type)
+    }
+
+    static async IsSymbolicLink(path) {
+        path = FsUtil.FixSymbolicLinkPath(path)
+        const stats = await fsPromises.lstat(path)
+        return stats.isSymbolicLink()
     }
 
     static async ParseSymbolicLink(path) {
         if (!await FsUtil.Exists(path)) {
             return path
         }
-        const stats = await fsPromises.lstat(path)
-        if (stats.isSymbolicLink()) {
+        if (await FsUtil.IsSymbolicLink(path)) {
             const target = await fsPromises.readlink(path)
             if (nodePath.isAbsolute(target)) {
                 return target
