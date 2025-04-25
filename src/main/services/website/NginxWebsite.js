@@ -112,7 +112,8 @@ export default class NginxWebsite {
 
     async setSsl(sslInfo) {
         let text = this.confText
-        const sslDir = GetDataPath.getNginxVhostsSslDir();
+        //证书目录，不需要区分端口，只需要区分域名
+        const sslDir = GetDataPath.getNginxVhostsSslDir(this.serverName);
         if(!await DirUtil.Exists(sslDir)) DirUtil.Create(sslDir)
 
         const keyName = path.basename(sslInfo.keyPath)
