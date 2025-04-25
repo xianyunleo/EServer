@@ -45,7 +45,7 @@ export default class GetDataPath {
 
     static getNginxVhostsRewriteDir = () => path.join(this.getNginxVhostsDir(), 'rewrite')
 
-    static getNginxVhostsSslDir = () => path.join(this.getNginxVhostsDir(), 'ssl')
+    static getNginxVhostsSslDir = (dir = '') => path.join(this.getNginxVhostsDir(), 'ssl', dir)
 
     static getNginxLogsDir = () => path.join(this.getNginxDir(), 'logs')
 
