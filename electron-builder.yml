@@ -35,6 +35,7 @@ win:
     - target: zip
       arch:
         - x64
+        - arm64
     - target: nsis
       arch:
         - x64
