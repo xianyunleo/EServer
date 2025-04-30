@@ -67,13 +67,13 @@ export default class App {
             throw new Error('安装路径不能包含中文等汉字！')
         }
 
-        if (isWindows) {
+        if (isWindows && process.arch === 'x64') { //hmc.getStringRegKey可能在arm64的Windows上有问题
             const hmc = require('hmc-win32')
             const semverDiff = require('semver-diff')
-            const vcVersion = hmc.getStringRegKey('HKEY_LOCAL_MACHINE', 'SOFTWARE\\Microsoft\\DevDiv\\VC\\Servicing\\14.0\\RuntimeMinimum', 'Version')
+            const vcVersion = hmc.getStringRegKey('HKEY_LOCAL_MACHINE', `SOFTWARE\\Microsoft\\DevDiv\\VC\\Servicing\\14.0\\RuntimeMinimum`, 'Version')
             const minVersion = '14.29.0' //Visual Studio 2019
             if (!vcVersion || !semverDiff(minVersion, vcVersion)) {
-                throw new Error('需要安装最新的Visual C++ 2022 Runtime！\nhttps://aka.ms/vs/17/release/vc_redist.x64.exe')
+                throw new Error('需要安装最新的Visual C++ 2022+ Runtime！\nhttps://aka.ms/vs/17/release/vc_redist.x64.exe')
             }
         }
     }
