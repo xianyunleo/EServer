@@ -18,6 +18,7 @@ export default class CommonInstall {
     }
 
     static async configure(appItem) {
+        await ChildAppInit.copyFiles(appItem)
         await ChildAppInit.initEtcFiles(appItem)
         const dirName = appItem.DirName
         if (dirName.match(/^mysql-[.\d]+$/)) {

@@ -15,6 +15,18 @@ export default class ChildAppInit {
         await Promise.all([this.initNginx(), this.initAllPHP(), this.initAllMySQL()])
     }
 
+    static async copyFiles(appItem) {
+        const copyFiles = appItem.CopyFiles
+        if (!copyFiles) return
+        const ownAppDir = ChildApp.getDir(appItem)
+
+        for (const item of copyFiles) {
+            const source = nodePath.join(ownAppDir, item.Source)
+            const dest = nodePath.join(ownAppDir, item.Dest)
+            await FsUtil.Copy(source, dest, { force: true })
+        }
+    }
+
     static async initEtcFiles(appItem) {
         const etcList = appItem.EtcList
         if (!etcList) return
@@ -121,12 +133,7 @@ export default class ChildAppInit {
 
     static async initPHPConf(version) {
         try {
-            const confDir = Php.getConfDir(version)
             const confPath = Php.getConfPath(version)
-
-            if (!(await FileUtil.Exists(confPath))) {
-                await FileUtil.Copy(nodePath.join(confDir, 'php.ini-development'), confPath)
-            }
 
             let text = await FileUtil.ReadAll(confPath)
 
