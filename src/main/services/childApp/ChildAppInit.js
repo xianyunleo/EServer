@@ -47,6 +47,7 @@ export default class ChildAppInit {
                     await FsUtil.Delete(source) //如果不是符号链接，就删除
                 }
             } else { //没有etc文件
+                //这里的dirname不能取ownEctDir，因为etcName可能是/分割的路径
                 await DirUtil.Create(nodePath.dirname(etcPath))
                 await FsUtil.Rename(source, etcPath) //将配置文件移动到etc目录
             }
