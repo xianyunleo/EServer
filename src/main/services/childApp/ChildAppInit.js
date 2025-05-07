@@ -23,7 +23,10 @@ export default class ChildAppInit {
         for (const item of copyFiles) {
             const source = nodePath.join(ownAppDir, item.Source)
             const dest = nodePath.join(ownAppDir, item.Dest)
-            await FsUtil.Copy(source, dest, { force: true })
+            //目标文件不存在，并且源文件是正常文件（非符号链接）
+            if (!(await FsUtil.Exists(dest)) && !(await FsUtil.IsSymbolicLink(source))) {
+                await FsUtil.Copy(source, dest)
+            }
         }
     }
 
