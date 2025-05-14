@@ -28,7 +28,7 @@ import { onMounted, ref, watch } from 'vue'
 import MessageBox from '@/renderer/utils/MessageBox'
 import UserPwdModal from '@/renderer/components/UserPwdModal.vue'
 import ChildApp from '@/main/services/childApp/ChildApp'
-import Service from '@/main/utils/Service'
+import SystemService from '@/main/utils/SystemService'
 import { message } from 'ant-design-vue'
 import DirUtil from '@/main/utils/DirUtil'
 import { MAC_DATA_DIR } from '@/main/utils/constant'
@@ -142,8 +142,8 @@ async function update() {
 
 async function stopIIS() {
   const IISServiceName = 'W3SVC'
-  if (await Service.isRunning(IISServiceName)) {
-    await Service.stop(IISServiceName)
+  if (await SystemService.isRunning(IISServiceName)) {
+    await SystemService.stop(IISServiceName)
     message.info('')
   }
 }
