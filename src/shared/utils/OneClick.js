@@ -1,8 +1,5 @@
 import Settings from '@/main/Settings'
 import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
-import ChildApp from '@/main/services/childApp/ChildApp'
-import { filterServerList } from '@/shared/utils/childApp'
-import CustomChildApp from '@/main/services/childApp/CustomChildApp'
 
 export default class OneClick {
     /**
@@ -11,13 +8,7 @@ export default class OneClick {
      * @param func {function}
      * @returns {Promise<void>}
      */
-    static async handle(func, serverList = null) { //改名成hand
-        if (!serverList) {
-            const list1 = await (await ChildApp.getList()).filterAsync(async item => await ChildApp.IsInstalled(item))
-            const list2 = await CustomChildApp.getList()
-            serverList = filterServerList([...list1, ...list2])
-        }
-
+    static async handle(func, serverList) {
         const oneClickServerList = Settings.get('OneClickServerList')
         const websitePhpFpmSwitch = oneClickServerList.includes('PHP-FPM')
         const requirePhpList = await OneClick.getNginxRequirePhpList()

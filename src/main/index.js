@@ -4,7 +4,7 @@ import { is } from '@electron-toolkit/utils'
 import Store from 'electron-store'
 import MainWindow from '@/main/MainWindow'
 import '@/main/ipcListen'
-import { extendPrototype } from '@/shared/utils/utils'
+import { extendPrototype, sleep } from '@/shared/utils/utils'
 import I18n from '@/main/i18n/I18n'
 import Service from '@/main/Service'
 
@@ -65,10 +65,12 @@ async function createMainWindow() {
 
 function onReady() {
     app.on('ready', async () => {
-        const serviceArg = process.argv.find(item => ['--service=start', '--service=stop'].includes(item))
+        const serviceArg = process.argv.find((item) => ['--service=start', '--service=stop'].includes(item))
         if (serviceArg) {
             const args = serviceArg.split('=')
-            args[1] === 'strat' ? Service.start() : Service.stop()
+            args[1] === 'start' ? Service.start() : Service.stop()
+            await sleep(30 * 1000)
+            app.exit()
         } else {
             createMainWindow()
             Store.initRenderer()

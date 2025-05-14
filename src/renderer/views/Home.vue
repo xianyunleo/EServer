@@ -93,15 +93,12 @@ import { storeToRefs } from 'pinia/dist/pinia'
 import { APP_NAME } from '@/shared/utils/constant'
 import Native from '@/renderer/utils/Native'
 import path from 'path'
-import ProcessExtend from '@/main/utils/ProcessExtend'
 import HomeService from '@/renderer/services/HomeService'
-import { isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
 import { StoreInitializedEventName } from '@/renderer/utils/constant'
 import Settings from '@/main/Settings'
-import CustomChildApp from '@/main/services/childApp/CustomChildApp'
-import FsUtil from '@/main/utils/FsUtil'
+import { getProcessList, initServerListStatus } from '@/shared/helper/process'
 import Ipc from '@/renderer/utils/Ipc'
 
 const timestamp = new Date().getTime()
@@ -157,36 +154,11 @@ onMounted(async () => {
 
 const loadingHandle = async () => {
   serverTableLoading.value = { tip: `${t('RefreshingServer')}...` }
-  await initServerListStatus()
+  const processList = await getProcessList(async (options) => {
+    return await Ipc.callStatic('ProcessLibrary', 'getList', options)
+  })
+  await initServerListStatus(serverList, processList,true)
   serverTableLoading.value = false
-}
-
-const getProcessList = async () => {
-  let list
-  let pathList = CustomChildApp.getServerProcessPathList()
-  pathList = await Promise.all(pathList.map(async p => await FsUtil.ParseSymbolicLink(p)))
-  const options = {directory: GetDataPath.getChildAppDir(), pathList}
-  if (isWindows) {
-    list = await Ipc.callStatic('ProcessLibrary', 'getList', options)
-  } else {
-    list = await ProcessExtend.getList(options)
-  }
-
-  return list.map(item => [item.path, item.pid])
-}
-
-const initServerListStatus = async () => {
-  const processList = await getProcessList()
-  const processMap = new Map(processList)
-  const initServerStatus = async (item) => {
-    const servPath = item.IsCustom ? await FsUtil.ParseSymbolicLink(path.normalize(item.ServerProcessPath)) : ChildApp.getServerProcessPath(item)
-    const pid = processMap.get(servPath)
-    item.isRunning = !!pid
-    item.pid = pid ?? null
-  }
-
-  const promiseArray = serverList.value.map((item) => initServerStatus(item))
-  await Promise.all(promiseArray)
 }
 
 const dataDirClick = () => Native.openDirectory(GetDataPath.getDir())
