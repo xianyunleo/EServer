@@ -87,10 +87,10 @@ export default class HomeService {
     }
 
     static oneClickStart() {
-        OneClick.start(serverList.value, HomeService.startServerClick)
+        OneClick.handle(HomeService.startServerClick, serverList.value)
     }
 
     static oneClickStop() {
-        OneClick.start(serverList.value, HomeService.stopServerClick)
+        OneClick.handle(HomeService.stopServerClick, serverList.value)
     }
 }

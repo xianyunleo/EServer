@@ -6,6 +6,7 @@ import MainWindow from '@/main/MainWindow'
 import '@/main/ipcListen'
 import { extendPrototype } from '@/shared/utils/utils'
 import I18n from '@/main/i18n/I18n'
+import Service from '@/main/Service'
 
 let mainWindow
 const gotTheLock = app.isPackaged ? app.requestSingleInstanceLock() : true //仅生产环境生效
@@ -64,9 +65,15 @@ async function createMainWindow() {
 
 function onReady() {
     app.on('ready', async () => {
-        createMainWindow()
-        Store.initRenderer()
-        I18n.init()
+        const serviceArg = process.argv.find(item => ['--service=start', '--service=stop'].includes(item))
+        if (serviceArg) {
+            const args = serviceArg.split('=')
+            args[1] === 'strat' ? Service.start() : Service.stop()
+        } else {
+            createMainWindow()
+            Store.initRenderer()
+            I18n.init()
+        }
     })
 }
 
