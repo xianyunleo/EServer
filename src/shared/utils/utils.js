@@ -1,4 +1,5 @@
 //通用且与项目无关的方法
+import { setTimeout } from 'timers'
 
 export function isASCII(str) {
     return /^[\x00-\x7F]*$/.test(str)
