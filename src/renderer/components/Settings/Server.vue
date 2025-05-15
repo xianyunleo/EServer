@@ -73,7 +73,8 @@ const createWindowsService = async () => {
     return
   } else {
     const binPath = path.join(GetPath.getDir(), `${SERVICE_NAME}.exe`)
-    await SystemService.create(SERVICE_NAME, binPath)
+    const pathWithArgs = `${binPath} ${GetPath.getExePath()}`
+    await SystemService.create(SERVICE_NAME, pathWithArgs)
   }
 }
 
