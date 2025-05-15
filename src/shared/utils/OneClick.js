@@ -15,15 +15,14 @@ export default class OneClick {
 
         const doAsync = async (item) => {
             if (oneClickServerList.includes(item.Name)) {
-                func(item)
+                await func(item)
             } else if (websitePhpFpmSwitch && requirePhpList.includes(item.Name.toUpperCase())) {//自动判断网站列表的PHP-FPM
-                func(item)
+                await func(item)
             }
         }
 
-        for (const item of serverList) {
-            doAsync(item)
-        }
+        const promiseArr = serverList.map(item => doAsync(item));
+        await Promise.all(promiseArr)
     }
 
     static async getNginxRequirePhpList() {

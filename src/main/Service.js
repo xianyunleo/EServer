@@ -21,7 +21,7 @@ export default class Service {
             await ServerControl.start(item)
         }
         const serverList = await Service.getServerList()
-        OneClick.handle(startFunc, serverList)
+        await OneClick.handle(startFunc, serverList)
     }
 
     static async stop() {
@@ -29,7 +29,7 @@ export default class Service {
             await ServerControl.stop(item)
         }
         const serverList = await Service.getServerList()
-        OneClick.handle(stopFunc, serverList)
+        await OneClick.handle(stopFunc, serverList)
     }
 
     static async getServerList() {

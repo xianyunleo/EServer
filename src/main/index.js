@@ -65,16 +65,16 @@ async function createMainWindow() {
 
 function onReady() {
     app.on('ready', async () => {
+        I18n.init()
         const serviceArg = process.argv.find((item) => ['--service=start', '--service=stop'].includes(item))
         if (serviceArg) {
             const args = serviceArg.split('=')
-            args[1] === 'start' ? Service.start() : Service.stop()
-            await sleep(30 * 1000)
+            args[1] === 'start' ? await Service.start() : await Service.stop()
+            await sleep(1000)
             app.exit()
         } else {
             createMainWindow()
             Store.initRenderer()
-            I18n.init()
         }
     })
 }
