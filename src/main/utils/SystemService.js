@@ -39,13 +39,35 @@ export default class SystemService {
         }
     }
 
+    static async delete(name) {
+        try {
+            let commandStr
+
+            if (isWindows) {
+                commandStr = `sc delete ${name}`
+                await Shell.exec(commandStr)
+                // eslint-disable-next-line no-empty
+            } else {
+            }
+            // eslint-disable-next-line no-empty
+        } catch {
+
+        }
+    }
+
+    /**
+     * 判断service是否存在
+     * @param name
+     * @returns {Promise<boolean>}
+     */
     static async exists(name) {
         try {
             let commandStr
 
             if (isWindows) {
-                commandStr = `sc query ${name}`
+                commandStr = `sc query ${name}` //sc query查询不存在的服务会报错
                 await Shell.exec(commandStr)
+                return true
                 // eslint-disable-next-line no-empty
             } else {
             }
