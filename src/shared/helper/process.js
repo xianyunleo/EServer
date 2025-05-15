@@ -6,13 +6,13 @@ import GetDataPath from '@/shared/utils/GetDataPath'
 import { isWindows } from '@/main/utils/utils'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 
-export async function getProcessList(func) {
+export async function getProcessList(winFunc) {
     let list
     let pathList = CustomChildApp.getServerProcessPathList()
     pathList = await Promise.all(pathList.map(async (p) => await FsUtil.ParseSymbolicLink(p)))
     const options = { directory: GetDataPath.getChildAppDir(), pathList }
     if (isWindows) {
-        list = await func(options)
+        list = await winFunc(options)
     } else {
         list = await ProcessExtend.getList(options)
     }
