@@ -9,9 +9,10 @@ import I18n from '@/main/i18n/I18n'
 import Service from '@/main/Service'
 
 let mainWindow
+const serviceArg = process.argv.find((item) => ['--service=start', '--service=stop'].includes(item))
 const gotTheLock = app.isPackaged ? app.requestSingleInstanceLock() : true //仅生产环境生效
 
-if (!gotTheLock) {
+if (!gotTheLock && !serviceArg) {
     app.quit()
 } else {
     onReady()
@@ -66,7 +67,6 @@ async function createMainWindow() {
 function onReady() {
     app.on('ready', async () => {
         I18n.init()
-        const serviceArg = process.argv.find((item) => ['--service=start', '--service=stop'].includes(item))
         if (serviceArg) {
             const args = serviceArg.split('=')
             args[1] === 'start' ? await Service.start() : await Service.stop()
