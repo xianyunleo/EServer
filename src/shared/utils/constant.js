@@ -2,6 +2,7 @@ export const APP_NAME = 'EServer'
 export const OFFICIAL_HOST = 'eserver.devcn.top'
 export const OFFICIAL_URL = `http://${OFFICIAL_HOST}`
 export const DOWNLOAD_URL = 'http://dl.eserver.devcn.top'
+export const SERVICE_NAME = 'EServerService'
 
 export const colorConst = {
     light: {

@@ -10,6 +10,14 @@
       ></a-select>
     </div>
 
+    <div class="settings-card-row" v-if="isWindows">
+      <a-flex gap="small" align="center">
+        <span>Windows Service：</span>
+        <a-button type="primary" @click="createWindowsService()">{{ t('Create') }}</a-button>
+        <a-button type="primary" @click="delWindowsService()">{{ t('Delete') }}</a-button>
+      </a-flex>
+    </div>
+
     <div class="settings-card-row flex-vertical-center">
       <a-switch v-model:checked="store.settings.AutoStartAndRestartServer" class="settings-switch"
                 :disabled="emptyOneClickServerList()" @change="changeAutoStartAndRestartServer" />
@@ -31,8 +39,14 @@ import { storeToRefs } from 'pinia'
 import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { computed } from 'vue'
+import { isWindows } from '@/main/utils/utils'
+import SystemService from '@/main/utils/SystemService'
+import { SERVICE_NAME } from '@/shared/utils/constant'
+import path from 'path'
+import GetPath from '@/shared/utils/GetPath'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
+const AFlex = createAsyncComponent(import('ant-design-vue'), 'Flex')
 const store = useMainStore()
 const { serverList } = storeToRefs(store)
 const oneClickServerOptions = computed(() => {
@@ -54,8 +68,23 @@ const changeAfterOpenAppStartServer = () => {
   store.setSettings('AfterOpenAppStartServer')
 }
 
+const createWindowsService = async () => {
+  if (await SystemService.exists(SERVICE_NAME)) {
+    return
+  } else {
+    const binPath = path.join(GetPath.getDir(), `${SERVICE_NAME}.exe`)
+    await SystemService.create(SERVICE_NAME, binPath)
+  }
+}
+
+const delWindowsService = async () => {
+  if (await SystemService.exists(SERVICE_NAME)) {
+    await SystemService.delete(SERVICE_NAME)
+  }
+}
+
 const emptyOneClickServerList = () => store.settings.OneClickServerList.length === 0
-const disabledTextClass = () => emptyOneClickServerList() ? 'disabled-text' : ''
+const disabledTextClass = () => (emptyOneClickServerList() ? 'disabled-text' : '')
 </script>
 
 <style scoped></style>
