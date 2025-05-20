@@ -41,6 +41,8 @@ win:
         - x64
   requestedExecutionLevel: requireAdministrator
   extraFiles:
+    - from: extra/win32/EServerService.exe
+      to: EServerService.exe
     - from: ./extra/win32/core/config/
       to: ./core/config/
     - from: ./extra/win32/core/initFiles/

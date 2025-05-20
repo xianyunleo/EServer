@@ -21,13 +21,19 @@ export default class SystemService {
         }
     }
 
-    static async create(name, path) {
+    /**
+     *
+     * @param name {string}
+     * @param pathWithArgs {string}
+     * @returns {Promise<void>}
+     */
+    static async create(name, pathWithArgs) {
         try {
-            path = nodePath.normalize(path)
+            pathWithArgs = nodePath.normalize(pathWithArgs)
             let commandStr
 
             if (isWindows) {
-                commandStr = `sc create ${name} binPath=${path}`
+                commandStr = `sc create ${name} binPath="${pathWithArgs}" start=auto`
                 await Shell.exec(commandStr)
                 // eslint-disable-next-line no-empty
             } else {
