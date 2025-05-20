@@ -110,21 +110,7 @@ export default class ChildAppInit {
         await this.initPHPConf(version)
         if (!isWindows) {
             await this.createPHPFpmConf(version)
-            await this.fixPhpBin(version)
         }
-    }
-
-    static async fixPhpBin(ver) {
-        const dir = GetDataPath.getPhpDir(ver)
-        const phpConfigBin = nodePath.join(dir, 'bin/php-config')
-        let text = await FileUtil.ReadAll(phpConfigBin)
-        text = text.replaceAll(MAC_DATA_DIR+'software',MAC_DATA_DIR+'childApp')
-        await FileUtil.WriteAll(phpConfigBin,text)
-
-        const phpizeBin = nodePath.join(dir, 'bin/phpize')
-        text = await FileUtil.ReadAll(phpizeBin)
-        text = text.replaceAll(MAC_DATA_DIR+'software',MAC_DATA_DIR+'childApp')
-        await FileUtil.WriteAll(phpizeBin,text)
     }
 
     static async createPHPFpmConf(version) {
