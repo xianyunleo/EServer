@@ -3,6 +3,11 @@
     :model='formData' ref="formRef" name='basic' autocomplete='off'
     :label-col='{ span: labelColSpan}' :wrapper-col='{ span: wrapperColSpan}'
   >
+    <a-form-item :label="t('Port')" name='port'
+                 :rules="[{  required: true, type: 'number', min: 1, max: 65535 }]">
+      <a-input-number v-model:value='formData.port' min='1' max='65535' />
+    </a-form-item>
+
     <a-form-item :label="mt('Certificate')" name='certPath'
                  :rules="[{ required: true, message:t('cannotBeEmpty') }]">
       <input-open-file-dialog v-model:value='formData.certPath' :toForwardSlash='true'></input-open-file-dialog>
@@ -25,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, inject, reactive } from 'vue'
+import { ref, inject, reactive, onMounted } from 'vue'
 import Website from '@/main/services/website/Website'
 import { message } from 'ant-design-vue'
 import MessageBox from '@/renderer/utils/MessageBox'
@@ -41,6 +46,7 @@ const labelColSpan = store.settings.Language === 'zh' ? 6 : 10;
 const wrapperColSpan = store.settings.Language === 'zh' ? 18 : 14;
 
 const initSslInfo = {
+  port: 443,
   certPath: '',
   keyPath: '',
   isForceHttps: false
@@ -48,10 +54,11 @@ const initSslInfo = {
 
 const formData = reactive({ ...initSslInfo })
 
-;(async () => {
+onMounted(async () => {
   const sslInfo = await Website.getSslInfo(confName.value)
   Object.assign(formData, sslInfo)
-})()
+  formData.port = formData.port ?? initSslInfo.port
+})
 
 const save = async () => {
   try {

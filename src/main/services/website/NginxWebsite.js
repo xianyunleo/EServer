@@ -126,13 +126,13 @@ export default class NginxWebsite {
 
         //增加listen 443，注意listen后面还有可能有 “default_server” 关键字
         const listenPattern = /(?<=listen.*;)[\s\S]+?(?=server_name)/;
-        text = text.replace(listenPattern, `${N}${T}listen 443 ssl;${N}${T}`);
+        text = text.replace(listenPattern, `${N}${T}listen ${sslInfo.port} ssl;${N}${T}`);
 
         const toHttpsPattern = /(?<=#HTTP_TO_HTTPS_START)[\s\S]+?(?=#HTTP_TO_HTTPS_END)/;
         if (sslInfo.isForceHttps)
         {
             //插入重定向到https的配置
-            const toHttpsText = Nginx.getToHttpsConfText();
+            const toHttpsText = Nginx.getToHttpsConfText(sslInfo.port);
             text = text.replace(toHttpsPattern, `${N}${toHttpsText}${N}${T}`)
         }
         else
@@ -150,7 +150,7 @@ export default class NginxWebsite {
 
     async closeSsl(){
         let text = this.confText
-        const listenPattern = /.*listen\s+443\s+ssl\d*;\r?\n/
+        const listenPattern = /.*listen\s+\d+\s+ssl\d*;\r?\n/
         text = text.replace(listenPattern, '')
 
         const toHttpsPattern = /(?<=#HTTP_TO_HTTPS_START)[\s\S]+?(?=#HTTP_TO_HTTPS_END)/
@@ -162,8 +162,10 @@ export default class NginxWebsite {
     }
 
 
-     async getSslInfo(){
-        const text = this.confText;
+    async getSslInfo() {
+        const text = this.confText
+        const portPattern = /listen\s+(\d+)\s+ssl;/
+        const portMatch = text.match(portPattern)
         const certPattern = /ssl_certificate\s+(.+);/
         const certMatch = text.match(certPattern)
         const keyPattern = /ssl_certificate_key\s+(.+);/
@@ -171,8 +173,9 @@ export default class NginxWebsite {
         const toHttpsPattern = /#HTTP_TO_HTTPS_START([\s\S]+?)#HTTP_TO_HTTPS_END/
         const toHttpsMatch = text.match(toHttpsPattern)
         return {
-            certPath: certMatch ?certMatch[1]:null,
-            keyPath: keyMatch ?keyMatch[1]:null,
+            port: portMatch ? parseInt(portMatch[1]) : null,
+            certPath: certMatch ? certMatch[1] : null,
+            keyPath: keyMatch ? keyMatch[1] : null,
             isForceHttps: !!(toHttpsMatch && toHttpsMatch[1].trim())
         }
     }

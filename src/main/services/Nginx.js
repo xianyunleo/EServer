@@ -229,9 +229,14 @@ ${T}ssl_prefer_server_ciphers on;`
         return replaceLineBreak(text)
     }
 
-    static getToHttpsConfText() {
+    /**
+     *
+     * @param sslPort {number}
+     * @returns {*}
+     */
+    static getToHttpsConfText(sslPort) {
         const text = `${T}if ($scheme != https){
-${T}${T}return 301 https://$host$request_uri;
+${T}${T}return 301 https://$host:${sslPort}$request_uri;
 ${T}}`
 
         return replaceLineBreak(text)
