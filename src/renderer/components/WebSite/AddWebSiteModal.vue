@@ -43,7 +43,7 @@ import { mt, t } from '@/renderer/utils/i18n'
 import { useMainStore } from '@/renderer/store'
 import ServerService from '@/renderer/services/ServerService'
 import { FolderOpenFilled } from '@ant-design/icons-vue'
-import Native from '@/renderer/utils/Native'
+import Opener from '@/renderer/utils/Opener'
 import GetDataPath from '@/shared/utils/GetDataPath'
 import WebsiteService from '@/renderer/services/WebsiteService'
 const { search, addModalVisible: visible } = inject('WebsiteProvide')
@@ -119,7 +119,7 @@ const rootPathRules = [
   }
 ]
 
-const openWebPhpConfigDir = () => Native.openDirectory(GetDataPath.getNginxPhpConfDir())
+const openWebPhpConfigDir = () => Opener.openDirectory(GetDataPath.getNginxPhpConfDir())
 </script>
 
 <style scoped>

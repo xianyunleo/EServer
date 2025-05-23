@@ -46,7 +46,7 @@ import ProcessExtend from '@/main/utils/ProcessExtend'
 import { DownOutlined } from '@ant-design/icons-vue'
 import MessageBox from '@/renderer/utils/MessageBox'
 import TcpProcess from '@/main/utils/TcpProcess'
-import Native from '@/renderer/utils/Native'
+import Opener from '@/renderer/utils/Opener'
 import { message } from 'ant-design-vue'
 import { isWindows } from '@/main/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
@@ -152,7 +152,7 @@ const kill = async (item) => {
 
 const openPath = async (item) => {
   if (item.path) {
-    await Native.showItemInFolder(item.path)
+    await Opener.showItemInFolder(item.path)
   }
 }
 </script>

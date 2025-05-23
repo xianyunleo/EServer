@@ -29,7 +29,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import Native from '@/renderer/utils/Native'
+import Opener from '@/renderer/utils/Opener'
 import { isWindows } from '@/main/utils/utils'
 import { useMainStore } from '@/renderer/store'
 import Ipc from '@/renderer/utils/Ipc'
@@ -39,7 +39,7 @@ const minimizeIsHover = ref(false)
 
 const store = useMainStore()
 
-const clickUrl = (url) => Native.openUrl(url)
+const clickUrl = (url) => Opener.openUrl(url)
 
 const minimizeClick = () => {
   call('windowMinimize')

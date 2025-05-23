@@ -67,7 +67,7 @@ import AddWebSiteModal from '@/renderer/components/WebSite/AddWebSiteModal.vue'
 import EditWebSiteModal from '@/renderer/components/WebSite/EditWebSiteModal.vue'
 import Website from '@/main/services/website/Website'
 import MessageBox from '@/renderer/utils/MessageBox'
-import Native from '@/renderer/utils/Native'
+import Opener from '@/renderer/utils/Opener'
 import Hosts from '@/main/utils/Hosts'
 import { mt, t } from '@/renderer/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
@@ -214,14 +214,14 @@ const showEdit = (item) => {
 }
 
 const openUrl = (item) => {
-  Native.openUrl(`http://${item.serverName}:${item.port}`)
+  Opener.openUrl(`http://${item.serverName}:${item.port}`)
 }
 
 const openConfFile = async (item) => {
-  Native.openTextFile(Website.getConfPath(item.confName))
+  Opener.openTextFile(Website.getConfPath(item.confName))
 }
 const openRewriteConfFile = (item) => {
-  Native.openTextFile(Website.getRewriteConfPath(item.confName))
+  Opener.openTextFile(Website.getRewriteConfPath(item.confName))
 }
 
 const openRootPath = (item) => {
@@ -229,17 +229,17 @@ const openRootPath = (item) => {
   if (isWindows) {
     path = path.replaceAll('/', '\\')
   }
-  Native.openDirectory(path)
+  Opener.openDirectory(path)
 }
 
 const openAccessLog = (item) => {
   const filePath = path.join(GetDataPath.getNginxLogsDir(), `${item.serverName}_${item.port}.access.log`)
-  Native.openTextFile(filePath)
+  Opener.openTextFile(filePath)
 }
 
 const openErrorLog = (item) => {
   const filePath = path.join(GetDataPath.getNginxLogsDir(), `${item.serverName}_${item.port}.error.log`)
-  Native.openTextFile(filePath)
+  Opener.openTextFile(filePath)
 }
 </script>
 

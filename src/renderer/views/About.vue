@@ -18,7 +18,7 @@
 
 <script setup>
 import { APP_NAME, OFFICIAL_HOST, OFFICIAL_URL } from '@/shared/utils/constant'
-import Native from '@/renderer/utils/Native'
+import Opener from '@/renderer/utils/Opener'
 import { t } from '@/renderer/utils/i18n'
 import {onMounted, ref} from 'vue'
 import Ipc from '@/renderer/utils/Ipc'
@@ -30,7 +30,7 @@ onMounted(async () => {
 })
 
 const openUrl = (url) => {
-  Native.openUrl(url)
+  Opener.openUrl(url)
 }
 </script>
 

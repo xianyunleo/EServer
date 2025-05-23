@@ -111,7 +111,7 @@ import { AppstoreAddOutlined, DownOutlined } from '@ant-design/icons-vue'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import MessageBox from '@/renderer/utils/MessageBox'
 import { getFileSizeText, getIpcError } from '@/shared/utils/utils'
-import Native from '@/renderer/utils/Native'
+import Opener from '@/renderer/utils/Opener'
 import PhpExtManager from '@/renderer/components/ChildApp/PhpExtManager.vue'
 import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 import path from 'path'
@@ -227,16 +227,16 @@ const openApp = (item) => {
   } else if (isMacOS) {
     appPath = ChildApp.getDir(item)
   }
-  Native.openApp(appPath)
+  Opener.openApp(appPath)
 }
 
 const openInstallPath = async (item) => {
   let path = item.IsMacApp ? ChildApp.getTypeDir(item.Type) : ChildApp.getDir(item)
-  Native.openDirectory(path)
+  Opener.openDirectory(path)
 }
 
-const openConfFile = (item) => Native.openTextFile(ChildApp.getConfPath(item))
-const openServerConfFile = (item) => Native.openTextFile(ChildApp.getServerConfPath(item))
+const openConfFile = (item) => Opener.openTextFile(ChildApp.getConfPath(item))
+const openServerConfFile = (item) => Opener.openTextFile(ChildApp.getServerConfPath(item))
 
 const uninstall = async (name) => {
   const item = findItem(name)
@@ -299,7 +299,7 @@ const showPhpExtManager = async (item) => {
 }
 
 const openUrl = (url) => {
-  Native.openUrl(url)
+  Opener.openUrl(url)
 }
 </script>
 

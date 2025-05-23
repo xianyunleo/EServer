@@ -56,7 +56,7 @@ import { computed, inject, ref, watch } from 'vue'
 import { EventEmitter } from 'events'
 import Installer from '@/main/services/php/extension/Installer'
 import Extension from '@/main/services/php/extension/Extension'
-import Native from '@/renderer/utils/Native'
+import Opener from '@/renderer/utils/Opener'
 import Php from '@/main/services/php/Php'
 import MessageBox from '@/renderer/utils/MessageBox'
 import path from 'path'
@@ -112,7 +112,7 @@ const updateList = async () => {
 updateList()
 
 const openExtDir = async () => {
-  Native.openDirectory(await Php.getExtensionDir(props.phpVersion));
+  Opener.openDirectory(await Php.getExtensionDir(props.phpVersion));
 }
 
 let installer
@@ -171,7 +171,7 @@ const install = async (item) => {
 }
 
 const editScript = (item) => {
-  Native.openTextFile(Extension.getInstallScriptPath(item?.name))
+  Opener.openTextFile(Extension.getInstallScriptPath(item?.name))
 }
 
 const closeTaskDialog = () => {

@@ -91,7 +91,7 @@ import GetDataPath from '@/shared/utils/GetDataPath'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import { storeToRefs } from 'pinia/dist/pinia'
 import { APP_NAME } from '@/shared/utils/constant'
-import Native from '@/renderer/utils/Native'
+import Opener from '@/renderer/utils/Opener'
 import path from 'path'
 import HomeService from '@/renderer/services/HomeService'
 import { createAsyncComponent } from '@/renderer/utils/utils'
@@ -161,24 +161,24 @@ const loadingHandle = async () => {
   serverTableLoading.value = false
 }
 
-const dataDirClick = () => Native.openDirectory(GetDataPath.getDir())
-const cfgPathClick = () => Native.openDirectory(GetDataPath.getEtcDir())
+const dataDirClick = () => Opener.openDirectory(GetDataPath.getDir())
+const cfgPathClick = () => Opener.openDirectory(GetDataPath.getEtcDir())
 const openWorkDir = (item) => {
   const p = item.IsCustom ?  path.dirname(item.ServerProcessPath) :ChildApp.getDir(item)
-  Native.openDirectory(p)
+  Opener.openDirectory(p)
 }
 
 const openConfFile = (item) => {
   const p = item.IsCustom ? item.ConfPath : ChildApp.getConfPath(item)
-  Native.openTextFile(p)
+  Opener.openTextFile(p)
 }
 const openServerConfFile = (item) => {
   const p = item.IsCustom ? item.ServerConfPath : ChildApp.getServerConfPath(item)
-  Native.openTextFile(p)
+  Opener.openTextFile(p)
 }
 const openExtraFile = (item, extraFile) => {
   const p = item.IsCustom ? extraFile.Path : ChildApp.getCommonPath(item, extraFile.Path)
-  Native.openTextFile(p)
+  Opener.openTextFile(p)
 }
 </script>
 

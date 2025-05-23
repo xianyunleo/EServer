@@ -9,7 +9,7 @@ import GetPath from '@/shared/utils/GetPath'
 import { isASCII } from '@/shared/utils/utils'
 const { shell } = require('electron')
 
-export default class Native {
+export default class Opener {
     /**
      *
      * @param path {string}
@@ -17,7 +17,7 @@ export default class Native {
      */
     static async openApp(path) {
         if (isWindows) {
-            await Native.openExternal(path)
+            await Opener.openExternal(path)
         } else if (isMacOS) {
             await Shell.exec(`open -a "${path}"`)
         } else {
@@ -89,7 +89,7 @@ export default class Native {
             if ((await FileUtil.Exists(path)) && !(await FsUtil.CanReadWrite(path))) {
                 await FsUtil.ChmodReadWrite(path)
             }
-            await Native.openTextFile(path)
+            await Opener.openTextFile(path)
         } catch (error) {
             throw new Error(error.message ?? error, t('Error opening hosts file!'))
         }

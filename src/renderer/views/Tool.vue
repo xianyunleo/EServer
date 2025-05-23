@@ -40,7 +40,7 @@ import { FileTextTwoTone, FolderOpenTwoTone, DatabaseTwoTone } from '@ant-design
 import MysqlResetPwdModal from '@/renderer/components/ToolPage/MysqlResetPwdModal.vue'
 import GetCorePath from '@/shared/utils/GetCorePath'
 import { sleep } from '@/shared/utils/utils'
-import Native from '@/renderer/utils/Native'
+import Opener from '@/renderer/utils/Opener'
 import TcpProcessListModal from '@/renderer/components/ToolPage/TcpProcessListModal.vue'
 
 const iconTypes = {
@@ -78,7 +78,7 @@ const toolItems = [
 async function editHosts() {
   message.info(t('pleaseWait'))
   await sleep(100)
-  Native.openHosts()
+  Opener.openHosts()
 }
 
 const mysqlResetPwdModalShow = ref(false)

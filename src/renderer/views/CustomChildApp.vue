@@ -123,7 +123,7 @@ import { isRealServer } from '@/shared/utils/childApp'
 import { ChildAppTypes } from '@/main/utils/constant'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import InputOpenFileDialog from '@/renderer/components/Input/InputOpenFileDialog.vue'
-import Native from '@/renderer/utils/Native'
+import Opener from '@/renderer/utils/Opener'
 import CustomChildApp from '@/main/services/childApp/CustomChildApp'
 import { message } from 'ant-design-vue'
 import { APP_NAME } from '@/shared/utils/constant'
@@ -237,7 +237,7 @@ const openApp = (item) => {
   } else if (isMacOS) {
     appPath = item.WorkDir
   }
-  Native.openApp(appPath)
+  Opener.openApp(appPath)
 }
 </script>
 <style scoped lang="less">
