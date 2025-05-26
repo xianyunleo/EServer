@@ -15,6 +15,7 @@
         <span>Windows Service：</span>
         <a-button type="primary" @click="createWindowsService()">{{ t('Create') }}</a-button>
         <a-button type="primary" @click="delWindowsService()">{{ t('Delete') }}</a-button>
+        <a-button type="primary" @click="openWindowsServices()">{{ t('Open')}}  Windows Services</a-button>
       </a-flex>
     </div>
 
@@ -38,12 +39,14 @@ import { useMainStore } from '@/renderer/store'
 import { storeToRefs } from 'pinia'
 import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
+import { message } from 'ant-design-vue'
 import { computed } from 'vue'
 import { isWindows } from '@/main/utils/utils'
 import SystemService from '@/main/utils/SystemService'
 import { SERVICE_NAME } from '@/shared/utils/constant'
 import path from 'path'
 import GetPath from '@/shared/utils/GetPath'
+import Opener from '@/renderer/utils/Opener'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const AFlex = createAsyncComponent(import('ant-design-vue'), 'Flex')
@@ -69,6 +72,7 @@ const changeAfterOpenAppStartServer = () => {
 }
 
 const createWindowsService = async () => {
+  message.info(t('pleaseWait'))
   if (await SystemService.exists(SERVICE_NAME)) {
     return
   } else {
@@ -76,12 +80,20 @@ const createWindowsService = async () => {
     const pathWithArgs = `${binPath} ${GetPath.getExePath()}`
     await SystemService.create(SERVICE_NAME, pathWithArgs)
   }
+  message.info(t('Done'))
 }
 
 const delWindowsService = async () => {
+  message.info(t('pleaseWait'))
   if (await SystemService.exists(SERVICE_NAME)) {
     await SystemService.delete(SERVICE_NAME)
   }
+  message.info(t('Done'))
+}
+
+const openWindowsServices = () => {
+  message.info(t('pleaseWait'))
+  Opener.openWindowsServices()
 }
 
 const emptyOneClickServerList = () => store.settings.OneClickServerList.length === 0

@@ -83,6 +83,10 @@ export default class Opener {
         return await shell.openExternal(url)
     }
 
+    static async openWindowsServices() {
+        return await Shell.exec(`services.msc`)
+    }
+
     static async openHosts() {
         try {
             let path = GetPath.getHostsPath()
