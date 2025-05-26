@@ -8,6 +8,7 @@ export default {
     Custom: 'Sur mesure',
     Config: 'Config',
     Create: 'Créer',
+    Done: 'Fait',
     Delete: 'Supprimer',
     Modify: 'Modifier',
     Access: 'Accès',
