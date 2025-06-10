@@ -191,10 +191,16 @@ const openExtraFile = (item, extraFile) => {
 
 .status-start {
   color: @colorSuccessActive;
+  :deep(svg){
+    border-radius: 7px;
+  }
 }
 
 .status-stop {
   color: @colorErrorActive;
+  :deep(svg){
+    border-radius: 7px;
+  }
 }
 
 .quick-card-content {
@@ -207,4 +213,5 @@ const openExtraFile = (item, extraFile) => {
   display: flex;
   justify-content: space-evenly;
 }
+
 </style>
