@@ -60,5 +60,8 @@
     "7zip-min-electron": {
       "7zip-bin": "^5.2.0"
     }
+  },
+  "resolutions": {
+    "7zip-min-electron/7zip-bin": "^5.2.0",
   }
 }
