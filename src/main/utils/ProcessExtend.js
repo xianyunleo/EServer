@@ -1,6 +1,7 @@
 import Shell from '@/main/utils/Shell'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import { PowerShell } from '@/main/utils/constant'
+import OS from '@/main/utils/OS'
 
 export default class ProcessExtend {
     /**
@@ -89,10 +90,18 @@ export default class ProcessExtend {
 
             if (isWindows) {
                 if (winShell) {
-                    const commandStr = `wmic process where processid=${pid} get executablepath`
-                    const resStr = await Shell.exec(commandStr)
-                    path = resStr.trim().split('\n')[1]
-                    console.log('getPathByPid', resStr, path)
+                    const versionStr = OS.getVersion()
+                    const [major, minor, build] = versionStr.split('.').map(Number)
+                    if (major === 10 && build >= 22000) {
+                        //Windows 11: 版本号从 10.0.22000 开始。Windows11 废弃了 wmic
+                        const commandStr = `(Get-Process -Id ${pid}).MainModule.FileName`
+                        const resStr = await Shell.exec(commandStr, { shell: PowerShell })
+                        path = resStr.trim().split('\n')[0]
+                    } else {
+                        const commandStr = `wmic process where processid=${pid} get executablepath`
+                        const resStr = await Shell.exec(commandStr)
+                        path = resStr.trim().split('\n')[1]
+                    }
                 } else {
                     const hmc = require('hmc-win32')
                     path = await hmc.getProcessFilePath2(pid) //getProcessFilePath2暂不支持并发
