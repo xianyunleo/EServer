@@ -8,15 +8,15 @@ import FileUtil from "@/main/utils/FileUtil";
 import TcpProcess from "@/main/utils/TcpProcess";
 import { isWindows } from '@/main/utils/utils'
 
-export default class Database {
+export default class MySQL {
     /**
      *
      * @param version {string}
      * @returns {Promise<void>}
      */
-    static async initMySQLData(version) {
+    static async initData(version) {
         let mysqlPath = GetDataPath.getMysqlDir(version);
-        let command = `${this.getMySQLDFilePath(version)} --defaults-file=${this.getMySQLConfFilePath(version)} --initialize`;
+        let command = `${this.getMySQLDFilePath(version)} --defaults-file=${this.getConfFilePath(version)} --initialize`;
         await Shell.exec(command, {cwd: mysqlPath});
     }
 
@@ -26,7 +26,7 @@ export default class Database {
      * @param password {string}
      * @returns {Promise<void>}
      */
-    static async resetMySQLPassword(version, password) {
+    static async resetPassword(version, password) {
         if (!password) {
             password = 'root';
         }
@@ -42,7 +42,7 @@ export default class Database {
         let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
         await FileUtil.WriteAll(resetPwdPath, resetCommand);
 
-        let confFilePath = this.getMySQLConfFilePath(version);
+        let confFilePath = this.getConfFilePath(version);
         let confText = await FileUtil.ReadAll(confFilePath)
         let portMatch = confText.match(/\[mysqld].*?port\s*=\s*(\d+)/s)
         let port = portMatch ? portMatch[1] : 3306;
@@ -71,7 +71,7 @@ export default class Database {
         await FileUtil.Delete(resetPwdPath)
     }
 
-    static getMySQLConfFilePath(version) {
+    static getConfFilePath(version) {
         const etcDir = GetDataPath.getOwnEtcDir(`mysql-${version}`)
         let name = isWindows ? 'my.ini' : 'my.cnf'
         return path.join(etcDir, name)

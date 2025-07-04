@@ -32,7 +32,7 @@
 
 <script setup>
 import {ref,computed} from "vue";
-import Database from "@/main/services/Database";
+import MySQL from "@/main/services/MySQL";
 import MessageBox from "@/renderer/utils/MessageBox";
 import { t,mt } from '@/renderer/utils/i18n'
 import { message } from 'ant-design-vue'
@@ -65,7 +65,7 @@ const resetClick = async () => {
 const reset = async (version, newPwd) => {
   try {
     okButtonLoading.value = true
-    await Database.resetMySQLPassword(version, newPwd)
+    await MySQL.resetPassword(version, newPwd)
     message.success(t('successfulOperation'))
   } catch (error) {
     MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('operation')]))

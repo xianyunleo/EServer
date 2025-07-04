@@ -4,7 +4,7 @@ import nodePath from 'path'
 import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 import DirUtil from '@/main/utils/DirUtil'
 import Php from '@/main/services/php/Php'
-import Database from '@/main/services/Database'
+import MySQL from '@/main/services/MySQL'
 import { isWindows } from '@/main/utils/utils'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import FsUtil from '@/main/utils/FsUtil'
@@ -202,14 +202,14 @@ export default class ChildAppInit {
         await this.initMySQLConf(version)
         if (!await DirUtil.Exists(GetDataPath.getMysqlDataDir(version))) {
             //如果mysql data目录不存在，初始化生成data目录，并重置密码
-            await Database.initMySQLData(version)
-            await Database.resetMySQLPassword(version)
+            await MySQL.initData(version)
+            await MySQL.resetPassword(version)
         }
     }
 
     static async initMySQLConf(version) {
         try {
-            const confPath = Database.getMySQLConfFilePath(version)
+            const confPath = MySQL.getConfFilePath(version)
             let text = await FileUtil.ReadAll(confPath)
             let mysqlDir = GetDataPath.getMysqlDir(version)
 
