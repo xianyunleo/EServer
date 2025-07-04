@@ -6,6 +6,7 @@ import util from 'util'
 import child_process from 'child_process'
 
 export default class OS {
+    static _version = null
     static _majorVersion = null
     static _simpleLanguage = null
 
@@ -14,7 +15,8 @@ export default class OS {
      * @returns {string}
      */
     static getVersion() {
-        return os.release()
+        this._version = this._version ? this._version : os.release()
+        return this._version
     }
 
     /**
