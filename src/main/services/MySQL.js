@@ -73,13 +73,13 @@ export default class MySQL {
 
     static getConfFilePath(version) {
         const etcDir = GetDataPath.getOwnEtcDir(`mysql-${version}`)
-        let name = isWindows ? 'my.ini' : 'my.cnf'
+        const name = isWindows ? 'my.ini' : 'my.cnf'
         return path.join(etcDir, name)
     }
 
     static getMySQLDFilePath(version) {
-        let mysqlPath = GetDataPath.getMysqlDir(version);
-        let name = isWindows ? 'mysqld.exe' : 'mysqld';
-        return path.join(mysqlPath, 'bin', name);
+        const mysqlDir = GetDataPath.getMysqlDir(version)
+        const name = isWindows ? 'mysqld.exe' : 'mysqld'
+        return path.join(mysqlDir, 'bin', name)
     }
 }

@@ -8,7 +8,6 @@ import MySQL from '@/main/services/MySQL'
 import { isWindows } from '@/main/utils/utils'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import FsUtil from '@/main/utils/FsUtil'
-import {MAC_DATA_DIR} from "@/main/utils/constant";
 
 export default class ChildAppInit {
     static async initAll() {
