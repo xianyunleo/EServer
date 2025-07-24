@@ -7,7 +7,7 @@
 </template>
 <script setup>
 
-import TokenProvider from '@/renderer/components/Theme/TokenProvider.vue'
+import TokenProvider from '@/renderer/layouts/Theme/TokenProvider.vue'
 import { useMainStore } from '@/renderer/store'
 const store = useMainStore()
 
