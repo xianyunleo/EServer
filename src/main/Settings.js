@@ -1,8 +1,8 @@
 import Store from 'electron-store'
-import { SETTINGS_FILE_NAME } from '@/main/utils/constant'
+import { SETTINGS_FILE_NAME } from '@/main/helpers/constant'
 import path from 'path'
 import { isMacOS, isWindows } from '@/main/utils/utils'
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 
 export default class Settings {
     static #_instance

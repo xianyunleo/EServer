@@ -1,7 +1,7 @@
 import path from 'path'
 import FileUtil from "@/main/utils/FileUtil";
-import GetDataPath from '@/shared/utils/GetDataPath'
-import { isRealServer } from '@/shared/utils/childApp'
+import GetDataPath from '@/shared/helpers/GetDataPath'
+import { isRealServer } from '@/shared/helpers/childApp'
 
 
 /**

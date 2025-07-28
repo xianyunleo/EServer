@@ -1,7 +1,7 @@
 import path from 'path'
-import { MAC_DATA_DIR, TEMP_DIR_NAME } from '@/main/utils/constant'
+import { MAC_DATA_DIR, TEMP_DIR_NAME } from '@/main/helpers/constant'
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
-import GetCorePath from '@/shared/utils/GetCorePath'
+import GetCorePath from '@/shared/helpers/GetCorePath'
 
 /**
  * （此程序）数据目录

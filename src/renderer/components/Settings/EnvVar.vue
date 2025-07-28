@@ -29,7 +29,7 @@
 import { computed, ref } from 'vue'
 import Env from '@/main/services/Env/Env'
 import { message } from 'ant-design-vue'
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'

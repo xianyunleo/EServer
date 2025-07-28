@@ -1,9 +1,9 @@
 import Nginx from "@/main/services/Nginx";
 import {EOL} from "os";
-import {CONF_INDENT} from "@/main/utils/constant";
+import {CONF_INDENT} from "@/main/helpers/constant";
 import FileUtil from "@/main/utils/FileUtil";
 import path from "path";
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 import DirUtil from '@/main/utils/DirUtil'
 import PathExt from '@/shared/utils/PathExt'
 

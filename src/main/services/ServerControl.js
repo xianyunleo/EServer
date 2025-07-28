@@ -5,7 +5,7 @@ import { parseTemplateStrings} from "@/shared/utils/utils";
 import child_process from "child_process";
 import path from "path";
 import FileUtil from "@/main/utils/FileUtil";
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 
 export default class ServerControl {
     /**

@@ -119,14 +119,14 @@ import { mt, t } from '@/renderer/utils/i18n'
 import { useMainStore } from '@/renderer/store'
 import { storeToRefs } from 'pinia'
 import { AppstoreAddOutlined,} from '@ant-design/icons-vue'
-import { isRealServer } from '@/shared/utils/childApp'
-import { ChildAppTypes } from '@/main/utils/constant'
+import { isRealServer } from '@/shared/helpers/childApp'
+import { ChildAppTypes } from '@/main/helpers/constant'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import InputOpenFileDialog from '@/renderer/components/Input/InputOpenFileDialog.vue'
 import Opener from '@/renderer/utils/Opener'
 import CustomChildApp from '@/main/services/childApp/CustomChildApp'
 import { message } from 'ant-design-vue'
-import { APP_NAME } from '@/shared/utils/constant'
+import { APP_NAME } from '@/shared/helpers/constant'
 
 const store = useMainStore()
 const { customChildAppList } = storeToRefs(store)

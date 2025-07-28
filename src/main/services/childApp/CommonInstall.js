@@ -2,7 +2,7 @@ import ChildAppExtend from "@/main/services/childApp/ChildAppExtend";
 import ChildAppInit from "@/main/services/childApp/ChildAppInit";
 import DirUtil from "@/main/utils/DirUtil";
 import { extract7z, extractTar, extractZip } from '@/main/utils/extract'
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 
 export default class CommonInstall {
     static async extract(filePath, dest) {

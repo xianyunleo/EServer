@@ -1,6 +1,6 @@
 import FileUtil from '@/main/utils/FileUtil'
 import nodePath from 'path'
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 import EnvMacOS from '@/main/services/Env/EnvMacOS'
 import EnvWindows from '@/main/services/Env/EnvWindows'
 import { isWindows, isMacOS } from '@/main/utils/utils'

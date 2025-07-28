@@ -1,6 +1,6 @@
 import Shell from '@/main/utils/Shell'
 import { isWindows } from '@/main/utils/utils'
-import { PowerShell } from '@/main/utils/constant'
+import { PowerShell } from '@/main/helpers/constant'
 import nodePath from 'path'
 
 export default class SystemService {

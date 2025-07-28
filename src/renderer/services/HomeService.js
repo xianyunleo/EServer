@@ -7,7 +7,7 @@ import MessageBox from '@/renderer/utils/MessageBox'
 import { watch } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import { storeToRefs } from 'pinia'
-import OneClick from '@/shared/utils/OneClick'
+import OneClick from '@/shared/helpers/OneClick'
 
 const store = useMainStore()
 const { serverList } = storeToRefs(store)

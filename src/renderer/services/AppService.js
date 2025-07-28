@@ -1,6 +1,6 @@
 import Settings from '@/main/Settings'
 import TimerService from '@/renderer/services/TimerService'
-import { StoreInitializedEventName } from '@/renderer/utils/constant'
+import { StoreInitializedEventName } from '@/renderer/helpers/constant'
 
 export default class AppService {
     static storeInitThen() {

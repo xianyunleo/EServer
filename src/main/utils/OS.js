@@ -1,6 +1,6 @@
 import os from 'os'
 import process from 'process'
-import { PowerShell } from '@/main/utils/constant'
+import { PowerShell } from '@/main/helpers/constant'
 import { isWindows } from '@/main/utils/utils'
 import util from 'util'
 import child_process from 'child_process'

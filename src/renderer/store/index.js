@@ -6,8 +6,8 @@ import { t } from '@/renderer/utils/i18n'
 import SystemTheme from '@/main/utils/SystemTheme'
 import { theme } from 'ant-design-vue'
 import { setTwoToneColor } from '@ant-design/icons-vue'
-import { colorConst } from '@/shared/utils/constant'
-import { filterServerList } from '@/shared/utils/childApp'
+import { colorConst } from '@/shared/helpers/constant'
+import { filterServerList } from '@/shared/helpers/childApp'
 import CustomChildApp from '@/main/services/childApp/CustomChildApp'
 
 export const useMainStore = defineStore('main', {

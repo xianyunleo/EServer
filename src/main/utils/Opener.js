@@ -5,7 +5,7 @@ import Settings from '@/main/Settings'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import FsUtil from '@/main/utils/FsUtil'
 import { t } from '@/renderer/utils/i18n'
-import GetPath from '@/shared/utils/GetPath'
+import GetPath from '@/shared/helpers/GetPath'
 import { isASCII } from '@/shared/utils/utils'
 const { shell } = require('electron')
 

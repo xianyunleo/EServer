@@ -1,6 +1,6 @@
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import path from 'path'
-import { APP_NAME } from '@/shared/utils/constant'
+import { APP_NAME } from '@/shared/helpers/constant'
 
 export default class GetPath {
     static getDir() {

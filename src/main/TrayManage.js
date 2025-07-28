@@ -1,5 +1,5 @@
 import { app, Tray, Menu, nativeImage } from 'electron'
-import { APP_NAME } from '@/shared/utils/constant'
+import { APP_NAME } from '@/shared/helpers/constant'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import { t } from '@/main/utils/i18n'
 import MainWindow from '@/main/MainWindow'

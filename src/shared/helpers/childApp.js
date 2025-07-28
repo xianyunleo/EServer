@@ -1,4 +1,4 @@
-import { ChildAppTypes } from '@/main/utils/constant'
+import { ChildAppTypes } from '@/main/helpers/constant'
 
 /**
  * 根据子应用列表的Type字段判断，筛选出Server列表

@@ -2,9 +2,9 @@ import FileUtil from "@/main/utils/FileUtil";
 import path from "path";
 import OS from "@/main/utils/OS";
 import Shell from "@/main/utils/Shell";
-import {APP_NAME} from "@/shared/utils/constant";
+import {APP_NAME} from "@/shared/helpers/constant";
 import FsUtil from '@/main/utils/FsUtil'
-import GetDataPath from "@/shared/utils/GetDataPath";
+import GetDataPath from "@/shared/helpers/GetDataPath";
 
 export default class EnvMacOS {
     static _envFileName = '.zshrc';

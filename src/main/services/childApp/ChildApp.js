@@ -1,10 +1,10 @@
 import path from 'path'
-import GetCorePath from "@/shared/utils/GetCorePath";
-import GetDataPath from "@/shared/utils/GetDataPath";
+import GetCorePath from "@/shared/helpers/GetCorePath";
+import GetDataPath from "@/shared/helpers/GetDataPath";
 import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
 import { parseTemplateStrings } from '@/shared/utils/utils'
-import { ChildAppTypes } from '@/main/utils/constant'
+import { ChildAppTypes } from '@/main/helpers/constant'
 
 export default class ChildApp {
     static #list;

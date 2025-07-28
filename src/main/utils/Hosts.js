@@ -1,4 +1,4 @@
-import GetPath from "@/shared/utils/GetPath";
+import GetPath from "@/shared/helpers/GetPath";
 import {EOL} from "os";
 import FileUtil from "@/main/utils/FileUtil";
 import FsUtil from '@/main/utils/FsUtil'

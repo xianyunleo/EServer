@@ -44,7 +44,7 @@ import { useMainStore } from '@/renderer/store'
 import ServerService from '@/renderer/services/ServerService'
 import { FolderOpenFilled } from '@ant-design/icons-vue'
 import Opener from '@/renderer/utils/Opener'
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 import WebsiteService from '@/renderer/services/WebsiteService'
 const { search, addModalVisible: visible } = inject('WebsiteProvide')
 

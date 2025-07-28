@@ -1,4 +1,4 @@
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 import FileUtil from '@/main/utils/FileUtil'
 import nodePath from 'path'
 import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'

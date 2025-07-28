@@ -1,9 +1,9 @@
 import { t } from '@/renderer/utils/i18n'
 import path from 'path'
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 import FileUtil from '@/main/utils/FileUtil'
 import { useMainStore } from '@/renderer/store'
-import { ChildAppTypes as ChildAppType } from '@/main/utils/constant'
+import { ChildAppTypes as ChildAppType } from '@/main/helpers/constant'
 import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 
 const store = useMainStore()

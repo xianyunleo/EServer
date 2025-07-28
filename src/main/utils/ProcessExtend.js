@@ -1,6 +1,6 @@
 import Shell from '@/main/utils/Shell'
 import { isMacOS, isWindows } from '@/main/utils/utils'
-import { PowerShell } from '@/main/utils/constant'
+import { PowerShell } from '@/main/helpers/constant'
 import OS from '@/main/utils/OS'
 
 export default class ProcessExtend {

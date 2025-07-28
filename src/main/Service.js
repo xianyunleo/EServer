@@ -1,12 +1,12 @@
-import OneClick from '@/shared/utils/OneClick'
+import OneClick from '@/shared/helpers/OneClick'
 import TcpProcess from '@/main/utils/TcpProcess'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import ServerControl from '@/main/services/ServerControl'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import CustomChildApp from '@/main/services/childApp/CustomChildApp'
-import { filterServerList } from '@/shared/utils/childApp'
-import { getProcessList, initServerListStatus } from '@/shared/helper/process'
-import ProcessLibrary from '@/main/utils/ProcessLibrary'
+import { filterServerList } from '@/shared/helpers/childApp'
+import { getProcessList, initServerListStatus } from '@/shared/helpers/process'
+import ProcessLibrary from '@/main/helpers/ProcessLibrary'
 
 export default class Service {
     static async start() {

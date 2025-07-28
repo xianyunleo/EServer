@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { APP_NAME } from '@/shared/utils/constant'
+import { APP_NAME } from '@/shared/helpers/constant'
 import {
   AppstoreTwoTone,
   ExclamationCircleTwoTone,

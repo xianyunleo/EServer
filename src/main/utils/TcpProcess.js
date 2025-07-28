@@ -1,7 +1,7 @@
 import Shell from '@/main/utils/Shell'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import { isMacOS, isWindows } from '@/main/utils/utils'
-import { PowerShell } from '@/main/utils/constant'
+import { PowerShell } from '@/main/helpers/constant'
 import { getFileIcon } from '@/shared/utils/file'
 
 export default class TcpProcess {

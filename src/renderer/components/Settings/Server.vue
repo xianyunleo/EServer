@@ -43,9 +43,9 @@ import { message } from 'ant-design-vue'
 import { computed } from 'vue'
 import { isWindows } from '@/main/utils/utils'
 import SystemService from '@/main/utils/SystemService'
-import { SERVICE_NAME } from '@/shared/utils/constant'
+import { SERVICE_NAME } from '@/shared/helpers/constant'
 import path from 'path'
-import GetPath from '@/shared/utils/GetPath'
+import GetPath from '@/shared/helpers/GetPath'
 import Opener from '@/renderer/utils/Opener'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')

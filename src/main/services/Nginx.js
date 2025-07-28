@@ -1,11 +1,11 @@
 import nodePath from 'path'
-import GetDataPath from "@/shared/utils/GetDataPath";
+import GetDataPath from "@/shared/helpers/GetDataPath";
 import NginxWebsite from "@/main/services/website/NginxWebsite";
 import DirUtil from "@/main/utils/DirUtil";
 import FileUtil from "@/main/utils/FileUtil";
 import { isWindows, replaceLineBreak } from '@/main/utils/utils'
 import { EOL } from 'os'
-import { CONF_INDENT } from '@/main/utils/constant'
+import { CONF_INDENT } from '@/main/helpers/constant'
 import PathExt from '@/shared/utils/PathExt'
 
 const N = EOL; //换行符

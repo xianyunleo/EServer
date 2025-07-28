@@ -3,8 +3,11 @@ import { Worker } from 'node:worker_threads'
 export async function callStatic(className, methodName, ...args) {
     let result, importReturn
 
-    const utilsClassArr = ['ProcessLibrary', 'FileDialog']
-    if (utilsClassArr.includes(className)) {
+    const helpersClassArr = ['ProcessLibrary']
+    const utilsClassArr = ['FileDialog']
+    if (helpersClassArr.includes(className)) {
+        importReturn = await import(`@/main/helpers/${className}.js`)
+    } else if (utilsClassArr.includes(className)) {
         importReturn = await import(`@/main/utils/${className}.js`)
     } else if (className === 'I18n') {
         importReturn = await import(`@/main/i18n/I18n.js`)

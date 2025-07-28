@@ -73,7 +73,7 @@ import { mt, t } from '@/renderer/utils/i18n'
 import { isWindows } from '@/main/utils/utils'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 import path from 'path'
 
 const store = useMainStore()

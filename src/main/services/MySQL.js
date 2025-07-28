@@ -1,5 +1,5 @@
 import path from "path";
-import GetDataPath from "@/shared/utils/GetDataPath";
+import GetDataPath from "@/shared/helpers/GetDataPath";
 import Shell from "@/main/utils/Shell";
 import ProcessExtend from "@/main/utils/ProcessExtend";
 import {sleep} from "@/shared/utils/utils";

@@ -1,6 +1,6 @@
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import path from 'path'
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 import child_process from 'child_process'
 import fsPromises from 'fs/promises'
 import DirUtil from '@/main/utils/DirUtil'

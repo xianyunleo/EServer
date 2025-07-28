@@ -1,7 +1,7 @@
 import { debugLog, isWindows } from '@/main/utils/utils'
-import { EnumChildAppInstallStatus } from '@/shared/utils/enum'
+import { EnumChildAppInstallStatus } from '@/shared/helpers/enum'
 import ChildApp from '@/main/services/childApp/ChildApp'
-import { DOWNLOAD_URL } from '@/shared/utils/constant'
+import { DOWNLOAD_URL } from '@/shared/helpers/constant'
 import DirUtil from '@/main/utils/DirUtil'
 import path from 'path'
 import FileUtil from '@/main/utils/FileUtil'
@@ -9,7 +9,7 @@ import { EventEmitter } from 'events'
 import { mt, t } from '@/renderer/utils/i18n'
 import CommonInstall from "@/main/services/childApp/CommonInstall";
 import Downloader from 'electron-dl-downloader'
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 
 export default class Installer extends EventEmitter {
     name;

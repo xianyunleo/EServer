@@ -1,4 +1,4 @@
-import GetDataPath from "@/shared/utils/GetDataPath";
+import GetDataPath from "@/shared/helpers/GetDataPath";
 import DirUtil from "@/main/utils/DirUtil";
 import nodePath from 'path'
 import FileUtil from "@/main/utils/FileUtil";

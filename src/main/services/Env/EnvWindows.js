@@ -1,6 +1,6 @@
 import Shell from "@/main/utils/Shell";
-import GetDataPath from "@/shared/utils/GetDataPath";
-import { PowerShell } from '@/main/utils/constant'
+import GetDataPath from "@/shared/helpers/GetDataPath";
+import { PowerShell } from '@/main/helpers/constant'
 
 export default class EnvWindows {
     static _pathVarName = 'PATH'

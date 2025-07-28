@@ -1,4 +1,4 @@
-import { ChildAppTypes as ChildAppType } from '@/main/utils/constant'
+import { ChildAppTypes as ChildAppType } from '@/main/helpers/constant'
 import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 import { useMainStore } from '@/renderer/store'
 

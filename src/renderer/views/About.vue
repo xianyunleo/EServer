@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { APP_NAME, OFFICIAL_HOST, OFFICIAL_URL } from '@/shared/utils/constant'
+import { APP_NAME, OFFICIAL_HOST, OFFICIAL_URL } from '@/shared/helpers/constant'
 import Opener from '@/renderer/utils/Opener'
 import { t } from '@/renderer/utils/i18n'
 import {onMounted, ref} from 'vue'

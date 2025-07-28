@@ -87,18 +87,18 @@
 <script setup>
 import { onMounted, ref} from 'vue'
 import { useMainStore } from '@/renderer/store'
-import GetDataPath from '@/shared/utils/GetDataPath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import { storeToRefs } from 'pinia/dist/pinia'
-import { APP_NAME } from '@/shared/utils/constant'
+import { APP_NAME } from '@/shared/helpers/constant'
 import Opener from '@/renderer/utils/Opener'
 import path from 'path'
 import HomeService from '@/renderer/services/HomeService'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
-import { StoreInitializedEventName } from '@/renderer/utils/constant'
+import { StoreInitializedEventName } from '@/renderer/helpers/constant'
 import Settings from '@/main/Settings'
-import { getProcessList, initServerListStatus } from '@/shared/helper/process'
+import { getProcessList, initServerListStatus } from '@/shared/helpers/process'
 import Ipc from '@/renderer/utils/Ipc'
 
 const timestamp = new Date().getTime()
