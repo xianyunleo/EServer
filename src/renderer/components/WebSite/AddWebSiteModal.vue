@@ -6,8 +6,8 @@
           <a-input v-model:value="formData.serverName" @change="serverNameChange" spellcheck="false" />
         </a-form-item>
 
-        <a-form-item :label="t('Port')" name="port" :rules="[{ required: true, type: 'number', min: 80, max: 65535 }]">
-          <a-input-number v-model:value="formData.port" min="80" max="65535" />
+        <a-form-item :label="t('Port')" name="port" :rules="[{ required: true, type: 'number', min: 1, max: 65535 }]">
+          <a-input-number v-model:value="formData.port" min="1" max="65535" />
         </a-form-item>
 
         <a-form-item :label="t('RootPath')" name="rootPath" :rules="rootPathRules">
