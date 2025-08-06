@@ -1,7 +1,7 @@
 import FileUtil from "@/main/utils/FileUtil";
 import path from "path";
 import OS from "@/main/utils/OS";
-import Shell from "@/main/utils/Shell";
+import Command from "@/main/utils/Command";
 import {APP_NAME} from "@/shared/helpers/constant";
 import FsUtil from '@/main/utils/FsUtil'
 import GetDataPath from "@/shared/helpers/GetDataPath";
@@ -24,7 +24,7 @@ export default class EnvMacOS {
 
         if (!await FsUtil.CanReadWrite(envFilePath)) {
             //envFile正常是可以编辑的，考虑到own变成root的情况
-            await Shell.sudoExec(`chown ${userName}:staff ${envFilePath}`)
+            await Command.sudoExec(`chown ${userName}:staff ${envFilePath}`)
         }
 
         text = await FileUtil.ReadAll(envFilePath);

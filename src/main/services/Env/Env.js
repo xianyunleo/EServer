@@ -5,7 +5,7 @@ import EnvMacOS from '@/main/services/Env/EnvMacOS'
 import EnvWindows from '@/main/services/Env/EnvWindows'
 import { isWindows, isMacOS } from '@/main/utils/utils'
 import FsUtil from '@/main/utils/FsUtil'
-import Shell from '@/main/utils/Shell'
+import Command from '@/main/utils/Command'
 
 export default class Env {
     /**
@@ -33,7 +33,7 @@ export default class Env {
             }
         }
         await FileUtil.WriteAll(path, text)
-        if (!isWindows) await Shell.sudoExec(`chmod +x ${path}`)
+        if (!isWindows) await Command.sudoExec(`chmod +x ${path}`)
     }
 
     static async createOtherBinFile(targetPath, targetOtherFileName, otherBinName) {

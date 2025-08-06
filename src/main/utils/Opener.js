@@ -1,4 +1,4 @@
-import Shell from '@/main/utils/Shell'
+import Command from '@/main/utils/Command'
 import fixPath from 'fix-path'
 import FileUtil from '@/main/utils/FileUtil'
 import Settings from '@/main/Settings'
@@ -19,7 +19,7 @@ export default class Opener {
         if (isWindows) {
             await Opener.openExternal(path)
         } else if (isMacOS) {
-            await Shell.exec(`open -a "${path}"`)
+            await Command.exec(`open -a "${path}"`)
         } else {
             throw new Error(`todo`)
         }
@@ -50,7 +50,7 @@ export default class Opener {
             } else if (isWindows) {
                 command = `"${editorPath}" "${filePath}"`
             }
-            await Shell.exec(command)
+            await Command.exec(command)
         } catch (error) {
             throw new Error(error.message ?? error, t('Error opening file!'))
         }
@@ -84,7 +84,7 @@ export default class Opener {
     }
 
     static async openWindowsServices() {
-        return await Shell.exec(`services.msc`)
+        return await Command.exec(`services.msc`)
     }
 
     static async openHosts() {

@@ -1,6 +1,6 @@
 import fsPromises, { constants } from 'fs/promises'
 import { isWindows } from '@/main/utils/utils'
-import Shell from '@/main/utils/Shell'
+import Command from '@/main/utils/Command'
 import nodePath from 'path'
 
 export default class FsUtil {
@@ -95,7 +95,7 @@ export default class FsUtil {
         if (isWindows) {
             await fsPromises.chmod(path, 0o666)
         } else {
-            await Shell.sudoExec(`chmod 666 ${path}`)
+            await Command.sudoExec(`chmod 666 ${path}`)
         }
     }
 }

@@ -1,4 +1,4 @@
-import Shell from '@/main/utils/Shell'
+import Command from '@/main/utils/Command'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import { PowerShell } from '@/main/helpers/constant'
 import OS from '@/main/utils/OS'
@@ -22,9 +22,9 @@ export default class ProcessExtend {
             }
             if (isWindows) {
                 //taskkill杀不存在的进程会有标准错误，从而引发异常
-                await Shell.exec(`taskkill /f /t /pid ${pid}`);
+                await Command.exec(`taskkill /f /t /pid ${pid}`);
             } else {
-                await Shell.sudoExec(`kill ${pid}`);
+                await Command.sudoExec(`kill ${pid}`);
             }
             // eslint-disable-next-line no-empty
         } catch {
@@ -39,7 +39,7 @@ export default class ProcessExtend {
                 return hmc.getProcessParentProcessID(pid)
             } else {
                 const commandStr = `ps -o ppid= -p ${pid}`
-                const resStr = await Shell.exec(commandStr)
+                const resStr = await Command.exec(commandStr)
                 let ppid = resStr.trim().split('\n')[0]
                 return ppid ? ppid : null
             }
@@ -57,10 +57,10 @@ export default class ProcessExtend {
         try {
             if (isWindows) {
                 //taskkill杀不存在的进程会有标准错误，从而引发异常
-                await Shell.exec(`taskkill /f /t /im ${name}.exe`);
+                await Command.exec(`taskkill /f /t /im ${name}.exe`);
             } else {
                 //pkill杀不存在的进程会有标准错误，从而引发异常
-                await Shell.sudoExec(`pkill ${name}`);
+                await Command.sudoExec(`pkill ${name}`);
             }
             // eslint-disable-next-line no-empty
         } catch {
@@ -95,11 +95,11 @@ export default class ProcessExtend {
                     if (major === 10 && build >= 22000) {
                         //Windows 11: 版本号从 10.0.22000 开始。Windows11 废弃了 wmic
                         const commandStr = `(Get-Process -Id ${pid}).MainModule.FileName`
-                        const resStr = await Shell.exec(commandStr, { shell: PowerShell })
+                        const resStr = await Command.exec(commandStr, { shell: PowerShell })
                         path = resStr.trim().split('\n')[0]
                     } else {
                         const commandStr = `wmic process where processid=${pid} get executablepath`
-                        const resStr = await Shell.exec(commandStr)
+                        const resStr = await Command.exec(commandStr)
                         path = resStr.trim().split('\n')[1]
                     }
                 } else {
@@ -110,7 +110,7 @@ export default class ProcessExtend {
                 }
             } else {
                 const commandStr = `lsof -p ${pid} -a -w -d txt -Fn|awk 'NR==3{print}'|sed "s/n//"`
-                const resStr = await Shell.exec(commandStr)
+                const resStr = await Command.exec(commandStr)
                 path = resStr.trim().split('\n')[0]
             }
 
@@ -149,7 +149,7 @@ export default class ProcessExtend {
         }
         command += `|grep -F -v '.dylib'|awk '{print $1,$2,$3,$10}'`
         try {
-            let str = await Shell.sudoExec(command)
+            let str = await Command.sudoExec(command)
             str = str.trim();
             if(!str){
                 return [];
@@ -182,7 +182,7 @@ export default class ProcessExtend {
         command += ' |Select-Object Name,ProcessId,ParentProcessId,ExecutablePath | Format-List | Out-String -Width 999'
 
         try {
-            let str = await Shell.exec(command, { shell: PowerShell })
+            let str = await Command.exec(command, { shell: PowerShell })
             str = str.trim()
             if (!str) {
                 return []

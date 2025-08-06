@@ -1,4 +1,4 @@
-import Shell from '@/main/utils/Shell'
+import Command from '@/main/utils/Command'
 import FsUtil from '@/main/utils/FsUtil'
 
 export default class SystemExtend {
@@ -9,7 +9,7 @@ export default class SystemExtend {
      */
     static async checkUserPwd(userPwd) {
         try {
-            await Shell.exec(`echo '${userPwd}' | sudo -S -k -l`)
+            await Command.exec(`echo '${userPwd}' | sudo -S -k -l`)
             return true
         } catch {
             return false

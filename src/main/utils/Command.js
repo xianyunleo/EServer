@@ -4,7 +4,7 @@ import SettingsExtend from '@/main/services/SettingsExtend'
 import util from 'util'
 // import { PowerShell } from '@/main/utils/constant'
 
-export default class Shell {
+export default class Command {
     /**
      * 执行命令，等待进程退出返回结果（标准输出）
      * @param command
@@ -12,7 +12,7 @@ export default class Shell {
      * @returns {Promise<string>}
      */
     static async exec(command, options = {}) {
-        debugLog('Shell.exec command', command)
+        debugLog('Command.exec command', command)
 
         if (!options.encoding) {
             options.encoding = 'utf8'
@@ -37,7 +37,7 @@ export default class Shell {
         if (isWindows) {
             throw new Error(`Cannot be executed on Windows!`)
         }
-        debugLog('Shell.sudoExec command', command)
+        debugLog('Command.sudoExec command', command)
 
         command = `echo '${SettingsExtend.getUserPwd()}' | sudo -S ${command}`
 

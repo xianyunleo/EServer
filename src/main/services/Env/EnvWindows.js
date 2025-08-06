@@ -1,4 +1,4 @@
-import Shell from "@/main/utils/Shell";
+import Command from "@/main/utils/Command";
 import GetDataPath from "@/shared/helpers/GetDataPath";
 import { PowerShell } from '@/main/helpers/constant'
 
@@ -28,7 +28,7 @@ export default class EnvWindows {
      */
     static async getVarStr(varName) {
         const commandStr = `[Environment]::GetEnvironmentVariable('${varName}','User')`
-        return (await Shell.exec(commandStr, { shell: PowerShell })).trim()
+        return (await Command.exec(commandStr, { shell: PowerShell })).trim()
     }
 
     /**
@@ -39,6 +39,6 @@ export default class EnvWindows {
      */
     static async setVarStr(varName, varVal) {
         const commandStr = `[Environment]::SetEnvironmentVariable('${varName}','${varVal}','User')`
-        await Shell.exec(commandStr, { shell: PowerShell })
+        await Command.exec(commandStr, { shell: PowerShell })
     }
 }

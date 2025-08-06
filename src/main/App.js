@@ -9,7 +9,7 @@ import FileUtil from '@/main/utils/FileUtil'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import LocalInstall from '@/main/services/childApp/LocalInstall'
 import FsUtil from '@/main/utils/FsUtil'
-import Shell from '@/main/utils/Shell'
+import Command from '@/main/utils/Command'
 import { extractZip } from '@/main/utils/extract'
 import CommonInstall from '@/main/services/childApp/CommonInstall'
 import Php from '@/main/services/php/Php'
@@ -138,7 +138,7 @@ export default class App {
             if (!await DirUtil.Exists(target)) {
                 await DirUtil.Create(target)
             }
-            await Shell.exec(`rsync -a ${source}/* ${target}`)
+            await Command.exec(`rsync -a ${source}/* ${target}`)
             await DirUtil.Delete(source)
         }
     }

@@ -1,4 +1,4 @@
-import Shell from '@/main/utils/Shell'
+import Command from '@/main/utils/Command'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import { PowerShell } from '@/main/helpers/constant'
@@ -17,7 +17,7 @@ export default class TcpProcess {
     static async getListForMacOS() {
         let commandStr = `lsof -iTCP -sTCP:LISTEN -P -n|awk 'NR!=1{print $1,$2,$3,$5,$9}'`
         try {
-            let resStr = await Shell.sudoExec(commandStr)
+            let resStr = await Command.sudoExec(commandStr)
             resStr = resStr.trim()
             if (!resStr) {
                 return []
@@ -48,7 +48,7 @@ export default class TcpProcess {
         commandStr += ' | fl | Out-String -Width 999'
 
         try {
-            let resStr = await Shell.exec(commandStr, { shell: PowerShell })
+            let resStr = await Command.exec(commandStr, { shell: PowerShell })
             resStr = resStr.trim()
             if (!resStr) {
                 return []
@@ -112,7 +112,7 @@ export default class TcpProcess {
                 pid = net.getTCPv4PortProcessID(port)
             } else {
                 const commandStr = `lsof -t -sTCP:LISTEN -i:${port}`
-                const resStr = await Shell.exec(commandStr)
+                const resStr = await Command.exec(commandStr)
                 if (!resStr) return null
                 pid = resStr.trim().split('\n')[0]
             }
@@ -137,7 +137,7 @@ export default class TcpProcess {
                 path = await ProcessExtend.getPathByPid(pid)
             } else {
                 const commandStr = `lsof -t -sTCP:LISTEN -i:${port}|head -n 1|xargs lsof -a -w -d txt -Fn -p|awk 'NR==3{print}'|sed "s/n//"`
-                const resStr = await Shell.exec(commandStr)
+                const resStr = await Command.exec(commandStr)
                 if (!resStr) return null
                 path = resStr.trim().split('\n')[0]
             }
