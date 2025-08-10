@@ -8,7 +8,7 @@
         <a-button type="primary" @click="HomeService.oneClickStop" :disabled="!!serverTableLoading">
           {{ mt('OneClick', 'ws', 'Stop') }}
         </a-button>
-        <a-button type="primary" @click="dataDirClick"> {{ APP_NAME }} {{ mt('ws', 'Directory') }}</a-button>
+        <a-button type="primary" @click="dataDirClick"> {{ mt('Data', 'ws', 'Directory') }}</a-button>
         <a-button type="primary" @click="cfgPathClick">{{ mt('Config', 'ws', 'Directory') }}</a-button>
       </div>
     </a-card>

@@ -8,6 +8,7 @@ export default {
     Custom: '自定义',
     Config: '配置',
     Create: '创建',
+    Data: '数据',
     Done: '完成',
     Delete: '删除',
     Modify: '修改',
