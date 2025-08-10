@@ -1,17 +1,31 @@
 import path from 'path'
-import { MAC_DATA_DIR, TEMP_DIR_NAME } from '@/main/helpers/constant'
+import { MAC_DATA_DIR, SETTINGS_FILE_NAME, TEMP_DIR_NAME } from '@/main/helpers/constant'
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import GetCorePath from '@/shared/helpers/GetCorePath'
+import GetAppPath from '@/shared/helpers/GetAppPath'
+import { APP_NAME } from '@/shared/helpers/constant'
 
 /**
  * （此程序）数据目录
  */
 export default class GetDataPath {
     static getDir() {
+        if(isWindows){
+            return path.join(GetAppPath.getDir(), `../${APP_NAME}-data`)
+        }else if (isMacOS) {
+            return MAC_DATA_DIR //dev也是这个目录
+        }
+        return GetCorePath.getDir()
+    }
+    static getOldDir() {
         if (isMacOS) {
             return MAC_DATA_DIR //dev也是这个目录
         }
         return GetCorePath.getDir()
+    }
+
+    static getSettingsPath() {
+        return path.join(GetDataPath.getDir(), SETTINGS_FILE_NAME)
     }
 
     static getEtcDir = () => path.join(this.getDir(), 'etc') //所有childApp的配置的父目录
@@ -23,7 +37,7 @@ export default class GetDataPath {
 
     static getDownloadsDir = () => path.join(this.getDir(), 'downloads')
 
-    static getSoftwareDir = () => path.join(this.getDir(), 'software') // old
+    static getChildAppOldDir = () => path.join(this.getDir(), 'software') // old
     static getChildAppDir = () => path.join(this.getDir(), 'childApp')
 
     static getPhpTypeDir = () => path.join(this.getChildAppDir(), 'php')

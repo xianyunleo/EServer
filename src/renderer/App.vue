@@ -27,7 +27,6 @@ import App from '@/main/App'
 import { onMounted, ref, watch } from 'vue'
 import MessageBox from '@/renderer/utils/MessageBox'
 import UserPwdModal from '@/renderer/components/UserPwdModal.vue'
-import ChildApp from '@/main/services/childApp/ChildApp'
 import SystemService from '@/main/utils/SystemService'
 import { message } from 'ant-design-vue'
 import DirUtil from '@/main/utils/DirUtil'
@@ -38,9 +37,7 @@ import { useMainStore } from '@/renderer/store'
 import Settings from '@/main/Settings'
 import { t } from '@/renderer/utils/i18n'
 import { changeLanguageWrapper } from '@/renderer/utils/language'
-import SystemExtend from '@/main/utils/SystemExtend'
 import { OFFICIAL_URL } from '@/shared/helpers/constant'
-import GetDataPath from '@/shared/helpers/GetDataPath'
 import Ipc from '@/renderer/utils/Ipc'
 
 const store = useMainStore()
@@ -58,10 +55,16 @@ store.settings = settings
 
 onMounted(async () => {
   try {
-    if ((await App.initFileExists()) && !isDev) {
-      await App.checkInstall()
-      await initOrUpdate()
+    if (!isDev) {
+      //init或者update
+      if (await App.needInit()) {
+        await App.checkInstallBefore()
+        await init()
+      } else {
+        await update() //覆盖安装就执行update
+      }
     }
+
     Ipc.callStatic('TrayManage', 'init')
     changeLanguageWrapper(store.settings.Language)
   } catch (error) {
@@ -75,33 +78,24 @@ onMounted(async () => {
   parseAppNotice()
 })
 
-async function initOrUpdate() {
+async function init() {
   store.loadingTip = t('Initializing')
 
-  if (isMacOS && process.arch === 'arm64' && !(await SystemExtend.isInstallRosetta())) {
-    await MessageBox.error(`需要Rosetta支持，请复制命令到终端执行安装\nchildAppupdate --install-rosetta`)
-    await Ipc.call('appExit')
+  if (isMacOS) {
+    //调用设置（electron-store）会自动创建USER_CORE_DIR，为了捕捉创建失败的错误，先提前写好创建文件夹的代码。
+    await macCreateUserCoreDir()
   }
-  //存在initFile文件的情况下，判断是第一次安装，还是覆盖安装
-  if (!await ChildApp.DirExists() &&  ! await DirUtil.Exists(GetDataPath.getSoftwareDir())) { //目录不存在说明是，第一次安装
-    if (isMacOS) {
-      //调用设置（electron-store）会自动创建USER_CORE_DIR，为了捕捉创建失败的错误，先提前写好创建文件夹的代码。
-      await macCreateUserCoreDir()
-    }
-    setLanguageShow.value = true
-    watch(setLanguageShow, async (setLanguageShow) => {
-      if (!setLanguageShow) {
-        if (isWindows) {
-          await winInit()
-        } else if (isMacOS) {
-          userPwdModalShow.value = true
-        }
+
+  setLanguageShow.value = true
+  watch(setLanguageShow, async (setLanguageShow) => {
+    if (!setLanguageShow) {
+      if (isWindows) {
+        await winInit()
+      } else if (isMacOS) {
+        userPwdModalShow.value = true
       }
-    })
-  } else {
-    //覆盖安装
-    await update()
-  }
+    }
+  })
 }
 
 async function winInit() {
@@ -131,8 +125,7 @@ async function update() {
   try {
     store.loading = true
     const needRestart = await App.update()
-    await App.deleteInitFile()
-    if(needRestart) await Ipc.call('appRestart')
+    if (needRestart) await Ipc.call('appRestart')
     store.loading = false
   } catch (error) {
     await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('update')]))

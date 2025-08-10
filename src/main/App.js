@@ -15,6 +15,7 @@ import CommonInstall from '@/main/services/childApp/CommonInstall'
 import Php from '@/main/services/php/Php'
 import Env from '@/main/services/Env/Env'
 import Settings from '@/main/Settings'
+import SystemExtend from '@/main/utils/SystemExtend'
 
 export default class App {
     static async initFileExists() {
@@ -22,13 +23,8 @@ export default class App {
     }
 
     static async init() {
-        const initFile = GetCorePath.getInitFilePath()
-
-        if (!await FileUtil.Exists(initFile)) {
-            return
-        }
         //SoftwareDir为老的结构
-        const childAppDirExists = await ChildApp.DirExists() ||  await DirUtil.Exists(GetDataPath.getSoftwareDir())
+        const childAppDirExists = await ChildApp.DirExists() ||  await DirUtil.Exists(GetDataPath.getChildAppOldDir())
 
         if (isMacOS && !isDev) {
             if (!await DirUtil.Exists(MAC_DATA_DIR)) {
@@ -40,22 +36,27 @@ export default class App {
         await this.moveInitFiles(['downloads', 'www', 'custom'])
         await this.createUserSubDir(['etc', 'childApp', 'database', 'bin', `${TEMP_DIR_NAME}/php`])
 
-        if (!childAppDirExists) { //目录不存在说明是第一次安装，不是覆盖安装
+        if (!childAppDirExists) { //目录不存在说明是第一次安装，不是覆盖安装。todo下个版本尝试去掉childAppDirExists的判断
             const files = await DirUtil.GetFiles(GetDataPath.getDownloadsDir())
             await LocalInstall.installMultiple(files)
         }
 
-        await FileUtil.Delete(initFile)
+        await FileUtil.Delete(GetCorePath.getInitFilePath())
     }
 
-    static async deleteInitFile() {
-        const initFile = GetCorePath.getInitFilePath()
-        if (await FileUtil.Exists(initFile)) {
-            await FileUtil.Delete(initFile)
+    static async needInit() {
+        //判断init文件是否存在（此文件可用于，迁移项目到其他电脑）
+        if (await FileUtil.Exists(GetCorePath.getInitFilePath())) {
+            return true
         }
+        //判断设置文件是否存在
+        if (!await FileUtil.Exists(GetDataPath.getSettingsPath())) {
+            return true
+        }
+        return false
     }
 
-    static async checkInstall(){
+    static async checkInstallBefore(){
         const appPath = GetAppPath.getDir()
         if (appPath.includes(' ')) {
             throw new Error('安装路径不能包含空格！')
@@ -63,6 +64,12 @@ export default class App {
 
         if (/[\u2E80-\u9FFF]/.test(appPath)) {
             throw new Error('安装路径不能包含中文等汉字！')
+        }
+
+        if (isMacOS) {
+            if (process.arch === 'arm64' && !(await SystemExtend.isInstallRosetta())) {
+                throw new Error(`需要Rosetta支持，请复制命令到终端执行安装\nchildAppupdate --install-rosetta`)
+            }
         }
 
         if (isWindows && process.arch === 'x64') { //hmc.getStringRegKey可能在arm64的Windows上有问题
@@ -81,19 +88,22 @@ export default class App {
      * @returns {Promise<boolean>}
      */
     static async update() {
-        if (isDev) {
-            return
-        }
         let needRestart = false
         if (isMacOS) {
             await this.updateMacDataSubDir(['Library'])
         }
         await this.moveInitFiles(['downloads', 'www', 'custom', 'custom/childApp'])
 
+        //Windows 迁移data目录
+        if (isWindows && !(await DirUtil.Exists(GetDataPath.getDir()))) {
+            needRestart = true
+            await FsUtil.Copy(GetDataPath.getOldDir(), GetDataPath.getDir())
+        }
+
         //目录childApp改名为childApp
         if (!await ChildApp.DirExists()) {
             needRestart = true
-            await FsUtil.Copy(GetDataPath.getSoftwareDir(), GetDataPath.getChildAppDir(), { recursive: true })
+            await FsUtil.Copy(GetDataPath.getChildAppOldDir(), GetDataPath.getChildAppDir(), { recursive: true })
         }
 
         //迁移配置文件到etc目录，并初始化

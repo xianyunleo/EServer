@@ -67,7 +67,7 @@ const saveUserPwd = async () => {
   rightPwd.value = userPwd.value;
   Settings.set('userPwd', userPwd.value);
   visible.value = false;
-  if (await App.initFileExists()) {
+  if (await App.needInit()) {
     try {
       store.loading = true;
       await App.init();
