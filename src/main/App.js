@@ -112,7 +112,6 @@ export default class App {
         const list = await ChildApp.getList()
         for (const item of list) {
             if (await DirUtil.Exists(ChildApp.getDir(item))) {
-                console.log(4)
                 await CommonInstall.configure(item)
             }
         }
