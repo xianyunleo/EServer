@@ -23,6 +23,10 @@ export default class LocalInstall {
         await CommonInstall.configure(appItem)
     }
 
+    /**
+     * @param files {string[]}
+     * @returns {Promise<void>}
+     */
     static async installMultiple(files) {
         await Promise.all(files.map(async file => {
             await LocalInstall.install(file,true);
