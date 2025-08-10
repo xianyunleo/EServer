@@ -10,12 +10,15 @@ import { APP_NAME } from '@/shared/helpers/constant'
  */
 export default class GetDataPath {
     static getDir() {
+        if(isDev){
+            return GetCorePath.getDir()
+        }
         if(isWindows){
             return path.join(GetAppPath.getDir(), `../${APP_NAME}-data`)
         }else if (isMacOS) {
             return MAC_DATA_DIR //dev也是这个目录
         }
-        return GetCorePath.getDir()
+        return null;
     }
     static getOldDir() {
         if (isMacOS) {
