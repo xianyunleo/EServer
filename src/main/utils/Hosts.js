@@ -1,4 +1,4 @@
-import GetPath from "@/shared/helpers/GetPath";
+import GetAppPath from "@/shared/helpers/GetAppPath";
 import {EOL} from "os";
 import FileUtil from "@/main/utils/FileUtil";
 import FsUtil from '@/main/utils/FsUtil'
@@ -9,7 +9,7 @@ export default class Hosts {
      * @param domain {string}
      */
     static async add(domain) {
-        let path = GetPath.getHostsPath();
+        let path = GetAppPath.getHostsPath();
         let text = await FileUtil.ReadAll(path);
 
         let domainRegx = this.getDomainRegExp(domain);
@@ -34,7 +34,7 @@ export default class Hosts {
      */
     static async delete(domain) {
         if (domain === 'localhost') return
-        let path = GetPath.getHostsPath();
+        let path = GetAppPath.getHostsPath();
         if (!await FileUtil.Exists(path)) {
             return;
         }

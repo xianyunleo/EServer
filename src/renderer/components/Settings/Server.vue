@@ -45,7 +45,7 @@ import { isWindows } from '@/main/utils/utils'
 import SystemService from '@/main/utils/SystemService'
 import { SERVICE_NAME } from '@/shared/helpers/constant'
 import path from 'path'
-import GetPath from '@/shared/helpers/GetPath'
+import GetAppPath from '@/shared/helpers/GetAppPath'
 import Opener from '@/renderer/utils/Opener'
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
@@ -76,8 +76,8 @@ const createWindowsService = async () => {
   if (await SystemService.exists(SERVICE_NAME)) {
     return
   } else {
-    const binPath = path.join(GetPath.getDir(), `${SERVICE_NAME}.exe`)
-    const pathWithArgs = `${binPath} ${GetPath.getExePath()}`
+    const binPath = path.join(GetAppPath.getDir(), `${SERVICE_NAME}.exe`)
+    const pathWithArgs = `${binPath} ${GetAppPath.getExePath()}`
     await SystemService.create(SERVICE_NAME, pathWithArgs)
   }
   message.info(t('Done'))

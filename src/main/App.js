@@ -1,7 +1,7 @@
 import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import path from 'path'
 import { MAC_DATA_DIR, InitFiles_DIR_NAME, TEMP_DIR_NAME } from '@/main/helpers/constant'
-import GetPath from '@/shared/helpers/GetPath'
+import GetAppPath from '@/shared/helpers/GetAppPath'
 import GetCorePath from '@/shared/helpers/GetCorePath'
 import GetDataPath from '@/shared/helpers/GetDataPath'
 import DirUtil from '@/main/utils/DirUtil'
@@ -56,7 +56,7 @@ export default class App {
     }
 
     static async checkInstall(){
-        const appPath = GetPath.getDir()
+        const appPath = GetAppPath.getDir()
         if (appPath.includes(' ')) {
             throw new Error('安装路径不能包含空格！')
         }

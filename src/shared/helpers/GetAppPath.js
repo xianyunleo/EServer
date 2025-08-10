@@ -2,7 +2,7 @@ import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
 import path from 'path'
 import { APP_NAME } from '@/shared/helpers/constant'
 
-export default class GetPath {
+export default class GetAppPath {
     static getDir() {
         if (isDev) {
             return process.cwd()

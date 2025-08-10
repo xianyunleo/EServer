@@ -5,7 +5,7 @@ import Settings from '@/main/Settings'
 import { isMacOS, isWindows } from '@/main/utils/utils'
 import FsUtil from '@/main/utils/FsUtil'
 import { t } from '@/renderer/utils/i18n'
-import GetPath from '@/shared/helpers/GetPath'
+import GetAppPath from '@/shared/helpers/GetAppPath'
 import { isASCII } from '@/shared/utils/utils'
 const { shell } = require('electron')
 
@@ -89,7 +89,7 @@ export default class Opener {
 
     static async openHosts() {
         try {
-            let path = GetPath.getHostsPath()
+            let path = GetAppPath.getHostsPath()
             if ((await FileUtil.Exists(path)) && !(await FsUtil.CanReadWrite(path))) {
                 await FsUtil.ChmodReadWrite(path)
             }
