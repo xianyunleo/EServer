@@ -20,6 +20,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.0",
+    "@napi-rs/lzma": "^1.4.4",
     "@tiny-libs/nls": "^1.0.1",
     "electron-dl-downloader": "^2.2.0",
     "electron-is": "^3.0.0",
@@ -27,7 +28,6 @@
     "extract-zip": "^2.0.1",
     "fix-path": "^3.0.0",
     "hmc-win32": "~1.4.92",
-    "lzma-native": "^8.0.6",
     "net-win32": "^1.0.1",
     "semver-diff": "3.1.1",
     "tar": "^7.4.3",
