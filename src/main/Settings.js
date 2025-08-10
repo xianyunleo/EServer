@@ -37,7 +37,6 @@ export default class Settings {
         }
         const options = {
             name: path.parse(SETTINGS_FILE_NAME).name,
-            fileExtension: path.parse(SETTINGS_FILE_NAME).ext,
             cwd: GetDataPath.getDir()
         }
         options.defaults = this.#_getDefault()
