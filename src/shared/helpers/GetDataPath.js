@@ -37,7 +37,8 @@ export default class GetDataPath {
 
     static getDownloadsDir = () => path.join(this.getDir(), 'downloads')
 
-    static getChildAppOldDir = () => path.join(this.getDir(), 'software') // old
+    static getChildAppOldDir = () => path.join(this.getOldDir(), 'childApp') // old
+    static getSoftwareOldDir = () => path.join(this.getOldDir(), 'software') // old
     static getChildAppDir = () => path.join(this.getDir(), 'childApp')
 
     static getPhpTypeDir = () => path.join(this.getChildAppDir(), 'php')
