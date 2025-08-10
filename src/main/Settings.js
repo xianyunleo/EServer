@@ -6,8 +6,6 @@ import GetDataPath from '@/shared/helpers/GetDataPath'
 
 export default class Settings {
     static #_instance
-    static #_fileName = SETTINGS_FILE_NAME
-    static #_fileExtension = 'json'
 
     static get(key) {
         return this.getInstance().get(key)
@@ -38,9 +36,9 @@ export default class Settings {
             return
         }
         const options = {
-            name: this.#_fileName,
-            fileExtension: this.#_fileExtension,
-            cwd: this.getDir()
+            name: path.parse(SETTINGS_FILE_NAME).name,
+            fileExtension: path.parse(SETTINGS_FILE_NAME).ext,
+            cwd: GetDataPath.getDir()
         }
         options.defaults = this.#_getDefault()
         this.#_instance = new Store(options)
@@ -73,17 +71,5 @@ export default class Settings {
         } else if (isWindows) {
             return path.join(toolTypePath, 'Notepad3/Notepad3.exe')
         }
-    }
-
-    static getDir() {
-        return GetDataPath.getDir()
-    }
-
-    /**
-     * 获取设置文件完整的路径
-     * @returns {string}
-     */
-    static getFilePath() {
-        return path.join(this.getDir(), `${this.#_fileName}.${this.#_fileExtension}`)
     }
 }
