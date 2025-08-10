@@ -1,7 +1,7 @@
 import Store from 'electron-store'
 import { SETTINGS_FILE_NAME } from '@/main/helpers/constant'
 import path from 'path'
-import { isMacOS, isWindows } from '@/main/utils/utils'
+import { isMacOS, isWindows } from '@/shared/utils/utils2'
 import GetDataPath from '@/shared/helpers/GetDataPath'
 
 export default class Settings {

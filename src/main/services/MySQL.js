@@ -6,7 +6,7 @@ import {sleep} from "@/shared/utils/utils";
 import child_process from "child_process";
 import FileUtil from "@/main/utils/FileUtil";
 import TcpProcess from "@/main/utils/TcpProcess";
-import { isWindows } from '@/main/utils/utils'
+import { isWindows } from '@/shared/utils/utils2'
 
 export default class MySQL {
     /**

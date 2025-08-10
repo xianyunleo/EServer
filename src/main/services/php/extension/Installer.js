@@ -1,4 +1,4 @@
-import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
+import { isDev, isMacOS, isWindows } from '@/shared/utils/utils2'
 import path from 'path'
 import GetDataPath from '@/shared/helpers/GetDataPath'
 import child_process from 'child_process'

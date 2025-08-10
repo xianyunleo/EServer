@@ -30,7 +30,7 @@
 <script setup>
 import { ref } from 'vue'
 import Opener from '@/renderer/utils/Opener'
-import { isWindows } from '@/main/utils/utils'
+import { isWindows } from '@/shared/utils/utils2'
 import { useMainStore } from '@/renderer/store'
 import Ipc from '@/renderer/utils/Ipc'
 const call = Ipc.call

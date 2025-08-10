@@ -3,7 +3,7 @@ import path from 'path'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import CustomChildApp from '@/main/services/childApp/CustomChildApp'
 import GetDataPath from '@/shared/helpers/GetDataPath'
-import { isWindows } from '@/main/utils/utils'
+import { isWindows } from '@/shared/utils/utils2'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 
 export async function getProcessList(winFunc) {

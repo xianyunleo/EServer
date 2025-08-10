@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
+import { isDev, isMacOS, isWindows } from '@/shared/utils/utils2'
 import TitleBar from './layouts/TitleBar.vue'
 import SideBar from './layouts/SideBar.vue'
 import App from '@/main/App'

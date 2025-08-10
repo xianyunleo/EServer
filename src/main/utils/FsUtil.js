@@ -1,5 +1,5 @@
 import fsPromises, { constants } from 'fs/promises'
-import { isWindows } from '@/main/utils/utils'
+import { isWindows } from '@/shared/utils/utils2'
 import Command from '@/main/utils/Command'
 import nodePath from 'path'
 

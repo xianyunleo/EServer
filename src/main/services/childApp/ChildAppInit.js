@@ -5,7 +5,7 @@ import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 import DirUtil from '@/main/utils/DirUtil'
 import Php from '@/main/services/php/Php'
 import MySQL from '@/main/services/MySQL'
-import { isWindows } from '@/main/utils/utils'
+import { isWindows } from '@/shared/utils/utils2'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import FsUtil from '@/main/utils/FsUtil'
 

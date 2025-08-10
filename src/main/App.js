@@ -1,4 +1,4 @@
-import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
+import { isDev, isMacOS, isWindows } from '@/shared/utils/utils2'
 import path from 'path'
 import { MAC_DATA_DIR, InitFiles_DIR_NAME, TEMP_DIR_NAME } from '@/main/helpers/constant'
 import GetAppPath from '@/shared/helpers/GetAppPath'

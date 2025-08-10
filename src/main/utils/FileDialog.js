@@ -1,5 +1,5 @@
 import { dialog } from 'electron'
-import { isMacOS, isWindows } from '@/main/utils/utils'
+import { isMacOS, isWindows } from '@/shared/utils/utils2'
 import MainWindow from "@/main/MainWindow";
 
 export default class FileDialog {

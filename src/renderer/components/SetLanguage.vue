@@ -19,7 +19,6 @@
 <script setup>
 import { t } from '@/renderer/utils/i18n'
 import { computed } from 'vue'
-import Settings from '@/main/Settings'
 import MessageBox from '@/renderer/utils/MessageBox'
 import { useMainStore } from '@/renderer/store'
 import { changeLanguageWrapper } from '@/renderer/utils/language'
@@ -46,11 +45,9 @@ const handleOk = () => {
 }
 
 const languageChange = async () => {
-  //todo改调用 store.setSettings ，并测试init调用此
   try {
-    Settings.set('Language', store.settings.Language)
+    store.setSettings('Language', store.settings.Language)
     await changeLanguageWrapper(store.settings.Language)
-    store.loadingTip = t('Initializing') //todo 删除这行？
   } catch (error) {
     MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('set')]))
   }

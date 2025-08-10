@@ -33,7 +33,7 @@ import { storeToRefs } from 'pinia'
 import { mt, t } from '@/renderer/utils/i18n'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import TimerService from '@/renderer/services/TimerService'
-import { isDev } from '@/main/utils/utils'
+import { isDev } from '@/shared/utils/utils2'
 
 function formatUnitLabel(seconds) {
   const timeUnits = [

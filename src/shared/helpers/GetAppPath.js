@@ -1,4 +1,4 @@
-import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
+import { isDev, isMacOS, isWindows } from '@/shared/utils/utils2'
 import path from 'path'
 import { APP_NAME } from '@/shared/helpers/constant'
 

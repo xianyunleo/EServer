@@ -1,5 +1,5 @@
 import Command from '@/main/utils/Command'
-import { isWindows } from '@/main/utils/utils'
+import { isWindows } from '@/shared/utils/utils2'
 import { PowerShell } from '@/main/helpers/constant'
 import nodePath from 'path'
 

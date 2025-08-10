@@ -48,7 +48,7 @@ import MessageBox from '@/renderer/utils/MessageBox'
 import TcpProcess from '@/main/utils/TcpProcess'
 import Opener from '@/renderer/utils/Opener'
 import { message } from 'ant-design-vue'
-import { isWindows } from '@/main/utils/utils'
+import { isWindows } from '@/shared/utils/utils2'
 import { mt, t } from '@/renderer/utils/i18n'
 
 const props = defineProps({ show: Boolean })

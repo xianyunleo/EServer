@@ -1,6 +1,6 @@
 import path from 'path'
 import { MAC_DATA_DIR, SETTINGS_FILE_NAME, TEMP_DIR_NAME } from '@/main/helpers/constant'
-import { isDev, isMacOS, isWindows } from '@/main/utils/utils'
+import { isDev, isMacOS, isWindows } from '@/shared/utils/utils2'
 import GetCorePath from '@/shared/helpers/GetCorePath'
 import GetAppPath from '@/shared/helpers/GetAppPath'
 import { APP_NAME } from '@/shared/helpers/constant'

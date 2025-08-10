@@ -1,4 +1,4 @@
-import { debugLog, isWindows } from '@/main/utils/utils'
+import { debugLog, isWindows } from '@/shared/utils/utils2'
 import { EnumChildAppInstallStatus } from '@/shared/helpers/enum'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import { DOWNLOAD_URL } from '@/shared/helpers/constant'

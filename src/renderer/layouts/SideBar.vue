@@ -49,7 +49,7 @@ import {useRouter} from "vue-router";
 const call = Ipc.call
 const router = useRouter();
 const selectedKeys = ref(['/']);
-import { isWindows ,isMacOS} from '@/main/utils/utils'
+import { isWindows ,isMacOS} from '@/shared/utils/utils2'
 import { mt } from '../utils/i18n'
 import Ipc from '@/renderer/utils/Ipc'
 

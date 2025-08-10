@@ -1,4 +1,4 @@
-import { debugLog } from '@/main/utils/utils'
+import { debugLog } from '@/shared/utils/utils2'
 import ProcessExtend from "@/main/utils/ProcessExtend";
 import ChildApp from "@/main/services/childApp/ChildApp";
 import { parseTemplateStrings} from "@/shared/utils/utils";

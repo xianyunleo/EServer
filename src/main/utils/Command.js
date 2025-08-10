@@ -1,4 +1,4 @@
-import { debugLog, isWindows } from '@/main/utils/utils'
+import { debugLog, isWindows } from '@/shared/utils/utils2'
 import child_process from 'child_process'
 import SettingsExtend from '@/main/services/SettingsExtend'
 import util from 'util'

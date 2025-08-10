@@ -1,6 +1,6 @@
 import Command from '@/main/utils/Command'
 import ProcessExtend from '@/main/utils/ProcessExtend'
-import { isMacOS, isWindows } from '@/main/utils/utils'
+import { isMacOS, isWindows } from '@/shared/utils/utils2'
 import { PowerShell } from '@/main/helpers/constant'
 import { getFileIcon } from '@/shared/utils/file'
 

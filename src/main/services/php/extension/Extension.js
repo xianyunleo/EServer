@@ -1,7 +1,7 @@
 import path from 'path'
 import Php from '@/main/services/php/Php'
 import FileUtil from '@/main/utils/FileUtil'
-import { isWindows } from '@/main/utils/utils'
+import { isWindows } from '@/shared/utils/utils2'
 import GetCorePath from '@/shared/helpers/GetCorePath'
 
 export default class Extension {

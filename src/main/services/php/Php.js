@@ -2,7 +2,7 @@ import DirUtil from '@/main/utils/DirUtil'
 import path from 'path'
 import GetDataPath from '@/shared/helpers/GetDataPath'
 import { APP_NAME } from '@/shared/helpers/constant'
-import { isWindows } from '@/main/utils/utils'
+import { isWindows } from '@/shared/utils/utils2'
 import { EOL } from 'os'
 import FileUtil from '@/main/utils/FileUtil'
 

@@ -3,7 +3,7 @@ import nodePath from 'path'
 import GetDataPath from '@/shared/helpers/GetDataPath'
 import EnvMacOS from '@/main/services/Env/EnvMacOS'
 import EnvWindows from '@/main/services/Env/EnvWindows'
-import { isWindows, isMacOS } from '@/main/utils/utils'
+import { isWindows, isMacOS } from '@/shared/utils/utils2'
 import FsUtil from '@/main/utils/FsUtil'
 import Command from '@/main/utils/Command'
 

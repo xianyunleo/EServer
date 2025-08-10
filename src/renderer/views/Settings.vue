@@ -16,7 +16,7 @@ import Timer from '@/renderer/components/Settings/Timer.vue'
 import Other from '@/renderer/components/Settings/Other.vue'
 import EnvVar from '@/renderer/components/Settings/EnvVar.vue'
 import UserPwd from '@/renderer/components/Settings/UserPwd.vue'
-import { isWindows } from '@/main/utils/utils'
+import { isWindows } from '@/shared/utils/utils2'
 </script>
 
 <style lang='less'>
