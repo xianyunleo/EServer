@@ -22,6 +22,10 @@ export default class FsUtil {
         return await fsPromises.cp(source, dest, options)
     }
 
+    static async CopyRecursive(source, dest) {
+        return await FsUtil.Copy(source, dest, { recursive: true })
+    }
+
     static async Rename(oldPath, newPath) {
         return await fsPromises.rename(oldPath, newPath)
     }
