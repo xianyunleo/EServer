@@ -12,7 +12,7 @@
             { "Name": "error.log", "Path": "${WorkDir}/logs/error.log" }
         ],
         "Type": "Server",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": false,
         "Icon": "nginx.png",
         "Desc": "Web Server"
@@ -28,7 +28,7 @@
         "StartServerArgs": "\"${WorkDir}/php-cgi.exe -c ${ConfPath}\" ${ServerPort} 4",
         "ServerPort": 9005,
         "Type": "PHP",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
@@ -44,7 +44,7 @@
         "StartServerArgs": "\"${WorkDir}/php-cgi.exe -c ${ConfPath}\" ${ServerPort} 4",
         "ServerPort": 9006,
         "Type": "PHP",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
@@ -60,7 +60,7 @@
         "StartServerArgs": "\"${WorkDir}/php-cgi.exe -c ${ConfPath}\" ${ServerPort} 4",
         "ServerPort": 9007,
         "Type": "PHP",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
@@ -76,7 +76,7 @@
         "StartServerArgs": "\"${WorkDir}/php-cgi.exe -c ${ConfPath}\" ${ServerPort} 4",
         "ServerPort": 9008,
         "Type": "PHP",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
@@ -92,7 +92,7 @@
         "StartServerArgs": "\"${WorkDir}/php-cgi.exe -c ${ConfPath}\" ${ServerPort} 4",
         "ServerPort": 9009,
         "Type": "PHP",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
@@ -108,7 +108,7 @@
         "StartServerArgs": "\"${WorkDir}/php-cgi.exe -c ${ConfPath}\" ${ServerPort} 4",
         "ServerPort": 9010,
         "Type": "PHP",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
@@ -124,7 +124,7 @@
         "StartServerArgs": "\"${WorkDir}/php-cgi.exe -c ${ConfPath}\" ${ServerPort} 4",
         "ServerPort": 9011,
         "Type": "PHP",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
@@ -140,7 +140,7 @@
         "StartServerArgs": "\"${WorkDir}/php-cgi.exe -c ${ConfPath}\" ${ServerPort} 4",
         "ServerPort": 9012,
         "Type": "PHP",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
@@ -156,7 +156,7 @@
         "StartServerArgs": "\"${WorkDir}/php-cgi.exe -c ${ConfPath}\" ${ServerPort} 4",
         "ServerPort": 9013,
         "Type": "PHP",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
@@ -172,7 +172,7 @@
         "StartServerArgs": "\"${WorkDir}/php-cgi.exe -c ${ConfPath}\" ${ServerPort} 4",
         "ServerPort": 9014,
         "Type": "PHP",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
@@ -188,7 +188,7 @@
         "StartServerArgs": "\"${WorkDir}/php-cgi.exe -c ${ConfPath}\" ${ServerPort} 4",
         "ServerPort": 9015,
         "Type": "PHP",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
@@ -203,7 +203,7 @@
         "StartServerArgs": "--defaults-file=${ServerConfPath}",
         "ServerPort": 3306,
         "ExtraFiles": [{ "Name": "mysql.log", "Path": "${WorkDir}/logs/mysql.log" }],
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "mysql.png",
         "Desc": "MySQL Is a Relational Database"
@@ -218,7 +218,7 @@
         "StartServerArgs": "--defaults-file=${ServerConfPath}",
         "ServerPort": 3306,
         "ExtraFiles": [{ "Name": "mysql.log", "Path": "${WorkDir}/logs/mysql.log" }],
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "mysql.png",
         "Desc": "MySQL Is a Relational Database"
@@ -232,7 +232,7 @@
         "StartServerArgs": "${ServerConfPath}",
         "ServerPort": 6379,
         "Type": "Server",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "redis.png",
         "Desc": "A high-performance Key-Value database"
@@ -246,7 +246,7 @@
         "StartServerArgs": "${ServerConfPath}",
         "ServerPort": 6379,
         "Type": "Server",
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "redis.png",
         "Desc": "A high-performance Key-Value database"
@@ -266,7 +266,7 @@
         "Type": "Tool",
         "ProcessPath": "${WorkDir}/Notepad3.exe",
         "CanOpen": true,
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "Notepad3.ico",
         "Desc": "Text and code editors"
@@ -276,7 +276,7 @@
         "DirName": "phpMyAdmin",
         "Type": "Tool",
         "RemoteIsCommonPlatform": true,
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "phpmyadmin.png",
         "Desc": "MySQL management tool on the web"

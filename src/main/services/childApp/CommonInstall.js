@@ -1,7 +1,7 @@
 import ChildAppExtend from "@/main/services/childApp/ChildAppExtend";
 import ChildAppInit from "@/main/services/childApp/ChildAppInit";
 import DirUtil from "@/main/utils/DirUtil";
-import { extract7z, extractTar, extractZip } from '@/main/utils/extract'
+import { extractTarXz, extractZip } from '@/main/utils/extract'
 import GetDataPath from '@/shared/helpers/GetDataPath'
 
 export default class CommonInstall {
@@ -11,10 +11,8 @@ export default class CommonInstall {
         }
         if (filePath.endsWith('.zip')) {
             await extractZip(filePath, dest)
-        } else if (filePath.endsWith('.7z')) {
-            await extract7z(filePath, dest)
-        } else if (filePath.endsWith('.tar.xz')) {
-            await extractTar(filePath, dest)
+        }else if (filePath.endsWith('.tar.xz')) {
+            await extractTarXz(filePath, dest)
         }
     }
 

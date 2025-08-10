@@ -261,7 +261,7 @@
         "DirName": "phpMyAdmin",
         "Type": "Tool",
         "RemoteIsCommonPlatform": true,
-        "RemoteArchiveExt": ".7z",
+        "RemoteArchiveExt": ".tar.xz",
         "CanDelete": true,
         "Icon": "phpmyadmin.png",
         "Desc": "MySQL management tool on the web"

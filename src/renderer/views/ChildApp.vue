@@ -255,7 +255,7 @@ const uninstall = async (name) => {
 
 const localInstall = async () => {
   try {
-    const extensions = isWindows ? ['zip', '7z'] : ['zip', '7z', 'tar.xz']
+    const extensions = ['zip', 'tar.xz']
     const path = await callStatic('FileDialog', 'showOpenFile', null, [{ name: 'package', extensions }])
     if (!path) return
     const dirName = LocalInstall.getDirName(path)
