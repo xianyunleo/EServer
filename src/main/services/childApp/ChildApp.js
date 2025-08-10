@@ -9,10 +9,6 @@ import { ChildAppTypes } from '@/main/helpers/constant'
 export default class ChildApp {
     static #list;
 
-    static async DirExists() {
-        return await DirUtil.Exists(GetDataPath.getChildAppDir());
-    }
-
     /**
      * 获取子应用列表
      * @returns {Promise<ChildAppItem[]>}
