@@ -17,6 +17,13 @@ export default class DirUtil {
         return await fsPromises.mkdir(path, options)
     }
 
+    /**
+     * 递归+强制删除
+     * @param path
+     * @param options
+     * @returns {Promise<void>}
+     * @constructor
+     */
     static async Delete(path, options = { recursive: true, force: true }) {
         return await FsUtil.Remove(path, options)
     }
