@@ -147,7 +147,7 @@ async function stopIIS() {
  */
 async function parseAppNotice() {
   try {
-    const response = await fetch(`${OFFICIAL_URL}/AppAdES.json`)
+    const response = await fetch(`${OFFICIAL_URL}/AppAdES.json?v=${Date.now()}`)
     store.noticeList = await response.json()
   } catch {
     /* empty */
