@@ -55,7 +55,7 @@ store.settings = settings
 
 onMounted(async () => {
   try {
-    if (!isDev) {
+    if (!isDev && (await App.initFileExists())) {
       //init或者update
       if (await App.needInit()) {
         await App.checkInstallBefore()

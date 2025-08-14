@@ -8,6 +8,7 @@ import MySQL from '@/main/services/MySQL'
 import { isWindows } from '@/shared/utils/utils2'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import FsUtil from '@/main/utils/FsUtil'
+import fsPromises from 'fs/promises'
 
 export default class ChildAppInit {
     static async initAll() {
@@ -71,15 +72,15 @@ export default class ChildAppInit {
             if (await FsUtil.Exists(etcPath)) { //已有etc文件
                 if (!await FsUtil.IsSymbolicLink(source)) {
                     await FsUtil.Delete(source) //如果不是符号链接，就删除
+                }else{
+                    await fsPromises.unlink(source)
+                    await FsUtil.CreateSymbolicLink(source, etcPath)
                 }
             } else { //没有etc文件
                 //这里的dirname不能取ownEctDir，因为etcName可能是/分割的路径
                 await DirUtil.Create(nodePath.dirname(etcPath))
                 await FsUtil.Rename(source, etcPath) //将配置文件移动到etc目录
             }
-            //覆盖
-            await FsUtil.Delete(source)
-            await FsUtil.CreateSymbolicLink(source, etcPath)
         }
     }
 

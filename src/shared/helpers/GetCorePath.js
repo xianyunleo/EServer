@@ -19,6 +19,7 @@ export default class GetCorePath {
         }
     }
 
+    //init文件，用来第一次初始化或者更新
     static getInitFilePath() {
         return path.join(this.getDir(), INIT_FILE_NAME)
     }

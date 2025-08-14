@@ -40,11 +40,8 @@ export default class App {
         await FileUtil.Delete(GetCorePath.getInitFilePath())
     }
 
+    //判断是否需要初始化，根据是否第一次安装判断
     static async needInit() {
-        //判断init文件是否存在（此文件可用于，迁移项目到其他电脑）
-        if (await FileUtil.Exists(GetCorePath.getInitFilePath())) {
-            return true
-        }
         //这里判断的不能是 GetDataPath.getDir() ，因为（electron-store）会自动创建文件和目录
         if (!await FileUtil.Exists(GetDataPath.getChildAppDir())
             //下面为兼容老版本的代码
@@ -101,8 +98,7 @@ export default class App {
                 //force是因为要覆盖electron-store设置文件
                 await FsUtil.Copy(GetDataPath.getOldDir(), GetDataPath.getDir(), { recursive: true, force: true })
 
-
-                if(Settings.get('EnableEnv')){
+                if (Settings.get('EnableEnv')) {
                     Env.switch(true)
                 }
 
@@ -116,7 +112,6 @@ export default class App {
                     const exePath = GetDataPath.getComposerExePath()
                     await Env.createBinFile(exePath, 'composer')
                 }
-
                 //reset mysql conf
                 const mysqlList = await ChildAppExtend.getMySQLList()
                 for (const item of mysqlList) {
@@ -131,7 +126,6 @@ export default class App {
                     }
                 }
             }
-
         }
 
         //update包更新逻辑
