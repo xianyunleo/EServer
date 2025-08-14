@@ -11,7 +11,7 @@ import FsUtil from '@/main/utils/FsUtil'
 
 export default class ChildAppInit {
     static async initAll() {
-        await Promise.all([this.initNginx(), this.initAllPHP(), this.initAllMySQL()])
+        await Promise.all([ChildAppInit.initNginx(), ChildAppInit.initAllPHP(), ChildAppInit.initAllMySQL()])
     }
 
     static async copyFiles(appItem) {
@@ -67,8 +67,8 @@ export default class ChildAppInit {
 
             await FileUtil.WriteAll(path, text)
 
-            await this.initNginxLocalhostConf()
-            await this.initNginxPhpmyadminConf()
+            await ChildAppInit.initNginxLocalhostConf()
+            await ChildAppInit.initNginxPhpmyadminConf()
         } catch (error) {
             throw new Error(`初始化Nginx配置失败！${error.message}`)
         }
@@ -101,14 +101,14 @@ export default class ChildAppInit {
     static async initAllPHP() {
         const phpList = await ChildAppExtend.getPHPList()
         for (const item of phpList) {
-            await this.initPHP(item.version)
+            await ChildAppInit.initPHP(item.version)
         }
     }
 
     static async initPHP(version) {
-        await this.initPHPConf(version)
+        await ChildAppInit.initPHPConf(version)
         if (!isWindows) {
-            await this.createPHPFpmConf(version)
+            await ChildAppInit.createPHPFpmConf(version)
         }
     }
 
@@ -189,7 +189,7 @@ export default class ChildAppInit {
     static async initAllMySQL() {
         const mysqlList = await ChildAppExtend.getMySQLList()
         for (const item of mysqlList) {
-            await this.initMySQL(item.version)
+            await ChildAppInit.initMySQL(item.version)
         }
     }
 
@@ -198,7 +198,7 @@ export default class ChildAppInit {
      * @returns {Promise<void>}
      */
     static async initMySQL(version) {
-        await this.initMySQLConf(version)
+        await ChildAppInit.initMySQLConf(version)
         if (!await DirUtil.Exists(GetDataPath.getMysqlDataDir(version))) {
             //如果mysql data目录不存在，初始化生成data目录，并重置密码
             await MySQL.initData(version)

@@ -16,8 +16,8 @@ export default class Env {
      */
     static async createBinFile(targetPath, binName, args = '') {
         let binDirPath = GetDataPath.getBinDir()
-        let path = nodePath.join(binDirPath, this.getBinFileName(binName))
-        await this.deleteBinFile(binName)
+        let path = nodePath.join(binDirPath, Env.getBinFileName(binName))
+        await Env.deleteBinFile(binName)
         let text = `"${targetPath}" ${args}`
 
         if (isWindows) {
@@ -29,7 +29,7 @@ export default class Env {
         } else {
             text = `#!/bin/bash\n${text} $@`
             if (binName === 'php') {
-                await this.createOtherBinFile(targetPath, 'phpize', 'phpize');
+                await Env.createOtherBinFile(targetPath, 'phpize', 'phpize');
             }
         }
         await FileUtil.WriteAll(path, text)
@@ -44,19 +44,19 @@ export default class Env {
     }
 
     static async deleteBinFile(binName) {
-        let path = nodePath.join(GetDataPath.getBinDir(), this.getBinFileName(binName))
+        let path = nodePath.join(GetDataPath.getBinDir(), Env.getBinFileName(binName))
         if (await FsUtil.Exists(path)) {
             await FileUtil.Delete(path)
         }
         if (!isWindows) {
             if (binName === 'php') {
-                await this.deleteOtherBinFile('phpize')
+                await Env.deleteOtherBinFile('phpize')
             }
         }
     }
 
     static async deleteOtherBinFile(otherBinName) {
-        let path = nodePath.join(GetDataPath.getBinDir(), this.getBinFileName(otherBinName))
+        let path = nodePath.join(GetDataPath.getBinDir(), Env.getBinFileName(otherBinName))
         if (await FsUtil.Exists(path)) {
             await FileUtil.Delete(path);
         }
