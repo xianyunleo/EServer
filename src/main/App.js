@@ -11,11 +11,12 @@ import LocalInstall from '@/main/services/childApp/LocalInstall'
 import FsUtil from '@/main/utils/FsUtil'
 import Command from '@/main/utils/Command'
 import { extractZip } from '@/main/utils/extract'
-import CommonInstall from '@/main/services/childApp/CommonInstall'
 import Php from '@/main/services/php/Php'
 import Env from '@/main/services/Env/Env'
 import Settings from '@/main/Settings'
 import SystemExtend from '@/main/utils/SystemExtend'
+import ChildAppInit from '@/main/services/childApp/ChildAppInit'
+import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 
 export default class App {
     static async initFileExists() {
@@ -30,7 +31,7 @@ export default class App {
             await this.updateMacDataSubDir(['Library'])
         }
 
-        await this.moveInitFiles(['downloads', 'www', 'custom'])
+        await this.moveInitFiles(['downloads', 'www', 'custom', 'custom/childApp'])
         await this.createUserSubDir(['etc', 'childApp', 'database', 'bin', `${TEMP_DIR_NAME}/php`])
 
         const files = await DirUtil.GetFiles(GetDataPath.getDownloadsDir())
@@ -48,7 +49,6 @@ export default class App {
         if (!await FileUtil.Exists(GetDataPath.getChildAppDir())
             //下面为兼容老版本的代码
             && !await FileUtil.Exists(GetDataPath.getChildAppOldDir())
-            && !await FileUtil.Exists(GetDataPath.getSoftwareOldDir())
         ) {
             return true
         }
@@ -92,29 +92,48 @@ export default class App {
             await this.updateMacDataSubDir(['Library'])
         }
 
-        //这里判断的不能是 GetDataPath.getDir() ，因为（electron-store）会自动创建文件和目录
-        if (isWindows && !(await DirUtil.Exists(GetDataPath.getChildAppDir()))) {
-            needRestart = true
-            console.log(' 迁移data目录')
-            //force是因为要覆盖electron-store设置文件
-            await FsUtil.Copy(GetDataPath.getOldDir(), GetDataPath.getDir(), { recursive: true, force: true })
-        }
+        //主要是升级5.0版本的代码
+        if (isWindows) {
+            //这里判断的不能是 GetDataPath.getDir() ，因为（electron-store）会自动创建文件和目录。主要是升级5.0版本
+            if(!(await DirUtil.Exists(GetDataPath.getChildAppDir()))){
+                needRestart = true
+                console.log(' 迁移data目录')
+                //force是因为要覆盖electron-store设置文件
+                await FsUtil.Copy(GetDataPath.getOldDir(), GetDataPath.getDir(), { recursive: true, force: true })
 
-        await this.moveInitFiles(['downloads', 'www', 'custom', 'custom/childApp'])
 
-        //目录software改名为childApp
-        if (!await DirUtil.Exists(GetDataPath.getChildAppDir()) && await DirUtil.Exists(GetDataPath.getSoftwareOldDir())) {
-            needRestart = true
-            await FsUtil.CopyRecursive(GetDataPath.getSoftwareOldDir(), GetDataPath.getChildAppDir())
-        }
+                if(Settings.get('EnableEnv')){
+                    Env.switch(true)
+                }
 
-        //迁移配置文件到etc目录，并初始化
-        const list = await ChildApp.getList()
-        for (const item of list) {
-            if (await DirUtil.Exists(ChildApp.getDir(item))) {
-                await CommonInstall.configure(item)
+                //createBinFile会先删除，再创建
+                if (Settings.get('PhpCliVersion')) {
+                    const confPath = Php.getConfPath(Settings.get('PhpCliVersion'))
+                    const exePath = GetDataPath.getPhpExePath(Settings.get('PhpCliVersion'))
+                    Env.createBinFile(exePath, 'php', `-c "${confPath}"`)
+                }
+                if (Settings.get('EnableComposer')) {
+                    const exePath = GetDataPath.getComposerExePath()
+                    await Env.createBinFile(exePath, 'composer')
+                }
+
+                //reset mysql conf
+                const mysqlList = await ChildAppExtend.getMySQLList()
+                for (const item of mysqlList) {
+                    await ChildAppInit.initMySQLConf(item.version)
+                }
+
+                //迁移配置文件到etc目录，并初始化
+                const list = await ChildApp.getList()
+                for (const item of list) {
+                    if (await DirUtil.Exists(ChildApp.getDir(item))) {
+                        await ChildAppInit.etcV4To5(item)
+                    }
+                }
             }
+
         }
+
         //update包更新逻辑
         const updateDir = path.join(GetCorePath.getDir(), 'update')
         if (await DirUtil.Exists(updateDir)) {
@@ -124,12 +143,6 @@ export default class App {
             if (await FileUtil.Exists(updateFile)) {
                 extractZip(updateFile, path.join(GetDataPath.getDir(), updateObj.targetDir))
             }
-        }
-
-        if (Settings.get('PhpCliVersion')) {
-            const confPath = Php.getConfPath(Settings.get('PhpCliVersion'))
-            const exePath = GetDataPath.getPhpExePath(Settings.get('PhpCliVersion'))
-            Env.createBinFile(exePath, 'php', `-c "${confPath}"`)
         }
 
         return needRestart

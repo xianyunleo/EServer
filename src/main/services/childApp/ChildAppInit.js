@@ -56,6 +56,33 @@ export default class ChildAppInit {
         }
     }
 
+    static async etcV4To5(appItem) {
+        const etcList = appItem.EtcList
+        if (!etcList) return
+        const ownAppDir = ChildApp.getDir(appItem)
+        const ownEctDir = GetDataPath.getOwnEtcDir(appItem.DirName)
+        for (const etcName of etcList) {
+            const source = nodePath.join(ownAppDir, etcName)
+            if (!await FsUtil.Exists(source)) {
+                continue //源文件不存在，跳过
+            }
+
+            const etcPath = nodePath.join(ownEctDir, etcName)
+            if (await FsUtil.Exists(etcPath)) { //已有etc文件
+                if (!await FsUtil.IsSymbolicLink(source)) {
+                    await FsUtil.Delete(source) //如果不是符号链接，就删除
+                }
+            } else { //没有etc文件
+                //这里的dirname不能取ownEctDir，因为etcName可能是/分割的路径
+                await DirUtil.Create(nodePath.dirname(etcPath))
+                await FsUtil.Rename(source, etcPath) //将配置文件移动到etc目录
+            }
+            //覆盖
+            await FsUtil.Delete(source)
+            await FsUtil.CreateSymbolicLink(source, etcPath)
+        }
+    }
+
     static async initNginx() {
         try {
             let path = nodePath.join(GetDataPath.getNginxConfDir(), 'nginx.conf')
