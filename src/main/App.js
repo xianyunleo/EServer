@@ -122,7 +122,7 @@ export default class App {
                 const list = await ChildApp.getList()
                 for (const item of list) {
                     if (await DirUtil.Exists(ChildApp.getDir(item))) {
-                        await ChildAppInit.etcV4To5(item)
+                        await ChildAppInit.initEtcFiles(item)
                     }
                 }
             }

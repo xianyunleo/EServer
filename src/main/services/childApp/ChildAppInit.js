@@ -15,6 +15,7 @@ export default class ChildAppInit {
         await Promise.all([ChildAppInit.initNginx(), ChildAppInit.initAllPHP(), ChildAppInit.initAllMySQL()])
     }
 
+    //子应用目录文件的拷贝，如Copy php.ini-development to php.ini
     static async copyFiles(appItem) {
         const copyFiles = appItem.CopyFiles
         if (!copyFiles) return
@@ -33,54 +34,29 @@ export default class ChildAppInit {
     static async initEtcFiles(appItem) {
         const etcList = appItem.EtcList
         if (!etcList) return
-        const ownAppDir = ChildApp.getDir(appItem)
+        const ownAppDir = ChildApp.getDir(appItem) //子应用目录
         const ownEctDir = GetDataPath.getOwnEtcDir(appItem.DirName)
         for (const etcName of etcList) {
-            const source = nodePath.join(ownAppDir, etcName)
+            const source = nodePath.join(ownAppDir, etcName) //子应用的目录的配置文件或配置目录（普通文件或普通目录或符号链接）
             if (!await FsUtil.Exists(source)) {
-                continue //源文件不存在，跳过
+                continue
             }
 
-            const etcPath = nodePath.join(ownEctDir, etcName)
-            if (await FsUtil.Exists(etcPath)) { //已有etc文件
-                if(!await FsUtil.IsSymbolicLink(source)){
-                    await FsUtil.Delete(source) //如果不是符号链接，就删除
-                }
-            } else { //没有etc文件
-                //这里的dirname不能取ownEctDir，因为etcName可能是/分割的路径
-                await DirUtil.Create(nodePath.dirname(etcPath))
+            const etcPath = nodePath.join(ownEctDir, etcName) // etc目录的配置文件或配置目录
+            //移动配置文件到etc目录
+            if(!await FsUtil.Exists(etcPath)){ //假定，etcPath不存在，那么 source 一定存在
+                await DirUtil.Create(nodePath.dirname(etcPath)) //这里目录不能用ownEctDir，因为etcName可能是/分割的多层目录
                 await FsUtil.Rename(source, etcPath) //将配置文件移动到etc目录
             }
-            if(!await FsUtil.Exists(source)){
-                await FsUtil.CreateSymbolicLink(source, etcPath) //在app目录创建符号链接指向etc目录
-            }
-        }
-    }
-
-    static async etcV4To5(appItem) {
-        const etcList = appItem.EtcList
-        if (!etcList) return
-        const ownAppDir = ChildApp.getDir(appItem)
-        const ownEctDir = GetDataPath.getOwnEtcDir(appItem.DirName)
-        for (const etcName of etcList) {
-            const source = nodePath.join(ownAppDir, etcName)
-            if (!await FsUtil.Exists(source)) {
-                continue //源文件不存在，跳过
-            }
-
-            const etcPath = nodePath.join(ownEctDir, etcName)
-            if (await FsUtil.Exists(etcPath)) { //已有etc文件
-                if (!await FsUtil.IsSymbolicLink(source)) {
-                    await FsUtil.Delete(source) //如果不是符号链接，就删除
-                }else{
-                    await fsPromises.unlink(source)
-                    await FsUtil.CreateSymbolicLink(source, etcPath)
+            //在子应用目录(重新)创建符号链接
+            if (await FsUtil.Exists(source)) {
+                if (await FsUtil.IsSymbolicLink(source)) {
+                    await FsUtil.Remove(source, { force: true }) //如果是符号链接时，这里不能有 recursive 参数
+                } else {
+                    await FsUtil.Remove(source, { force: true, recursive: true })
                 }
-            } else { //没有etc文件
-                //这里的dirname不能取ownEctDir，因为etcName可能是/分割的路径
-                await DirUtil.Create(nodePath.dirname(etcPath))
-                await FsUtil.Rename(source, etcPath) //将配置文件移动到etc目录
             }
+            await FsUtil.CreateSymbolicLink(source, etcPath) //在子应用目录创建符号链接指向etc目录
         }
     }
 
