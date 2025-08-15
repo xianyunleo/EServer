@@ -13,7 +13,6 @@
         ],
         "Type": "Server",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": false,
         "Icon": "nginx.png",
         "Desc": "Web Server"
     },
@@ -29,7 +28,6 @@
         "StartServerArgs": "-c ${ConfPath} -y ${ServerConfPath} -F",
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
     },
@@ -45,7 +43,6 @@
         "StartServerArgs": "-c ${ConfPath} -y ${ServerConfPath} -F",
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
     },
@@ -61,7 +58,6 @@
         "StartServerArgs": "-c ${ConfPath} -y ${ServerConfPath} -F",
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
     },
@@ -77,7 +73,6 @@
         "StartServerArgs": "-c ${ConfPath} -y ${ServerConfPath} -F",
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
     },
@@ -93,7 +88,6 @@
         "StartServerArgs": "-c ${ConfPath} -y ${ServerConfPath} -F",
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
     },
@@ -109,7 +103,6 @@
         "StartServerArgs": "-c ${ConfPath} -y ${ServerConfPath} -F",
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
     },
@@ -125,7 +118,6 @@
         "StartServerArgs": "-c ${ConfPath} -y ${ServerConfPath} -F",
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
     },
@@ -141,7 +133,6 @@
         "StartServerArgs": "-c ${ConfPath} -y ${ServerConfPath} -F",
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
     },
@@ -157,7 +148,6 @@
         "StartServerArgs": "-c ${ConfPath} -y ${ServerConfPath} -F",
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
     },
@@ -173,7 +163,6 @@
         "StartServerArgs": "-c ${ConfPath} -y ${ServerConfPath} -F",
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
     },
@@ -189,7 +178,6 @@
         "StartServerArgs": "-c ${ConfPath} -y ${ServerConfPath} -F",
         "Type": "PHP",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "php.png",
         "Desc": "PHP is the best programming language in the world"
     },
@@ -204,7 +192,6 @@
         "ServerPort": 3306,
         "ExtraFiles": [{ "Name": "mysql.log", "Path": "${WorkDir}/logs/mysql.log" }],
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "mysql.png",
         "Desc": "MySQL Is a Relational Database"
     },
@@ -219,7 +206,6 @@
         "ServerPort": 3306,
         "ExtraFiles": [{ "Name": "mysql.log", "Path": "${WorkDir}/logs/mysql.log" }],
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "mysql.png",
         "Desc": "MySQL Is a Relational Database"
     },
@@ -233,7 +219,6 @@
         "ServerPort": 6379,
         "Type": "Server",
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "redis.png",
         "Desc": "A high-performance Key-Value database"
     },
@@ -242,7 +227,6 @@
         "DirName": "Composer",
         "Type": "Tool",
         "RemoteIsCommonPlatform": true,
-        "CanDelete": true,
         "Icon": "Composer.png",
         "Desc": "PHP dependency management tool"
     },
@@ -252,7 +236,6 @@
         "Type": "Tool",
         "CanOpen": true,
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "Notepad--.png",
         "Desc": "cross-platform text and code editor"
     },
@@ -262,7 +245,6 @@
         "Type": "Tool",
         "RemoteIsCommonPlatform": true,
         "RemoteArchiveExt": ".tar.xz",
-        "CanDelete": true,
         "Icon": "phpmyadmin.png",
         "Desc": "MySQL management tool on the web"
     }

@@ -12,7 +12,6 @@ export default class ChildAppItem {
     IsMacApp;
     RemoteIsCommonPlatform;
     RemoteArchiveExt;
-    CanDelete;
     Icon;
     Desc;
     Installed;

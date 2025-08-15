@@ -34,7 +34,7 @@
               <div class="app-item-desc">{{ t(item.Desc) }}</div>
               <div class="app-item-operate">
                 <template v-if="item.Installed">
-                  <a-button type="primary" danger style="margin-right: 5px" :disabled="item.CanDelete === false" @click="uninstall(item.Name)">{{ t('Uninstall') }} </a-button>
+                  <a-button type="primary" danger style="margin-right: 5px" @click="uninstall(item.Name)">{{ t('Uninstall') }} </a-button>
 
                   <a-dropdown :trigger="['click']">
                     <template #overlay>
