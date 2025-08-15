@@ -2,6 +2,13 @@ import fsPromises from 'fs/promises'
 import FsUtil from '@/main/utils/FsUtil'
 
 export default class FileUtil {
+    /**
+     * 强制删除
+     * @param path
+     * @param options
+     * @returns {Promise<void>}
+     * @constructor
+     */
     static async Delete(path, options = { force: true }) {
         return await FsUtil.Remove(path, options)
     }

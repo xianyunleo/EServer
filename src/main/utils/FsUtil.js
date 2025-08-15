@@ -30,6 +30,13 @@ export default class FsUtil {
         return await fsPromises.rename(oldPath, newPath)
     }
 
+    /**
+     * 递归+强制删除
+     * @param path
+     * @param options
+     * @returns {Promise<void>}
+     * @constructor
+     */
     static async Delete(path, options = { force: true, recursive: true }) {
         return await FsUtil.Remove(path, options)
     }
