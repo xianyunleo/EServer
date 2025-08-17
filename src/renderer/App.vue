@@ -41,6 +41,7 @@ import { OFFICIAL_URL } from '@/shared/helpers/constant'
 import Ipc from '@/renderer/utils/Ipc'
 import FileUtil from '@/main/utils/FileUtil'
 import GetCorePath from '@/shared/helpers/GetCorePath'
+import GetDataPath from '@/shared/helpers/GetDataPath'
 import CommonInstall from '@/main/services/childApp/CommonInstall'
 
 const store = useMainStore()
@@ -68,9 +69,9 @@ onMounted(async () => {
           await update() //覆盖安装就执行update
         }
         await FileUtil.Delete(GetCorePath.getInstallOrUpdateFilePath())
-      } else if (await FileUtil.Exists(GetCorePath.getInitFilePath())) {
+      } else if (await FileUtil.Exists(GetDataPath.getInitFilePath())) {
         await CommonInstall.configureAll()
-        await FileUtil.Delete(GetCorePath.getInitFilePath())
+        await FileUtil.Delete(GetDataPath.getInitFilePath())
       }
     }
 

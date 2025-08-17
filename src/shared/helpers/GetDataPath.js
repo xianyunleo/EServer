@@ -1,5 +1,5 @@
 import path from 'path'
-import { MAC_DATA_DIR, SETTINGS_FILE_NAME, TEMP_DIR_NAME } from '@/main/helpers/constant'
+import { INIT_FILE_NAME, MAC_DATA_DIR, SETTINGS_FILE_NAME, TEMP_DIR_NAME } from '@/main/helpers/constant'
 import { isDev, isMacOS, isWindows } from '@/shared/utils/utils2'
 import GetCorePath from '@/shared/helpers/GetCorePath'
 import GetAppPath from '@/shared/helpers/GetAppPath'
@@ -29,6 +29,11 @@ export default class GetDataPath {
 
     static getSettingsPath() {
         return path.join(GetDataPath.getDir(), SETTINGS_FILE_NAME)
+    }
+
+    //init文件，用初始化配置文件
+    static getInitFilePath() {
+        return path.join(this.getDir(), INIT_FILE_NAME)
     }
 
     static getEtcDir = () => path.join(this.getDir(), 'etc') //所有childApp的配置的父目录

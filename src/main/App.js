@@ -33,8 +33,6 @@ export default class App {
 
         const files = await DirUtil.GetFiles(GetDataPath.getDownloadsDir())
         await LocalInstall.installMultiple(files)
-
-        await FileUtil.Delete(GetCorePath.getInitFilePath())
     }
 
     //判断是否需要安装

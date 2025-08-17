@@ -24,10 +24,6 @@ export default class GetCorePath {
         return path.join(this.getDir(), INSTALL_OR_UPDATE_FILE_NAME)
     }
 
-    //init文件，用初始化配置文件
-    static getInitFilePath() {
-        return path.join(this.getDir(), INIT_FILE_NAME)
-    }
     static getScriptDir() {
         return path.join(this.getDir(), 'script')
     }
