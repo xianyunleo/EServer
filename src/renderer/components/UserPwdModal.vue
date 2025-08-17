@@ -1,16 +1,18 @@
 <template>
   <a-modal
-      :title="t('theUserPwdForThisComputer')"
-      :ok-text="t('Submit')"
-      :cancel-text="props.cancelIsExit?t('Exit'):t('Cancel')"
-      @ok="saveUserPwd" @cancel="cancel"
-      :ok-button-props="{loading:okButtonLoading}"
-      v-model:open="visible"
-      :right-pwd="rightPwd"
-      centered
-      :maskClosable="false">
+    :title="t('theUserPwdForThisComputer')"
+    :ok-text="t('Submit')"
+    :cancel-text="props.cancelIsExit ? t('Exit') : t('Cancel')"
+    @ok="saveUserPwd"
+    @cancel="cancel"
+    :ok-button-props="{ loading: okButtonLoading }"
+    v-model:open="visible"
+    :right-pwd="rightPwd"
+    centered
+    :maskClosable="false"
+  >
     <div class="modal-content">
-      <div style="margin-bottom: 10px">{{t('thisPwdIsUsedForSudoCommands')}}</div>
+      <div style="margin-bottom: 10px">{{ t('thisPwdIsUsedForSudoCommands') }}</div>
       <a-input-password v-model:value="userPwd" />
     </div>
   </a-modal>
@@ -34,51 +36,51 @@ const emit = defineEmits(['update:show', 'update:rightPwd'])
 
 const visible = computed({
   get() {
-    return props.show;
+    return props.show
   },
   set(value) {
-    emit('update:show', value);
+    emit('update:show', value)
   }
-});
+})
 
 const rightPwd = computed({
   get() {
-    return props.rightPwd;
+    return props.rightPwd
   },
   set(value) {
-    emit('update:rightPwd', value);
+    emit('update:rightPwd', value)
   }
-});
+})
 
-const userPwd = ref('');
-const okButtonLoading = ref(false);
+const userPwd = ref('')
+const okButtonLoading = ref(false)
 
 const saveUserPwd = async () => {
   if (!userPwd.value) {
-    return;
+    return
   }
   okButtonLoading.value = true
-  message.info(t('pleaseWait'));
-  if (!await SystemExtend.checkUserPwd(userPwd.value)) {
-    message.error(mt('Wrong','ws','Pwd'));
-    okButtonLoading.value = false;
-    return;
+  message.info(t('pleaseWait'))
+  if (!(await SystemExtend.checkUserPwd(userPwd.value))) {
+    message.error(mt('Wrong', 'ws', 'Pwd'))
+    okButtonLoading.value = false
+    return
   }
-  rightPwd.value = userPwd.value;
-  Settings.set('userPwd', userPwd.value);
-  visible.value = false;
-  if (await App.needInit()) {
+  rightPwd.value = userPwd.value
+  Settings.set('userPwd', userPwd.value)
+  visible.value = false
+  if (await App.needInstall()) {
     try {
-      store.loading = true;
-      await App.init();
-      await store.refreshChildAppList();
-      store.loading = false;
+      store.loading = true
+      await App.install()
+      await store.refreshChildAppList()
+      store.loading = false
     } catch (error) {
-      await MessageBox.error(error.message ?? error,t('errorOccurredDuring', [t('initializing')]));
+      await MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('initializing')]))
       await call('appExit')
     }
   }
-  okButtonLoading.value = false;
+  okButtonLoading.value = false
 }
 
 const cancel = () => {
@@ -90,6 +92,4 @@ const cancel = () => {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -26,8 +26,8 @@ mac:
       to: ./Core/script/
     - from: ./extra/darwin/Core/update/
       to: ./Core/update/
-    - from: ./extra/darwin/Core/init.txt
-      to: ./Core/init.txt
+    - from: ./extra/darwin/Core/installOrUpdate
+      to: ./Core/installOrUpdate
   icon: build/icons/icon.icns
   artifactName: '${productName}-${os}-${version}-${arch}.${ext}'
 win:
@@ -51,8 +51,8 @@ win:
       to: ./core/script/
     - from: ./extra/win32/core/update/
       to: ./core/update/
-    - from: ./extra/win32/core/init.txt
-      to: ./core/init.txt
+    - from: ./extra/win32/core/installOrUpdate
+      to: ./core/installOrUpdate
   icon: build/icons/icon.ico
 nsis:
   artifactName: ${productName}-${version}-setup.${ext}

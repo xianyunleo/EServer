@@ -26,34 +26,6 @@ export default class ChildAppExtend {
         return phpVersionList;
     }
 
-    static async getPHPList() {
-        let path = GetDataPath.getPhpTypeDir()
-        if (!await DirUtil.Exists(path)) {
-            return [];
-        }
-        let list = await DirUtil.GetDirectories(path, 'php-');
-
-        return list.map(path => {
-            let name = nodePath.basename(path);
-            let version = ChildAppExtend.getPHPVersion(name);
-            return { version, name };
-        });
-    }
-
-    static async getMySQLList() {
-        let path = GetDataPath.getServerTypeDir()
-        if (!await DirUtil.Exists(path)) {
-            return [];
-        }
-        let list = await DirUtil.GetDirectories(path, 'mysql-');
-
-        return list.map(path => {
-            let name = nodePath.basename(path);
-            let version = ChildAppExtend.getMysqlVersion(name);
-            return { version, name };
-        });
-    }
-
     /**
      *
      * @param name {string}

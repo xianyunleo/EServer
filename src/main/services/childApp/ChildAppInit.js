@@ -1,7 +1,6 @@
 import GetDataPath from '@/shared/helpers/GetDataPath'
 import FileUtil from '@/main/utils/FileUtil'
 import nodePath from 'path'
-import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 import DirUtil from '@/main/utils/DirUtil'
 import Php from '@/main/services/php/Php'
 import MySQL from '@/main/services/MySQL'
@@ -11,10 +10,6 @@ import FsUtil from '@/main/utils/FsUtil'
 import fsPromises from 'fs/promises'
 
 export default class ChildAppInit {
-    static async initAll() {
-        await Promise.all([ChildAppInit.initNginx(), ChildAppInit.initAllPHP(), ChildAppInit.initAllMySQL()])
-    }
-
     //子应用目录文件的拷贝，如Copy php.ini-development to php.ini
     static async copyFiles(appItem) {
         const copyFiles = appItem.CopyFiles
@@ -51,9 +46,9 @@ export default class ChildAppInit {
             //在子应用目录(重新)创建符号链接
             if (await FsUtil.Exists(source)) {
                 if (await FsUtil.IsSymbolicLink(source)) {
-                    await FsUtil.Remove(source, { force: true }) //如果是符号链接时，这里不能有 recursive 参数
+                    await fsPromises.unlink(source)
                 } else {
-                    await FsUtil.Remove(source, { force: true, recursive: true })
+                    await FsUtil.Delete(source)
                 }
             }
             await FsUtil.CreateSymbolicLink(source, etcPath) //在子应用目录创建符号链接指向etc目录
@@ -99,13 +94,6 @@ export default class ChildAppInit {
             let replaceStr = `root ${rootPath};`
             text = text.replaceAll(pattern, replaceStr)
             await FileUtil.WriteAll(path, text)
-        }
-    }
-
-    static async initAllPHP() {
-        const phpList = await ChildAppExtend.getPHPList()
-        for (const item of phpList) {
-            await ChildAppInit.initPHP(item.version)
         }
     }
 
@@ -187,13 +175,6 @@ export default class ChildAppInit {
             await FileUtil.WriteAll(confPath, text)
         } catch (error) {
             throw new Error(`初始化PHP配置失败！${error.message}`)
-        }
-    }
-
-    static async initAllMySQL() {
-        const mysqlList = await ChildAppExtend.getMySQLList()
-        for (const item of mysqlList) {
-            await ChildAppInit.initMySQL(item.version)
         }
     }
 

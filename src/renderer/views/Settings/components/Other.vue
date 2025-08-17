@@ -28,13 +28,13 @@
 
 <script setup>
 import MessageBox from '@/renderer/utils/MessageBox'
-import ChildAppInit from '@/main/services/childApp/ChildAppInit'
 import { message } from 'ant-design-vue'
 import { mt, t } from '@/renderer/utils/i18n'
 import { APP_NAME } from '@/shared/helpers/constant'
 import { createAsyncComponent } from '@/renderer/utils/utils'
 import { useMainStore } from '@/renderer/store'
 import Ipc from '@/renderer/utils/Ipc'
+import CommonInstall from '@/main/services/childApp/CommonInstall'
 const call = Ipc.call
 const callStatic = Ipc.callStatic
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
@@ -74,7 +74,7 @@ const init = async () => {
       cancelText: t('Cancel')
     }
     if (await MessageBox.confirm(options)) {
-      await ChildAppInit.initAll()
+      await CommonInstall.configureAll()
       message.success(t('Initialization successful'))
     }
   } catch (error) {

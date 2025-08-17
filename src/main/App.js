@@ -6,7 +6,6 @@ import GetCorePath from '@/shared/helpers/GetCorePath'
 import GetDataPath from '@/shared/helpers/GetDataPath'
 import DirUtil from '@/main/utils/DirUtil'
 import FileUtil from '@/main/utils/FileUtil'
-import ChildApp from '@/main/services/childApp/ChildApp'
 import LocalInstall from '@/main/services/childApp/LocalInstall'
 import FsUtil from '@/main/utils/FsUtil'
 import Command from '@/main/utils/Command'
@@ -15,15 +14,13 @@ import Php from '@/main/services/php/Php'
 import Env from '@/main/services/Env/Env'
 import Settings from '@/main/Settings'
 import SystemExtend from '@/main/utils/SystemExtend'
+import CommonInstall from '@/main/services/childApp/CommonInstall'
+import ChildApp from '@/main/services/childApp/ChildApp'
 import ChildAppInit from '@/main/services/childApp/ChildAppInit'
 import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
 
 export default class App {
-    static async initFileExists() {
-        return await FileUtil.Exists(GetCorePath.getInitFilePath())
-    }
-
-    static async init() {
+    static async install() {
         if (isMacOS && !isDev) {
             if (!await DirUtil.Exists(MAC_DATA_DIR)) {
                 await DirUtil.Create(MAC_DATA_DIR)
@@ -40,8 +37,8 @@ export default class App {
         await FileUtil.Delete(GetCorePath.getInitFilePath())
     }
 
-    //判断是否需要初始化，根据是否第一次安装判断
-    static async needInit() {
+    //判断是否需要安装
+    static async needInstall() {
         //这里判断的不能是 GetDataPath.getDir() ，因为（electron-store）会自动创建文件和目录
         if (!await FileUtil.Exists(GetDataPath.getChildAppDir())
             //下面为兼容老版本的代码
@@ -112,16 +109,15 @@ export default class App {
                     const exePath = GetDataPath.getComposerExePath()
                     await Env.createBinFile(exePath, 'composer')
                 }
-                //reset mysql conf
-                const mysqlList = await ChildAppExtend.getMySQLList()
-                for (const item of mysqlList) {
-                    await ChildAppInit.initMySQLConf(item.version)
-                }
 
                 //迁移配置文件到etc目录，并初始化
                 const list = await ChildApp.getList()
                 for (const item of list) {
                     if (await DirUtil.Exists(ChildApp.getDir(item))) {
+                        const version = ChildAppExtend.getMysqlVersion(item.Name)
+                        if (version) {
+                            await ChildAppInit.initMySQL(version)
+                        }
                         await ChildAppInit.initEtcFiles(item)
                     }
                 }

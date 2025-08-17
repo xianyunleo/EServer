@@ -41,6 +41,13 @@ export default class FsUtil {
         return await FsUtil.Remove(path, options)
     }
 
+    /**
+     * fsPromises.rm，在低版本node上，可能会有问题。比如Node.js: 16，无法删除符号链接文件
+     * @param path
+     * @param options
+     * @returns {Promise<void>}
+     * @constructor
+     */
     static async Remove(path, options = {}) {
         return await fsPromises.rm(path, options)
     }

@@ -39,6 +39,9 @@ import { t } from '@/renderer/utils/i18n'
 import { changeLanguageWrapper } from '@/renderer/utils/language'
 import { OFFICIAL_URL } from '@/shared/helpers/constant'
 import Ipc from '@/renderer/utils/Ipc'
+import FileUtil from '@/main/utils/FileUtil'
+import GetCorePath from '@/shared/helpers/GetCorePath'
+import CommonInstall from '@/main/services/childApp/CommonInstall'
 
 const store = useMainStore()
 //操作childAppList和serverList等JS代码，都要等待init完成。
@@ -55,13 +58,19 @@ store.settings = settings
 
 onMounted(async () => {
   try {
-    if (!isDev && (await App.initFileExists())) {
-      //init或者update
-      if (await App.needInit()) {
-        await App.checkInstallBefore()
-        await init()
-      } else {
-        await update() //覆盖安装就执行update
+    if (!isDev) {
+      if (await FileUtil.Exists(GetCorePath.getInstallOrUpdateFilePath())) {
+        //init或者update
+        if (await App.needInstall()) {
+          await App.checkInstallBefore()
+          await install()
+        } else {
+          await update() //覆盖安装就执行update
+        }
+        await FileUtil.Delete(GetCorePath.getInstallOrUpdateFilePath())
+      } else if (await FileUtil.Exists(GetCorePath.getInitFilePath())) {
+        await CommonInstall.configureAll()
+        await FileUtil.Delete(GetCorePath.getInitFilePath())
       }
     }
 
@@ -78,7 +87,7 @@ onMounted(async () => {
   parseAppNotice()
 })
 
-async function init() {
+async function install() {
   store.loadingTip = t('Initializing')
 
   if (isMacOS) {
@@ -90,7 +99,7 @@ async function init() {
   watch(setLanguageShow, async (setLanguageShow) => {
     if (!setLanguageShow) {
       if (isWindows) {
-        await winInit()
+        await winInstall()
       } else if (isMacOS) {
         userPwdModalShow.value = true
       }
@@ -98,10 +107,10 @@ async function init() {
   })
 }
 
-async function winInit() {
+async function winInstall() {
   try {
     store.loading = true
-    await App.init()
+    await App.install()
     await store.refreshChildAppList()
     store.loading = false
   } catch (error) {
