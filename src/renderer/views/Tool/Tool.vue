@@ -37,11 +37,11 @@ import { mt, t } from '@/renderer/utils/i18n'
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { FileTextTwoTone, FolderOpenTwoTone, DatabaseTwoTone } from '@ant-design/icons-vue'
-import MysqlResetPwdModal from '@/renderer/components/ToolPage/MysqlResetPwdModal.vue'
+import MysqlResetPwdModal from '@/renderer/views/Tool/components/MysqlResetPwdModal.vue'
 import GetCorePath from '@/shared/helpers/GetCorePath'
 import { sleep } from '@/shared/utils/utils'
 import Opener from '@/renderer/utils/Opener'
-import TcpProcessListModal from '@/renderer/components/ToolPage/TcpProcessListModal.vue'
+import TcpProcessListModal from '@/renderer/views/Tool/components/TcpProcessListModal.vue'
 
 const iconTypes = {
   dir: 'dir',

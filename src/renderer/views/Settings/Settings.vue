@@ -10,12 +10,12 @@
 </template>
 
 <script setup>
-import App from '@/renderer/components/Settings/App.vue'
-import Server from '@/renderer/components/Settings/Server.vue'
-import Timer from '@/renderer/components/Settings/Timer.vue'
-import Other from '@/renderer/components/Settings/Other.vue'
-import EnvVar from '@/renderer/components/Settings/EnvVar.vue'
-import UserPwd from '@/renderer/components/Settings/UserPwd.vue'
+import App from '@/renderer/views/Settings/components/App.vue'
+import Server from '@/renderer/views/Settings/components/Server.vue'
+import Timer from '@/renderer/views/Settings/components/Timer.vue'
+import Other from '@/renderer/views/Settings/components/Other.vue'
+import EnvVar from '@/renderer/views/Settings/components/EnvVar.vue'
+import UserPwd from '@/renderer/views/Settings/components/UserPwd.vue'
 import { isWindows } from '@/shared/utils/utils2'
 </script>
 

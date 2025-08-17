@@ -63,8 +63,8 @@
 <script setup>
 import { ref, provide, computed } from 'vue'
 import InputWithSearch from '@/renderer/components/Input/InputWithSearch.vue'
-import AddWebSiteModal from '@/renderer/components/WebSite/AddWebSiteModal.vue'
-import EditWebSiteModal from '@/renderer/components/WebSite/EditWebSiteModal.vue'
+import AddWebSiteModal from '@/renderer/views/Website/components/AddWebSiteModal.vue'
+import EditWebSiteModal from '@/renderer/views/Website/components/EditWebSiteModal.vue'
 import Website from '@/main/services/website/Website'
 import MessageBox from '@/renderer/utils/MessageBox'
 import Opener from '@/renderer/utils/Opener'
