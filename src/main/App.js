@@ -59,7 +59,7 @@ export default class App {
 
         if (isMacOS) {
             if (process.arch === 'arm64' && !(await SystemExtend.isInstallRosetta())) {
-                throw new Error(`需要Rosetta支持，请复制命令到终端执行安装\nchildAppupdate --install-rosetta`)
+                throw new Error(`需要Rosetta支持，请复制命令到终端执行安装\n softwareupdate --install-rosetta`)
             }
         }
 
