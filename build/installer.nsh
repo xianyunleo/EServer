@@ -25,6 +25,6 @@
 
 !macro customUnWelcomePage
   !define MUI_WELCOMEPAGE_TITLE "卸载本软件"
-  !define MUI_WELCOMEPAGE_TEXT "卸载本软件后会删除本软件的所有数据。请备份好重要数据！！！"
+  !define MUI_WELCOMEPAGE_TEXT "卸载本软件后不会删除数据。数据在EServer-data目录"
   !insertmacro MUI_UNPAGE_WELCOME
 !macroend
