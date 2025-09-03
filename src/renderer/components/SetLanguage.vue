@@ -46,7 +46,7 @@ const handleOk = () => {
 
 const languageChange = async () => {
   try {
-    store.setSettings('Language', store.settings.Language)
+    store.setSettings('Language')
     await changeLanguageWrapper(store.settings.Language)
   } catch (error) {
     MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('set')]))
