@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest]
+        arch: [x64, arm64]
 
     steps:
       - name: Check out Git repository
