@@ -1,11 +1,10 @@
-name: Build/release
+name: Build/Release
 
 on: push
 
 jobs:
   release:
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: [macos-latest, windows-latest]
@@ -19,16 +18,31 @@ jobs:
         with:
           node-version: 18
 
-      # 👇 macOS：补装 x64 二进制
-      - name: Install deps (mac)
+      # macOS 构建 x64
+      - name: Build macOS x64
         if: matrix.os == 'macos-latest'
-        run: |
-          npm install @napi-rs/lzma-darwin-x64@^1.4.4 --ignore-scripts --force
-
-      - name: Build with Electron Builder
         uses: coparse-inc/action-electron-builder@v1.0.0
         with:
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          platform: mac
+          arch: x64
 
+      # macOS 构建 arm64
+      - name: Build macOS arm64
+        if: matrix.os == 'macos-latest'
+        uses: coparse-inc/action-electron-builder@v1.0.0
+        with:
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          platform: mac
+          arch: arm64
 
+      # Windows 构建，不区分架构
+      - name: Build Windows
+        if: matrix.os == 'windows-latest'
+        uses: coparse-inc/action-electron-builder@v1.0.0
+        with:
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          platform: win
