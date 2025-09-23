@@ -24,31 +24,8 @@ jobs:
         with:
           node-version: 18
 
-      # macOS 构建 x64
-      - name: Build macOS x64
-        if: matrix.os == 'macos-latest'
+      - name: Build Electron App
         uses: coparse-inc/action-electron-builder@v1.0.0
         with:
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          platform: mac
-          arch: x64
-
-      # macOS 构建 arm64
-      - name: Build macOS arm64
-        if: matrix.os == 'macos-latest'
-        uses: coparse-inc/action-electron-builder@v1.0.0
-        with:
-          github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          platform: mac
-          arch: arm64
-
-      # Windows 构建，不区分架构
-      - name: Build Windows
-        if: matrix.os == 'windows-latest'
-        uses: coparse-inc/action-electron-builder@v1.0.0
-        with:
-          github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          platform: win
