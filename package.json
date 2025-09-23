@@ -1,7 +1,7 @@
 {
   "name": "eserver",
   "productName": "EServer",
-  "version": "v5.0.16",
+  "version": "v5.0.17",
   "description": "EServer",
   "main": "./out/main/index.js",
   "author": "xianyunleo",
@@ -21,7 +21,6 @@
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.0",
     "@napi-rs/lzma": "^1.4.4",
-    "@napi-rs/lzma-darwin-x64": "^1.4.5",
     "@tiny-libs/nls": "^1.0.1",
     "electron-dl-downloader": "^2.2.0",
     "electron-is": "^3.0.0",
