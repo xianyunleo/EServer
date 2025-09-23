@@ -23,7 +23,7 @@ jobs:
       - name: Install deps (mac)
         if: matrix.os == 'macos-latest'
         run: |
-          npm install @napi-rs/lzma-darwin-x64@^1.4.4 --ignore-scripts --platform=darwin --arch=x64
+          npm install @napi-rs/lzma-darwin-x64@^1.4.4 --ignore-scripts --force
 
       - name: Build with Electron Builder
         uses: coparse-inc/action-electron-builder@v1.0.0
