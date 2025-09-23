@@ -19,21 +19,16 @@ jobs:
         with:
           node-version: 18
 
-      # 👇 macOS：一次安装 + 补装 x64 二进制
+      # 👇 macOS：补装 x64 二进制
       - name: Install deps (mac)
         if: matrix.os == 'macos-latest'
         run: |
-          npm ci
-          # 默认已经装 arm64 的 lzma，这里额外补齐 x64
           npm install @napi-rs/lzma-darwin-x64@^1.4.4 --ignore-scripts
-
-      # 👇 Windows：正常装依赖
-      - name: Install deps (win)
-        if: matrix.os == 'windows-latest'
-        run: npm ci
 
       - name: Build with Electron Builder
         uses: coparse-inc/action-electron-builder@v1.0.0
         with:
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+
