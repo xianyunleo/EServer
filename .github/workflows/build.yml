@@ -8,9 +8,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: macos-latest
-          - os: macos-latest-large # x64
-          - os: windows-latest
+          - os: [macos-latest, macos-latest-large, windows-latest]
 
     steps:
       - name: Check out Git repository
