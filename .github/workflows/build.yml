@@ -9,11 +9,8 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            arch: x64
-          - os: macos-latest
-            arch: arm64
+          - os: macos-latest-large # x64
           - os: windows-latest
-            arch: x64
 
     steps:
       - name: Check out Git repository
@@ -29,4 +26,3 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          arch: ${{ matrix.arch }}
