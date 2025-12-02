@@ -76,21 +76,18 @@ export default class TcpProcess {
 
     static async getListForWindows() {
         const net = require('net-win32')
-        const hmc = require('hmc-win32')
         try {
             let list = await net.getConnectNetListAsync(true, false, true, false)
             list = await list.filterAsync((item) => item.state === 'LISTEN')
-            //由于hmc的promise暂不支持并发，所以先用for of
-            const result = []
-            for (const item of list) {
-                const { pid, ip, port } = item
-                const name = await hmc.getProcessName2(pid)
-                const path = await ProcessExtend.getPathByPid(pid)
-                const icon = path ? await getFileIcon(path) : null
-                result.push({ pid, ip, port, name, path, status: 'Listen', icon })
-            }
-
-            return result
+            return await Promise.all(
+                list.map(async (item) => {
+                    const { pid, ip, port } = item
+                    const name = await ProcessExtend.getNameByPidForWindows(pid)
+                    const path = await ProcessExtend.getPathByPidForWindows(pid)
+                    const icon = path ? await getFileIcon(path) : null
+                    return { pid, ip, port, name, path, status: 'Listen', icon }
+                })
+            )
         } catch (e) {
             return []
         }

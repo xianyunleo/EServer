@@ -7,7 +7,7 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { builtinModules } from 'module'
 
 const externals = ['fix-path', 'electron-store', 'extract-zip',
-  'hmc-win32', 'net-win32', '@napi-rs/lzma',...builtinModules, ...builtinModules.map((m) => `node:${m}`)]
+  'hmc-win32', 'net-win32', '@napi-rs/lzma','koffi',...builtinModules, ...builtinModules.map((m) => `node:${m}`)]
 
 export default defineConfig({
   main: {

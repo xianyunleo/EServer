@@ -2,6 +2,10 @@ appId: net.XianYun.EServer
 productName: EServer
 files:
   - '!**/.vscode/*'
+  - "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}"
+  - "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}"
+  - "!**/node_modules/*.d.ts"
+  - "!**/node_modules/.bin"
   - '!src/*'
   - '!electron.vite.config.{js,ts,mjs,cjs}'
   - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
@@ -9,6 +13,8 @@ files:
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
   - '!extra/*'
   - '!screenshots/*'
+  - '!node_modules/koffi/build/koffi/!(win32_*64)'
+
 mac:
   target:
     - target: dmg
@@ -40,6 +46,8 @@ win:
   extraFiles:
     - from: extra/win32/EServerService.exe
       to: EServerService.exe
+    - from: extra/win32/windowsapi.dll
+      to: windowsapi.dll
     - from: ./extra/win32/core/config/
       to: ./core/config/
     - from: ./extra/win32/core/initFiles/

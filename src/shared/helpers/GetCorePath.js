@@ -1,7 +1,7 @@
 import { isDev, isMacOS, isWindows } from '@/shared/utils/utils2'
 import path from 'path'
 import ChildApp from '@/main/services/childApp/ChildApp'
-import { INIT_FILE_NAME, CoreDirNames, INSTALL_OR_UPDATE_FILE_NAME } from '@/main/helpers/constant'
+import { CoreDirNames, INSTALL_OR_UPDATE_FILE_NAME } from '@/main/helpers/constant'
 import GetAppPath from '@/shared/helpers/GetAppPath'
 import process from 'process'
 
@@ -17,6 +17,10 @@ export default class GetCorePath {
                 return path.join(GetAppPath.getContentsDir(), coreDirName)
             }
         }
+    }
+
+    static getParentDir() {
+        return path.dirname(GetCorePath.getDir())
     }
 
     //用来第一次安装或者覆盖安装更新

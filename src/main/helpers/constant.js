@@ -13,6 +13,7 @@ export const SETTINGS_FILE_NAME = 'settings.json'
 export const CONF_INDENT = '    '
 
 export const PowerShell = 'powershell'
+export const WINDOWS_API_FILE_NAME = 'windowsapi.dll'
 
 export const ChildAppTypes = {
     PHP: 'PHP',

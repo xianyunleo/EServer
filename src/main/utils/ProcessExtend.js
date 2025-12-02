@@ -1,9 +1,18 @@
 import Command from '@/main/utils/Command'
 import { isMacOS, isWindows } from '@/shared/utils/utils2'
-import { PowerShell } from '@/main/helpers/constant'
-import OS from '@/main/utils/OS'
+import { PowerShell, WINDOWS_API_FILE_NAME } from '@/main/helpers/constant'
+import nodePath from 'path'
+import GetCorePath from '@/shared/helpers/GetCorePath'
 
 export default class ProcessExtend {
+    static _ffiModule = null;
+    static _initFfi(){
+        if(!ProcessExtend._ffiModule){
+            ProcessExtend._ffiModule = require('koffi')
+            ProcessExtend._ffiModule.config({max_async_calls:256})
+        }
+        return ProcessExtend._ffiModule
+    }
     /**
      *  杀死进程和子进程
      * @param pid {number}
@@ -22,14 +31,12 @@ export default class ProcessExtend {
             }
             if (isWindows) {
                 //taskkill杀不存在的进程会有标准错误，从而引发异常
-                await Command.exec(`taskkill /f /t /pid ${pid}`);
+                await Command.exec(`taskkill /f /t /pid ${pid}`)
             } else {
-                await Command.sudoExec(`kill ${pid}`);
+                await Command.sudoExec(`kill ${pid}`)
             }
             // eslint-disable-next-line no-empty
-        } catch {
-
-        }
+        } catch {}
     }
 
     static async getParentPid(pid) {
@@ -57,57 +64,36 @@ export default class ProcessExtend {
         try {
             if (isWindows) {
                 //taskkill杀不存在的进程会有标准错误，从而引发异常
-                await Command.exec(`taskkill /f /t /im ${name}.exe`);
+                await Command.exec(`taskkill /f /t /im ${name}.exe`)
             } else {
                 //pkill杀不存在的进程会有标准错误，从而引发异常
-                await Command.sudoExec(`pkill ${name}`);
+                await Command.sudoExec(`pkill ${name}`)
             }
             // eslint-disable-next-line no-empty
-        } catch {
-
-        }
+        } catch {}
     }
 
     static pidIsRunning(pid) {
         try {
-            process.kill(pid, 0);
-            return true;
+            process.kill(pid, 0)
+            return true
         } catch (e) {
-            return false;
+            return false
         }
     }
 
     /**
-     * 根据pid，获取进程路径。Windows下，winShell=false，不支持并发，但是速度快。winShell=true，支持并发，但是速度慢。
+     * 根据pid，获取进程路径
      * @param pid {number}
-     * @param winShell {boolean}
      * @returns {Promise<*|null>}
      */
-    static async getPathByPid(pid, winShell = false) {
+    static async getPathByPid(pid) {
         try {
             pid = parseInt(pid)
             let path
 
             if (isWindows) {
-                if (winShell) {
-                    const versionStr = OS.getVersion()
-                    const [major, minor, build] = versionStr.split('.').map(Number)
-                    if (major === 10 && build >= 22000) {
-                        //Windows 11: 版本号从 10.0.22000 开始。Windows11 废弃了 wmic
-                        const commandStr = `(Get-Process -Id ${pid}).MainModule.FileName`
-                        const resStr = await Command.exec(commandStr, { shell: PowerShell })
-                        path = resStr.trim().split('\n')[0]
-                    } else {
-                        const commandStr = `wmic process where processid=${pid} get executablepath`
-                        const resStr = await Command.exec(commandStr)
-                        path = resStr.trim().split('\n')[1]
-                    }
-                } else {
-                    const hmc = require('hmc-win32')
-                    path = await hmc.getProcessFilePath2(pid) //getProcessFilePath2暂不支持并发
-                    path = path ?? ''
-                    path = path.startsWith('\\Device\\HarddiskVolume') ? '' : path //过滤掉 getProcessFilePath2 错误的path
-                }
+                path = await ProcessExtend.getPathByPidForWindows(pid)
             } else {
                 const commandStr = `lsof -p ${pid} -a -w -d txt -Fn|awk 'NR==3{print}'|sed "s/n//"`
                 const resStr = await Command.exec(commandStr)
@@ -120,18 +106,47 @@ export default class ProcessExtend {
         }
     }
 
+    static async getNameByPidForWindows(pid) {
+        try {
+            const koffi = ProcessExtend._initFfi()
+            const libPath = nodePath.join(GetCorePath.getParentDir(), WINDOWS_API_FILE_NAME)
+            const lib = koffi.load(libPath)
+            const getProcessName = lib.func('getProcessName', 'str', ['int'])
+            // 个别进程的  getProcessName 比  getProcessPath 更耗时
+            return await new Promise((resolve, reject) => {
+                getProcessName.async(pid, (err, res) => {
+                    resolve(res ?? '')
+                })
+            })
+        }catch(e){
+            return null
+        }
+    }
+
+    static async getPathByPidForWindows(pid) {
+        try {
+            const koffi = ProcessExtend._initFfi()
+            const libPath = nodePath.join(GetCorePath.getParentDir(), WINDOWS_API_FILE_NAME)
+            const lib = koffi.load(libPath)
+            const getProcessPath = lib.func('getProcessPath', 'str', ['int'])
+            return getProcessPath(pid)
+        }catch{
+            return null
+        }
+    }
+
     /**
      *
      * @param options {object}
      * @returns {Promise<[]|{path: *, name: *, pid: *, ppid: *}[]>}
      */
-    static async getList(options={}) {
+    static async getList(options = {}) {
         if (isMacOS) {
-            return await this.getListForMacOS(options);
+            return await this.getListForMacOS(options)
         } else if (isWindows) {
-            return await this.getListForWindows(options);
+            return await this.getListForWindows(options)
         }
-        return [];
+        return []
     }
 
     static async getListForMacOS(options = {}) {
@@ -150,24 +165,22 @@ export default class ProcessExtend {
         command += `|grep -F -v '.dylib'|awk '{print $1,$2,$3,$10}'`
         try {
             let str = await Command.sudoExec(command)
-            str = str.trim();
-            if(!str){
-                return [];
+            str = str.trim()
+            if (!str) {
+                return []
             }
-            let list = str.split('\n');
+            let list = str.split('\n')
 
-            list = list.map(item => {
-                let arr = item.split(' ');
-                let name, pid, ppid, path;
-                [name, pid, ppid, path] = arr;
-                return {name, pid, ppid, path};
-            });
+            list = list.map((item) => {
+                let arr = item.split(' ')
+                const [name, pid, ppid, path] = arr
+                return { name, pid, ppid, path }
+            })
 
-            return list;
+            return list
         } catch (e) {
             return []
         }
-
     }
 
     static async getListForWindows(options = {}) {
@@ -188,15 +201,14 @@ export default class ProcessExtend {
                 return []
             }
             let list = str.split(/\r?\n\r?\n/)
-            list = list.map(item => {
+            list = list.map((item) => {
                 let lineArr = item.split(/\r?\n/)
 
-                let arr = lineArr.map(line => {
+                let arr = lineArr.map((line) => {
                     return line.split(' : ')[1]?.trim()
                 })
 
-                let name, pid, ppid, path;
-                [name, pid, ppid, path] = arr
+                const [name, pid, ppid, path] = arr
                 return { name, pid, ppid, path }
             })
             return list

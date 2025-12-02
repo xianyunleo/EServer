@@ -3,7 +3,6 @@ export const OFFICIAL_HOST = 'eserver.devcn.top'
 export const OFFICIAL_URL = `http://${OFFICIAL_HOST}`
 export const DOWNLOAD_URL = 'http://dl.eserver.devcn.top'
 export const SERVICE_NAME = 'EServerService'
-export const SETTINGS_FILE_NAME = 'settings.json'
 
 export const colorConst = {
     light: {
