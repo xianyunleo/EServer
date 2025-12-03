@@ -20,7 +20,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.0",
-    "@napi-rs/lzma": "^1.4.4",
+    "@napi-rs/lzma": "~1.3.0",
     "@tiny-libs/nls": "^1.0.1",
     "electron-dl-downloader": "^2.2.0",
     "electron-is": "^3.0.0",
