@@ -1,33 +1,36 @@
 <template>
   <div class="sidebar">
-    <div ref='logoContainer' class="draggable logo-container" @dblclick="dblclick">
+    <div ref="logoContainer" class="draggable logo-container" @dblclick="dblclick">
       <img src="@/renderer/assets/img/icons/icon-trans.png" alt="icon" />
-      <span class='color-text'>{{ APP_NAME }} </span>
+      <span class="color-text">{{ APP_NAME }} </span>
     </div>
     <a-menu mode="vertical" @select="menuItemSelect" v-model:selectedKeys="selectedKeys">
       <div style="flex: 1" class="non-draggable">
         <a-menu-item key="/">
-          <template #icon><home-two-tone /> </template>{{$t("Home")}}
+          <template #icon><home-two-tone /> </template>{{ $t('Home') }}
         </a-menu-item>
         <a-menu-item key="/website">
-          <template #icon><layout-two-tone /> </template>{{$t("Website")}}
+          <template #icon><layout-two-tone /> </template>{{ $t('Website') }}
         </a-menu-item>
         <a-menu-item key="/tool">
-          <template #icon><tool-two-tone /> </template>{{$t("Tools")}}
+          <template #icon><tool-two-tone /> </template>{{ $t('Tools') }}
         </a-menu-item>
         <a-menu-item key="/appStore">
-          <template #icon><appstore-two-tone /> </template>{{$t("AppStore")}}
+          <template #icon><appstore-two-tone /> </template>{{ $t('AppStore') }}
         </a-menu-item>
         <a-menu-item key="/customApp">
-          <template #icon><appstore-two-tone /> </template>{{mt('Custom','ws','App')}}
+          <template #icon><appstore-two-tone /> </template>{{ mt('Custom', 'ws', 'App') }}
         </a-menu-item>
       </div>
-      <div style="margin-bottom: 25px;" class="non-draggable">
+      <div style="margin-bottom: 25px" class="non-draggable">
         <a-menu-item key="/settings">
-          <template #icon><setting-two-tone  /> </template>{{$t("Settings")}}
+          <template #icon><setting-two-tone /> </template>{{ $t('Settings') }}
         </a-menu-item>
         <a-menu-item key="/about">
-          <template #icon><exclamation-circle-two-tone /> </template>{{$t("About")}}
+          <template #icon><exclamation-circle-two-tone /> </template>{{ $t('About') }}
+        </a-menu-item>
+        <a-menu-item key="/donate">
+          <template #icon><DollarTwoTone /> </template>{{ $t('Donate') }}
         </a-menu-item>
       </div>
     </a-menu>
@@ -36,20 +39,13 @@
 
 <script setup>
 import { APP_NAME } from '@/shared/helpers/constant'
-import {
-  AppstoreTwoTone,
-  ExclamationCircleTwoTone,
-  HomeTwoTone,
-  LayoutTwoTone,
-  SettingTwoTone,
-  ToolTwoTone
-} from "@ant-design/icons-vue";
+import { AppstoreTwoTone, ExclamationCircleTwoTone, HomeTwoTone, LayoutTwoTone, SettingTwoTone, ToolTwoTone, DollarTwoTone } from '@ant-design/icons-vue'
 import { defineAsyncComponent, onMounted, ref } from 'vue'
-import {useRouter} from "vue-router";
+import { useRouter } from 'vue-router'
 const call = Ipc.call
-const router = useRouter();
-const selectedKeys = ref(['/']);
-import { isWindows ,isMacOS} from '@/shared/utils/utils2'
+const router = useRouter()
+const selectedKeys = ref(['/'])
+import { isWindows, isMacOS } from '@/shared/utils/utils2'
 import { mt } from '../utils/i18n'
 import Ipc from '@/renderer/utils/Ipc'
 
@@ -77,12 +73,9 @@ const AMenuItem = defineAsyncComponent(() => {
   })
 })
 
-const menuItemSelect = e =>{
-  router.push({path:e.key})
+const menuItemSelect = (e) => {
+  router.push({ path: e.key })
 }
-
 </script>
 
-<style scoped lang="less">
-
-</style>
+<style scoped lang="less"></style>

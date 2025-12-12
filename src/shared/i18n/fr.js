@@ -9,6 +9,7 @@ export default {
     Config: 'Config',
     Create: 'Créer',
     Data: 'Données',
+    Donate: 'Donner',
     Done: 'Fait',
     Delete: 'Supprimer',
     Modify: 'Modifier',

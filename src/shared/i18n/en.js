@@ -10,6 +10,7 @@ export default {
     Create: 'Create',
     Delete: 'Delete',
     Data: 'Data',
+    Donate: 'Donate',
     Done: 'Done',
     Modify: 'Modify',
     Access: 'Access',

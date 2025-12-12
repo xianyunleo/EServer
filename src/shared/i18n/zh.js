@@ -9,6 +9,7 @@ export default {
     Config: '配置',
     Create: '创建',
     Data: '数据',
+    Donate: '打赏',
     Done: '完成',
     Delete: '删除',
     Modify: '修改',
