@@ -82,15 +82,9 @@ Ipc.on('mainWindowUnmaximize',() => {
     width: 24px;
     animation: textSizeChange 1s infinite;
     @keyframes textSizeChange {
-      0% {
-        font-size: 14px;
-      }
-      50% {
-        font-size: 16px;
-      }
-      100% {
-        font-size: 14px;
-      }
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.15); }
+      100% { transform: scale(1); }
     }
   }
 }
