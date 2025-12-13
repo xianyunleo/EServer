@@ -3,6 +3,12 @@
 
 ## doc：eserver.devcn.top/doc
 
+## Sponsorship Methods
+### If you are an international friend, please sponsor from the ko-fi platform.
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S61Q4WH0)
+
+![ko-fi-qrcode](https://github.com/xianyunleo/EServer/raw/master/screenshots/ko-fi-qrcode.png)
+
 ### The predecessor of this software is phpEnv ，www.phpenv.cn
 
 ![app](https://github.com/xianyunleo/EServer/raw/master/screenshots/app-en.png)
