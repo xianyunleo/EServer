@@ -182,6 +182,21 @@
         "Desc": "PHP is the best programming language in the world"
     },
     {
+        "Name": "PHP-8.5",
+        "ServerName": "PHP-FPM-8.5",
+        "DirName": "php-8.5",
+        "CopyFiles": [{"Source": "etc/php.ini-development","Dest":"etc/php.ini"}],
+        "EtcList": ["etc/"],
+        "ConfPath": "${EtcDir}/etc/php.ini",
+        "ServerProcessPath": "${WorkDir}/sbin/php-fpm",
+        "ServerConfPath": "${EtcDir}/etc/php-fpm.conf",
+        "StartServerArgs": "-c ${ConfPath} -y ${ServerConfPath} -F",
+        "Type": "PHP",
+        "RemoteArchiveExt": ".tar.xz",
+        "Icon": "php.png",
+        "Desc": "PHP is the best programming language in the world"
+    },
+    {
         "Name": "MySQL-5.7",
         "DirName": "mysql-5.7",
         "Type": "Server",
