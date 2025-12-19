@@ -29,9 +29,9 @@
         <a-menu-item key="/about">
           <template #icon><exclamation-circle-two-tone /> </template>{{ $t('About') }}
         </a-menu-item>
-        <a-menu-item key="/donate">
+<!--        <a-menu-item key="/donate">
           <template #icon><DollarTwoTone /> </template>{{ $t('Donate') }}
-        </a-menu-item>
+        </a-menu-item>-->
       </div>
     </a-menu>
   </div>
