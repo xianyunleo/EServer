@@ -99,12 +99,12 @@ export default class Extension {
                     return '8.2'
                 }
             case 'redis':
-                if (phpVersion < 7.0) {
+                if (phpVersion <= 5.6) {
                     return '4.3.0'
-                } else if (phpVersion < 7.2) {
+                } else if (phpVersion <= 7.3) {
                     return '5.3.7'
                 } else {
-                    return '6.1.0'
+                    return '6.3.0'
                 }
             case 'swoole':
                 if (phpVersion < 5.5) {
@@ -113,26 +113,28 @@ export default class Extension {
                     return '2.2.0'
                 } else if (phpVersion < 7.2) {
                     return '4.5.11'
-                } else if (phpVersion < 8.0) {
+                } else if (phpVersion <= 7.4) {
                     return '4.8.13'
-                } else if (phpVersion < 8.4) {
+                } else if (phpVersion <= 8.3) {
                     return '5.1.7'
                 } else {
-                    return '6.0.2'
+                    return '6.1.5'
                 }
             case 'mongodb':
                 if (phpVersion <= 7.1) {
                     return '1.7.5'
-                } else if (phpVersion < 7.4) {
+                } else if (phpVersion <= 7.4) {
                     return '1.15.3'
+                } else if (phpVersion <= 8.3) {
+                    return '1.19.4'
                 } else {
-                    return '1.19.3'
+                    return '2.1.4'
                 }
             case 'imagick':
                 if (phpVersion <= 5.6) {
                     return '3.4.4'
                 } else {
-                    return '3.7.0'
+                    return '3.8.1'
                 }
             case 'xdebug':
                 if (phpVersion <= 5.6) {
@@ -140,11 +142,13 @@ export default class Extension {
                 } else if (phpVersion <= 7.4) {
                     return '2.9.8'
                 } else {
-                    return '3.4.2'
+                    return '3.5.0'
                 }
-            case 'xlswriter':
-                if (phpVersion >= 7.0){
-                    return '1.5.7'
+            case 'xlswriter': //2026年开始，作者本人停止维护此扩展
+                if (phpVersion <= 5.6) {
+                    return null
+                } else {
+                    return '1.5.8'
                 }
         }
         return null
@@ -158,11 +162,11 @@ export default class Extension {
             case 'memcache':
                 if (phpVersion <= 5.6) {
                     return '3.0.8'
-                } else if (phpVersion >= 7.0 && phpVersion <= 7.1) {
+                } else if (phpVersion <= 7.1) {
                     return null
-                } else if (phpVersion >= 7.2 && phpVersion <= 7.4) { //todo 7.2的包改官方的 memcache扩展
+                } else if (phpVersion <= 7.4) {
                     return '4.0.5.2'
-                } else if (phpVersion <= 8.3) {
+                } else if (phpVersion <= 8.5) {
                     return '8.2'
                 } else {
                     return null
@@ -174,8 +178,8 @@ export default class Extension {
                     return '4.2.0'
                 } else if (phpVersion <= 8.1) {
                     return '5.3.7'
-                } else if (phpVersion <= 8.4) {
-                    return '6.1.0'
+                } else if (phpVersion <= 8.5) {
+                    return '6.3.0'
                 } else {
                     return null
                 }
@@ -188,6 +192,8 @@ export default class Extension {
                     return '1.13.0'
                 } else if (phpVersion <= 8.3) {
                     return '1.19.4'
+                } else if (phpVersion <= 8.5) {
+                    return '2.1.4'
                 } else {
                     return null
                 }
@@ -198,18 +204,17 @@ export default class Extension {
                     return '2.9.8'
                 } else if (phpVersion <= 8.3) {
                     return '3.3.2'
+                } else if (phpVersion <= 8.5) {
+                    return '3.5.0'
                 } else {
                     return null
                 }
-            case 'xlswriter':
-                if (phpVersion == 5.6) {
+            case 'xlswriter': //2026年开始，作者本人停止维护此扩展
+                if (phpVersion <= 5.6) {
                     return null
-                }
-                if (phpVersion == 7.0) {
+                } else if (phpVersion <= 7.1) {
                     return '1.2.3'
-                } else if (phpVersion == 7.1) {
-                    return '1.3.2'
-                } else if (phpVersion <= 8.3) {
+                } else if (phpVersion <= 8.5) {
                     return '1.5.8'
                 } else {
                     return null
