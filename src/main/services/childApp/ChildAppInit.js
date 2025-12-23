@@ -131,8 +131,7 @@ export default class ChildAppInit {
                     return ++i === 2 ? 'extension_dir = "ext"' : match
                 })
 
-                const extArr = ['bz2', 'curl', 'fileinfo', 'mbstring', 'exif', 'mysqli', 'openssl',
-                    'pdo_mysql', 'pdo_odbc', 'soap', 'sockets']
+                const extArr = ['bz2', 'curl', 'fileinfo', 'mbstring', 'exif', 'mysqli', 'openssl', 'pdo_mysql', 'pdo_odbc', 'soap', 'sockets', 'intl']
 
                 const versionFloat = parseFloat(version)
 
