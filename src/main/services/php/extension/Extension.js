@@ -107,11 +107,9 @@ export default class Extension {
                     return '6.3.0'
                 }
             case 'swoole':
-                if (phpVersion < 5.5) {
-                    return '1.10.5'
-                } else if (phpVersion < 7.0) {
-                    return '2.2.0'
-                } else if (phpVersion < 7.2) {
+                if (phpVersion <= 5.6) {
+                    return '2.0.12'
+                } else if (phpVersion <= 7.2) {
                     return '4.5.11'
                 } else if (phpVersion <= 7.4) {
                     return '4.8.13'
