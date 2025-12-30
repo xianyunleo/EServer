@@ -45,10 +45,10 @@ export async function initServerListStatus(serverList, runningProcessList, tcpPr
 
     const initServerStatus = async (item) => {
         const servPath = item.IsCustom ? await FsUtil.ParseSymbolicLink(path.normalize(item.ServerProcessPath)) : ChildApp.getServerProcessPath(item)
-        const pidArr = runningProcessMap.get(servPath)
+        const pidArr = runningProcessMap.get(servPath) //Map每条数据的value虽然定义了为数组。但是整个Map可能是空的。
         let pid = null
         //Port Status
-        if (item.checkServerMode == EnumServerStatusCheckMode.PortStatus) {
+        if (Array.isArray(pidArr) && item.checkServerMode == EnumServerStatusCheckMode.PortStatus) {
             for (const pidItem of pidArr) {
                 if (tcpProcessMap.get(pidItem) == item.ServerPort) {
                     pid = pidItem
