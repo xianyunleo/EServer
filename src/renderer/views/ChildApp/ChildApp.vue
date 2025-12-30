@@ -88,11 +88,11 @@
     <a-card size="small">
       <div class="local-install">
         <a-button type="primary" :icon="h(AppstoreAddOutlined)" @click="localInstall">
-          {{ mt('Local', 'ws', 'Install') }}
+          {{ mt('Offline', 'ws', 'Install') }}
         </a-button>
         <span>{{ t('installPackageDownloadUrl') }}:</span>
         <a @click="openUrl('http://github.com/xianyunleo/EServerAppStore')">Github</a>
-        <a @click="openUrl('https://gitee.com/xianyunleo/EServerAppStore')">Gitee</a>
+        <a @click="openUrl('https://gitee.com/xianyunleo/EServerAppStore')">Gitee(中国)</a>
       </div>
     </a-card>
   </div>
