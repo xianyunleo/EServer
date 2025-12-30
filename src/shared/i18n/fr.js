@@ -74,8 +74,10 @@ export default {
     New: 'Nouveau',
     Please: 'Veuillez',
     Select: 'Sélectionner',
+    Template: 'Modèle',
     Kill: 'Tuer',
     Doc: 'Doc',
+    Offline: 'Hors ligne',
     OfficialSite: 'Site officiel',
     Desc: 'Description',
     List: 'Liste',
@@ -103,7 +105,8 @@ export default {
     Note: 'Remarque',
     Close: 'Fermer',
     Force: 'Forcer',
-    Certificate: 'Certificat', // Lowercase
+    Certificate: 'Certificat',
+    // Lowercase
     none: 'Aucun',
     auto: 'Automatique',
     dark: 'Sombre',

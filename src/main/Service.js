@@ -7,6 +7,7 @@ import CustomChildApp from '@/main/services/childApp/CustomChildApp'
 import { filterServerList } from '@/shared/helpers/childApp'
 import { getProcessList, initServerListStatus } from '@/shared/helpers/process'
 import ProcessLibrary from '@/main/helpers/ProcessLibrary'
+import { EnumServerStatusCheckMode } from '@/shared/helpers/enum'
 
 export default class Service {
     static async start() {
@@ -36,9 +37,12 @@ export default class Service {
         const list1 = await (await ChildApp.getList()).filterAsync(async (item) => await ChildApp.IsInstalled(item))
         const list2 = await CustomChildApp.getList()
         let serverList = filterServerList([...list1, ...list2])
-        const processList = await getProcessList(async (options) => {
+        const runningProcessList = await getProcessList(async (options) => {
             return await ProcessLibrary.getList(options)
         })
-        return await initServerListStatus(serverList, processList)
+        const portCheckServer = serverList?.find((item) => item.checkServerMode == EnumServerStatusCheckMode.PortStatus)
+        //如果有serverList有一个声明了端口号检查，那么获取tcp进程列表
+        const tcpProcessList = portCheckServer ? await TcpProcess.getList() : []
+        return await initServerListStatus(serverList, runningProcessList, tcpProcessList)
     }
 }

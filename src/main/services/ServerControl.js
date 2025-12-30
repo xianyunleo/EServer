@@ -22,7 +22,7 @@ export default class ServerControl {
         }
         item.isRunning = true
         item.errMsg = ''
-        const command = `${ctrlProcessPath} ${itemMap.StartServerArgs}`
+        const command = `"${ctrlProcessPath}" ${itemMap.StartServerArgs}`
         const options = { cwd: workDir, shell: true } //使用shell，childProcess返回的pid是shell的pid
         const childProcess = child_process.spawn(command, [], options)
 
@@ -36,7 +36,7 @@ export default class ServerControl {
             item.isRunning = false
         })
 
-        debugLog('ServerControl start command:', command)
+        debugLog(`ServerControl start command:“ ${command} ”`)
         debugLog(`${path.basename(ctrlProcessPath)},pid ${childProcess.pid}`)
 
         item.pid = childProcess.pid

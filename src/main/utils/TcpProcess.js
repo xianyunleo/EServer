@@ -5,16 +5,17 @@ import { PowerShell } from '@/main/helpers/constant'
 import { getFileIcon } from '@/shared/utils/file'
 
 export default class TcpProcess {
-    static async getList() {
+    static async getList(retAllAttrs = false) {
         if (isMacOS) {
-            return await this.getListForMacOS()
+            return await this.getListForMacOS(retAllAttrs)
         } else if (isWindows) {
-            return await this.getListForWindows()
+            return await this.getListForWindows(retAllAttrs)
         }
         return []
     }
 
-    static async getListForMacOS() {
+    static async getListForMacOS(retAllAttrs = false) {
+        //todo 实现retAllAttrs
         let commandStr = `lsof -iTCP -sTCP:LISTEN -P -n|awk 'NR!=1{print $1,$2,$3,$5,$9}'`
         try {
             let resStr = await Command.sudoExec(commandStr)
@@ -74,7 +75,7 @@ export default class TcpProcess {
         }
     }
 
-    static async getListForWindows() {
+    static async getListForWindows(retAllAttrs = false) {
         const net = require('net-win32')
         try {
             let list = await net.getConnectNetListAsync(true, false, true, false)
@@ -82,10 +83,15 @@ export default class TcpProcess {
             return await Promise.all(
                 list.map(async (item) => {
                     const { pid, ip, port } = item
-                    const name = await ProcessExtend.getNameByPidForWindows(pid)
-                    const path = await ProcessExtend.getPathByPidForWindows(pid)
-                    const icon = path ? await getFileIcon(path) : null
-                    return { pid, ip, port, name, path, status: 'Listen', icon }
+
+                    let attrs = { pid, ip, port, status: 'Listen' }
+                    if (retAllAttrs) {
+                        const name = await ProcessExtend.getNameByPidForWindows(pid)
+                        const path = await ProcessExtend.getPathByPidForWindows(pid)
+                        const icon = path ? await getFileIcon(path) : null
+                        attrs = { ...attrs, path, name, icon }
+                    }
+                    return attrs
                 })
             )
         } catch (e) {
