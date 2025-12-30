@@ -22,12 +22,12 @@ export default class TimerService {
     }
 
     static async restartServer() {
-        const initServerStatus = async (item) => {
+        const asyncFunc = async (item) => {
             const processList = Settings.get('AutoTimerServerList')
             if (processList.length > 0 && processList.includes(item.Name)) ServerService.restart(item.Name)
         }
 
-        const promiseArray = serverList.value.map((item) => initServerStatus(item))
+        const promiseArray = serverList.value.map((item) => asyncFunc(item))
         await Promise.all(promiseArray)
     }
 }
