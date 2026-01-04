@@ -15,6 +15,7 @@
 
     <a-table
       :columns="columns"
+      @change="handleTableChange"
       :data-source="serverList"
       class="content-table"
       :pagination="false"
@@ -77,7 +78,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import GetDataPath from '@/shared/helpers/GetDataPath'
 import ChildApp from '@/main/services/childApp/ChildApp'
@@ -105,27 +106,37 @@ const PoweroffOutlined = createAsyncComponent(import('@ant-design/icons-vue'), '
 const ReloadOutlined = createAsyncComponent(import('@ant-design/icons-vue'), 'ReloadOutlined')
 const RightSquareFilled = createAsyncComponent(import('@ant-design/icons-vue'), 'RightSquareFilled')
 
-const columns = [
-  {
-    title: t('Name'),
-    width: 220,
-    dataIndex: 'name'
-  },
-  {
-    title: t('Status'),
-    dataIndex: 'status',
-    width: 100,
-    align: 'center'
-  },
-  {
-    title: t('Operation'),
-    dataIndex: 'operate',
-    align: 'center'
-  }
-]
-
 const store = useMainStore()
 const { serverList } = storeToRefs(store)
+
+const columns = computed(() => {
+  return [
+    {
+      title: t('Name'),
+      width: 220,
+      sorter: (a, b) => a?.Name?.localeCompare(b?.Name, 'en', { sensitivity: 'base' }),
+      sortOrder: store.Home.nameSortOrder,
+      dataIndex: 'name'
+    },
+    {
+      title: t('Status'),
+      dataIndex: 'status',
+      width: 100,
+      align: 'center'
+    },
+    {
+      title: t('Operation'),
+      dataIndex: 'operate',
+      align: 'center'
+    }
+  ]
+})
+
+const handleTableChange = (pagination, filters, sorter) => {
+  if (sorter?.field === 'name') {
+    store.Home.nameSortOrder = sorter?.order
+  }
+}
 
 window.addEventListener(StoreInitializedEventName, async () => {
   loadingHandle().then(() => {

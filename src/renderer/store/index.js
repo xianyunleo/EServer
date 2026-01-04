@@ -23,7 +23,8 @@ export const useMainStore = defineStore('main', {
             customTheme: {},
             websiteList: { showSecondDomainName: false, showNote: false },
             Home: {
-                firstLoadingHandled: false
+                firstLoadingHandled: false,
+                nameSortOrder: null,
             },
             ChildApp: {
                 installInfoMap: {},
