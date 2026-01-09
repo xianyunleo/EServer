@@ -1,4 +1,6 @@
 import { app} from 'electron'
+import Settings from '@/main/Settings'
+import { isDev } from '@/shared/utils/utils2'
 export default class MainWindow {
 
     static _instance;
@@ -35,6 +37,11 @@ export default class MainWindow {
         mainWindow.on('unmaximize', () => {
             mainWindow.webContents.send('mainWindowUnmaximize')
         })
+
+        if (isDev || Settings.get('Debug')) {
+            mainWindow.webContents.openDevTools()
+            mainWindow.setSize(1280, mainWindow.getSize()[1])
+        }
     }
 
     static show() {
