@@ -21,16 +21,17 @@ export const useMainStore = defineStore('main', {
             loadingTip: 'Loading',
             settings: {},
             customTheme: {},
-            websiteList: { showSecondDomainName: false, showNote: false },
+            Website: { showSecondDomainName: false, showNote: false },
             Home: {
-                firstLoadingHandled: false
+                firstLoadingHandled: false,
+                nameSortOrder: null
             },
             ChildApp: {
                 installInfoMap: {},
                 selectedType: '',
                 listened: false
             },
-            noticeList:[]
+            noticeList: []
         }
     },
     getters: {

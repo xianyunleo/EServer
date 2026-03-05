@@ -5,10 +5,10 @@
         <a-button type="primary" @click="showAdd">{{ t('Add') }}</a-button>
         <div>
           {{ mt('Show', 'ws', 'Column') }}：
-          <a-checkbox v-model:checked="store.websiteList.showSecondDomainName">
+          <a-checkbox v-model:checked="store.Website.showSecondDomainName">
             {{ mt('Second', 'ws', 'DomainName') }}
           </a-checkbox>
-          <a-checkbox v-model:checked="store.websiteList.showNote">
+          <a-checkbox v-model:checked="store.Website.showNote">
             {{ mt('Note') }}
           </a-checkbox>
         </div>
@@ -100,14 +100,14 @@ const columns = computed(() => {
       width: 120,
       dataIndex: 'extraServerName',
       ellipsis: true,
-      hidden: !store.websiteList.showSecondDomainName
+      hidden: !store.Website.showSecondDomainName
     },
     {
       title: mt('Note'),
       width: 120,
       dataIndex: 'note',
       ellipsis: true,
-      hidden: !store.websiteList.showNote
+      hidden: !store.Website.showNote
     },
     {
       title: t('Port'),

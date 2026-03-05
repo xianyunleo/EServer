@@ -14,7 +14,6 @@ import Php from '@/main/services/php/Php'
 import Env from '@/main/services/Env/Env'
 import Settings from '@/main/Settings'
 import SystemExtend from '@/main/utils/SystemExtend'
-import CommonInstall from '@/main/services/childApp/CommonInstall'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import ChildAppInit from '@/main/services/childApp/ChildAppInit'
 import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
@@ -33,6 +32,8 @@ export default class App {
 
         const files = await DirUtil.GetFiles(GetDataPath.getDownloadsDir())
         await LocalInstall.installMultiple(files)
+
+        await App.update()
     }
 
     //判断是否需要安装
