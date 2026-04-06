@@ -22,7 +22,10 @@ cd "swoole-$extVersion"
 $phpDir/bin/phpize
 ./configure \
 --with-php-config=$phpDir/bin/php-config \
---with-openssl-dir=/Applications/EServer/Library/openssl@1.1/
+--with-openssl-dir=/Applications/EServer/Library/openssl@1.1/ \
+--enable-openssl \
+--enable-swoole-curl \
+PKG_CONFIG_PATH=/Applications/EServer/Library/curl/lib/pkgconfig
 
 arch -x86_64 make -j4
 make install
