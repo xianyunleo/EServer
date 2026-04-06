@@ -160,7 +160,7 @@ const install = async (item) => {
         const extension = PathExt.GetFileNameWithoutExt(item.fileName)
         await Php.addExtension(props.phpVersion, extension, item.isZend)
         const phpName = ChildAppExtend.getPhpName(props.phpVersion)
-        if (Settings.get('AutoStartAndRestartServer') && ServerService.isRunning(phpName)) {
+        if (Settings.get('AutoRestartServices') && ServerService.isRunning(phpName)) {
           ServerService.restart(phpName)
         }
       } else {

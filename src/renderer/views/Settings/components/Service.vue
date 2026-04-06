@@ -1,11 +1,11 @@
 <template>
-  <a-card size="small" :title="`${t('Server')} & ${t('OneClick')}`" class="settings-card">
+  <a-card size="small" :title="`${t('Service')} & ${t('OneClick')}`" class="settings-card">
     <div class="settings-card-row flex-vertical-center">
-      <span>{{ mt('Server', 'ws', 'List') }}：</span>
+      <span>{{ mt('Service', 'ws', 'List') }}：</span>
 
       <a-select
-        v-model:value="store.settings.OneClickServerList"
-        :options="oneClickServerOptions" @change="oneClickServerChange"
+        v-model:value="store.settings.OneClickServiceList"
+        :options="oneClickServiceOptions" @change="oneClickServiceChange"
         mode="multiple" :placeholder="t('pleaseChoose')" style="flex: 1"
       ></a-select>
     </div>
@@ -20,15 +20,15 @@
     </div>
 
     <div class="settings-card-row flex-vertical-center">
-      <a-switch v-model:checked="store.settings.AutoStartAndRestartServer" class="settings-switch"
-                :disabled="emptyOneClickServerList()" @change="changeAutoStartAndRestartServer" />
+      <a-switch v-model:checked="store.settings.AutoStartAndRestartService" class="settings-switch"
+                :disabled="emptyOneClickServiceList()" @change="changeAutoStartAndRestartService" />
       <span :class="disabledTextClass()">{{ t('websiteAutoRestartText') }}</span>
     </div>
 
     <div class="settings-card-row flex-vertical-center">
-      <a-switch v-model:checked="store.settings.AfterOpenAppStartServer" class="settings-switch"
-                :disabled="emptyOneClickServerList()" @change="changeAfterOpenAppStartServer" />
-      <span :class="disabledTextClass()">{{ t('afterOpenAppStartServer')
+      <a-switch v-model:checked="store.settings.AfterOpenAppStartService" class="settings-switch"
+                :disabled="emptyOneClickServiceList()" @change="changeAfterOpenAppStartService" />
+      <span :class="disabledTextClass()">{{ t('afterOpenAppStartService')
         }}</span>
     </div>
   </a-card>
@@ -51,9 +51,9 @@ import Opener from '@/renderer/utils/Opener'
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const AFlex = createAsyncComponent(import('ant-design-vue'), 'Flex')
 const store = useMainStore()
-const { serverList } = storeToRefs(store)
-const oneClickServerOptions = computed(() => {
-  const options = serverList.value.map((item) => {
+const { serviceList } = storeToRefs(store)
+const oneClickServiceOptions = computed(() => {
+  const options = serviceList.value.map((item) => {
     const name = item.Name
     return { value: name, label: item.ServerName ? item.ServerName : name }
   })
@@ -61,14 +61,14 @@ const oneClickServerOptions = computed(() => {
   return options
 })
 
-const oneClickServerChange = () => {
-  store.setSettings('OneClickServerList')
+const oneClickServiceChange = () => {
+  store.setSettings('OneClickServiceList')
 }
-const changeAutoStartAndRestartServer = () => {
-  store.setSettings('AutoStartAndRestartServer')
+const changeAutoStartAndRestartService = () => {
+  store.setSettings('AutoStartAndRestartService')
 }
-const changeAfterOpenAppStartServer = () => {
-  store.setSettings('AfterOpenAppStartServer')
+const changeAfterOpenAppStartService = () => {
+  store.setSettings('AfterOpenAppStartService')
 }
 
 const createWindowsService = async () => {
@@ -96,8 +96,8 @@ const openWindowsServices = () => {
   Opener.openWindowsServices()
 }
 
-const emptyOneClickServerList = () => store.settings.OneClickServerList.length === 0
-const disabledTextClass = () => (emptyOneClickServerList() ? 'disabled-text' : '')
+const emptyOneClickServiceList = () => store.settings.OneClickServiceList.length === 0
+const disabledTextClass = () => (emptyOneClickServiceList() ? 'disabled-text' : '')
 </script>
 
 <style scoped></style>

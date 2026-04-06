@@ -2,10 +2,10 @@
   <div class="content-container">
     <a-card :title="t('ShortcutActions')" size="small">
       <div class="quick-card-content">
-        <a-button type="primary" @click="HomeService.oneClickStart" :disabled="!!serverTableLoading">
+        <a-button type="primary" @click="HomeService.oneClickStart" :disabled="!!serviceTableLoading">
           {{ mt('OneClick', 'ws', 'Start') }}
         </a-button>
-        <a-button type="primary" @click="HomeService.oneClickStop" :disabled="!!serverTableLoading">
+        <a-button type="primary" @click="HomeService.oneClickStop" :disabled="!!serviceTableLoading">
           {{ mt('OneClick', 'ws', 'Stop') }}
         </a-button>
         <a-button type="primary" @click="dataDirClick"> {{ mt('Data', 'ws', 'Directory') }}</a-button>
@@ -16,11 +16,11 @@
     <a-table
       :columns="columns"
       @change="handleTableChange"
-      :data-source="serverList"
+      :data-source="serviceList"
       class="content-table"
       :pagination="false"
       size="middle"
-      :loading="serverTableLoading"
+      :loading="serviceTableLoading"
       :scroll="{ y: 'calc(100vh - 220px)' }"
     >
       <template #bodyCell="{ column, record: item }">
@@ -39,19 +39,19 @@
 
         <template v-if="column.dataIndex === 'operate'">
           <div class="operate-td">
-            <a-button type="primary" @click="HomeService.startServerClick(item)" v-if="!item.isRunning" :loading="item.btnLoading">
+            <a-button type="primary" @click="HomeService.startServiceClick(item)" v-if="!item.isRunning" :loading="item.btnLoading">
               <template #icon>
                 <PoweroffOutlined />
               </template>
               {{ t('Start') }}
             </a-button>
-            <a-button type="primary" @click="HomeService.stopServerClick(item)" v-if="item.isRunning" :loading="item.btnLoading">
+            <a-button type="primary" @click="HomeService.stopServiceClick(item)" v-if="item.isRunning" :loading="item.btnLoading">
               <template #icon>
                 <PoweroffOutlined />
               </template>
               {{ t('Stop') }}
             </a-button>
-            <a-button type="primary" @click="HomeService.restartServerClick(item)" :loading="item.btnLoading" :disabled="!item.isRunning">
+            <a-button type="primary" @click="HomeService.restartServiceClick(item)" :loading="item.btnLoading" :disabled="!item.isRunning">
               <template #icon>
                 <ReloadOutlined />
               </template>
@@ -90,14 +90,14 @@ import { createAsyncComponent } from '@/renderer/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
 import { StoreInitializedEventName } from '@/renderer/helpers/constant'
 import Settings from '@/main/Settings'
-import { getProcessList, initServerListStatus } from '@/shared/helpers/process'
+import { getProcessList, initServiceListStatus } from '@/shared/helpers/process'
 import Ipc from '@/renderer/utils/Ipc'
 import TcpProcess from '@/main/utils/TcpProcess'
 import { EnumServerStatusCheckMode } from '@/shared/helpers/enum'
 
 const timestamp = new Date().getTime()
 
-const serverTableLoading = ref(false)
+const serviceTableLoading = ref(false)
 
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
@@ -107,7 +107,7 @@ const ReloadOutlined = createAsyncComponent(import('@ant-design/icons-vue'), 'Re
 const RightSquareFilled = createAsyncComponent(import('@ant-design/icons-vue'), 'RightSquareFilled')
 
 const store = useMainStore()
-const { serverList } = storeToRefs(store)
+const { serviceList } = storeToRefs(store)
 
 const columns = computed(() => {
   return [
@@ -141,8 +141,8 @@ const handleTableChange = (pagination, filters, sorter) => {
 window.addEventListener(StoreInitializedEventName, async () => {
   loadingHandle().then(() => {
     store.Home.firstLoadingHandled = true
-    //“打开软件后，启动服务”功能，必须等待读取server列表状态。避免server真实状态是“启动”，重复启动软件。
-    if (Settings.get('AfterOpenAppStartServer')) {
+    //“打开软件后，启动服务”功能，必须等待读取service列表状态。避免service真实状态是“启动”，重复启动软件。
+    if (Settings.get('AfterOpenAppStartService')) {
       HomeService.oneClickStart()
     }
   })
@@ -157,15 +157,15 @@ onMounted(async () => {
 })
 
 const loadingHandle = async () => {
-  serverTableLoading.value = { tip: `${t('RefreshingServer')}...` }
+  serviceTableLoading.value = { tip: `${t('RefreshingService')}...` }
   const runningProcessList = await getProcessList(async (options) => {
     return await Ipc.callStatic('ProcessLibrary', 'getList', options)
   })
-  const portCheckServer = serverList.value?.find((item) => item.checkServerMode == EnumServerStatusCheckMode.PortStatus)
-  //如果有serverList有一个声明了端口号检查，那么获取tcp进程列表
-  const tcpProcessList = portCheckServer ? await TcpProcess.getList() : []
-  await initServerListStatus(serverList, runningProcessList, tcpProcessList, true)
-  serverTableLoading.value = false
+  const checkPort = serviceList.value?.some((item) => item.checkServerMode == EnumServerStatusCheckMode.PortStatus)
+  //如果有serviceList有一个声明了端口号检查，那么获取tcp进程列表
+  const tcpProcessList = checkPort ? await TcpProcess.getList() : []
+  await initServiceListStatus(serviceList, runningProcessList, tcpProcessList, true)
+  serviceTableLoading.value = false
 }
 
 const dataDirClick = () => Opener.openDirectory(GetDataPath.getDir())

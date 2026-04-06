@@ -134,6 +134,24 @@ export default class App {
             }
         }
 
+        //其他升级代码
+        if (Settings.get('OneClickServerList') != null) {
+            Settings.set('OneClickServiceList', Settings.get('OneClickServerList'))
+            Settings.set('OneClickServerList', null)
+        }
+        if (Settings.get('AutoStartAndRestartServer') != null) {
+            Settings.set('AutoStartAndRestartService', Settings.get('AutoStartAndRestartServer'))
+            Settings.set('AutoStartAndRestartServer', null)
+        }
+        if (Settings.get('AfterOpenAppStartServer') != null) {
+            Settings.set('AfterOpenAppStartService', Settings.get('AfterOpenAppStartServer'))
+            Settings.set('AfterOpenAppStartServer', null)
+        }
+        if (Settings.get('AutoTimerRestartServer') != null) {
+            Settings.set('AutoTimerRestartService', Settings.get('AutoTimerRestartServer'))
+            Settings.set('AutoTimerRestartServer', null)
+        }
+
         return needRestart
     }
 

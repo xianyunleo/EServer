@@ -1,17 +1,17 @@
 <template>
-  <div class='content-container'>
+  <div class="content-container">
     <App />
-    <Server />
+    <Service />
     <Timer />
     <EnvVar />
     <Other />
-    <UserPwd v-if='!isWindows' />
+    <UserPwd v-if="!isWindows" />
   </div>
 </template>
 
 <script setup>
 import App from '@/renderer/views/Settings/components/App.vue'
-import Server from '@/renderer/views/Settings/components/Server.vue'
+import Service from '@/renderer/views/Settings/components/Service.vue'
 import Timer from '@/renderer/views/Settings/components/Timer.vue'
 import Other from '@/renderer/views/Settings/components/Other.vue'
 import EnvVar from '@/renderer/views/Settings/components/EnvVar.vue'
@@ -19,7 +19,7 @@ import UserPwd from '@/renderer/views/Settings/components/UserPwd.vue'
 import { isWindows } from '@/shared/utils/utils2'
 </script>
 
-<style lang='less'>
+<style lang="less">
 .settings-card {
   margin-bottom: 10px;
 

@@ -7,15 +7,15 @@ import path from "path";
 import FileUtil from "@/main/utils/FileUtil";
 import GetDataPath from '@/shared/helpers/GetDataPath'
 
-export default class ServerControl {
+export default class ServiceControl {
     /**
      * ChildAppItem
      * @param item {ChildAppItem}
      * @returns {Promise<void>}
      */
     static async start(item) {
-        const itemMap = ServerControl.parseServerFields(item)
-        const ctrlProcessPath = ServerControl.getControlProcessPath(itemMap)
+        const itemMap = ServiceControl.parseServerFields(item)
+        const ctrlProcessPath = ServiceControl.getControlProcessPath(itemMap)
         const workDir = item.IsCustom ? path.dirname(ctrlProcessPath) : ChildApp.getDir(item)
         if (!await FileUtil.Exists(ctrlProcessPath)) {
             throw new Error(`${ctrlProcessPath} 文件不存在！`)
@@ -49,8 +49,8 @@ export default class ServerControl {
      */
     static async stop(item) {
         if (item.StopServerArgs) {
-            const itemMap = ServerControl.parseServerFields(item)
-            const ctrlProcessPath = ServerControl.getControlProcessPath(itemMap)
+            const itemMap = ServiceControl.parseServerFields(item)
+            const ctrlProcessPath = ServiceControl.getControlProcessPath(itemMap)
             const command = `${ctrlProcessPath} ${itemMap.StopServerArgs}`
             const workDir = item.IsCustom ? path.dirname(ctrlProcessPath) : ChildApp.getDir(item)
             const options = { cwd: workDir, shell: true }

@@ -7,7 +7,7 @@ import SystemTheme from '@/main/utils/SystemTheme'
 import { theme } from 'ant-design-vue'
 import { setTwoToneColor } from '@ant-design/icons-vue'
 import { colorConst } from '@/shared/helpers/constant'
-import { filterServerList } from '@/shared/helpers/childApp'
+import { filterServiceList } from '@/shared/helpers/childApp'
 import CustomChildApp from '@/main/services/childApp/CustomChildApp'
 
 export const useMainStore = defineStore('main', {
@@ -35,9 +35,9 @@ export const useMainStore = defineStore('main', {
         }
     },
     getters: {
-        //server列表，包含自定义的
-        serverList(state) {
-            return filterServerList([...state.installedChildAppList,...state.customChildAppList])
+        //服务列表，包含自定义的
+        serviceList(state) {
+            return filterServiceList([...state.installedChildAppList,...state.customChildAppList])
         }
     },
     actions: {

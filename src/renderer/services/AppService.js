@@ -7,7 +7,7 @@ export default class AppService {
         const storeInitializedEvent = new Event(StoreInitializedEventName)
         window.dispatchEvent(storeInitializedEvent)
 
-        if (Settings.get('AutoTimerRestartServer') && Settings.get('AutoTimerServerList')) {
+        if (Settings.get('AutoTimerRestartService') && Settings.get('AutoTimerServiceList')) {
             TimerService.setRestartTimer()
         }
     }

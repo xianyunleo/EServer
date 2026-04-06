@@ -22,13 +22,13 @@ export async function getProcessList(winFunc) {
 
 /**
  *
- * @param serverList {array|object}
+ * @param serviceList {array|object}
  * @param runningProcessList {array}
  * @param tcpProcessList {array}
  * @param isVue
  * @returns {Promise<Awaited<unknown>[]>}
  */
-export async function initServerListStatus(serverList, runningProcessList, tcpProcessList, isVue = false) {
+export async function initServiceListStatus(serviceList, runningProcessList, tcpProcessList, isVue = false) {
     const runningProcessMap = new Map()
     for (const runningProcess of runningProcessList) {
         const key = runningProcess.path;
@@ -63,7 +63,7 @@ export async function initServerListStatus(serverList, runningProcessList, tcpPr
         return item
     }
 
-    const statelessProcessList = isVue ? serverList.value : serverList
+    const statelessProcessList = isVue ? serviceList.value : serviceList
     const promiseArray = statelessProcessList.map((item) => initServerStatus(item))
     return await Promise.all(promiseArray)
 }

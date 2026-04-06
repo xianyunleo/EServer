@@ -5,7 +5,7 @@ import Settings from '@/main/Settings'
 import ServerService from '@/renderer/services/ServerService'
 
 const store = useMainStore()
-const { serverList } = storeToRefs(store)
+const { serviceList } = storeToRefs(store)
 
 export default class TimerService {
     static intervalId
@@ -14,20 +14,20 @@ export default class TimerService {
         if (TimerService.intervalId) {
             clearInterval(TimerService.intervalId)
         }
-        if (store.settings.AutoTimerRestartServer && store.settings.AutoTimerInterval) {
+        if (store.settings.AutoTimerRestartService && store.settings.AutoTimerInterval) {
             TimerService.intervalId = setInterval(() => {
-                TimerService.restartServer()
+                TimerService.restartService()
             }, store.settings.AutoTimerInterval * 1000)
         }
     }
 
-    static async restartServer() {
+    static async restartService() {
         const asyncFunc = async (item) => {
-            const processList = Settings.get('AutoTimerServerList')
+            const processList = Settings.get('AutoTimerServiceList')
             if (processList.length > 0 && processList.includes(item.Name)) ServerService.restart(item.Name)
         }
 
-        const promiseArray = serverList.value.map((item) => asyncFunc(item))
+        const promiseArray = serviceList.value.map((item) => asyncFunc(item))
         await Promise.all(promiseArray)
     }
 }
