@@ -6,7 +6,7 @@
       <span>{{ t('ServiceAutoRestartText') }}</span>
     </div>
     <div class="settings-card-row flex-vertical-center">
-      <span :class="disabledTextClass()">{{ mt('Server', 'ws', 'List') }}：</span>
+      <span :class="disabledTextClass()">{{ mt('Service', 'ws', 'List') }}：</span>
       <a-select
         v-model:value="store.settings.AutoTimerServiceList"
         :options="timerServerOptions" :disabled="!store.settings.AutoTimerRestartService"
