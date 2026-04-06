@@ -69,7 +69,7 @@ const toolItems = [
   {
     key: 'tcpProcessList',
     iconType: iconTypes.list,
-    title: `Tcp${mt('ws', 'Port', 'ws', 'Process', 'ws', 'List')}`,
+    title: `TCP${mt('ws', 'Port', 'ws', 'Process', 'ws', 'List')}`,
     desc: t('Check port usage'),
     func: tcpProcessList
   }
