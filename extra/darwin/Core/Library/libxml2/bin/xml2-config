@@ -58,7 +58,7 @@ while test $# -gt 0; do
       ;;
 
     --version)
-	echo 2.11.5
+	echo 2.15.3
 	exit 0
 	;;
 
@@ -67,7 +67,7 @@ while test $# -gt 0; do
 	;;
 
     --cflags)
-        cflags="-I${includedir}/libxml2 -I/Applications/EServer/Library/libiconv/include "
+        cflags="-I${includedir}/libxml2 "
        	;;
 
     --libtool-libs)
@@ -84,12 +84,12 @@ while test $# -gt 0; do
     --libs)
         if [ "$2" = "--dynamic" ]; then
             shift
-            libs="-lxml2"
+            libs="-lxml2 "
         else
-            libs="-lxml2 -L/Applications/EServer/Library/zlib/lib -lz   -L/Applications/EServer/Library/libiconv/lib -liconv     "
+            libs="-lxml2    -L/Applications/EServer/Library/zlib/lib -lz -liconv  "
         fi
 
-        if [ "-L${libdir}" != "-L/usr/lib" -a "-L${libdir}" != "-L/usr/lib64" ]; then
+        if [ "${exec_prefix}/lib" != "/usr/lib" -a "${exec_prefix}/lib" != "/usr/lib64" ]; then
             libs="-L${libdir} $libs"
         fi
         ;;

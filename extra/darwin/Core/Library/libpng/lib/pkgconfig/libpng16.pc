@@ -5,7 +5,7 @@ includedir=${prefix}/include/libpng16
 
 Name: libpng
 Description: Loads and saves PNG files
-Version: 1.6.40
+Version: 1.6.58
 Requires.private: zlib
 Libs: -L${libdir} -lpng16
 Libs.private: -lz 

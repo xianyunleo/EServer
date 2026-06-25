@@ -1,0 +1,13 @@
+prefix=/Applications/EServer/Library/libgd
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: gd
+Description: GD graphics library
+Version: 2.3.3
+Requires:
+Requires.private:   zlib  libpng  freetype2 >= 9.8.3  libjpeg
+Cflags: -I${includedir}
+Libs.private:  -L/Applications/EServer/Library/libwebp/lib  -lwebp -liconv
+Libs: -L${libdir} -lgd

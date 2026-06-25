@@ -1,0 +1,14 @@
+prefix=/Applications/EServer/Library/libpq
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libecpg_compat
+Description: PostgreSQL libecpg_compat library
+URL: https://www.postgresql.org/
+Version: 18.4
+Requires: 
+Requires.private: libecpg, libpgtypes
+Cflags: -I${includedir}
+Libs: -L${libdir} -lecpg_compat
+Libs.private: -L/Applications/EServer/Library/curl/lib -L/Applications/EServer/Library/icu/lib -L/Applications/EServer/Library/krb5/lib -L/Applications/EServer/Library/openssl@3.5/lib -lecpg -lpgcommon -lpgport -lpq -lm

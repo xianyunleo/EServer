@@ -1,0 +1,10 @@
+prefix=/Applications/EServer/Library/libjpeg-turbo
+exec_prefix=/Applications/EServer/Library/libjpeg-turbo
+libdir=/Applications/EServer/Library/libjpeg-turbo/lib
+includedir=/Applications/EServer/Library/libjpeg-turbo/include
+
+Name: libjpeg
+Description: A SIMD-accelerated JPEG codec that provides the libjpeg API
+Version: 3.1.4.1
+Libs: -L${libdir} -ljpeg
+Cflags: -I${includedir}

@@ -7,7 +7,7 @@ datadir=/Applications/EServer/Library/oniguruma/share
 
 Name: oniguruma
 Description: Regular expression library
-Version: 6.9.8
+Version: 6.9.10
 Requires:
 Libs: -L${libdir} -lonig
 Cflags: -I${includedir}

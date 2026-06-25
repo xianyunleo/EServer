@@ -9,7 +9,7 @@ POSIX wrapper interface.
 
                        Written by Philip Hazel
      Original API code Copyright (c) 1997-2012 University of Cambridge
-          New API code Copyright (c) 2016-2019 University of Cambridge
+          New API code Copyright (c) 2016-2023 University of Cambridge
 
 -----------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -40,6 +40,8 @@ POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
+#ifndef PCRE2POSIX_H_IDEMPOTENT_GUARD
+#define PCRE2POSIX_H_IDEMPOTENT_GUARD
 
 /* Have to include stdlib.h in order to ensure that size_t is defined. */
 
@@ -119,23 +121,33 @@ typedef struct {
 /* When an application links to a PCRE2 DLL in Windows, the symbols that are
 imported have to be identified as such. When building PCRE2, the appropriate
 export settings are needed, and are set in pcre2posix.c before including this
-file. */
+file. So, we don't change existing definitions of PCRE2POSIX_EXP_DECL.
 
-#if defined(_WIN32) && !defined(PCRE2_STATIC) && !defined(PCRE2POSIX_EXP_DECL)
-#  define PCRE2POSIX_EXP_DECL  extern __declspec(dllimport)
-#  define PCRE2POSIX_EXP_DEFN  __declspec(dllimport)
-#endif
-
-/* By default, we use the standard "extern" declarations. */
+By default, we use the standard "extern" declarations. */
 
 #ifndef PCRE2POSIX_EXP_DECL
-#  ifdef __cplusplus
+#  if defined(_WIN32) && defined(PCRE2POSIX_SHARED)
+#    define PCRE2POSIX_EXP_DECL  extern __declspec(dllimport)
+#  elif defined __cplusplus
 #    define PCRE2POSIX_EXP_DECL  extern "C"
-#    define PCRE2POSIX_EXP_DEFN  extern "C"
 #  else
 #    define PCRE2POSIX_EXP_DECL  extern
-#    define PCRE2POSIX_EXP_DEFN  extern
 #  endif
+#endif
+
+/* When compiling with the MSVC compiler, it is sometimes necessary to include
+a "calling convention" before exported function names. For example:
+
+  void __cdecl function(....)
+
+might be needed. In order to make this easy, all the exported functions have
+PCRE2_CALL_CONVENTION just before their names.
+
+PCRE2 normally uses the platform's standard calling convention, so this should
+not be set unless you know you need it. */
+
+#ifndef PCRE2_CALL_CONVENTION
+#define PCRE2_CALL_CONVENTION
 #endif
 
 /* The functions. The actual code is in functions with pcre2_xxx names for
@@ -144,11 +156,11 @@ regex functions. It's done this way to ensure to they are always linked from
 the PCRE2 library and not by accident from elsewhere (regex_t differs in size
 elsewhere). */
 
-PCRE2POSIX_EXP_DECL int pcre2_regcomp(regex_t *, const char *, int);
-PCRE2POSIX_EXP_DECL int pcre2_regexec(const regex_t *, const char *, size_t,
+PCRE2POSIX_EXP_DECL int PCRE2_CALL_CONVENTION pcre2_regcomp(regex_t *, const char *, int);
+PCRE2POSIX_EXP_DECL int PCRE2_CALL_CONVENTION pcre2_regexec(const regex_t *, const char *, size_t,
                      regmatch_t *, int);
-PCRE2POSIX_EXP_DECL size_t pcre2_regerror(int, const regex_t *, char *, size_t);
-PCRE2POSIX_EXP_DECL void pcre2_regfree(regex_t *);
+PCRE2POSIX_EXP_DECL size_t PCRE2_CALL_CONVENTION pcre2_regerror(int, const regex_t *, char *, size_t);
+PCRE2POSIX_EXP_DECL void PCRE2_CALL_CONVENTION pcre2_regfree(regex_t *);
 
 #define regcomp  pcre2_regcomp
 #define regexec  pcre2_regexec
@@ -166,5 +178,7 @@ them having to maintain their own patch, but are not documented by PCRE2. */
 #ifdef __cplusplus
 }   /* extern "C" */
 #endif
+
+#endif /* PCRE2POSIX_H_IDEMPOTENT_GUARD */
 
 /* End of pcre2posix.h */

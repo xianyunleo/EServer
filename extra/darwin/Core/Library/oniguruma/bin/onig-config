@@ -1,7 +1,7 @@
 #!/bin/sh
 # Copyright (C) 2006  K.Kosako
 
-ONIG_VERSION=6.9.8
+ONIG_VERSION=6.9.10
 
 show_usage()
 {

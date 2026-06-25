@@ -1,0 +1,14 @@
+prefix=/Applications/EServer/Library/krb5
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+vendor=MIT
+
+defccname=API:
+defktname=FILE:/etc/krb5.keytab
+defcktname=FILE:/Applications/EServer/Library/krb5/var/krb5/user/%{euid}/client.keytab
+
+Name: krb5
+Description: An implementation of Kerberos network authentication
+Version: 1.22.2
+Requires: mit-krb5

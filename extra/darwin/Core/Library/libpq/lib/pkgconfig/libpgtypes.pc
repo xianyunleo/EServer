@@ -1,0 +1,14 @@
+prefix=/Applications/EServer/Library/libpq
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libpgtypes
+Description: PostgreSQL libpgtypes library
+URL: https://www.postgresql.org/
+Version: 18.4
+Requires: 
+Requires.private: 
+Cflags: -I${includedir}
+Libs: -L${libdir} -lpgtypes
+Libs.private: -L/Applications/EServer/Library/curl/lib -L/Applications/EServer/Library/icu/lib -L/Applications/EServer/Library/krb5/lib -L/Applications/EServer/Library/openssl@3.5/lib -lpgcommon -lpgport -lm

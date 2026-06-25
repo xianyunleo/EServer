@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# Copyright (C) 2000-2023 by
+# Copyright (C) 2000-2026 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -14,7 +14,7 @@ export LC_ALL
 
 
 # if `pkg-config' is available, use values from `freetype2.pc'
-/usr/local/bin/pkg-config --atleast-pkgconfig-version 0.24 >/dev/null 2>&1
+/opt/homebrew/bin/pkg-config --atleast-pkgconfig-version 0.24 >/dev/null 2>&1
 if test $? -eq 0 ; then
   # note that option `--variable' is not affected by the
   # PKG_CONFIG_SYSROOT_DIR environment variable
@@ -23,17 +23,17 @@ if test $? -eq 0 ; then
     export PKG_CONFIG_SYSROOT_DIR
   fi
 
-  prefix=`/usr/local/bin/pkg-config --variable prefix freetype2`
-  exec_prefix=`/usr/local/bin/pkg-config --variable exec_prefix freetype2`
+  prefix=`/opt/homebrew/bin/pkg-config --variable prefix freetype2`
+  exec_prefix=`/opt/homebrew/bin/pkg-config --variable exec_prefix freetype2`
 
-  includedir=`/usr/local/bin/pkg-config --variable includedir freetype2`
-  libdir=`/usr/local/bin/pkg-config --variable libdir freetype2`
+  includedir=`/opt/homebrew/bin/pkg-config --variable includedir freetype2`
+  libdir=`/opt/homebrew/bin/pkg-config --variable libdir freetype2`
 
-  version=`/usr/local/bin/pkg-config --modversion freetype2`
+  version=`/opt/homebrew/bin/pkg-config --modversion freetype2`
 
-  cflags=`/usr/local/bin/pkg-config --cflags freetype2`
-  dynamic_libs=`/usr/local/bin/pkg-config --libs freetype2`
-  static_libs=`/usr/local/bin/pkg-config --static --libs freetype2`
+  cflags=`/opt/homebrew/bin/pkg-config --cflags freetype2`
+  dynamic_libs=`/opt/homebrew/bin/pkg-config --libs freetype2`
+  static_libs=`/opt/homebrew/bin/pkg-config --static --libs freetype2`
 else
   prefix="/Applications/EServer/Library/freetype"
   exec_prefix="/Applications/EServer/Library/freetype"
@@ -41,11 +41,11 @@ else
   includedir="/Applications/EServer/Library/freetype/include"
   libdir="/Applications/EServer/Library/freetype/lib"
 
-  version=26.1.20
+  version=26.6.20
 
   cflags="-I${SYSROOT}$includedir/freetype2"
   dynamic_libs="-lfreetype"
-  static_libs="-lfreetype -L/Applications/EServer/Library/zlib/lib -lz -L/Applications/EServer/Library/bzip2/lib -lbz2 -L/Applications/EServer/Library/libpng/lib -L/Applications/EServer/Library/zlib/lib -lpng16 -lz"
+  static_libs="-lfreetype -L/Applications/EServer/Library/zlib/lib -lz -lbz2 -L/Applications/EServer/Library/libpng/lib -lpng16 -L/Applications/EServer/Library/zlib/lib -lz -L/Applications/EServer/Library/brotli/lib -lbrotlidec -lbrotlicommon"
   if test "${SYSROOT}$libdir" != "/usr/lib"   &&
      test "${SYSROOT}$libdir" != "/usr/lib64" ; then
     libs_L="-L${SYSROOT}$libdir"

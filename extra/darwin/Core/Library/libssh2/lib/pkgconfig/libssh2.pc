@@ -1,0 +1,21 @@
+###########################################################################
+# libssh2 installation details
+#
+# Copyright (C) The libssh2 project and its contributors.
+# SPDX-License-Identifier: BSD-3-Clause
+###########################################################################
+
+prefix=/Applications/EServer/Library/libssh2
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libssh2
+URL: https://libssh2.org/
+Description: Library for SSH-based communication
+Version: 1.11.1
+Requires: 
+Requires.private: libcrypto,zlib
+Libs: -L${libdir} -lssh2 
+Libs.private:  -L/Applications/EServer/Library/openssl@3.5/lib -lssl -L/Applications/EServer/Library/openssl@3.5/lib -lcrypto -R/Applications/EServer/Library/openssl@3.5/lib -L/Applications/EServer/Library/zlib/lib -lz -R/Applications/EServer/Library/zlib/lib
+Cflags: -I${includedir}

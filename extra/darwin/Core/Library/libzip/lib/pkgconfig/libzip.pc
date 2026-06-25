@@ -8,7 +8,7 @@ zipcmp=${bindir}/zipcmp
 
 Name: libzip
 Description: library for handling zip archives
-Version: 1.10.1
+Version: 1.11.4
 Libs:  -L${libdir} -lzip
-Libs.private:  -lzstdbz2 -lzstdlzma -lzstdZLIB::ZLIB
+Libs.private:  -lbz2 -llzma -lzstd -lz
 Cflags: -I${includedir}

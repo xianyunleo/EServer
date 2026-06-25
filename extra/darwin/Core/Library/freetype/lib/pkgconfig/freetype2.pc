@@ -6,9 +6,9 @@ includedir=/Applications/EServer/Library/freetype/include
 Name: FreeType 2
 URL: https://freetype.org
 Description: A free, high-quality, and portable font engine.
-Version: 26.1.20
+Version: 26.6.20
 Requires: 
-Requires.private: zlib, libpng
+Requires.private: zlib, bzip2, libpng, libbrotlidec
 Libs: -L/Applications/EServer/Library/freetype/lib -lfreetype
-Libs.private: -L/Applications/EServer/Library/bzip2/lib -lbz2
+Libs.private: 
 Cflags: -I${includedir}/freetype2

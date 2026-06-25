@@ -5,9 +5,9 @@ includedir=${prefix}/include
 modules=1
 
 Name: libXML
-Version: 2.11.5
+Version: 2.15.3
 Description: libXML library version2.
-Requires:
-Libs: -L${libdir} -lxml2
-Libs.private: -L/Applications/EServer/Library/zlib/lib -lz   -L/Applications/EServer/Library/libiconv/lib -liconv    
-Cflags: -I${includedir}/libxml2 -I/Applications/EServer/Library/libiconv/include 
+Requires.private: 
+Libs: -L${libdir} -lxml2 
+Libs.private:    -L/Applications/EServer/Library/zlib/lib -lz -liconv  
+Cflags: -I${includedir}/libxml2  
