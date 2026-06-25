@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-lates]
+        os: [macos-latest]
 
     steps:
       - name: Check out Git repository
