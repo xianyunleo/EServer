@@ -58,12 +58,6 @@ export default class App {
             throw new Error('安装路径不能包含中文等汉字！')
         }
 
-        if (isMacOS) {
-            if (process.arch === 'arm64' && !(await SystemExtend.isInstallRosetta())) {
-                throw new Error(`需要Rosetta支持，请复制命令到终端执行安装\n softwareupdate --install-rosetta`)
-            }
-        }
-
         if (isWindows && process.arch === 'x64') { //hmc.getStringRegKey可能在arm64的Windows上有问题
             const hmc = require('hmc-win32')
             const semverDiff = require('semver-diff')
