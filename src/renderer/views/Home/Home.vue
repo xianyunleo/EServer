@@ -2,10 +2,10 @@
   <div class="content-container">
     <a-card :title="t('ShortcutActions')" size="small">
       <div class="quick-card-content">
-        <a-button type="primary" @click="HomeService.oneClickStart" :disabled="!!serverTableLoading">
+        <a-button type="primary" @click="HomeService.oneClickStart" :disabled="!!serviceTableLoading">
           {{ mt('OneClick', 'ws', 'Start') }}
         </a-button>
-        <a-button type="primary" @click="HomeService.oneClickStop" :disabled="!!serverTableLoading">
+        <a-button type="primary" @click="HomeService.oneClickStop" :disabled="!!serviceTableLoading">
           {{ mt('OneClick', 'ws', 'Stop') }}
         </a-button>
         <a-button type="primary" @click="dataDirClick"> {{ mt('Data', 'ws', 'Directory') }}</a-button>
@@ -15,17 +15,19 @@
 
     <a-table
       :columns="columns"
-      :data-source="serverList"
+      @change="handleTableChange"
+      :data-source="serviceList"
       class="content-table"
       :pagination="false"
       size="middle"
-      :loading="serverTableLoading"
+      :loading="serviceTableLoading"
       :scroll="{ y: 'calc(100vh - 220px)' }"
     >
-      <template #bodyCell="{ column, record : item }">
+      <template #bodyCell="{ column, record: item }">
         <template v-if="column.dataIndex === 'name'">
-          <div>{{ item.ServerName ? item.ServerName : item.Name }}
-            <a-tag v-if="item.IsCustom">{{t('Custom')}}</a-tag>
+          <div>
+            {{ item.ServerName ? item.ServerName : item.Name }}
+            <a-tag v-if="item.IsCustom">{{ t('Custom') }}</a-tag>
           </div>
         </template>
         <template v-if="column.dataIndex === 'status'">
@@ -37,22 +39,19 @@
 
         <template v-if="column.dataIndex === 'operate'">
           <div class="operate-td">
-            <a-button type="primary" @click="HomeService.startServerClick(item)"
-                      v-if="!item.isRunning" :loading="item.btnLoading">
+            <a-button type="primary" @click="HomeService.startServiceClick(item)" v-if="!item.isRunning" :loading="item.btnLoading">
               <template #icon>
                 <PoweroffOutlined />
               </template>
               {{ t('Start') }}
             </a-button>
-            <a-button type="primary" @click="HomeService.stopServerClick(item)"
-                      v-if="item.isRunning" :loading="item.btnLoading">
+            <a-button type="primary" @click="HomeService.stopServiceClick(item)" v-if="item.isRunning" :loading="item.btnLoading">
               <template #icon>
                 <PoweroffOutlined />
               </template>
               {{ t('Stop') }}
             </a-button>
-            <a-button type="primary" @click="HomeService.restartServerClick(item)"
-                      :loading="item.btnLoading" :disabled="!item.isRunning">
+            <a-button type="primary" @click="HomeService.restartServiceClick(item)" :loading="item.btnLoading" :disabled="!item.isRunning">
               <template #icon>
                 <ReloadOutlined />
               </template>
@@ -64,15 +63,9 @@
                   <a-menu-item @click="openWorkDir(item)" key="999">
                     {{ mt('Open', 'ws', 'Directory') }}
                   </a-menu-item>
-                  <a-menu-item v-if="item.ConfPath" @click="openConfFile(item)" key="998">
-                    {{ mt('Open', 'ws') }}{{ path.basename(item.ConfPath) }}
-                  </a-menu-item>
-                  <a-menu-item v-if="item.ServerConfPath" @click="openServerConfFile(item)" key="997">
-                    {{ mt('Open', 'ws') }}{{ path.basename(item.ServerConfPath) }}
-                  </a-menu-item>
-                  <a-menu-item v-for="item2 in item.ExtraFiles" @click="openExtraFile(item, item2)">
-                    {{ mt('Open', 'ws') }}{{ item2.Name }}
-                  </a-menu-item>
+                  <a-menu-item v-if="item.ConfPath" @click="openConfFile(item)" key="998"> {{ mt('Open', 'ws') }}{{ path.basename(item.ConfPath) }} </a-menu-item>
+                  <a-menu-item v-if="item.ServerConfPath" @click="openServerConfFile(item)" key="997"> {{ mt('Open', 'ws') }}{{ path.basename(item.ServerConfPath) }} </a-menu-item>
+                  <a-menu-item v-for="item2 in item.ExtraFiles" @click="openExtraFile(item, item2)"> {{ mt('Open', 'ws') }}{{ item2.Name }} </a-menu-item>
                 </a-menu>
               </template>
               <a-button>{{ t('Manage') }}<DownOutlined /></a-button>
@@ -85,12 +78,11 @@
 </template>
 
 <script setup>
-import { onMounted, ref} from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useMainStore } from '@/renderer/store'
 import GetDataPath from '@/shared/helpers/GetDataPath'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import { storeToRefs } from 'pinia/dist/pinia'
-import { APP_NAME } from '@/shared/helpers/constant'
 import Opener from '@/renderer/utils/Opener'
 import path from 'path'
 import HomeService from '@/renderer/services/HomeService'
@@ -98,12 +90,14 @@ import { createAsyncComponent } from '@/renderer/utils/utils'
 import { mt, t } from '@/renderer/utils/i18n'
 import { StoreInitializedEventName } from '@/renderer/helpers/constant'
 import Settings from '@/main/Settings'
-import { getProcessList, initServerListStatus } from '@/shared/helpers/process'
+import { getProcessList, initServiceListStatus } from '@/shared/helpers/process'
 import Ipc from '@/renderer/utils/Ipc'
+import TcpProcess from '@/main/utils/TcpProcess'
+import { EnumServerStatusCheckMode } from '@/shared/helpers/enum'
 
 const timestamp = new Date().getTime()
 
-const serverTableLoading = ref(false)
+const serviceTableLoading = ref(false)
 
 const AButton = createAsyncComponent(import('ant-design-vue'), 'Button')
 const ADropdown = createAsyncComponent(import('ant-design-vue'), 'Dropdown')
@@ -112,59 +106,72 @@ const PoweroffOutlined = createAsyncComponent(import('@ant-design/icons-vue'), '
 const ReloadOutlined = createAsyncComponent(import('@ant-design/icons-vue'), 'ReloadOutlined')
 const RightSquareFilled = createAsyncComponent(import('@ant-design/icons-vue'), 'RightSquareFilled')
 
-const columns = [
-  {
-    title: t('Name'),
-    width: 180,
-    dataIndex: 'name'
-  },
-  {
-    title: t('Status'),
-    dataIndex: 'status',
-    width: 100,
-    align: 'center'
-  },
-  {
-    title: t('Operation'),
-    dataIndex: 'operate',
-    align: 'center'
-  }
-]
-
 const store = useMainStore()
-const { serverList } = storeToRefs(store)
+const { serviceList } = storeToRefs(store)
+
+const columns = computed(() => {
+  return [
+    {
+      title: t('Name'),
+      width: 220,
+      sorter: (a, b) => a?.Name?.localeCompare(b?.Name, 'en', { sensitivity: 'base' }),
+      sortOrder: store.Home.nameSortOrder,
+      dataIndex: 'name'
+    },
+    {
+      title: t('Status'),
+      dataIndex: 'status',
+      width: 100,
+      align: 'center'
+    },
+    {
+      title: t('Operation'),
+      dataIndex: 'operate',
+      align: 'center'
+    }
+  ]
+})
+
+const handleTableChange = (pagination, filters, sorter) => {
+  if (sorter?.field === 'name') {
+    store.Home.nameSortOrder = sorter?.order
+  }
+}
 
 window.addEventListener(StoreInitializedEventName, async () => {
   loadingHandle().then(() => {
     store.Home.firstLoadingHandled = true
-    //“打开软件后，启动服务”功能，必须等待读取server列表状态。避免server真实状态是“启动”，重复启动软件。
-    if (Settings.get('AfterOpenAppStartServer')) {
+    //“打开软件后，启动服务”功能，必须等待读取service列表状态。避免service真实状态是“启动”，重复启动软件。
+    if (Settings.get('AfterOpenAppStartService')) {
       HomeService.oneClickStart()
     }
   })
 })
 
 onMounted(async () => {
-  console.log('Home onMounted ms:', (new Date().getTime()) - timestamp)
+  console.log('Home onMounted ms:', new Date().getTime() - timestamp)
   //devConsoleLog('Home onMounted ms:', () => (new Date().getTime()) - timestamp)
-  if (store.Home.firstLoadingHandled){
+  if (store.Home.firstLoadingHandled) {
     loadingHandle()
   }
 })
 
 const loadingHandle = async () => {
-  serverTableLoading.value = { tip: `${t('RefreshingServer')}...` }
-  const processList = await getProcessList(async (options) => {
+  serviceTableLoading.value = { tip: `${t('RefreshingService')}...` }
+  const runningProcessList = await getProcessList(async (options) => {
     return await Ipc.callStatic('ProcessLibrary', 'getList', options)
   })
-  await initServerListStatus(serverList, processList,true)
-  serverTableLoading.value = false
+  const checkPort = serviceList.value?.some((item) => item.checkServerMode == EnumServerStatusCheckMode.PortStatus)
+  //如果有serviceList有一个声明了端口号检查，那么获取tcp进程列表
+  const tcpProcessList = checkPort ? await TcpProcess.getList() : []
+  await initServiceListStatus(serviceList, runningProcessList, tcpProcessList, true)
+  serviceTableLoading.value = false
 }
 
 const dataDirClick = () => Opener.openDirectory(GetDataPath.getDir())
 const cfgPathClick = () => Opener.openDirectory(GetDataPath.getEtcDir())
 const openWorkDir = (item) => {
-  const p = item.IsCustom ?  path.dirname(item.ServerProcessPath) :ChildApp.getDir(item)
+  const p = item.IsCustom ? path.dirname(item.ServerProcessPath) : ChildApp.getDir(item)
   Opener.openDirectory(p)
 }
 
@@ -191,14 +198,14 @@ const openExtraFile = (item, extraFile) => {
 
 .status-start {
   color: @colorSuccessActive;
-  :deep(svg){
+  :deep(svg) {
     border-radius: 7px;
   }
 }
 
 .status-stop {
   color: @colorErrorActive;
-  :deep(svg){
+  :deep(svg) {
     border-radius: 7px;
   }
 }
@@ -213,5 +220,4 @@ const openExtraFile = (item, extraFile) => {
   display: flex;
   justify-content: space-evenly;
 }
-
 </style>

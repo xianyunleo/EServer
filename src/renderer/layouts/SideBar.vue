@@ -50,9 +50,11 @@ import { mt } from '../utils/i18n'
 import Ipc from '@/renderer/utils/Ipc'
 
 const dblclick = () => {
-  if (!isWindows) call('switchMax')
+  if (!isWindows) maximizeClick()
 }
-
+const maximizeClick = () => {
+  call('windowSwitchMax')
+}
 const logoContainer = ref()
 onMounted(() => {
   if (isMacOS) logoContainer.value.style.paddingTop = '50px'

@@ -23,7 +23,7 @@ if (!gotTheLock && !serviceArg) {
 async function createMainWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        width: is.dev ? 1280 : 900,
+        width: 900,
         height: 650,
         minWidth: 900,
         minHeight: 650,
@@ -36,7 +36,7 @@ async function createMainWindow() {
             sandbox: false,
             nodeIntegration: true,
             contextIsolation: false,
-            webSecurity: false,
+            webSecurity: false
         }
     })
 
@@ -57,7 +57,6 @@ async function createMainWindow() {
     // Load the remote URL for development or the local html file for production.
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
         mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-        mainWindow.webContents.openDevTools()
     } else {
         mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
     }

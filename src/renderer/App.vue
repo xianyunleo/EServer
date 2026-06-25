@@ -45,7 +45,7 @@ import GetDataPath from '@/shared/helpers/GetDataPath'
 import CommonInstall from '@/main/services/childApp/CommonInstall'
 
 const store = useMainStore()
-//操作childAppList和serverList等JS代码，都要等待init完成。
+//操作childAppList和serviceList等JS代码，都要等待init完成。
 store.init().then(async () => {
   const AppService = await import('@/renderer/services/AppService')
   AppService.default.storeInitThen()

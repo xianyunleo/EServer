@@ -129,7 +129,7 @@ const list = ref([])
 const search = async () => {
   tableLoading.value = true
   try {
-    list.value = await TcpProcess.getList()
+    list.value = await TcpProcess.getList(true)
   } catch (error) {
     MessageBox.error(error.message ?? error, '获取列表出错！')
   }

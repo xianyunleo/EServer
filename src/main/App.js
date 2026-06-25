@@ -14,7 +14,6 @@ import Php from '@/main/services/php/Php'
 import Env from '@/main/services/Env/Env'
 import Settings from '@/main/Settings'
 import SystemExtend from '@/main/utils/SystemExtend'
-import CommonInstall from '@/main/services/childApp/CommonInstall'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import ChildAppInit from '@/main/services/childApp/ChildAppInit'
 import ChildAppExtend from '@/main/services/childApp/ChildAppExtend'
@@ -33,6 +32,8 @@ export default class App {
 
         const files = await DirUtil.GetFiles(GetDataPath.getDownloadsDir())
         await LocalInstall.installMultiple(files)
+
+        await App.update()
     }
 
     //判断是否需要安装
@@ -55,12 +56,6 @@ export default class App {
 
         if (/[\u2E80-\u9FFF]/.test(appPath)) {
             throw new Error('安装路径不能包含中文等汉字！')
-        }
-
-        if (isMacOS) {
-            if (process.arch === 'arm64' && !(await SystemExtend.isInstallRosetta())) {
-                throw new Error(`需要Rosetta支持，请复制命令到终端执行安装\n softwareupdate --install-rosetta`)
-            }
         }
 
         if (isWindows && process.arch === 'x64') { //hmc.getStringRegKey可能在arm64的Windows上有问题
@@ -131,6 +126,24 @@ export default class App {
             if (await FileUtil.Exists(updateFile)) {
                 extractZip(updateFile, path.join(GetDataPath.getDir(), updateObj.targetDir))
             }
+        }
+
+        //其他升级代码
+        if (Settings.get('OneClickServerList') != null) {
+            Settings.set('OneClickServiceList', Settings.get('OneClickServerList'))
+            Settings.set('OneClickServerList', null)
+        }
+        if (Settings.get('AutoStartAndRestartServer') != null) {
+            Settings.set('AutoStartAndRestartService', Settings.get('AutoStartAndRestartServer'))
+            Settings.set('AutoStartAndRestartServer', null)
+        }
+        if (Settings.get('AfterOpenAppStartServer') != null) {
+            Settings.set('AfterOpenAppStartService', Settings.get('AfterOpenAppStartServer'))
+            Settings.set('AfterOpenAppStartServer', null)
+        }
+        if (Settings.get('AutoTimerRestartServer') != null) {
+            Settings.set('AutoTimerRestartService', Settings.get('AutoTimerRestartServer'))
+            Settings.set('AutoTimerRestartServer', null)
         }
 
         return needRestart

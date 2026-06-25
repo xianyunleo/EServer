@@ -11,3 +11,8 @@ export const EnumChildAppInstallStatus = {
     Abort: 100,
     Finish: 200
 }
+
+export const EnumServerStatusCheckMode = {
+    ProcessStatus: 0,
+    PortStatus: 1
+}

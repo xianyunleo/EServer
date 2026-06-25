@@ -1,15 +1,15 @@
 <template>
   <a-card size="small" :title="t('Timer')" class="settings-card">
     <div class="settings-card-row flex-vertical-center">
-      <a-switch v-model:checked="store.settings.AutoTimerRestartServer" class="settings-switch"
-                @change="changeAutoTimerRestartServer" />
-      <span>{{ t('ServerAutoRestartText') }}</span>
+      <a-switch v-model:checked="store.settings.AutoTimerRestartService" class="settings-switch"
+                @change="changeAutoTimerRestartService" />
+      <span>{{ t('ServiceAutoRestartText') }}</span>
     </div>
     <div class="settings-card-row flex-vertical-center">
-      <span :class="disabledTextClass()">{{ mt('Server', 'ws', 'List') }}：</span>
+      <span :class="disabledTextClass()">{{ mt('Service', 'ws', 'List') }}：</span>
       <a-select
-        v-model:value="store.settings.AutoTimerServerList"
-        :options="timerServerOptions" :disabled="!store.settings.AutoTimerRestartServer"
+        v-model:value="store.settings.AutoTimerServiceList"
+        :options="timerServerOptions" :disabled="!store.settings.AutoTimerRestartService"
         mode="multiple" style="flex: 1" :placeholder="t('pleaseChoose')"
         @change="AutoTimerServerChange"
       ></a-select>
@@ -19,7 +19,7 @@
       <span :class="disabledTextClass()">{{ t('RestartIntervalText') }}：</span>
       <a-select v-model:value="store.settings.AutoTimerInterval"
         :options="intervalOptions" :placeholder="t('pleaseChoose')" style="flex: 1"
-        :disabled="!store.settings.AutoTimerRestartServer"
+        :disabled="!store.settings.AutoTimerRestartService"
         @change="changeAutoTimerInterval"
       ></a-select>
     </div>
@@ -61,9 +61,9 @@ const intervalOptions = computed(() => {
 
 const ACard = createAsyncComponent(import('ant-design-vue'), 'Card')
 const store = useMainStore()
-const { serverList } = storeToRefs(store)
+const { serviceList } = storeToRefs(store)
 const timerServerOptions = computed(() => {
-  const options = serverList.value.map((item) => {
+  const options = serviceList.value.map((item) => {
     const name = item.Name
     return { value: name, label: item.ServerName ? item.ServerName : name }
   })
@@ -74,22 +74,22 @@ const timerServerOptions = computed(() => {
 // 重设定重启间隔时自动更新定时器
 watch(() => store.settings.AutoTimerInterval, TimerService.setRestartTimer)
 
-watch(() => store.settings.AutoTimerRestartServer, TimerService.setRestartTimer)
+watch(() => store.settings.AutoTimerRestartService, TimerService.setRestartTimer)
 
 const AutoTimerServerChange = () => {
-  store.setSettings('AutoTimerServerList')
+  store.setSettings('AutoTimerServiceList')
 }
 
 const changeAutoTimerInterval = () => {
   store.setSettings('AutoTimerInterval')
 }
 
-const changeAutoTimerRestartServer = () => {
-  store.setSettings('AutoTimerRestartServer')
+const changeAutoTimerRestartService = () => {
+  store.setSettings('AutoTimerRestartService')
   TimerService.setRestartTimer()
 }
 
-const disabledTextClass = () => !store.settings.AutoTimerRestartServer ? 'disabled-text' : ''
+const disabledTextClass = () => !store.settings.AutoTimerRestartService ? 'disabled-text' : ''
 </script>
 
 <style scoped></style>
