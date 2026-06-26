@@ -1,0 +1,1 @@
+../../libgd/lib/pkgconfig/gdlib.pc

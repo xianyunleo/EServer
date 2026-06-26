@@ -1,0 +1,1 @@
+../../libssh2/lib/pkgconfig/libssh2.pc

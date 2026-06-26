@@ -1,0 +1,13 @@
+# libargon2 info for pkg-config
+
+prefix=/Applications/EServer/Library/argon2
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: libargon2
+Description: Development libraries for libargon2
+Version: 20190702
+Libs: -L${libdir} -largon2 
+Cflags: -I${includedir}
+URL: https://github.com/P-H-C/phc-winner-argon2

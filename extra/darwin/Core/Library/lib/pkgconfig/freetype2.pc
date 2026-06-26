@@ -1,0 +1,1 @@
+../../freetype/lib/pkgconfig/freetype2.pc

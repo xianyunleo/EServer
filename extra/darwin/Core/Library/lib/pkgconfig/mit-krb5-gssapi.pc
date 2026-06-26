@@ -1,0 +1,1 @@
+../../krb5/lib/pkgconfig/mit-krb5-gssapi.pc
