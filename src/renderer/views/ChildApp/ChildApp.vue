@@ -260,10 +260,6 @@ const localInstall = async () => {
     if (!path) return
     const dirName = LocalInstall.getDirName(path)
 
-    if (dirName === 'nginx') {
-      MessageBox.warning(mt('Not', 'ws', 'Support', 'ws') + 'nginx')
-      return
-    }
     const item = childAppList.find((item) => item.DirName === dirName)
     if (!item) {
       MessageBox.error(mt('Not', 'ws', 'Match'))
@@ -291,7 +287,6 @@ const localInstall = async () => {
 const showPhpExtManager = async (item) => {
   if (isMacOS && !(await SystemExtend.isInstalledBrew())) {
     MessageBox.error(`Homebrew未安装！\n请复制命令到终端执行安装\n/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`)
-    return
   }
   phpVersion.value = ChildAppExtend.getPHPVersion(item.DirName)
   phpExtManagerShow.value = true

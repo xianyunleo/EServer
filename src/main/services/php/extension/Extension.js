@@ -43,16 +43,11 @@ export default class Extension {
             }, {
                 name: 'imagick',
                 fileName: 'imagick.so',
-                needX64Brew: true
             },{
                 name: 'xlswriter',
                 fileName: 'xlswriter.so'
             }
         ]
-    }
-
-    static isNeedX64Brew(extName) {
-        return this.getSimpleList().find(item => item.nam === extName)?.needX64Brew
     }
 
     static getSimpleListForWindows() {
@@ -115,8 +110,10 @@ export default class Extension {
                     return '4.8.13'
                 } else if (phpVersion <= 8.3) {
                     return '5.1.7'
+                } else if (phpVersion <= 8.4) {
+                    return '6.1.8'
                 } else {
-                    return '6.1.5'
+                    return '6.2.1'
                 }
             case 'mongodb':
                 if (phpVersion <= 7.1) {
@@ -126,7 +123,7 @@ export default class Extension {
                 } else if (phpVersion <= 8.3) {
                     return '1.19.4'
                 } else {
-                    return '2.1.4'
+                    return '2.3.3'
                 }
             case 'imagick':
                 if (phpVersion <= 5.6) {
@@ -140,7 +137,7 @@ export default class Extension {
                 } else if (phpVersion <= 7.4) {
                     return '2.9.8'
                 } else {
-                    return '3.5.0'
+                    return '3.5.3'
                 }
             case 'xlswriter': //2026年开始，作者本人停止维护此扩展
                 if (phpVersion <= 5.6) {

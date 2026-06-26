@@ -22,5 +22,5 @@ brew install pkg-config autoconf automake libtool
 cd "xlswriter-$extVersion"
 $phpDir/bin/phpize
 ./configure --with-php-config=$phpDir/bin/php-config --enable-reader --with-zlib-dir=/Applications/EServer/Library/zlib
-arch -x86_64 make -j4
+make -j"$(sysctl -n hw.ncpu 2>/dev/null || echo 8)"
 make install

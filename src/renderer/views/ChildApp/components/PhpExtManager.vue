@@ -124,13 +124,6 @@ const install = async (item) => {
     return
   }
 
-  if (isMacOS && Extension.isNeedX64Brew(item.name) && !(await SystemExtend.isInstalledX64Brew())) {
-    const scriptFilePath = path.join(GetCorePath.getScriptDir(), `x86_64-brew-install.sh`)
-    await fsPromises.chmod(scriptFilePath, '0755')
-    MessageBox.error(`安装${item.name}扩展需要先安装 -x86_64 的 Homebrew！\n请复制命令到终端执行安装\n${scriptFilePath}`)
-    return
-  }
-
   taskVisible.value = true
   eventEmitter = new EventEmitter()
   installer = new Installer(item.name, extVersion, props.phpVersion, eventEmitter)

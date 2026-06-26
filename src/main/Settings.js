@@ -57,7 +57,7 @@ export default class Settings {
             EnableComposer: false,
             TextEditor: this.#_getDefaultTextEditorPath(),
             WebsiteDir: GetDataPath.getWebsiteDir(),
-            OneClickServiceList: ['Nginx', 'PHP-FPM', 'MySQL-5.7'],
+            OneClickServiceList: ['Nginx', 'PHP-FPM', 'MySQL-8.0'],
             AutoStartAndRestartService: true,
             AfterOpenAppStartService: false,
             AutoTimerRestartService: false
