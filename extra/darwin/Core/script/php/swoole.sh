@@ -23,7 +23,6 @@ $phpDir/bin/phpize
 PKG_CONFIG_PATH=/Applications/EServer/Library/lib/pkgconfig \
 ./configure \
 --with-php-config=$phpDir/bin/php-config \
---with-openssl-dir=/Applications/EServer/Library/openssl@1.1/ \
 --enable-openssl \
 --enable-swoole-curl
 
