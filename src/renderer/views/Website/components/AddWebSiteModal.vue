@@ -97,7 +97,7 @@ const addWeb = async (websiteInfo) => {
     }
   }
 
-  if (Settings.get('AutoStartAndRestartServer') && ServerService.isRunning('Nginx')) {
+  if (Settings.get('AutoStartAndRestartService') && ServerService.isRunning('Nginx')) {
     ServerService.restart('Nginx')
     if (phpVersion) {
       const option = phpOpts.find(item => item.value === phpVersion)
