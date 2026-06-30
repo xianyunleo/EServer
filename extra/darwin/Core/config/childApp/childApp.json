@@ -208,7 +208,7 @@
         "ExtraFiles": [{ "Name": "mysql.log", "Path": "${WorkDir}/logs/mysql.log" }],
         "RemoteArchiveExt": ".tar.xz",
         "Icon": "mysql.png",
-        "Desc": "MySQL Is a Relational Database"
+        "Desc": "Intel x86_64 architecture, to be deprecated soon. Intel x86_64 架构，即将废弃"
     },
     {
         "Name": "MySQL-8.0",
