@@ -27,8 +27,8 @@ export default class CommonInstall {
         const ownEtcExists = await DirUtil.Exists(GetDataPath.getOwnEtcDir(appItem.DirName))
         await ChildAppInit.initEtcFiles(appItem)
 
+        const dirName = appItem.DirName
         if (!ownEtcExists || force) { //虽然一开始ownEtc不存在，但是initEtcFiles会创建ownEtc
-            const dirName = appItem.DirName
             if (dirName.match(/^mysql-[.\d]+$/)) {
                 const version = ChildAppExtend.getMysqlVersion(dirName)
                 await ChildAppInit.initMySQL(version)
@@ -38,6 +38,11 @@ export default class CommonInstall {
             } else if (dirName.match(/^nginx$/)) {
                 await ChildAppInit.initNginx()
             }
+        }
+
+        if (dirName.match(/^mysql-[.\d]+$/)) {
+            const version = ChildAppExtend.getMysqlVersion(dirName)
+            await ChildAppInit.initMySQLDataAndPassword(version)
         }
     }
 

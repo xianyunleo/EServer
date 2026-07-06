@@ -178,11 +178,18 @@ export default class ChildAppInit {
     }
 
     /**
-     * 初始化MySQL data目录和重置密码
+     * 初始化MySQL配置文件
      * @returns {Promise<void>}
      */
     static async initMySQL(version) {
         await ChildAppInit.initMySQLConf(version)
+    }
+
+    /**
+     * 初始化MySQL data目录和重置密码
+     * @returns {Promise<void>}
+     */
+    static async initMySQLDataAndPassword(version) {
         if (!(await DirUtil.Exists(GetDataPath.getMysqlDataDir(version)))) {
             //如果mysql data目录不存在，初始化生成data目录，并重置密码
             await MySQL.initData(version)
