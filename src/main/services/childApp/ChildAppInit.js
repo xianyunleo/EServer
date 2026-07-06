@@ -183,10 +183,10 @@ export default class ChildAppInit {
      */
     static async initMySQL(version) {
         await ChildAppInit.initMySQLConf(version)
-        if (!await DirUtil.Exists(GetDataPath.getMysqlDataDir(version))) {
+        if (!(await DirUtil.Exists(GetDataPath.getMysqlDataDir(version)))) {
             //如果mysql data目录不存在，初始化生成data目录，并重置密码
             await MySQL.initData(version)
-            await MySQL.resetPassword(version)
+            await MySQL.resetPassword(MySQL.PASSWORD_ROOT, version)
         }
     }
 
