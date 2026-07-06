@@ -225,6 +225,20 @@
         "Desc": "MySQL Is a Relational Database"
     },
     {
+        "Name": "MySQL-8.4",
+        "DirName": "mysql-8.4",
+        "Type": "Server",
+        "ServerProcessPath": "${WorkDir}/bin/mysqld",
+        "EtcList": ["my.cnf"],
+        "ServerConfPath": "${EtcDir}/my.cnf",
+        "StartServerArgs": "--defaults-file=${ServerConfPath}",
+        "ServerPort": 3306,
+        "ExtraFiles": [{ "Name": "mysql.log", "Path": "${WorkDir}/logs/mysql.log" }],
+        "RemoteArchiveExt": ".tar.xz",
+        "Icon": "mysql.png",
+        "Desc": "MacOS Sonoma (version 14) or a later version"
+    },
+    {
         "Name": "Redis-7.2",
         "DirName": "redis-7.2",
         "ServerProcessPath": "${WorkDir}/bin/redis-server",
