@@ -116,6 +116,7 @@ export default class App {
                         const version = ChildAppExtend.getMysqlVersion(item.Name)
                         if (version) {
                             await ChildAppInit.initMySQL(version)
+                            await ChildAppInit.initMySQLDataAndPassword(version)
                         }
                         await ChildAppInit.initEtcFiles(item)
                     }
