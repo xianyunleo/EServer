@@ -1,7 +1,9 @@
 name: Build/Release
 
-on: push
-
+on:
+  push:
+    tags:
+      - 'v*'
 jobs:
   release:
     runs-on: ${{ matrix.os }}

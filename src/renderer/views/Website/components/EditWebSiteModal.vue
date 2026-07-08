@@ -39,7 +39,7 @@ const defaultKey = 'basicSetting'
 const activeKey = ref(defaultKey)
 
 const editAfter = (phpVersion = '') => {
-  if (Settings.get('AutoStartAndRestartServer') && ServerService.isRunning('Nginx')) {
+  if (Settings.get('AutoStartAndRestartService') && ServerService.isRunning('Nginx')) {
     ServerService.restart('Nginx')
     if (phpVersion) {
       const phpOptions = WebsiteService.getPhpOptions()

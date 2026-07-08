@@ -133,7 +133,7 @@
         "ExtraFiles": [{ "Name": "mysql.log", "Path": "${WorkDir}/logs/mysql.log" }],
         "RemoteArchiveExt": ".tar.xz",
         "Icon": "mysql.png",
-        "Desc": "MySQL Is a Relational Database"
+        "Desc": "Intel x86_64 architecture, to be deprecated soon. Intel x86_64 架构，即将废弃"
     },
     {
         "Name": "MySQL-8.0",
@@ -148,6 +148,20 @@
         "RemoteArchiveExt": ".tar.xz",
         "Icon": "mysql.png",
         "Desc": "MySQL Is a Relational Database"
+    },
+    {
+        "Name": "MySQL-8.4",
+        "DirName": "mysql-8.4",
+        "Type": "Server",
+        "ServerProcessPath": "${WorkDir}/bin/mysqld",
+        "EtcList": ["my.cnf"],
+        "ServerConfPath": "${EtcDir}/my.cnf",
+        "StartServerArgs": "--defaults-file=${ServerConfPath}",
+        "ServerPort": 3306,
+        "ExtraFiles": [{ "Name": "mysql.log", "Path": "${WorkDir}/logs/mysql.log" }],
+        "RemoteArchiveExt": ".tar.xz",
+        "Icon": "mysql.png",
+        "Desc": "MacOS Sonoma (version 14) or a later version"
     },
     {
         "Name": "Redis-7.2",

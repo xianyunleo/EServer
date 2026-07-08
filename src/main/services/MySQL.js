@@ -1,74 +1,37 @@
-import path from "path";
-import GetDataPath from "@/shared/helpers/GetDataPath";
-import Command from "@/main/utils/Command";
-import ProcessExtend from "@/main/utils/ProcessExtend";
-import {sleep} from "@/shared/utils/utils";
-import child_process from "child_process";
-import FileUtil from "@/main/utils/FileUtil";
-import TcpProcess from "@/main/utils/TcpProcess";
+import path from 'path'
+import GetDataPath from '@/shared/helpers/GetDataPath'
+import Command from '@/main/utils/Command'
+import ProcessExtend from '@/main/utils/ProcessExtend'
+import { sleep } from '@/shared/utils/utils'
+import child_process from 'child_process'
+import FileUtil from '@/main/utils/FileUtil'
+import TcpProcess from '@/main/utils/TcpProcess'
 import { isWindows } from '@/shared/utils/utils2'
+import DirUtil from '@/main/utils/DirUtil'
+import MySQLBase from '@/main/services/MySQLBase'
 
 export default class MySQL {
+    static PASSWORD_ROOT = 'root'
     /**
      *
      * @param version {string}
      * @returns {Promise<void>}
      */
     static async initData(version) {
-        let mysqlPath = GetDataPath.getMysqlDir(version);
-        let command = `${this.getMySQLDFilePath(version)} --defaults-file=${this.getConfFilePath(version)} --initialize`;
-        await Command.exec(command, {cwd: mysqlPath});
+        const mysqlDir = GetDataPath.getMysqlDir(version)
+        const logsDir = path.join(mysqlDir, 'logs')
+        if (!(await DirUtil.Exists(logsDir))) await DirUtil.Create(logsDir)
+        let command = `${MySQL.getMySQLDFilePath(version)} --defaults-file=${MySQL.getConfFilePath(version)} --initialize`
+        await Command.exec(command, { cwd: mysqlDir })
     }
 
     /**
-     *
-     * @param version {string}
      * @param password {string}
+     * @param version {string}
      * @returns {Promise<void>}
      */
-    static async resetPassword(version, password) {
-        if (!password) {
-            password = 'root';
-        }
-        let resetCommand;
-        switch (version) {
-            case '5.7':
-            case '8.0':
-                resetCommand = `ALTER USER 'root'@'localhost' IDENTIFIED BY '${password}';`;
-                break;
-            default:
-        }
-        let mysqlPath = GetDataPath.getMysqlDir(version);
-        let resetPwdPath = path.join(mysqlPath, 'reset-pwd.txt');
-        await FileUtil.WriteAll(resetPwdPath, resetCommand);
-
-        let confFilePath = this.getConfFilePath(version);
-        let confText = await FileUtil.ReadAll(confFilePath)
-        let portMatch = confText.match(/\[mysqld].*?port\s*=\s*(\d+)/s)
-        let port = portMatch ? portMatch[1] : 3306;
-
-        let oldPid = await TcpProcess.getPidByPort(port);
-        if (oldPid) {
-            await ProcessExtend.kill(oldPid, true)
-        }
-
-        await sleep(100);
-
-        const args = [`--defaults-file=${confFilePath}`, `--init-file=${resetPwdPath}`]
-        const mysqldPath = this.getMySQLDFilePath(version)
-        //mysqld执行此命令会一直前台运行不退出
-        const childProcess = child_process.execFile(mysqldPath, args, { cwd: mysqlPath })
-
-        for (let i = 0; i < 30; i++) {
-            await sleep(500)
-            let path = await TcpProcess.getPathByPort(port)
-            if (path === mysqldPath) {
-                break
-            }
-        }
-        await sleep(100)
-        await ProcessExtend.kill(childProcess.pid)
-        await FileUtil.Delete(resetPwdPath)
+    static async resetPassword(password, version) {
+        await MySQLBase.resetPassword(password, GetDataPath.getMysqlDir(version), MySQL.getConfFilePath(version))
     }
 
     static getConfFilePath(version) {
@@ -78,8 +41,6 @@ export default class MySQL {
     }
 
     static getMySQLDFilePath(version) {
-        const mysqlDir = GetDataPath.getMysqlDir(version)
-        const name = isWindows ? 'mysqld.exe' : 'mysqld'
-        return path.join(mysqlDir, 'bin', name)
+        return MySQLBase.getMySQLDFilePath(GetDataPath.getMysqlDir(version))
     }
 }

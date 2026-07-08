@@ -1,29 +1,22 @@
 <template>
   <a-modal
-      :title="t('mysqlResetRootAccountPwd')"
-      :ok-text="t('Submit')"
-      :cancel-text="t('Cancel')"
-      :ok-button-props="{loading:okButtonLoading}"
-      @ok="resetClick"
-      v-model:open="visible"
-      centered
-      :maskClosable="false">
+    :title="t('mysqlResetRootAccountPwd')"
+    :ok-text="t('Submit')"
+    :cancel-text="t('Cancel')"
+    :ok-button-props="{ loading: okButtonLoading }"
+    @ok="resetClick"
+    v-model:open="visible"
+    centered
+    :maskClosable="false"
+  >
     <div class="modal-content">
-      <div style="text-align: center;padding-bottom: 20px">{{t('mysqlResetPwdTip')}}</div>
-      <a-form
-          :model="formData"
-          ref="formRef"
-          :label-col="{ span: 8}"
-          :wrapper-col="{ span: 16 }"
-          autocomplete="off">
-        <a-form-item :label="`MySQL ${mt('Version')}`" name="version"
-                     :rules="[{ required: true, message: mt('Please','ws','Select')}]">
-          <a-select style="width: 150px" v-model:value="formData.version" :options="mysqlOpts">
-          </a-select>
+      <div style="text-align: center; padding-bottom: 20px">{{ t('mysqlResetPwdTip') }}</div>
+      <a-form :model="formData" ref="formRef" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }" autocomplete="off">
+        <a-form-item :label="`MySQL ${mt('Version')}`" name="version" :rules="[{ required: true, message: mt('Please', 'ws', 'Select') }]">
+          <a-select style="width: 150px" v-model:value="formData.version" :options="mysqlOpts"> </a-select>
         </a-form-item>
-        <a-form-item :label="mt('New','ws','Pwd')"  name="newPwd"
-                     :rules="[{ required: true, message: '请输入新密码!' }]">
-          <a-input v-model:value="formData.newPwd"/>
+        <a-form-item :label="mt('New', 'ws', 'Pwd')" name="newPwd" :rules="[{ required: true, message: '请输入新密码!' }]">
+          <a-input v-model:value="formData.newPwd" />
         </a-form-item>
       </a-form>
     </div>
@@ -31,10 +24,10 @@
 </template>
 
 <script setup>
-import {ref,computed} from "vue";
-import MySQL from "@/main/services/MySQL";
-import MessageBox from "@/renderer/utils/MessageBox";
-import { t,mt } from '@/renderer/utils/i18n'
+import { ref, computed } from 'vue'
+import MySQL from '@/main/services/MySQL'
+import MessageBox from '@/renderer/utils/MessageBox'
+import { t, mt } from '@/renderer/utils/i18n'
 import { message } from 'ant-design-vue'
 import ChildAppService from '@/renderer/services/ChildAppService'
 
@@ -43,10 +36,10 @@ const emit = defineEmits(['update:show'])
 
 const visible = computed({
   get() {
-    return props.show;
+    return props.show
   },
   set(value) {
-    emit('update:show', value);
+    emit('update:show', value)
   }
 })
 const formRef = ref()
@@ -56,16 +49,16 @@ const okButtonLoading = ref(false)
 
 const resetClick = async () => {
   try {
-    let values = await formRef.value.validateFields();
-    await reset(values.version, values.newPwd);
+    let values = await formRef.value.validateFields()
+    await reset(values.newPwd, values.version)
   } catch (errorInfo) {
-    console.log('Validate Failed:', errorInfo);
+    console.log('Validate Failed:', errorInfo)
   }
-};
-const reset = async (version, newPwd) => {
+}
+const reset = async (newPwd, version) => {
   try {
     okButtonLoading.value = true
-    await MySQL.resetPassword(version, newPwd)
+    await MySQL.resetPassword(newPwd, version)
     message.success(t('successfulOperation'))
   } catch (error) {
     MessageBox.error(error.message ?? error, t('errorOccurredDuring', [t('operation')]))
@@ -73,9 +66,6 @@ const reset = async (version, newPwd) => {
     okButtonLoading.value = false
   }
 }
-
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
