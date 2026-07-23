@@ -33,7 +33,8 @@ export default class SystemService {
             let commandStr
 
             if (isWindows) {
-                commandStr = `sc create ${name} binPath="${pathWithArgs}" start=auto`
+                //Windows7等低版本，sc.exe 的参数要求 等号后面必须有空格
+                commandStr = `sc create ${name} binPath= "${pathWithArgs}" start= auto`
                 await Command.exec(commandStr)
                 // eslint-disable-next-line no-empty
             } else {
