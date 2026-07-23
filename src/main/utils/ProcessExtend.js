@@ -3,13 +3,22 @@ import { isMacOS, isWindows } from '@/shared/utils/utils2'
 import { PowerShell, WINDOWS_API_FILE_NAME } from '@/main/helpers/constant'
 import nodePath from 'path'
 import GetCorePath from '@/shared/helpers/GetCorePath'
+import { utf16ArrayToString } from '@/shared/utils/utils'
 
 export default class ProcessExtend {
     static _ffiModule = null;
+    static _processDetail = null;
     static _initFfi(){
         if(!ProcessExtend._ffiModule){
-            ProcessExtend._ffiModule = require('koffi')
+            let koffi
+            ProcessExtend._ffiModule = koffi = require('koffi')
             ProcessExtend._ffiModule.config({max_async_calls:256})
+            // 定义结构体
+            ProcessExtend._processDetail = koffi.struct('ProcessDetail', {
+                pid: 'uint32',
+                name: koffi.array('uint16', 260),
+                path: koffi.array('uint16', 260)
+            })
         }
         return ProcessExtend._ffiModule
     }
@@ -111,7 +120,7 @@ export default class ProcessExtend {
             const koffi = ProcessExtend._initFfi()
             const libPath = nodePath.join(GetCorePath.getParentDir(), WINDOWS_API_FILE_NAME)
             const lib = koffi.load(libPath)
-            const getProcessName = lib.func('getProcessName', 'str', ['int'])
+            const getProcessName = lib.func('GetProcessName', 'str', ['int'])
             // 个别进程的  getProcessName 比  getProcessPath 更耗时
             return await new Promise((resolve, reject) => {
                 getProcessName.async(pid, (err, res) => {
@@ -128,11 +137,88 @@ export default class ProcessExtend {
             const koffi = ProcessExtend._initFfi()
             const libPath = nodePath.join(GetCorePath.getParentDir(), WINDOWS_API_FILE_NAME)
             const lib = koffi.load(libPath)
-            const getProcessPath = lib.func('getProcessPath', 'str', ['int'])
+            const getProcessPath = lib.func('GetProcessPath', 'str', ['int'])
             return getProcessPath(pid)
         }catch{
             return null
         }
+    }
+
+    static async getListForWindows(options){
+        let list = await ProcessExtend.getListForWindowsApi()
+        if (options) {
+            let list1 = [], list2 = []
+            if (options.directory) {
+                list1 = list.filter(item => item.path.includes(options.directory))
+            }
+            if (options.pathList) {
+                list2 = list.filter(item => options.pathList.includes(item.path))
+            }
+            list = [...list1, ...list2]
+        }
+
+        return list
+    }
+
+    static async getListForWindowsApi() {
+        const koffi = ProcessExtend._initFfi()
+        const libPath = nodePath.join(GetCorePath.getParentDir(), WINDOWS_API_FILE_NAME)
+        const lib = koffi.load(libPath)
+
+        const GetProcessDetailList = lib.func('bool GetProcessDetailList(void *buffer, uint32_t *count)')
+
+        // 分配 count 指针
+        let count = koffi.alloc('uint32_t', 1)
+
+        // 第一次获取数量
+        let ok = await new Promise((resolve, reject) => {
+            GetProcessDetailList.async(null, count, (err, res) => {
+                resolve(res ?? '')
+            })
+        })
+
+        if (!ok) {
+            throw new Error('GetProcessDetailList failed')
+        }
+
+        let total = koffi.decode(count, 'uint32_t')
+
+        if (total === 0) {
+            return []
+        }
+
+        // 分配 ProcessDetail 数组
+        let list = koffi.alloc(ProcessExtend._processDetail, total)
+
+        // 第二次调用前，重新设置 count
+        koffi.encode(count, 'uint32_t', total)
+
+        // 第二次获取数据
+
+        ok = await new Promise((resolve, reject) => {
+            GetProcessDetailList.async(list, count, (err, res) => {
+                resolve(res ?? '')
+            })
+        })
+
+        if (!ok) {
+            throw new Error('GetProcessDetailList failed')
+        }
+
+        let resultCount = koffi.decode(count, 'uint32_t')
+
+        // 解码数组
+        const ProcessDetailList = koffi.array(ProcessExtend._processDetail, resultCount)
+
+        const items = koffi.decode(list, ProcessDetailList)
+
+        const retList = items.map((item) => ({
+            pid: item.pid,
+            name: utf16ArrayToString(item.name),
+            path: utf16ArrayToString(item.path)
+        }))
+
+        return retList
     }
 
     /**
@@ -183,7 +269,7 @@ export default class ProcessExtend {
         }
     }
 
-    static async getListForWindows(options = {}) {
+    static async getListForWindowsOld(options = {}) {
         let command = ' Get-WmiObject -Class Win32_Process -Filter '
         if (options) {
             if (options.directory) {

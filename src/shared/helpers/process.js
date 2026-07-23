@@ -3,21 +3,14 @@ import path from 'path'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import CustomChildApp from '@/main/services/childApp/CustomChildApp'
 import GetDataPath from '@/shared/helpers/GetDataPath'
-import { isWindows } from '@/shared/utils/utils2'
 import ProcessExtend from '@/main/utils/ProcessExtend'
 import { EnumServerStatusCheckMode } from '@/shared/helpers/enum'
 
-export async function getProcessList(winFunc) {
-    let list
+export async function getProcessList() {
     let pathList = CustomChildApp.getServerProcessPathList()
     pathList = await Promise.all(pathList.map(async (p) => await FsUtil.ParseSymbolicLink(p)))
     const options = { directory: GetDataPath.getChildAppDir(), pathList }
-    if (isWindows) {
-        list = await winFunc(options)
-    } else {
-        list = await ProcessExtend.getList(options)
-    }
-    return list
+    return await ProcessExtend.getList(options)
 }
 
 /**

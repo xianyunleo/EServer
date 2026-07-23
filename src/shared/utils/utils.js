@@ -84,3 +84,8 @@ export function getIpcError(error) {
     err.name = match[1]
     return err
 }
+
+export function utf16ArrayToString(arr) {
+    const len = arr.indexOf(0)
+    return new TextDecoder('utf-16le').decode(arr.slice(0, len).buffer)
+}

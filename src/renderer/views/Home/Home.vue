@@ -94,6 +94,8 @@ import { getProcessList, initServiceListStatus } from '@/shared/helpers/process'
 import Ipc from '@/renderer/utils/Ipc'
 import TcpProcess from '@/main/utils/TcpProcess'
 import { EnumServerStatusCheckMode } from '@/shared/helpers/enum'
+import { debugLog } from '@/shared/utils/utils2'
+import ProcessExtend from '@/main/utils/ProcessExtend'
 
 const timestamp = new Date().getTime()
 
@@ -150,7 +152,7 @@ window.addEventListener(StoreInitializedEventName, async () => {
 
 onMounted(async () => {
   console.log('Home onMounted ms:', new Date().getTime() - timestamp)
-  //devConsoleLog('Home onMounted ms:', () => (new Date().getTime()) - timestamp)
+  //debugLog('Home onMounted ms:', () => (new Date().getTime()) - timestamp)
   if (store.Home.firstLoadingHandled) {
     loadingHandle()
   }
@@ -158,9 +160,9 @@ onMounted(async () => {
 
 const loadingHandle = async () => {
   serviceTableLoading.value = { tip: `${t('RefreshingService')}...` }
-  const runningProcessList = await getProcessList(async (options) => {
-    return await Ipc.callStatic('ProcessLibrary', 'getList', options)
-  })
+  const runningProcessList = await getProcessList()
+
+  debugLog("runningProcessList",runningProcessList)
   const checkPort = serviceList.value?.some((item) => item.checkServerMode == EnumServerStatusCheckMode.PortStatus)
   //如果有serviceList有一个声明了端口号检查，那么获取tcp进程列表
   const tcpProcessList = checkPort ? await TcpProcess.getList() : []

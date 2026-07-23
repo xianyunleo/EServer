@@ -37,9 +37,7 @@ export default class Service {
         const list1 = await (await ChildApp.getList()).filterAsync(async (item) => await ChildApp.IsInstalled(item))
         const list2 = await CustomChildApp.getList()
         let serviceList = filterServiceList([...list1, ...list2])
-        const runningProcessList = await getProcessList(async (options) => {
-            return await ProcessLibrary.getList(options)
-        })
+        const runningProcessList = await getProcessList()
         const portCheckServer = serviceList?.find((item) => item.checkServerMode == EnumServerStatusCheckMode.PortStatus)
         //如果有serviceList有一个声明了端口号检查，那么获取tcp进程列表
         const tcpProcessList = portCheckServer ? await TcpProcess.getList() : []
