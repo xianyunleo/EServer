@@ -11,7 +11,9 @@
 
 ## MacOS Installation Guide
 1.Terminal execution`sudo spctl --global-disable`
+
 2.Drag the App to the "Applications" directory to complete the installation.
+
 3.Terminal execution`sudo xattr -rd com.apple.quarantine /Applications/EServer.app`
 
 ### The predecessor of this software is phpEnv ，www.phpenv.cn
