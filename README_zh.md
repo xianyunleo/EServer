@@ -7,3 +7,8 @@
 ![app](https://github.com/xianyunleo/EServer/raw/master/screenshots/app-en.png)
 
 ![界面](https://github.com/xianyunleo/EServer/raw/master/screenshots/app.png)
+
+## MacOS安装指南
+1.终端执行`sudo spctl --global-disable `
+2.将App拖动到 应用程序（Applications）目录完成安装
+3.终端执行`sudo xattr -rd com.apple.quarantine /Applications/EServer.app`
