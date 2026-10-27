@@ -4,7 +4,7 @@ out
 *.log*
 .vscode
 .idea
-package-lock.json
+.workbuddy/
 
 
 extra/win32/core/settings.json
