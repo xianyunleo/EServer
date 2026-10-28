@@ -8,6 +8,9 @@ import { isWindows } from '@/shared/utils/utils2'
 import ChildApp from '@/main/services/childApp/ChildApp'
 import FsUtil from '@/main/utils/FsUtil'
 import fsPromises from 'fs/promises'
+import NginxWebsite from '@/main/services/website/NginxWebsite'
+
+const defaultPhpVersion = '8.2'
 
 export default class ChildAppInit {
     //子应用目录文件的拷贝，如Copy php.ini-development to php.ini
@@ -74,7 +77,8 @@ export default class ChildAppInit {
     }
 
     static async initNginxLocalhostConf() {
-        let path = nodePath.join(GetDataPath.getNginxVhostsDir(), 'localhost_80.conf')
+        const localhostConfName = 'localhost_80.conf'
+        let path = nodePath.join(GetDataPath.getNginxVhostsDir(), localhostConfName)
         if (await FileUtil.Exists(path)) {
             let text = await FileUtil.ReadAll(path)
             let pattern = /root.+/g
@@ -82,11 +86,17 @@ export default class ChildAppInit {
             let replaceStr = `root ${rootPath};`
             text = text.replaceAll(pattern, replaceStr)
             await FileUtil.WriteAll(path, text)
+
+            const website = new NginxWebsite(localhostConfName)
+            await website.init()
+            website.setPHPVersion(defaultPhpVersion)
+            await website.save()
         }
     }
 
     static async initNginxPhpmyadminConf() {
-        let path = nodePath.join(GetDataPath.getNginxVhostsDir(), 'localhost_888.conf')
+        const phpmyadminConfName = 'localhost_888.conf'
+        let path = nodePath.join(GetDataPath.getNginxVhostsDir(), phpmyadminConfName)
         if (await FileUtil.Exists(path)) {
             let text = await FileUtil.ReadAll(path)
             let pattern = /root.+/g
@@ -94,6 +104,11 @@ export default class ChildAppInit {
             let replaceStr = `root ${rootPath};`
             text = text.replaceAll(pattern, replaceStr)
             await FileUtil.WriteAll(path, text)
+
+            const website = new NginxWebsite(phpmyadminConfName)
+            await website.init()
+            website.setPHPVersion(defaultPhpVersion)
+            await website.save()
         }
     }
 
