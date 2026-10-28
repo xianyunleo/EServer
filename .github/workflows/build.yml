@@ -4,24 +4,40 @@ on:
   push:
     tags:
       - 'v*'
+
 jobs:
   release:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest,macos-latest]
+        os: [windows-latest, macos-latest]
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
 
-      - name: Install Node.js, NPM and Yarn
+      - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Build Electron App
-        uses: coparse-inc/action-electron-builder@v1.0.0
-        with:
-          github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+      - name: Install dependencies
+        shell: bash
+        run: |
+          rm -f package-lock.json
+          npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Package & release (Windows)
+        if: runner.os == 'Windows'
+        run: npx electron-builder --win --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Package & release (macOS)
+        if: runner.os == 'macOS'
+        run: npx electron-builder --mac --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
