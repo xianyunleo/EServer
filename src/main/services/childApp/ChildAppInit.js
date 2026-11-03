@@ -9,6 +9,7 @@ import ChildApp from '@/main/services/childApp/ChildApp'
 import FsUtil from '@/main/utils/FsUtil'
 import fsPromises from 'fs/promises'
 import NginxWebsite from '@/main/services/website/NginxWebsite'
+import PathExt from '@/shared/utils/PathExt'
 
 const defaultPhpVersion = '8.2'
 
@@ -85,6 +86,12 @@ export default class ChildAppInit {
             let rootPath = nodePath.join(GetDataPath.getWebsiteDir(), 'localhost').replaceSlash()
             let replaceStr = `root ${rootPath};`
             text = text.replaceAll(pattern, replaceStr)
+
+            //修正 access_log / error_log 日志路径：按“域名_端口”匹配日志文件（如 localhost_80.access.log）
+            const logName = PathExt.GetFileNameWithoutExt(localhostConfName)
+            text = text.replaceAll(/(?<=access_log\s+)logs\/\S+\.access\.log(?=\s*;)/g, `logs/${logName}.access.log`)
+            text = text.replaceAll(/(?<=error_log\s+)logs\/\S+\.error\.log(?=\s*;)/g, `logs/${logName}.error.log`)
+
             await FileUtil.WriteAll(path, text)
 
             const website = new NginxWebsite(localhostConfName)
