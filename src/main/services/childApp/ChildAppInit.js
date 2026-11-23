@@ -182,6 +182,11 @@ export default class ChildAppInit {
                 for (const ext of extArr) {
                     text = Php.addExtensionByText(version, text, ext)
                 }
+
+                //macOS下php-7.3开启pcre.jit会导致崩溃，需禁用
+                if (parseFloat(version) === 7.3) {
+                    text = text.replace(/(?<=\n);?.?pcre\.jit\s*=.*/, 'pcre.jit=0')
+                }
             }
 
             let phpTempPath = nodePath.join(GetDataPath.geTempDir(), 'php')
